@@ -7,7 +7,8 @@ The 'DCore' lib has two purposes:
 
 # Notes
 
-This is shared on github, so put all personal information elsewhere :P.
+- This is shared on github, so put all personal information elsewhere :P.
+- Look into: https://pypi.python.org/pypi/appdirs to store data in the right place on different OSes.
 
 # Structure
 
