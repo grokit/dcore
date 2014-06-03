@@ -8,9 +8,8 @@ class OsExtException(BaseException):
 
 def execute(cmd):
     """
-    Execute a OS command, throw an exception if the return code isn't 0.
-    
-    Returns everything that was put on stdout and stderr.
+    Execute a OS command, throw an exception if the return code isn't 0, 
+    return all data written to stdout and stderr once execution finishes.
     """
     
     fh = tempfile.NamedTemporaryFile(delete=False)
