@@ -22,11 +22,33 @@ def getDirsMap():
                 'pics':      '/media/75a94e19-dccf-477a-bd80-251f0231a0b1/data/archive/media_pers',                
                 'downloads': '/home/david/Downloads',                
         }
+    elif os.name == 'nt':
+        dirsRepo = {
+                'scripts':   r'c:\david\sync\scripts',
+                'scriptsp':  r'c:\david\sync\scripts-private',
+                'root':      r'C:\david\sync\dev',
+                'dev':       r'C:\david\sync\dev',
+                'desktop':   r'C:\Users\dgaulin\Desktop',                
+        }
     else:
         raise Exception("Not coded for os: %s." % os.name)
     
     return dirsRepo
 
+def getFilesMap():
+    if os.name == 'posix':
+        fileMap = {'todo':     '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
+                   'ta':       '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
+                   'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt'}
+    elif os.name == 'nt':
+        fileMap = {
+                'todo':         r'c:\david\sync\scripts\todo.txt',
+        }
+    else:
+        raise Exception("Not coded for os: %s." % os.name)
+    
+    return fileMap
+    
 def getAutogenFileTemplate():
     
     magic_tag = 'Magic number for easy deletion: %s.' % magic_tag_intstr
@@ -55,7 +77,7 @@ def getPythonScriptsEnv():
     if os.name == 'nt':
         file_ext = '.bat'
         output_dir = os.getcwd() + '\\path_ext'
-        file_template = file_template.replace('__custom__', "python ""__py_file__"" __opt_cmd__ %%*")
+        file_template = file_template.replace('__custom__', "python ""__py_file__"" __opt_cmd__ %*")
         
     elif os.name == 'posix':
         file_ext = ''

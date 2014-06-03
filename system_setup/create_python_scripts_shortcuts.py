@@ -7,14 +7,6 @@ Search all python scripts for metadata indicating that a global shortcut for the
 
 - cmdline args
     --> allow delete all shortcus based on magic number
-
-# BLEH
-
-#print(sys.path)
-#print(os.environ)
-
-for (k, v) in os.environ.items():
-    print("%s: %s" % (k, v))
 """
 
 import os
@@ -47,7 +39,7 @@ def delCurrentShortcuts():
         fh.close()
         
         for line in lines:
-            if line.find(magic_tag_intstr) != -1:
+            if line.find(sd.magic_tag_intstr) != -1:
                 toDel.append(file)
                 break
     

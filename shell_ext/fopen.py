@@ -9,8 +9,10 @@ import os
 import smtplib
 import time
 import argparse
+import dcore.system_description as sd
 
 _meta_shell_command = 'fopen'
+
 def getArgs():
     
     parser = argparse.ArgumentParser()
@@ -26,10 +28,8 @@ if __name__ == '__main__':
     print(args)
 
     editor = 'vim'
-
-    known = {'todo': '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
-             'ta': '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
-             'someday': '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt'}
+    
+    known = sd.getFilesMap()
     
     target = args.lookup[0]
 
