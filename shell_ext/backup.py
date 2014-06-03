@@ -4,7 +4,7 @@ import time
 
 import misc.osext as osext
 import misc.files
-import lsk
+import private_data
 
 _meta_shell_command = 'backup'
 
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     archive_name = misc.files.getUniqueDateFile('backup_generic_', '.k0.7z')
      
     # -mhe: encrypt file names
-    pw = lsk.lsk0
+    pw = private_data.lsk0
     cmd = '%s -t7z -mhe -p%s a %s "%s"' % (exe_7zip, pw, archive_name, backup_loc)
 
     print(cmd)

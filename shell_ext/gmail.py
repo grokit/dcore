@@ -2,7 +2,7 @@
 import smtplib
 import time
 import argparse
-import lsk
+import private_data
 
 _meta_shell_command = 'gmail'
 
@@ -17,7 +17,7 @@ def getArgs():
     args = parser.parse_args()
     return args
 
-def send_email(to, gmail_user = lsk.low_security_email, gmail_pwd = lsk.low_security_email_pw, subject = "subject", body = "body"):
+def send_email(to, gmail_user = private_data.low_security_email, gmail_pwd = private_data.low_security_email_pw, subject = "subject", body = "body"):
     
     print("%s sends to %s, subject: '%s', body='%s'" % (gmail_user, to, subject, body))
     

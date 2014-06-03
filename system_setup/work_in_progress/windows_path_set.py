@@ -7,17 +7,17 @@ Note: must be administrator.
 import os
 import sys
 
-import lsk
+import private_data
 
 SYS_PATH_ADD_IF_NOT_PRESENT = [
 r'c:\python32',
 r'c:\python33',
 r'c:\python27',
 r'c:\david\sync\Dropbox\scripts\path_ext',
-r'C:\Users\%s\Desktop\Dropbox\scripts\path_ext' % lsk.muname]
+r'C:\Users\%s\Desktop\Dropbox\scripts\path_ext' % private_data.muname]
 
 SYS_ENV_VARS_ADD_OR_CLOBBER = {
-'PYTHONPATH': r'c:\david\sync\Dropbox\scripts;C:\Users\%s\Desktop\Dropbox\scripts' %s lsk.muname,
+'PYTHONPATH': r'c:\david\sync\Dropbox\scripts;C:\Users\%s\Desktop\Dropbox\scripts' %s private_data.muname,
 'DTG_ROOT': r'c:\david\sync',
 'DESKTOP': os.path.join(os.environ['userprofile'], 'desktop')
 }
