@@ -16,3 +16,6 @@ The 'DCore' lib has two purposes:
     ./shell_ext    : small utilities (all contained in a file) invokable from the command-line.
     ./system_setup : scripts that make system-wide changes to setup the productivity scripts.
 
+# TODOs
+
+- private_data : make in dcore, but read private resource, option to return default value if not found

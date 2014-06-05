@@ -8,6 +8,10 @@ On Windows, you can simply execute the 'cd' script, e.g:
 
 On Linux, you need to prepend '. ':
     . cdmusic
+
+# TODO
+- In windows/linux the directories shortcuts do not get cleaned-up
+- @@a1: relies of 'path_ext' of current directory being on path for windows. Find a better way (auto add to path, use system-mandated-directory e.g: %appdata%).
 """
 
 import dcore.system_description as sd
@@ -15,6 +19,8 @@ import dcore.system_description as sd
 import os
 import sys
 import argparse
+
+import private_data
 
 _meta_shell_command = 'cdgen'
 
@@ -27,8 +33,14 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
         
-    dirsMap = sd.getDirsMap()
- 
+    dirsMapPublic = sd.getDirsMap()
+    dirsMapPrivate = {}
+    try:
+        dirsMapPrivate = private_data.getDirsMapPrivate()
+    except Exception as e:
+        print("%s cannot get private directories: %s." % (__file__, e))
+    dirsMap = dict(list(dirsMapPublic.items()) + list(dirsMapPrivate.items()))
+    
     if args.list == True:
         for k, v in dirsMap.items():
             print("%-15s: %s" % (k, v))
@@ -43,7 +55,10 @@ if __name__ == '__main__':
         for shortcut, folder in dirsMap.items():
             
             fileOut = output_dir + "/" + 'cd' + shortcut + file_ext
-            fileContent = fileContentTemplate.replace('__custom__', 'cd %s' % folder)
+            dswitch = ""
+            if os.name == 'nt':
+                dswitch = "/d "
+            fileContent = fileContentTemplate.replace('__custom__', 'cd %s%s' % (dswitch, folder))
             
             fh = open(fileOut, 'w')
             fh.write(fileContent)

@@ -24,11 +24,6 @@ def getDirsMap():
         }
     elif os.name == 'nt':
         dirsRepo = {
-                'scripts':   r'c:\david\sync\scripts',
-                'scriptsp':  r'c:\david\sync\scripts-private',
-                'root':      r'C:\david\sync\dev',
-                'dev':       r'C:\david\sync\dev',
-                'desktop':   r'C:\Users\dgaulin\Desktop',                
         }
     else:
         raise Exception("Not coded for os: %s." % os.name)

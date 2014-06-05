@@ -10,8 +10,6 @@ import os
 import tempfile
 import time
 
-import misc.osext as osext
-
 _meta_shell_command = 'tonp'
 
 def getAndPrintStdinData():
@@ -34,7 +32,6 @@ if __name__ == '__main__':
     
     cmd = 'start /b np "%s"' % fh.name
     print(cmd)
-    #osext.execute(cmd) # does not work, maybe because it uses a temp file too and delete the other one?
     os.system(cmd)
     
     

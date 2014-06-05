@@ -2,7 +2,7 @@
 # TODO
 - Can list the shortcuts available
 - Make this part of system setup & have the files in the global configure thingie.
-
+- Be able to open my scripts shortcuts: if conflict in resolve, throw an exception (have a generic 'checkMatch()' algorithm).
 """
 
 import os
