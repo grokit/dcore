@@ -10,8 +10,8 @@ def getArgs():
     
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-t', '--to')
-    parser.add_argument('-s', '--subject', default= 'Done at: (%s).' % time.strftime('%Y-%m-%d %H:%M %Ss'))
+    parser.add_argument('-t', '--to', required=True)
+    parser.add_argument('subject', nargs='+')
     parser.add_argument('-b', '--body', default= 'This is a test, not spam (%s).' % time.strftime('%Y-%m-%d %H:%M %Ss'))
     
     args = parser.parse_args()
@@ -23,7 +23,9 @@ def send_email(to, gmail_user = private_data.low_security_email, gmail_pwd = pri
     
     if type(to) == type(''):
         to = [to]
-    
+   
+    subject = " ".join(subject) 
+   
     # Prepare actual message
     message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body)
     
