@@ -1,10 +1,12 @@
 """
 Defines where is what (files, applications, folders) in your system.
 
-Obviously, personalize this to reflect your system / env.
+Obviously, personalize this to reflect your system / environment.
 """
 
 import os
+
+import private_data
 
 # Stick this into every file that is auto-generated. This is used for cleanup / 
 # allowing to remove the old files when a new set of files is created.
@@ -12,7 +14,7 @@ magic_tag_intstr = '4452669129437275268177914375'
 
 def getDirsMap():
     if os.name == 'posix':
-        dirsRepo = {
+        dirsMap = {
                 'dropbox':   '/home/david/Desktop/Dropbox',
                 'scripts':   '/home/david/Desktop/Dropbox/scripts',
                 'root':      '/media/75a94e19-dccf-477a-bd80-251f0231a0b1/data',
@@ -23,17 +25,25 @@ def getDirsMap():
                 'downloads': '/home/david/Downloads',                
         }
     elif os.name == 'nt':
-        dirsRepo = {
+        dirsMap = {
         }
     else:
         raise Exception("Not coded for os: %s." % os.name)
     
-    return dirsRepo
+    dirsMapPrivate = {}
+    try:
+        dirsMapPrivate = private_data.getDirsMapPrivate()
+    except Exception as e:
+        print("%s cannot get private directories: %s." % (__file__, e))
+    dirsMap = dict(list(dirsMap.items()) + list(dirsMapPrivate.items()))
+        
+    return dirsMap
 
 def getFilesMap():
     if os.name == 'posix':
         fileMap = {'todo':     '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
                    'ta':       '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
+                   'python_private':       '/home/david/Desktop/Dropbox/scripts/private_data.py',
                    'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt'}
     elif os.name == 'nt':
         fileMap = {

@@ -16,12 +16,16 @@ import sys
 import dcore.search_files as fsearch
 import dcore.system_description as sd
 
-
 shell_meta_search = '_meta_shell_command'
+_meta_shell_command = 'genscripts'
 
 def findPyFiles():
-    pyfiles = fsearch.getAllFilesRecursively('*.py', '.')
-    pyfiles += fsearch.getAllFilesRecursively('*.py', r'..\scripts')
+    
+    dirsMap = sd.getDirsMap()
+    
+    pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
+    if dirsMap.get('python_folder_private') is not None:
+        pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
     pyfiles = [pyfile for pyfile in pyfiles if pyfile.find('__') == -1]
     return pyfiles
 
@@ -79,6 +83,7 @@ def getMetadataFromPyFiles(pyfiles):
 def createShortcuts(lMeta):
     
     file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
+    dirsMap = sd.getDirsMap()
     
     for meta in lMeta:
         
@@ -86,7 +91,7 @@ def createShortcuts(lMeta):
         fileContent = fileContent.replace('__py_file__', meta[0])
         fileContent = fileContent.replace('__opt_cmd__', meta[2])
         
-        fileOut = output_dir + "/" + meta[1] + file_ext
+        fileOut = dirsMap['dirs_shortcuts'] + "/" + meta[1] + file_ext
         
         print( (meta, fileOut) )
         

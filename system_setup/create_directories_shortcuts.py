@@ -11,7 +11,9 @@ On Linux, you need to prepend '. ':
 
 # TODO
 - In windows/linux the directories shortcuts do not get cleaned-up
-- @@a1: relies of 'path_ext' of current directory being on path for windows. Find a better way (auto add to path, use system-mandated-directory e.g: %appdata%).
+- Be able to add a directory map from anywhere: cdgen --add ., then query for name (or --name). This goes to a flat file that is referenced.
+- @@a1: use a flat file instead of python file to store directories preferences. Allow to add a shortcut from command-line: "cdgen --add . dirtag"
+    - this can also solve the "private data" issue: just have a flat file, implementation is all public, it will just complain of a missing key if not there.
 """
 
 import dcore.system_description as sd
@@ -22,7 +24,7 @@ import argparse
 
 import private_data
 
-_meta_shell_command = 'cdgen'
+_meta_shell_command = 'gendirs'
 
 if __name__ == '__main__':
  
@@ -32,14 +34,8 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gen',  action = "store_true")
 
     args = parser.parse_args()
-        
-    dirsMapPublic = sd.getDirsMap()
-    dirsMapPrivate = {}
-    try:
-        dirsMapPrivate = private_data.getDirsMapPrivate()
-    except Exception as e:
-        print("%s cannot get private directories: %s." % (__file__, e))
-    dirsMap = dict(list(dirsMapPublic.items()) + list(dirsMapPrivate.items()))
+    
+    dirsMap = sd.getDirsMap()
     
     if args.list == True:
         for k, v in dirsMap.items():
@@ -54,7 +50,7 @@ if __name__ == '__main__':
         # So if a folder has the shortcut 'app', you can access it on the console by doing 'cdapp'
         for shortcut, folder in dirsMap.items():
             
-            fileOut = output_dir + "/" + 'cd' + shortcut + file_ext
+            fileOut = dirsMap['dirs_shortcuts'] + "/" + 'cd' + shortcut + file_ext
             dswitch = ""
             if os.name == 'nt':
                 dswitch = "/d "
