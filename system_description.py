@@ -6,7 +6,7 @@ Obviously, personalize this to reflect your system / environment.
 
 import os
 
-import private_data
+import dcore.private_data as private_data
 
 # Stick this into every file that is auto-generated. This is used for cleanup / 
 # allowing to remove the old files when a new set of files is created.
@@ -44,7 +44,8 @@ def getFilesMap():
         fileMap = {'todo':     '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
                    'ta':       '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
                    'python_private':       '/home/david/Desktop/Dropbox/scripts/private_data.py',
-                   'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt'}
+                   'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt',
+                   'private_data':  '/home/david/Desktop/Dropbox/scripts/private_data'}
     elif os.name == 'nt':
         fileMap = {
                 'todo':         r'c:\david\sync\scripts\todo.txt',

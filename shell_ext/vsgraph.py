@@ -1,17 +1,9 @@
-"""
-TODO
-
-@@a1: remove all ms-ish things
-"""
 
 import re
 import sys
 import os
 
 import dcore.search_files as fsearch
-"""
-dot -Tps graph1.dot -o graph1.ps
-"""
 
 _meta_shell_command = 'vsgraph'
 
@@ -29,7 +21,7 @@ def refToFullPath(filepath, ref):
     if len(ref.split('.')) > 0 and (ref.split('.')[0].lower() == 'system' or ref.split('.')[0].lower() == 'microsoft'):
         return None
     
-    ## @@a1: generic replace with env with regex
+    ## TODO: generic replace with env with regex
     ref = ref.replace('$(example_sys_var)', example_sys_var)
     ref = ref.replace('$(example_sys_var)', example_sys_var)
     

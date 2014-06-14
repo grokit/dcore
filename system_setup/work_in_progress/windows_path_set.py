@@ -7,7 +7,7 @@ Note: must be administrator.
 import os
 import sys
 
-import private_data
+import dcore.private_data as private_data
 
 SYS_PATH_ADD_IF_NOT_PRESENT = [
 r'c:\python32',

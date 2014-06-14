@@ -22,7 +22,7 @@ import os
 import sys
 import argparse
 
-import private_data
+import dcore.private_data as private_data
 
 _meta_shell_command = 'gendirs'
 

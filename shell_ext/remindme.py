@@ -2,7 +2,7 @@
 import argparse
 import time
 
-import private_data
+import dcore.private_data as private_data
 import dcore.shell_ext.gmail as gmail
 
 _meta_shell_command = 'reminder'
