@@ -16,8 +16,6 @@ if __name__ == '__main__':
 	files = [f for f in files if os.path.isfile(f)]
 
 	for f in files:
-		print(f)
-		#to = f.replace(' ', '_')
 		to = re.sub('[ ()]', '_', f)
 		
 		L = []

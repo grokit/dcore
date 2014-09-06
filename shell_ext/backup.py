@@ -4,7 +4,7 @@ import time
 
 import misc.osext as osext
 import misc.files
-import dcore.private_data as private_data
+import dcore.system_description as private_data
 
 _meta_shell_command = 'backup'
 

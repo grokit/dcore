@@ -8,7 +8,6 @@
 import sys
 import os
 import tempfile
-import time
 
 _meta_shell_command = 'tonp'
 

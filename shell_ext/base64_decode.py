@@ -5,7 +5,7 @@ import argparse
 _meta_shell_command = 'b64d -s'
 
 def base64decode(str):
-    return base64.b64decode(str)
+    return base64.b64decode(str) # this returns bytes!!
     
 if __name__ == '__main__':
     

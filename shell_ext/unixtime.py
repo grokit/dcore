@@ -1,3 +1,12 @@
+"""
+    for i in range(1, 100):
+        i = 2**i
+        print(i)
+        print( time.ctime(i) )
+
+# TODO
+- Would be great if it were bi-directional.        
+"""
 
 _meta_shell_command = 'unixtime'
 
@@ -25,10 +34,9 @@ def getCommandLineArguments():
     return args
     
 def unixTimeToReadeableStr(unix_time):
-    if unix_time > 9e9:
-        raise ValueError("unix_time: %s is > 2255, value is too large" % unix_time)
+    if unix_time > 2**35: # limitation of time.ctime
+        raise ValueError("unix_time: %s is too large" % unix_time)
     
-    # time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.ctime(unix_time))
     return time.ctime(unix_time)
 
 if __name__ == '__main__':

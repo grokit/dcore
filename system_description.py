@@ -1,18 +1,21 @@
 """
-Defines where is what (files, applications, folders) in your system.
-
-Obviously, personalize this to reflect your system / environment.
+# TODO: put in private data file info:
+    - Obviously, just use this for low security stuff (such as added layer of security when sending as mail), passwords for accounts I do not care about, ...
+    - Always keep old key, but in comment (disable script using them).
+    - Keep key indication in backup name.
 """
 
 import os
-
-import dcore.private_data as private_data
+import json
 
 # Stick this into every file that is auto-generated. This is used for cleanup / 
 # allowing to remove the old files when a new set of files is created.
 magic_tag_intstr = '4452669129437275268177914375'
 
 def getDirsMap():
+    
+    #@@@todo-a: move to file
+    
     if os.name == 'posix':
         dirsMap = {
                 'dropbox':   '/home/david/Desktop/Dropbox',
@@ -32,7 +35,7 @@ def getDirsMap():
     
     dirsMapPrivate = {}
     try:
-        dirsMapPrivate = private_data.getDirsMapPrivate()
+        dirsMapPrivate = getDirsMapPrivate()
     except Exception as e:
         print("%s cannot get private directories: %s." % (__file__, e))
     dirsMap = dict(list(dirsMap.items()) + list(dirsMapPrivate.items()))
@@ -40,15 +43,19 @@ def getDirsMap():
     return dirsMap
 
 def getFilesMap():
+    #@@@todo-a: move to file
     if os.name == 'posix':
-        fileMap = {'todo':     '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
+        fileMap = {
+                   'todo':     '/home/david/Desktop/Dropbox/logs/Todo_Home.txt',
                    'ta':       '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
                    'python_private':       '/home/david/Desktop/Dropbox/scripts/private_data.py',
                    'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt',
-                   'private_data':  '/home/david/Desktop/Dropbox/scripts/private_data'}
+                   'private_data':  '/home/david/Desktop/Dropbox/scripts/private_data',
+                   }
     elif os.name == 'nt':
-        fileMap = {
+        fileMap =  {
                 'todo':         r'c:\david\sync\scripts\todo.txt',
+                'private_data': r'c:\david\sync\scripts-private\private_data',
         }
     else:
         raise Exception("Not coded for os: %s." % os.name)
@@ -140,3 +147,33 @@ def getWindowsAppStuff():
     start "__title__" "__launcher__"
     exit
     """ % (__file__, magic_tag_intstr)
+    
+def __loadPrivateFile():
+    
+    fileMap = getFilesMap()
+    privateDataFile = fileMap['private_data']
+
+    fh = open(privateDataFile, 'r')
+    jr = fh.read()
+    fh.close()
+    
+    jd = json.loads(jr)
+
+    return jd
+
+def getDirsMapPrivate():
+    jd = __loadPrivateFile()
+    jd = jd['dirs']
+    dirsMap = jd[os.name]
+    return dirsMap
+
+# This will add all the variables declared in the JSON file as local variables.
+# This way, private_data.variable is accessible after importing the module.
+jd = __loadPrivateFile()
+localsDir = locals()
+for k, v in jd['variables'].items():
+    localsDir[k] = v
+
+if __name__ == '__main__':
+    dm = getDirsMapPrivate()
+    #print(dm)

@@ -50,28 +50,27 @@ css = """
 body 
 {
     margin: 20px 0;
-    margin-left: 100px;
-    margin-right: 200px;
-    background: #fdfdf6;
+    margin-left: 75px;
+    margin-right: 75px;
+    background: #ffffff;
 }
 
 body, th, td, input, textarea 
 {
     font-family: Helvetica;
-    font-size: 13px;
-    color: #080808;
+    font-size: 14px;
 }
 
 h1, h2, h3 
 {
     margin-top: 0.5em;
     font-family: Helvetica;
-    color: #416b45;
+    color: #3f64b7;
 }
 
 h1 
 {
-    font-size: 2.3em;
+    font-size: 2.1em;
 }
 
 h2 
@@ -89,6 +88,13 @@ p
     margin-top: 0.5em;
     line-height: 1.5em;
     font-size: 1.1em;
+}
+
+pre
+{
+    padding: 10px;
+    /*border-style: dashed;*/
+    background: #f9f9f9;
 }
 
 a 

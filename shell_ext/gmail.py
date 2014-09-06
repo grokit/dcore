@@ -2,7 +2,7 @@
 import smtplib
 import time
 import argparse
-import dcore.private_data as private_data
+import dcore.system_description as private_data
 
 _meta_shell_command = 'gmail'
 
@@ -23,8 +23,9 @@ def send_email(to, gmail_user = private_data.low_security_email, gmail_pwd = pri
     
     if type(to) == type(''):
         to = [to]
-   
-    subject = " ".join(subject) 
+    
+    if type(subject) == type([]):
+        subject = " ".join(subject) 
    
     # Prepare actual message
     message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body)
