@@ -5,6 +5,7 @@ rem # As
 choco install git
 choco install notepadplusplus.install
 choco install 7zip.commandline
+choco install python2
 choco install python
 choco install Wget
 choco install curl
@@ -25,7 +26,7 @@ choco install youtube-dl
 choco install foobar2000
 choco install gimp
 choco install vlc
-choco install imagemagick.app
+choco install imagemagick
 choco install winscp
 choco install PDFXChangeViewer
 choco install ffmpeg
