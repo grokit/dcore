@@ -9,7 +9,7 @@ choco install python2
 choco install python
 choco install Wget
 choco install curl
-choco install autohotkey.portable
+
 choco install hg
 choco install putty
 choco install winmerge
@@ -17,9 +17,11 @@ choco install vim
 
 rem # Bs
 
+choco install autohotkey.portable
 choco install Console2
 choco install launchy
 choco install greenshot
+choco install ditto
 choco install PDFCreator
 choco install Cygwin
 choco install youtube-dl
@@ -30,7 +32,6 @@ choco install imagemagick
 choco install winscp
 choco install PDFXChangeViewer
 choco install ffmpeg
-choco install ditto
 choco install windowsessentials
 choco install windirstat
 
