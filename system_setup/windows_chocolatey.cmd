@@ -9,7 +9,6 @@ choco install python2
 choco install python
 choco install Wget
 choco install curl
-
 choco install hg
 choco install putty
 choco install winmerge
