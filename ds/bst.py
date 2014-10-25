@@ -2,7 +2,7 @@
 import random
 import os 
 
-#random.seed(12345)
+random.seed(12345)
 
 class Node:
 
@@ -23,7 +23,6 @@ class Node:
         if self.parent is not None:
             p = self.parent.value
         return "%s, left: %s, right: %s, parent: %s" % (self.value, l, r, p) 
-
 
 class BST:
     "Binary Search Tree"
@@ -89,7 +88,8 @@ class BST:
                 S.append( (n.right, 0) )
 
     def toGraph(self):
-        gb = r'"C:\Program Files (x86)\Graphviz 2.28\bin\dot.exe"'
+        #gb = r'"C:\Program Files (x86)\Graphviz 2.28\bin\dot.exe"'
+        gb = 'dot'
         L = []
         L.append("digraph G{")
         L.append('graph [ordering="out"];')

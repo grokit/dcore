@@ -53,8 +53,8 @@ def getFilesMap():
                    'private_data':  '/home/david/Desktop/Dropbox/scripts/private_data',
                    }
     elif os.name == 'nt':
+        #@@a1: just use import where where.scriptRoot() which use __file__.
         fileMap =  {
-                'todo':         r'c:\david\sync\scripts\todo.txt',
                 'private_data': r'c:\david\sync\scripts-private\private_data',
         }
     else:

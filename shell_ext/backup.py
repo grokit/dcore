@@ -2,8 +2,8 @@ import os
 import shutil
 import time
 
-import misc.osext as osext
-import misc.files
+import dcore.osext as osext
+import dcore.files as files
 import dcore.system_description as private_data
 
 _meta_shell_command = 'backup'
@@ -19,10 +19,10 @@ if __name__ == '__main__':
     
     os.chdir(backup_in)
 
-    archive_name = misc.files.getUniqueDateFile('backup_generic_', '.k0.7z')
+    archive_name = files.getUniqueDateFile('backup_generic_', '.k0.7z')
      
     # -mhe: encrypt file names
-    pw = private_data.lsk0
+    pw = private_data.sk0
     cmd = '%s -t7z -mhe -p%s a %s "%s"' % (exe_7zip, pw, archive_name, backup_loc)
 
     print(cmd)
