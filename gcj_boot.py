@@ -12,14 +12,13 @@ def solve(solveFn, readProblemChunk, ffilter = '.*'):
     files = [f for f in os.listdir('.') if f[-3:] == '.in' and re.search(ffilter, f) is not None]
 
     for file in files:
-        print(file)
+        print("Processing '%s'." % file)
         i = 1
         S = []
         for p in readProblems(file, readProblemChunk):
-            print(p)
             result = solveFn(p)
             sol = "Case #%i: %s\n" % (i, result)
-            print(sol)
+            print(sol.strip())
             i += 1
             S.append( sol )
          

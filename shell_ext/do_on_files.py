@@ -25,6 +25,7 @@ import os
 import subprocess
 import stat
 import argparse
+import codecs
 
 verbose = True
 
@@ -44,7 +45,8 @@ def isDataSentToScript():
          return False
 
 def getStdinData():
-    return sys.stdin.read() 
+    return codecs.getwriter('utf-8')(sys.stdin).read()
+    #return sys.stdin.read() 
 
     
 def aiTryJuiceFileFromFuzzyLine(str):

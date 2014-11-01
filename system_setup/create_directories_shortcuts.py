@@ -10,10 +10,10 @@ On Linux, you need to prepend '. ':
     . cdmusic
 
 # TODO
-- In windows/linux the directories shortcuts do not get cleaned-up
-- Be able to add a directory map from anywhere: cdgen --add ., then query for name (or --name). This goes to a flat file that is referenced.
-- @@a1: use a flat file instead of python file to store directories preferences. Allow to add a shortcut from command-line: "cdgen --add . dirtag"
-    - this can also solve the "private data" issue: just have a flat file, implementation is all public, it will just complain of a missing key if not there.
+    - In windows/linux the directories shortcuts do not get cleaned-up
+    - Be able to add a directory map from anywhere: cdgen --add ., then query for name (or --name). This goes to a flat file that is referenced.
+    - @@c1: use a flat file instead of python file to store directories preferences. Allow to add a shortcut from command-line: "cdgen --add . dirtag"
+        - this can also solve the "private data" issue: just have a flat file, implementation is all public, it will just complain of a missing key if not there.
 """
 
 import dcore.system_description as sd
@@ -49,6 +49,7 @@ if __name__ == '__main__':
         # Generate all folder shortcuts with 'cd' prefix.
         # So if a folder has the shortcut 'app', you can access it on the console by doing 'cdapp'
         for shortcut, folder in dirsMap.items():
+            print(shortcut, folder)
             
             fileOut = dirsMap['dirs_shortcuts'] + "/" + 'cd' + shortcut + file_ext
             dswitch = ""
@@ -66,3 +67,4 @@ if __name__ == '__main__':
                 os.system('chmod +x %s' % fileOut)
     else:
         raise Exception("Invalid script arguments: %s." % args)
+

@@ -3,7 +3,7 @@
 The 'DCore' lib has two purposes:
 
 - Place to put scripts that the main applications I develop can depend on and share (a core lib of some sort).
-- Neat collection of scrits that make the computer a better development platform that I install on everyone of my computers.
+- Neat collection of scripts that make the computer a better development platform that I install on everyone of my computers.
 
 # Notes
 
@@ -16,6 +16,7 @@ The 'DCore' lib has two purposes:
     ./shell_ext    : small utilities (all contained in a file) invokable from the command-line.
     ./system_setup : scripts that make system-wide changes to setup the productivity scripts.
 
-# TODOs
+## Rules
 
-- private_data : make in dcore, but read private resource, option to return default value if not found
+- No one depends on the scripts in 'shell_ext', they are leaf modules.
+

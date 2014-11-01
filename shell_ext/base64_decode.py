@@ -2,7 +2,7 @@
 import base64
 import argparse
 
-_meta_shell_command = 'b64d -s'
+_meta_shell_command = 'b64d'
 
 def base64decode(str):
     return base64.b64decode(str) # this returns bytes!!
