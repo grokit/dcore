@@ -7,6 +7,7 @@
 
 import os
 import json
+import pathlib
 
 # Stick this into every file that is auto-generated. This is used for cleanup / 
 # allowing to remove the old files when a new set of files is created.
@@ -42,6 +43,14 @@ def getDirsMap():
         
     return dirsMap
 
+def getPrivateDataFile():
+    cp = pathlib.Path(os.path.realpath(__file__))
+    
+    while not cp.parents[0].joinpath('private_data').is_file():
+        cp = cp.parents[0]
+    
+    return cp.parents[0].joinpath('private_data').as_posix()
+    
 def getFilesMap():
     #@@@todo-a: move to file
     if os.name == 'posix':
@@ -50,15 +59,15 @@ def getFilesMap():
                    'ta':       '/home/david/Desktop/Dropbox/logs/TheArchive.txt',
                    'python_private':       '/home/david/Desktop/Dropbox/scripts/private_data.py',
                    'someday':  '/home/david/Desktop/Dropbox/logs/MaybeSomeday.txt',
-                   'private_data':  '/home/david/Desktop/Dropbox/scripts/private_data',
                    }
     elif os.name == 'nt':
         #@@a1: just use import where where.scriptRoot() which use __file__.
         fileMap =  {
-                'private_data': r'c:\david\sync\scripts-private\private_data',
         }
     else:
         raise Exception("Not coded for os: %s." % os.name)
+    
+    fileMap['private_data'] = getPrivateDataFile()
     
     return fileMap
     
@@ -175,5 +184,5 @@ for k, v in jd['variables'].items():
     localsDir[k] = v
 
 if __name__ == '__main__':
-    dm = getDirsMapPrivate()
-    #print(dm)
+    #dm = getDirsMapPrivate()
+    print(getPrivateDataFile())
