@@ -6,7 +6,6 @@ Note: must be administrator.
 
 import os
 import sys
-
 import pathlib
 
 SYS_PATH_ADD_IF_NOT_PRESENT = [
@@ -16,7 +15,10 @@ r'c:\python27']
 
 def getRootPath():
     filepath = os.path.realpath(__file__)
-    return pathlib.Path(filepath).parents[1]
+    return pathlib.Path(filepath).parents[2].as_posix()
+
+def getShortcutsPath():
+	return os.path.join(getRootPath(), './dcore/path_ext')
 
 SYS_ENV_VARS_ADD_OR_CLOBBER = {
 'PYTHONPATH': getRootPath(),
@@ -27,7 +29,9 @@ def listRemoveDuplicates(lst):
     return list(set(list(lst)))
 
 def getSysPathAsList():
-    return listRemoveDuplicates( os.environ['path'].split(';') )
+    listPath = listRemoveDuplicates( os.environ['path'].split(';') )
+    listPath.append( getShortcutsPath() )
+    return listRemoveDuplicates( listPath )
 
 def setPermanentEnvironmentVariable(name, var):
     
