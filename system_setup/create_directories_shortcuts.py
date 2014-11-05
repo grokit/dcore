@@ -19,6 +19,7 @@ On Linux, you need to prepend '. ':
 import dcore.system_description as sd
 
 import os
+import re
 import sys
 import argparse
 
@@ -26,8 +27,20 @@ import dcore.system_description as private_data
 
 _meta_shell_command = 'gendirs'
 
-if __name__ == '__main__':
- 
+def explandTemplates(str):
+    m = re.search('__(\w+)\((\w+)\)__', str)
+    
+    if m is not None:
+        
+        if m.groups(2)[1] != 'env_var':
+            raise Exception("Invalid template: %s." % str)
+        
+        rstr = '__%s(%s)__' % (m.groups(2)[0], m.groups(2)[1])
+        str = str.replace(rstr, os.environ[m.groups(2)[0]])
+
+    return str
+
+def do():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-l', '--list', action = "store_true")
@@ -52,6 +65,7 @@ if __name__ == '__main__':
             print(shortcut, folder)
             
             fileOut = dirsMap['dirs_shortcuts'] + "/" + 'cd' + shortcut + file_ext
+            folder = explandTemplates(folder)
             dswitch = ""
             if os.name == 'nt':
                 dswitch = "/d "
@@ -68,3 +82,9 @@ if __name__ == '__main__':
     else:
         raise Exception("Invalid script arguments: %s." % args)
 
+def test():
+    print(explandTemplates("c:\\__inetroot(env_var)__\\toto"))
+    
+if __name__ == '__main__':
+    #test()
+    do()
