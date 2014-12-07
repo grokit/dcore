@@ -1,4 +1,6 @@
+.code_search*
 __pycache__/
+
 *.swp
 *.*~
 *.pyc

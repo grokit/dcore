@@ -104,7 +104,7 @@ def getPythonScriptsEnv():
     elif os.name == 'posix':
         file_ext = ''
         output_dir = '/usr/local/bin'
-        file_template = file_template.replace('__custom__', "python3 ""__py_file__"" __opt_cmd__ $@")
+        file_template = file_template.replace('__custom__', "python3.4 ""__py_file__"" __opt_cmd__ $@")
     else:
         raise Exception("Not coded for os: %s." % os.name)
     

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.4
 
 """
 Search all python scripts for metadata indicating that a global shortcut for the shell system should be created.

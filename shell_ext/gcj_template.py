@@ -1,7 +1,8 @@
+import sys
 
 _meta_shell_command = 'gcjt'
 
-template = """ \"\"\"
+template = """\"\"\"
 This script may use libraries publicly available at: https://github.com/grokit/dcore.
 
 Does this solution solve:
@@ -18,14 +19,19 @@ def readProblem(fh):
 
     n, m = [int(x) for x in fh.readline().strip().split()]
 
-    problem = Problem()
-    return problem
+    p = Problem()
+    return p
 
-def solve(P):
+def solve(p):
     return -1
 
 boot.solve(solve, readProblem, '.*tiny')
 """
 
 if __name__ == '__main__':
-    open('code.py', 'w').write(template)
+    name = 'code.py'
+
+    if len(sys.argv) > 1:
+        name = sys.argv[1]
+
+    open(name, 'w').write(template)

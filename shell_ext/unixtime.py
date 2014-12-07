@@ -24,9 +24,10 @@ def getCommandLineArguments():
                         '--milliseconds_mode', 
                         action="store_true",
                         help='Use milliseconds instead of seconds since epoch.')
-                        
+
     parser.add_argument('time', 
                         type=int,
+                        nargs='?',
                         help='Unix time to transform to readable date-time.')
     
     args = parser.parse_args()
@@ -43,6 +44,10 @@ if __name__ == '__main__':
     
     args = getCommandLineArguments()
     print(args)
+    
+    if args.time is None:
+        print(time.time())
+        exit(0)
     
     unixTime = int(args.time)
     if args.milliseconds_mode:
