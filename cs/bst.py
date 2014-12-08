@@ -1,3 +1,6 @@
+"""
+Binary Search Tree
+"""
 
 import random
 import os 
