@@ -1,6 +1,13 @@
 """
 Generic n-ary tree with some helper functions implemented.
+
+# Improvements
+
+Might be better to have a tree class that manages the node. Each node having a unique ID guaranteed
+by the tree class would help for debugging and algorithms that copy nodes around.
 """
+
+import os
 
 class Node:
 
@@ -29,33 +36,53 @@ def upApply(node, fn, state):
         node = node.parent
     fn(node, state)
 
-def printBranches(root):
-    #print('root: ', root)
-    for node in DFS(root):
-        #print('DFS yielded node: %s' % node)
-        if len(node.children) == 0:
-            fn = lambda x, y: y.append(x)
-            state = []
-            upApply(node, fn, state)
-            #print('L: %s' % len(state))
-            L = []
-            for s in state:
-                L.append(str(s.data))
-            print("Branch: " + ", ".join(L))
+def toGraph(root):
+    gb = 'dot'
+    L = []
+    L.append("digraph G{")
+    L.append('graph [ordering="out"];')
 
-def printTree(root):
+    nodeToId = idTree(root)
+    for node in DFS(root):
+        L.append('%s [label="%s"];' % (nodeToId[node], str(nodeToId[node]) + "_" +str(node.data)))
+        if node.parent is not None:
+            L.append('%s -> %s [color=lawngreen, constraint=false]; // (c->parent)' % (nodeToId[node], nodeToId[node.parent]))
+        for c in node.children:
+            L.append('%s -> %s;' % (nodeToId[node], nodeToId[c]))
+
+    L.append("}")
+    s = "\n".join(L)
+    print(s)
+    fh = open('g.dot', 'w')
+    fh.write(s)
+    fh.close()
+
+    cmd = gb + ' -Tpng g.dot -O'
+    os.system(cmd)
+
+def idTree(root):
     nodeToId = {}
-    nodeToId[None] = -1
+    #nodeToId[None] = -1
 
     idCount = 0
     for node in DFS(root):
         nodeToId[node] = idCount
         idCount += 1
+    return nodeToId
 
+def printTree(root):
+
+    nodeToId = idTree(root)
     for node in DFS(root):
         C = [str(nodeToId[x]) for x in node.children]
         C = ", ".join(C)
         print('Node[%i]: value: %s, parent: %s, children(s): %s.' % (nodeToId[node], node.data, nodeToId[node.parent], C))
+
+def findNodeWithData(root, data):
+    for iNode in DFS(root):
+        if iNode.data == data:
+            return iNode
+    return None
 
 def DFS(node):
     for child in node.children:
