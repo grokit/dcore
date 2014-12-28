@@ -17,7 +17,7 @@ class Node:
         self.parent = None
 
     def __repr__(self):
-        return this.__str__(self)
+        return self.__str__()
 
     def __str__(self):
         if self.parent == None: 
@@ -36,7 +36,7 @@ def upApply(node, fn, state):
         node = node.parent
     fn(node, state)
 
-def toGraph(root):
+def toGraph(root, name='graph'):
     gb = 'dot'
     L = []
     L.append("digraph G{")
@@ -52,12 +52,12 @@ def toGraph(root):
 
     L.append("}")
     s = "\n".join(L)
-    print(s)
-    fh = open('g.dot', 'w')
+    #print(s)
+    fh = open('%s.dot' % name, 'w')
     fh.write(s)
     fh.close()
 
-    cmd = gb + ' -Tpng g.dot -O'
+    cmd = gb + ' -Tpng %s.dot -O' % name
     os.system(cmd)
 
 def idTree(root):

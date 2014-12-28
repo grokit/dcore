@@ -13,14 +13,13 @@ def solve(solveFn, readProblemChunk, ffilter = '.*'):
 
     for file in files:
         print("Processing '%s'." % file)
-        i = 1
-        S = []
-        for p in readProblems(file, readProblemChunk):
-            result = solveFn(p)
-            sol = "Case #%i: %s\n" % (i, result)
-            print(sol.strip())
-            i += 1
-            S.append( sol )
-         
-        open(file.replace('.in', '.out'), 'w').write( "".join(S) )
+        fileOut = file.replace('.in', '.out')
+        fh = open(fileOut, 'w')
 
+        S = []
+        for i, p in enumerate(readProblems(file, readProblemChunk)):
+            result = solveFn(p)
+            sol = "Case #%i: %s\n" % (i+1, result)
+            print(sol.strip('\n'))
+            fh.write(sol)
+        fh.close()
