@@ -6,7 +6,7 @@ import argparse
 import shutil
 import time
 
-mp3_dir = '/media/david/SANSA CLIPP/MUSIC'
+mp3_dir = '/media/david/SANSA CLIPP/PODCASTS'
 mp3_in_folders = [os.path.expanduser(f) for f in ['~/Desktop/podcasts', '~/Downloads']]
 
 def getArgs():
