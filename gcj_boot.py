@@ -12,7 +12,7 @@ def readProblems(file, readProblemChunk):
 def solve(solveFn, readProblemChunk, ffilter = '.*'):
     files = [f for f in os.listdir('.') if f[-3:] == '.in' and re.search(ffilter, f) is not None]
 
-    fhStats = open('stats', 'a')
+    fhStats = open('processing.stats', 'a')
     for file in files:
         logLine = "Processing '%s'." % file
         print(logLine)

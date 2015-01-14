@@ -4,6 +4,11 @@ _meta_shell_command = 'cpprun'
 import os
 import argparse
 
+def isCppFile(filename):
+    if os.path.splitext(filename)[1] in ['.cpp', '.hpp', '.cc']:
+        return True
+    return False 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     
@@ -15,7 +20,7 @@ if __name__ == '__main__':
         filesc = [args.file]
     else:
         files = os.listdir('.')
-        filesc = [file for file in files if file[-3:].lower() == 'cpp']
+        filesc = [file for file in files if isCppFile(file)]
 
     rv = 0;
     for file in filesc:

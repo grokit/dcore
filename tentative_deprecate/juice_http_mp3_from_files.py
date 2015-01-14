@@ -1,7 +1,8 @@
 import os
 import re
 
-files = [os.path.join(dp, f) for dp, dn, filenames in os.walk('.') for f in filenames]
+files = [os.path.join(dp, f)
+         for dp, dn, filenames in os.walk('.') for f in filenames]
 
 mp3 = set()
 for file in files:
@@ -15,4 +16,3 @@ for file in files:
         pass
 
 open('out', 'w').write("\n".join(mp3))
-
