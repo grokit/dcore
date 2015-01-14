@@ -1,10 +1,6 @@
 """
-    for i in range(1, 100):
-        i = 2**i
-        print(i)
-        print( time.ctime(i) )
-
 # TODO
+
 - Would be great if it were bi-directional.        
 """
 
