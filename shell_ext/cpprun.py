@@ -7,14 +7,14 @@ import argparse
 def isCppFile(filename):
     if os.path.splitext(filename)[1] in ['.cpp', '.hpp', '.cc']:
         return True
-    return False 
+    return False
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('-f', '--file', type=str, default = None)
     args = parser.parse_args()
-    
+
     filec = []
     if args.file != None:
         filesc = [args.file]
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     rv = 0;
     for file in filesc:
-        cmd = 'g++ -std=c++11 %s -o %s.bin' % (file, file)
+        cmd = 'g++ -Wl,--no-as-needed -std=c++11 -pthread %s -o %s.bin' % (file, file)
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
         print(cmd)
         rv |= os.system(cmd)
@@ -32,4 +32,3 @@ if __name__ == '__main__':
     if rv == 0:
         os.system('./' + filesc[0] + '.bin > ' + filesc[0] + '.out')
         os.system('cat ./' + filesc[0] + '.out')
-
