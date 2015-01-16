@@ -11,8 +11,7 @@ def isCppFile(filename):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('-f', '--file', type=str, default = None)
+    parser.add_argument('file', type=str, nargs='?', default = None)
     args = parser.parse_args()
 
     filec = []
