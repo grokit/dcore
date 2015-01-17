@@ -101,11 +101,12 @@ def createShortcuts(lMeta):
         
         if os.name == 'posix':
            os.system('chmod +x %s' % fileOut)    
-    
-if __name__ == "__main__":
-    
+
+def do():
     delCurrentShortcuts()
-    
     pyFiles = findPyFiles()
     meta = getMetadataFromPyFiles(pyFiles)
     createShortcuts(meta)
+    
+if __name__ == "__main__":
+	do()
