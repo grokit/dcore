@@ -13,3 +13,9 @@ Maybe automatically name the shortcut the same as the file without the .py?
 
 place_name is looked in the usual system_description.py
 
+#
+- Just use the name of the scripts for the command-line short-cut. Do not require meta flag if in this directory.
+
+- Be able to list and edit any script:
+    - dcripts edit <name>
+    - dcripts list

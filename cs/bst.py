@@ -5,7 +5,7 @@ Binary Search Tree
 import random
 import os 
 
-random.seed(12345)
+random.seed(112345)
 
 class Node:
 

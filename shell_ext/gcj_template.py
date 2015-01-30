@@ -12,15 +12,11 @@ Does this solution solve:
 
 import dcore.gcj_boot as boot
 
-class Problem:
-    pass
-
 def readProblem(fh):
 
     n, m = [int(x) for x in fh.readline().strip().split()]
 
-    p = Problem()
-    return p
+    return (n, m)
 
 def solve(p):
     return -1

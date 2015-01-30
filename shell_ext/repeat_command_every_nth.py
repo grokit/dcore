@@ -22,8 +22,8 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-c', '--command', nargs='+')
-    parser.add_argument('-t', '--timeInterval', type=float)
+    parser.add_argument('command', nargs='+')
+    parser.add_argument('-t', '--timeInterval', default = '1.0', type=float)
     
     args = parser.parse_args()
     
