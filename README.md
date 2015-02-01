@@ -15,6 +15,7 @@ The 'DCore' lib has two purposes:
     ./             : library scripts; imported from application. This is a sort of 'core-lib'.
     ./shell_ext    : small utilities (all contained in a file) invokable from the command-line.
     ./system_setup : scripts that make system-wide changes to setup the productivity scripts.
+    ./apps         : complete applications that can depend on any dcore infrastructure (except from _shell_ext).
 
 ## Rules
 

@@ -1,0 +1,38 @@
+# use glob syntax.
+syntax: glob
+
+*.jpg
+*.swp
+*.png
+*.pyc
+*~
+*.tar.gz
+*.gz
+*.zip
+
+# files
+ws_root/index.yaml
+
+# folders
+LaFontaineFables/data/*
+google_appengine
+google_appengine/*
+appengine_django/*
+django-on-appengine/*
+__depends/*
+__old/*
+
+# mirrors
+ws_root/static/*
+ws_root/ws_django/webdoc/gen/*
+
+code_repository.pickled
+pyscode_cmdline.pye
+dependencies/GoogleAppEngine-*.msi
+dependencies/python-2.7.3.msi
+
+syntax: regexp
+
+^\.code_search_cache
+^ws_root/django
+^ws_root/ws_django/gfx
