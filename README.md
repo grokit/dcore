@@ -1,3 +1,8 @@
+
+# TODO
+
+- Have an install.sh that justs sets everything up so that you can be on a new *nix or windows system and just get started.
+
 # DCore: What is it
 
 The 'DCore' lib has two purposes:
