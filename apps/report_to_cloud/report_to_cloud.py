@@ -1,7 +1,16 @@
+#!/usr/bin/python3.4
+
 """
 # TODO
-- Eliminate the port magic requirement.
-- Remove unused imports.
+
+## As
+
+- Have this compatible with a cron, do not loop automatically.
+
+## Bs
+
+- Write a common log infrastructure, don't re-write for every app.
+
 """
 
 import sys
@@ -21,7 +30,7 @@ import logging
 
 _meta_shell_command = 'report_to_cloud'
 
-logfilename = os.path.join('.', '%s.log' % __file__.replace('.py', ''))
+logfilename = os.path.join(os.path.expanduser('~'), '%s.log' % __file__.replace('.py', ''))
 UpdateIntervalInSecs = 90
 
 class PrintHandler(logging.Handler):
@@ -37,18 +46,18 @@ class DictToClass:
     def __str__(self):
         return str(self.__dict__)
 
-def getLocalIP():
-    # Would work as well?: print(socket.gethostbyname(socket.gethostname()))
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("www.google.com", 80))
-    ip = s.getsockname()[0]
-    s.close()
+def getArgs():
+    parser = argparse.ArgumentParser()
     
-    return ip
+    parser.add_argument('-s', '--server', default = 'incomingp2p.appspot.com:80')
+    parser.add_argument('-l', '--localhost_server', action = 'store_true')
 
-def getPublicIP():
-    ip = str(urllib.request.urlopen('http://ip.42.pl/raw').read(), "utf8")
-    return ip
+    args = parser.parse_args()
+
+    if args.server.find(':') == -1: args.server = args.server + ':80'
+    if args.localhost_server == True: args.server = '127.0.0.1:8080'
+
+    return args
 
 def threadLoopUpdateToCloud(userName, serverIPPort, starter = True):
     
@@ -87,22 +96,9 @@ def threadLoopUpdateToCloud(userName, serverIPPort, starter = True):
                 log.error("Exception: %s." % e)
                 time.sleep(checkInterval)
                 
-def getArgs():
-    parser = argparse.ArgumentParser()
-    
-    parser.add_argument('-s', '--server', default = 'incomingp2p.appspot.com:80')
-    parser.add_argument('-l', '--localhost_server', action = 'store_true')
-
-    args = parser.parse_args()
-
-    if args.server.find(':') == -1: args.server = args.server + ':80'
-    if args.localhost_server == True: args.server = '127.0.0.1:8080'
-
-    return args
 
 def uploadUserInfoToCloud(userName, userIP, userIPPublic, serverIPPort):
     
-    #@@todo: just receive JSON here, do not do any processing on input
     serverIP = serverIPPort[0]
     serverPort = serverIPPort[1]
     
@@ -158,6 +154,19 @@ def downloadUserInfoFromCloud(serverIPCache):
 def getLocalUsername():
     return  platform.node()
  
+def getLocalIP():
+    # Would work as well?: print(socket.gethostbyname(socket.gethostname()))
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("www.google.com", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    
+    return ip
+
+def getPublicIP():
+    ip = str(urllib.request.urlopen('http://ip.42.pl/raw').read(), "utf8")
+    return ip
+
 if __name__ == '__main__':
      
     logging.basicConfig(format='%(levelname)s %(asctime)-15s %(message)s', filename = logfilename, level=logging.DEBUG, datefmt='%Y-%m-%d_%H:%M_%Ss')
@@ -169,7 +178,11 @@ if __name__ == '__main__':
   
     serverIPCache = args.server.split(':')
 
-    threadLoopUpdateToCloud(getLocalUsername(), serverIPCache)
+    # threadLoopUpdateToCloud(getLocalUsername(), serverIPCache)
+    userIP = getLocalIP()
+    userIPPublic = getPublicIP()
+    uploadUserInfoToCloud(getLocalUsername(), userIP, userIPPublic, serverIPCache)
+
     usersInfo = downloadUserInfoFromCloud(serverIPCache)
     log.debug(usersInfo)
     
