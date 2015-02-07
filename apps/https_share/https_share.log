@@ -1,6 +1,0 @@
-INFO 2015-02-07_15:38_43s Namespace(access_token='randomToken_eec18b62cce93d1e7e7cf2e1d71d32e0953b3cab90bb910f507eee2b', cert_file='/media/data/dev/Dropbox/scripts/dcore/apps/https_share/default_server_cert.pem', output_folder='.', port=4443, share_root_directory='/media/data/dev/Dropbox/scripts/dcore/apps/https_share')
-INFO 2015-02-07_15:38_44s Server starting at https://192.168.1.6:4443/, have fun!
-INFO 2015-02-07_15:38_44s You can use this share link: https://192.168.1.6:4443/set_cookie/randomToken_eec18b62cce93d1e7e7cf2e1d71d32e0953b3cab90bb910f507eee2b
-DEBUG 2015-02-07_15:39_04s queryPath: /media/data/dev/Dropbox/scripts/dcore/apps/https_share/2014-06-03-sysk-mose.mp3
-DEBUG 2015-02-07_15:39_20s You pressed Ctrl+C, closing socket listener.
-DEBUG 2015-02-07_15:39_20s Socket listener closed.
