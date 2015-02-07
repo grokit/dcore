@@ -1,9 +1,11 @@
 """
 Generic n-ary tree with some helper functions implemented.
 
+Does not enforce order of nodes, NOT a search tree. See bst.py for search tree.
+
 # Improvements
 
-Might be better to have a tree class that manages the node. Each node having a unique ID guaranteed
+- Might be better to have a tree class that manages the node. Each node having a unique ID guaranteed
 by the tree class would help for debugging and algorithms that copy nodes around.
 """
 
@@ -36,7 +38,38 @@ def upApply(node, fn, state):
         node = node.parent
     fn(node, state)
 
-def toGraph(root, name='graph'):
+
+def idTree(root):
+    nodeToId = {}
+    #nodeToId[None] = -1
+
+    idCount = 0
+    for node in DFS(root):
+        nodeToId[node] = idCount
+        idCount += 1
+    return nodeToId
+
+
+def findNodeWithData(root, data):
+    for iNode in DFS(root):
+        if iNode.data == data:
+            return iNode
+    return None
+
+def DFS(node):
+    for child in node.children:
+        yield from DFS(child)
+    yield node
+
+def printTree(root):
+
+    nodeToId = idTree(root)
+    for node in DFS(root):
+        C = [str(nodeToId[x]) for x in node.children]
+        C = ", ".join(C)
+        print('Node[%i]: value: %s, parent: %s, children(s): %s.' % (nodeToId[node], node.data, nodeToId[node.parent], C))
+        
+def generatePng(root, name='graph'):
     gb = 'dot'
     L = []
     L.append("digraph G{")
@@ -59,32 +92,3 @@ def toGraph(root, name='graph'):
 
     cmd = gb + ' -Tpng %s.dot -O' % name
     os.system(cmd)
-
-def idTree(root):
-    nodeToId = {}
-    #nodeToId[None] = -1
-
-    idCount = 0
-    for node in DFS(root):
-        nodeToId[node] = idCount
-        idCount += 1
-    return nodeToId
-
-def printTree(root):
-
-    nodeToId = idTree(root)
-    for node in DFS(root):
-        C = [str(nodeToId[x]) for x in node.children]
-        C = ", ".join(C)
-        print('Node[%i]: value: %s, parent: %s, children(s): %s.' % (nodeToId[node], node.data, nodeToId[node.parent], C))
-
-def findNodeWithData(root, data):
-    for iNode in DFS(root):
-        if iNode.data == data:
-            return iNode
-    return None
-
-def DFS(node):
-    for child in node.children:
-        yield from DFS(child)
-    yield node

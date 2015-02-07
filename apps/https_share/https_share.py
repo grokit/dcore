@@ -185,13 +185,16 @@ def handleUrlListFiles(httpHanlder):
         httpHanlder.send_response(200)
         httpHanlder.send_header('Content-disposition','attachment; filename=%s' % filename)
         httpHanlder.end_headers()
-        
+
         fh = open(queryPath, 'rb')
-        fileBytes = fh.read()
+        chunkSize = 1024*32
+        while True:
+            fileBytes = fh.read(chunkSize)
+            if len(fileBytes) == 0:
+                break
+            httpHanlder.wfile.write(fileBytes)
         fh.close()
-        
-        httpHanlder.wfile.write(fileBytes)
-        
+
     else:
         handleNotFound(httpHanlder)
 

@@ -1,5 +1,5 @@
 """
-Binary Search Tree
+Binary Search Tree with 0-2 children per node.
 """
 
 import random
@@ -76,7 +76,11 @@ class BST:
         self.traverseInorder(fn)
         return L
 
-    def traverseInorder(self, fn):
+    def traverseInorder(self):
+        """
+        TODO: Replace fn by yield.
+        """
+
         S = [(self.root, 0)]
         while len(S) != 0:
             (n, s) = S.pop()
@@ -87,8 +91,21 @@ class BST:
                 S.append( (n, 1) )
                 S.append( (n.left, 0) )
             else:
-                fn(n)
+                yield n
                 S.append( (n.right, 0) )
+
+    @staticmethod
+    def isLeftChild(n, parent):
+        if parent.left is None:
+            return None
+        if parent.left == n: return True
+        return False
+    
+    @staticmethod
+    def leftmostChild(n):
+        while n.left is not None:
+            n = n.left
+        return n
 
     def toGraph(self):
         #gb = r'"C:\Program Files (x86)\Graphviz 2.28\bin\dot.exe"'
@@ -122,19 +139,6 @@ class BST:
 
         cmd = gb + ' -Tpng g.dot -O'
         os.system(cmd)
-
-    @staticmethod
-    def isLeftChild(n, parent):
-        if parent.left is None:
-            return None
-        if parent.left == n: return True
-        return False
-    
-    @staticmethod
-    def leftmostChild(n):
-        while n.left is not None:
-            n = n.left
-        return n
 
 def buildRandomBST(n = 10):
 

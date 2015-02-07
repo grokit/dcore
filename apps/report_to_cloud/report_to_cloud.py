@@ -5,6 +5,7 @@
 
 ## As
 
+- ! Use Zulu time !
 - Have this compatible with a cron, do not loop automatically.
 
 ## Bs
