@@ -15,6 +15,7 @@
 
 - When using a custom folder, the uploads will not automatically go there.
 - Uploading could corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
+- The IP in the link is sometimes not the public IP.
 
 """
 
@@ -93,6 +94,7 @@ def isAuthorized(httpHanlder):
     tokenV = ''
     cookies = httpHanlder.headers.get('Cookie')
     if cookies and len(cookies.split('accessToken=')) > 0:
+        log.debug('Cookies: %s.' % cookies)
         tokenV = cookies.split('accessToken=')[1]
     
     if tokenV == httpHanlder.server.data['access_token']:
@@ -186,10 +188,7 @@ if __name__ == '__main__':
     
     log.info(args)
     
-    ip = '0.0.0.0'
-    
-    server_address = (ip, args.port)
-    
+    server_address = ('0.0.0.0', args.port)
     dataToServer = {'access_token': args.access_token, 'authorized_folder': args.share_root_directory, 'output_folder': args.output_folder}
     httpd = AddDataTCPServer(server_address, CustomHTTPHandler, data=dataToServer)
     httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile=args.cert_file)

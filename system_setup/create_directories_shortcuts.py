@@ -82,9 +82,6 @@ def do():
     else:
         raise Exception("Invalid script arguments: %s." % args)
 
-def test():
-    print(explandTemplates("c:\\__inetroot(env_var)__\\toto"))
-    
 if __name__ == '__main__':
     #test()
     do()
