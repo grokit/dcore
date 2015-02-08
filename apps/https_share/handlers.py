@@ -166,7 +166,6 @@ def handleUploadSink(httpHandler):
         Lfh.append(fh)
         
         log.debug('Reading chunk %i.' % len(Lfh))
-        log.debug(type(httpHandler.rfile))
 
         readLen = 2**20
         if readLen > length-lenRecv:
