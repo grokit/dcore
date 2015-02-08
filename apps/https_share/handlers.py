@@ -102,7 +102,6 @@ def extractHeadersInfo(listFileHandles):
     header = header + b'\r\n\r\n'
     
     log.debug(header)
-    #log.debug(data)
     
     boundaryTag = b'\r\n' + header.split(b'\r\n')[0]
     filename = header.split(b'filename="')[1].split(b'"')[0]
@@ -115,8 +114,6 @@ def extractHeadersInfo(listFileHandles):
     return filename, boundaryTag, dataStartPos 
 
 def writeMultipartFile(listFileHandlers, filenameOut, dataStartPos, boundaryTag):
-
-    log.debug(locals())
 
     fh = open(filenameOut, 'wb')
 
@@ -180,6 +177,8 @@ def handleUploadSink(httpHandler):
         if len(data) == 0 or lenRecv == length:
             break
     
+    # This write the files in temp files, then merge to final file. Thus it writes everything twice. A better implementation would
+    # write to a single file, and detect / correct MIME heads on the fly using the two latest chunks read.
     filename, boundaryTag, dataStartPos = extractHeadersInfo(Lfh)
     filename = 'recv_' + filename # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
     fullpath = os.path.join(outputFolder, filename)
