@@ -13,6 +13,8 @@
 
 - Have an HTTP interface when you can just POST a file and it gets swallowed to a file.
 
+- Pivot: maybe this project could be a 'web read-write'? Provide a way to store data in the web if you provide the nodes?
+
 # Bugs
 
 - When uploading, limited by size of memory because the current MIME-chunk implementation relies on having the whole file.

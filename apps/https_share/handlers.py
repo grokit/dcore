@@ -3,6 +3,7 @@ import os
 import hashlib
 import logging
 import base64
+import tempfile
 
 import htmlt
 
@@ -79,7 +80,7 @@ def getHtmlDebugInfo(httpHanlder):
     
     return '<div class="debug_info">%s</div>' % debug_mid    
 
-def coonvertMultipartToFile(multiplart):
+def extractHeadersInfo(listFileHandles):
     """
     Example:
     ^M
@@ -88,77 +89,116 @@ def coonvertMultipartToFile(multiplart):
     Content-Type: image/jpeg
     
     [... file content ...]
+
+    See: http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
     """
+
+    log.debug(locals())
     
-    log.debug(type(multiplart))
-    header, data = multiplart.split(b'\r\n\r\n', 1)
+    firstFh = listFileHandles[0]
+    firstFh.seek(0)
+    multipart = firstFh.read()
+    header, data = multipart.split(b'\r\n\r\n', 1)
+    header = header + b'\r\n\r\n'
     
     log.debug(header)
+    #log.debug(data)
     
-    boundary = header.split(b'\r\n')[0]
+    boundaryTag = b'\r\n' + header.split(b'\r\n')[0]
     filename = header.split(b'filename="')[1].split(b'"')[0]
     filename = filename.decode('ascii')
     
-    log.debug('Detected boundary: %s.' % boundary.decode())
-    
-    data = data.split(b'\r\n' + boundary + b'--')[0] #\r\n
-    
-    hashV = getHash(data)
-    
-    return (filename, data, hashV)
+    log.debug('Detected boundary: %s.' % boundaryTag)
 
-def handleUploadSink(httpHanlder):
+    dataStartPos = len(header)
     
-    if httpHanlder.headers['content-length'] is None:
-        handleCustomError(httpHanlder, "No 'content-length' header, browser is not trying to upload?")
+    return filename, boundaryTag, dataStartPos 
+
+def writeMultipartFile(listFileHandlers, filenameOut, dataStartPos, boundaryTag):
+
+    log.debug(locals())
+
+    fh = open(filenameOut, 'wb')
+
+    for i, fht in enumerate(listFileHandlers):
+        log.debug('Write non-temp chunk %i of %i.' % (i, len(listFileHandlers)))
+        fht.seek(0)
+
+        done = False
+        while not done:
+            readD = fht.read(2**20)
+            log.debug('Read from temp file %i byte(s).' % len(readD))
+
+            if i == 0:
+                readD = readD[dataStartPos:]
+
+            # @@bug what happens if the boundary is split between two chunks?
+            posF = readD.find(boundaryTag)
+            if posF != -1:
+                log.debug('Found boundary at pos %i.' % posF)
+                readD = readD[0:posF]
+                done = True
+
+            fh.write(readD)
+
+            if len(readD) == 0:
+                #raise Exception("Should end with boundary -- file is most likely corrupted.")
+                done = True
+    fh.close()
+    log.debug('Done writeMultipartFile.')
+
+def handleUploadSink(httpHandler):
+    
+    if httpHandler.headers['content-length'] is None:
+        handleCustomError(httpHandler, "No 'content-length' header, browser is not trying to upload?")
         return
     
-    length = int(httpHanlder.headers['content-length'])
+    length = int(httpHandler.headers['content-length'])
     
-    filename = 'upload'
-    log.debug(httpHanlder.headers)
-    
-    lD = []
-    MB = 2**20
+    log.debug(httpHandler.headers)
+    outputFolder = httpHandler.server.data['output_folder']
+
+    Lfh = []
     lenRecv = 0
+    log.debug('Starting upload read...')
     while True:
+        fh = tempfile.TemporaryFile()
+        Lfh.append(fh)
         
-        cLen = length - lenRecv
-        
-        if cLen > MB:
-            cLen = MB
-            
-        data = httpHanlder.rfile.read(cLen)
+        log.debug('Reading chunk %i.' % len(Lfh))
+        log.debug(type(httpHandler.rfile))
+
+        readLen = 2**20
+        if readLen > length-lenRecv:
+            readLen = length-lenRecv
+
+        log.debug('Attempt read %i byte(s).' % readLen)
+        data = httpHandler.rfile.read(readLen)
+        log.debug('Read %i byte(s).' % len(data))
         lenRecv += len(data)
-        
-        lD.append( data )
+        fh.write(data)
         
         if len(data) == 0 or lenRecv == length:
             break
     
-    data = b"".join(lD)
-    
-    filename, data, hashV = coonvertMultipartToFile(data)
-    
-    fullpath = os.path.join(httpHanlder.server.data['output_folder'], filename)
-    
-    with open(fullpath, 'wb') as fh:
-        log.debug('Got upload: %s, %s bytes. Written to: %s.' % (filename, length, fullpath))
-        fh.write(data)
+    filename, boundaryTag, dataStartPos = extractHeadersInfo(Lfh)
+    filename = 'recv_' + filename # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
+    fullpath = os.path.join(outputFolder, filename)
+    writeMultipartFile(Lfh, filename, dataStartPos, boundaryTag)
 
-    httpHanlder.send_response(200)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(200)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     body = "<h2>File uploaded successfully.</h2><p>Filename: %s.<br>Len: %s.<br>MD5 hash: %s<br></p>"
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', body % (filename, len(data), hashV))
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__body__', body % (filename, len(data), 'hash computation skipped'))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 
 def handleSetToken(httpHanlder):
     
