@@ -4,12 +4,18 @@
 # TODO
 
 - This is messy, split in files
+    - html
+    - handlers
+
+- COMPLEX: break-down functionalities in modules that embed and isolate their complexity.
 
 - Ping localhost (or broadcast or UDP dns, ...), not google to get local IP.
 
+- Have an HTTP interface when you can just POST a file and it gets swallowed to a file.
+
 # Bugs
 
-- No stream concept: if open a large file, will load all in memory before serve. On rPI ==> choke on large files.
+- When uploading, limited by size of memory because the current MIME-chunk implementation relies on having the whole file.
 - When using a custom folder, the uploads will not automatically go there.
 
 """
@@ -37,26 +43,9 @@ import traceback
 from urllib.parse import urlparse
 from random import randint
 
+import htmlt
+
 _meta_shell_command = 'https_share'
-
-html_template = """
-<head>
-__head__
-</head>
-
-<style type=text/css>
-__style__
-</style>
-  
-<html>
-<body>
-
-__body__
-
-__debug_info__
-<body>
-</html>
-"""
 
 def pickRandomToken(pre):
     rBytes = os.urandom(8*1024)
@@ -170,7 +159,7 @@ def handleUrlListFiles(httpHanlder):
         httpHanlder.send_header('Content-type','text/html')
         httpHanlder.end_headers()
         
-        html = html_template
+        html = htmlt.html_template
         html = html.replace('__head__', '')
         html = html.replace('__style__', getStyle())
         html = html.replace('__body__', getHtmlDir(queryPath))
@@ -206,36 +195,20 @@ def getStyle():
     cnt = fh.read()
     return cnt
 
-main_html = r"""
-<p>
-<a href="/files/">List files</a><br>
-<a href="/upload/">Upload</a><br>
-<a href="/log/">See server logs</a><br>
-</p>
-"""
-
 def handleMain(httpHanlder):
     
     httpHanlder.send_response(200)
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', main_html)
+    html = html.replace('__body__', htmlt.main_html)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
     httpHanlder.wfile.write(html.encode())
        
-main_log = r"""
-<p>
-<pre><code>
-{0}
-</code></pre>
-</p>
-"""
-
 def handleLog(httpHanlder):
     
     httpHanlder.send_response(200)
@@ -246,10 +219,10 @@ def handleLog(httpHanlder):
     logCt = fh.read()
     fh.close()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', main_log.format( logCt ))
+    html = html.replace('__body__', htmlt.main_log.format( logCt ))
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
     httpHanlder.wfile.write(html.encode())
@@ -262,7 +235,7 @@ def handleCustomError(httpHanlder, errMsg):
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<h2>%s Bad Request, %s</h2>' % (errNo, errMsg))
@@ -277,7 +250,7 @@ def handleNotFound(httpHanlder):
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<h2>404 Not Found :(</h2>')
@@ -285,36 +258,16 @@ def handleNotFound(httpHanlder):
     
     httpHanlder.wfile.write(html.encode())
 
-not_auth_body = r"""
-<h2>401 Unauthorized</h2>
-
-<p>
-You need an access token to access this website.
-
-<form action="/set_cookie/">
-  Access Token: <input type="text" name="accessToken"><input type="submit" value="Submit">
-</form>
-</p>
-"""
-
-not_auth_folder_body = r"""
-<h2>401 Unauthorized</h2>
-
-<p>
-You do not have access to this resource: __resource__.
-</p>
-"""
-
 def handleNotAuthorizedFolder(httpHanlder, resource):
     
     httpHanlder.send_response(401)
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', not_auth_folder_body)
+    html = html.replace('__body__', htmlt.not_auth_folder_body)
     html = html.replace('__resource__', os.path.realpath( resource ) )    
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
@@ -326,23 +279,14 @@ def handleNotAuthorized(httpHanlder):
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', not_auth_body)
+    html = html.replace('__body__', htmlt.not_auth_body)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
     httpHanlder.wfile.write(html.encode())    
 
-upload_body = r"""
-<h2>Upload Form</h2>
-
-<p>Trust us, we will make good use of that data.</p>
-
-<form enctype="multipart/form-data" action="/upload/sink/" method="POST">
-Choose a file to upload: <input name="uploadedfile" type="file" />
-<input type="submit" value="Upload File" />
-</form>"""
     
 def handleUpload(httpHanlder):
     
@@ -350,10 +294,10 @@ def handleUpload(httpHanlder):
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', upload_body)
+    html = html.replace('__body__', html.upload_body)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
     httpHanlder.wfile.write(html.encode())
@@ -436,7 +380,7 @@ def handleUploadSink(httpHanlder):
     
     body = "<h2>File uploaded successfully.</h2><p>Filename: %s.<br>Len: %s.<br>Hash: %s<br></p>"
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', body % (filename, len(data), hashV))
@@ -456,7 +400,7 @@ def handleSetToken(httpHanlder):
     httpHanlder.send_header('Set-Cookie', 'accessToken=%s;Path=/; HttpOnly' % tokenV)
     httpHanlder.end_headers()
     
-    html = html_template
+    html = htmlt.html_template
     html = html.replace('__head__', '<meta http-equiv="refresh" content="3;url=/" />')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<p><b>Token set to: %s.</b></p>You will be redirected automatically.' % tokenV)
