@@ -3,10 +3,6 @@
 """
 # TODO
 
-- This is messy, split in files
-    - html
-    - handlers
-
 - COMPLEX: break-down functionalities in modules that embed and isolate their complexity.
 
 - Ping localhost (or broadcast or UDP dns, ...), not google to get local IP.
@@ -17,8 +13,8 @@
 
 # Bugs
 
-- When uploading, limited by size of memory because the current MIME-chunk implementation relies on having the whole file.
 - When using a custom folder, the uploads will not automatically go there.
+- Uploading could corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
 
 """
 
