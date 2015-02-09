@@ -7,6 +7,10 @@
 
 - Seems to be serving only one request at a time. If upload a big file, any other user will be blocked out.
 
+- Setting token use mime-escape.
+
+- OSError: [Errno 24] Too many open files: '/tmp/tmp8oum1l' <-- chunking with hundreds of open filehandles is not a good idea apparently.
+
 ## Bs
 
 - COMPLEX: break-down functionalities in modules that embed and isolate their complexity.
