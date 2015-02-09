@@ -154,6 +154,7 @@ def handleUploadSink(httpHandler):
     
     log.debug(httpHandler.headers)
     outputFolder = httpHandler.server.data['output_folder']
+    log.debug('File upload output folder: %s.' % outputFolder)
 
     Lfh = []
     lenRecv = 0
@@ -182,6 +183,7 @@ def handleUploadSink(httpHandler):
     filename, boundaryTag, dataStartPos = extractHeadersInfo(Lfh)
     filename = 'recv_' + filename # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
     fullpath = os.path.join(outputFolder, filename)
+    log.debug('File upload output filename: %s.' % filename)
     writeMultipartFile(Lfh, filename, dataStartPos, boundaryTag)
 
     httpHandler.send_response(200)

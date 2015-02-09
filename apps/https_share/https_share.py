@@ -3,6 +3,14 @@
 """
 # TODO
 
+## As
+
+- Seems to be serving only one request at a time. If upload a big file, any other user will be blocked out.
+
+- When using a custom folder, the uploads will not automatically go there (they go to ~).
+
+## Bs
+
 - COMPLEX: break-down functionalities in modules that embed and isolate their complexity.
 
 - Ping localhost (or broadcast or UDP dns, ...), not google to get local IP.
@@ -13,7 +21,6 @@
 
 # Bugs
 
-- When using a custom folder, the uploads will not automatically go there.
 - Uploading could corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
 - The IP in the link is sometimes not the public IP.
 
