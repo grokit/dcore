@@ -4,6 +4,7 @@ import hashlib
 import logging
 import base64
 import tempfile
+import urllib
 
 import htmlt
 
@@ -206,7 +207,8 @@ def handleSetToken(httpHanlder):
     
     if tokenV[0] == '?':
         tokenV = tokenV.split('?accessToken=')[1]
-    
+    tokenV = urllib.parse.unquote(tokenV)
+
     httpHanlder.send_response(200)
     httpHanlder.send_header('Content-type','text/html')
     httpHanlder.send_header('Set-Cookie', 'accessToken=%s;Path=/; HttpOnly' % tokenV)
@@ -219,6 +221,7 @@ def handleSetToken(httpHanlder):
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
     
     httpHanlder.wfile.write(html.encode())
+
 def handleUrlListFiles(httpHanlder):
     
     queryPath = httpHanlder.server.data['authorized_folder']
