@@ -33,5 +33,5 @@ The 'DCore' lib has two purposes:
 
 ## Rules
 
-- No one depends on the scripts in 'shell_ext', they are leaf modules.
+- No one depends on the scripts in 'shell_ext' or 'apps', they are leaf modules.
 
