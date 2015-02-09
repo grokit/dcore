@@ -7,8 +7,6 @@
 
 - Seems to be serving only one request at a time. If upload a big file, any other user will be blocked out.
 
-- When using a custom folder, the uploads will not automatically go there (they go to ~).
-
 ## Bs
 
 - COMPLEX: break-down functionalities in modules that embed and isolate their complexity.

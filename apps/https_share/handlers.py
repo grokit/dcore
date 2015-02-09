@@ -183,8 +183,8 @@ def handleUploadSink(httpHandler):
     filename, boundaryTag, dataStartPos = extractHeadersInfo(Lfh)
     filename = 'recv_' + filename # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
     fullpath = os.path.join(outputFolder, filename)
-    log.debug('File upload output filename: %s.' % filename)
-    writeMultipartFile(Lfh, filename, dataStartPos, boundaryTag)
+    log.debug('File upload output filename: %s.' % fullpath)
+    writeMultipartFile(Lfh, fullpath, dataStartPos, boundaryTag)
 
     httpHandler.send_response(200)
     httpHandler.send_header('Content-type','text/html')
