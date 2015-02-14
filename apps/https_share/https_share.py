@@ -5,8 +5,6 @@
 
 ## As
 
-- Seems to be serving only one request at a time. If upload a big file, any other user will be blocked out.
-
 - File UPLOAD (1.4GB) sometimes MD5 sum does not match.
 
 ## Bs
@@ -16,8 +14,6 @@
 
 - COMPLEX: break-down functionalities in modules that embed and isolate their complexity.
 
-- Ping localhost (or broadcast or UDP dns, ...), not google to get local IP.
-
 - Have an HTTP interface when you can just POST a file and it gets swallowed to a file.
 
 - Pivot: maybe this project could be a 'web read-write'? Provide a way to store data in the web if you provide the nodes?
@@ -26,6 +22,10 @@
 
 - Uploading could corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
 - The IP in the link is sometimes not the public IP.
+
+# Notes
+
+- http://pymotw.com/2/BaseHTTPServer/, https://docs.python.org/3.4/library/socketserver.html
 
 """
 
@@ -112,11 +112,6 @@ def isAuthorized(httpHanlder):
     
     return False
 
-class AddDataTCPServer(socketserver.TCPServer):
-    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True, data = None):
-        self.data = data
-        socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate=True)
-
 class CustomHTTPHandler(http.server.BaseHTTPRequestHandler):
     
     def serve_forever(self):
@@ -167,6 +162,14 @@ class CustomHTTPHandler(http.server.BaseHTTPRequestHandler):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             log.error("".join(traceback.format_exception(exc_type, exc_value,exc_traceback)))
 
+class AddDataTCPServer(socketserver.TCPServer):
+    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True, data = None):
+        self.data = data
+        socketserver.TCPServer.__init__(self, server_address, RequestHandlerClass, bind_and_activate=True)
+
+class ThreadedHTTPServer(socketserver.ThreadingMixIn, AddDataTCPServer):
+        """Handle requests in a separate thread."""
+
 class SignalHandler:
     
     def signal_handler(self, signal, frame):
@@ -200,7 +203,7 @@ if __name__ == '__main__':
     
     server_address = ('0.0.0.0', args.port)
     dataToServer = {'access_token': args.access_token, 'authorized_folder': args.share_root_directory, 'output_folder': args.output_folder}
-    httpd = AddDataTCPServer(server_address, CustomHTTPHandler, data=dataToServer)
+    httpd = ThreadedHTTPServer(server_address, CustomHTTPHandler, data=dataToServer)
     httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile=args.cert_file)
     
     sh = SignalHandler()
