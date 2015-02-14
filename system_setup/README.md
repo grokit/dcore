@@ -20,8 +20,8 @@ Goal is to git clone dcore, then have all the scripts available and common funct
 
 ## Cron
 
-*/2 * * * * python3 /home/pi/dcore/apps/report_to_cloud/report_to_cloud.py
-*/1 * * * * python3 /home/pi/dcore/apps/https_share/https_share.py -p 443 -s /home/pi/share -o /home/pi/share -a atoken_849h8ddj019
-^^ must be in root's crontab
+    */2 * * * * python3 /home/pi/dcore/apps/report_to_cloud/report_to_cloud.py
+    */1 * * * * python3 /home/pi/dcore/apps/https_share/https_share.py -p 443 -s /home/pi/share -o /home/pi/share -a atoken_849h8ddj019
+    ^^ must be in root's crontab
 
 
