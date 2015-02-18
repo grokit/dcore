@@ -265,8 +265,9 @@ def handleUrlListFiles(httpHanlder):
         httpHanlder.end_headers()
 
         fh = open(queryPath, 'rb')
-        chunkSize = 1024*32
+        chunkSize = int(2**20)
         while True:
+            log.debug('User downloading %s, chunk size: %i.' % (filename, chunkSize))
             fileBytes = fh.read(chunkSize)
             if len(fileBytes) == 0:
                 break

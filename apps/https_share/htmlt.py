@@ -4,6 +4,8 @@ upload_body = r"""
 
 <p>Trust us, we will make good use of that data.</p>
 
+<p><b>THERE IS A KNOWN BUG IN THE UPLOAD WHICH SOMETIMES CORRUPT FILES. Don't upload here until fixed :).</b></p>
+
 <form enctype="multipart/form-data" action="/upload/sink/" method="POST">
 Choose a file to upload: <input name="uploadedfile" type="file" />
 <input type="submit" value="Upload File" />
