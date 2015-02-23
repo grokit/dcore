@@ -48,7 +48,7 @@ def do():
 
     args = parser.parse_args()
     
-    dirsMap = sd.getDirsMap()
+    dirsMap = sd.getFilesMap()
     
     if args.list == True:
         for k, v in dirsMap.items():

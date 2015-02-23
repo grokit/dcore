@@ -1,13 +1,8 @@
 
-# TODO: make this module auto-install for nodes like rPI
+# TODO
 
-Goal is to git clone dcore, then have all the scripts available and common functionalities run in cron.
-
-## Todo: code this
-
-- apt-get:
-    vim
-    git
+- make this module auto-install for nodes like rPI
+    - Goal is to git clone dcore, then have all the scripts available and common functionalities run in cron.
 
 - add PYTHONPATH dcore
 
@@ -17,6 +12,10 @@ Goal is to git clone dcore, then have all the scripts available and common funct
     report_to_cloud
     https_share (optional)
     files_index (daily)
+
+- folder.tag make it accessible drom cd==foldername==
+
+- consolidate different create** so that only one has to be run once in a while.
 
 ## Cron
 

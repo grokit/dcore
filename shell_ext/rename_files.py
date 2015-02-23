@@ -1,8 +1,15 @@
+"""
+Rename files / folders with nice, commonly used patterns.
+
+# TODO
+
+- Prepend ISO date: 2014-01-01_<filename>
+"""
 
 import re
 import os
 
-_meta_shell_command = 'filenames_rename'
+_meta_shell_command = 'rename_files'
 
 def isNum(s):
 	try:

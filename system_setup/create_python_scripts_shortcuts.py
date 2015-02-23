@@ -21,7 +21,7 @@ _meta_shell_command = 'genscripts'
 
 def findPyFiles():
     
-    dirsMap = sd.getDirsMap()
+    dirsMap = sd.getFilesMap()
     
     pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
     if dirsMap.get('python_folder_private') is not None:
@@ -83,7 +83,7 @@ def getMetadataFromPyFiles(pyfiles):
 def createShortcuts(lMeta):
     
     file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
-    dirsMap = sd.getDirsMap()
+    dirsMap = sd.getFilesMap()
     
     for meta in lMeta:
         

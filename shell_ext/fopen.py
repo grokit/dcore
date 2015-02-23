@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     editor = 'vim'
     
-    known = system_description.getFilesMap()
+    known = {k:v for (k,v) in system_description.getFilesMap().items() if os.path.isfile(v)}
     
     if args.list == True:
         printList(known)
