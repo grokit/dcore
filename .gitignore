@@ -1,6 +1,7 @@
 .code_search*
 __pycache__/
 
+nohup.out
 *.swp
 *.log
 *.*~
