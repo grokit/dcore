@@ -20,6 +20,9 @@ def getArgs():
 def lock():
     os.system('gnome-screensaver-command -l')
 
+def battery():
+    os.system('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
+
 def sleep():
     command = 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
     os.system(command)
@@ -29,11 +32,29 @@ def startapps():
     os.system('nohup diodon&')
     os.system('nohup shutter --min_at_startup&')
 
-def mute():
-    os.system('amixer set Master mute')
+def vol_up():
+    os.system('amixer -q sset Master 10%+')
+
+def vol_down():
+    os.system('amixer -q sset Master 10%-')
+
+def vol_mute_toggle():
+    os.system('amixer -q sset Master toggle')
+    os.system('amixer -q sset Headphone toggle')
+    os.system('amixer -q sset Speaker toggle')
+    os.system('amixer -q sset PCM toggle')
 
 def unmute():
-    os.system('amixer set Master unmute')
+    os.system('amixer set Master unmute') 
+    os.system('amixer set Headphone unmute') 
+    os.system('amixer set Speaker unmute') 
+    os.system('amixer set PCM unmute') 
+
+def mute():
+    os.system('amixer set Master mute')
+    os.system('amixer set Headphone mute') 
+    os.system('amixer set Speaker mute') 
+    os.system('amixer set PCM mute') 
 
 if __name__ == '__main__':
     args = getArgs()
