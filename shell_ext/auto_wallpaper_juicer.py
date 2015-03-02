@@ -11,7 +11,8 @@ import argparse
 _meta_shell_command = 'getpics'
 
 outputFolder = os.path.expanduser('~/Desktop/getpics')
-linux_setpic_cmd = 'gsettings set org.gnome.desktop.background picture-uri file:///%s'
+linux_setpic_cmds = ['gsettings set org.gnome.desktop.background picture-uri file:///%s']
+linux_setpic_cmds.append('feh --bg-scale %s')
 
 class ScriptLogHandler(logging.FileHandler):
 
@@ -165,6 +166,7 @@ if __name__ == '__main__':
             f) is not None]
     rI = random.randint(0, len(pics)-1)
     pic = pics[rI]
-    cmd = linux_setpic_cmd % pic
-    print(cmd)
-    os.system(cmd)
+    for linux_setpic_cmd in linux_setpic_cmds:
+        cmd = linux_setpic_cmd % pic
+        print(cmd)
+        os.system(cmd)

@@ -20,9 +20,7 @@ shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'genscripts'
 
 def findPyFiles():
-    
     dirsMap = sd.getFilesMap()
-    
     pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
     if dirsMap.get('python_folder_private') is not None:
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
