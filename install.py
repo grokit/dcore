@@ -11,10 +11,10 @@ import os
 
 if __name__ == '__main__':
     magicMark = "# Magic dcore tag: fh89h98h3f9hf39hf98ahsfd9djh." 
-    dcoreLoc = os.path.split(os.path.realpath(__file__))[0]
+    dcoreLoc = os.path.normpath(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..'))
     ppathMod = 'export PYTHONPATH=$PYTHONPATH:%s' % dcoreLoc
     os.system(ppathMod)
-    profileF = os.path.expanduser('~/.profile')
+    profileF = os.path.expanduser('~/.bashrc')
     profile = open(profileF).read()
     if magicMark not in profile:
         profile = magicMark + "\n" + ppathMod + "\n" + profile

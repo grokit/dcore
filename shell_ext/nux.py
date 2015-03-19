@@ -23,6 +23,12 @@ def lock():
 def battery():
     os.system('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
 
+def wifi():
+    #  wicd-curses does not seem to work...
+    command = 'nm-applet&'
+    print(command)
+    os.system(command)
+
 def sleep():
     command = 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
     os.system(command)

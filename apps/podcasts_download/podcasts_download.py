@@ -145,7 +145,13 @@ if __name__ == '__main__':
     rssUrls.append('http://downloads.bbc.co.uk/podcasts/worldservice/whyfactor/rss.xml')
     rssUrls.append('http://feeds.thisamericanlife.org/talpodcast')
     rssUrls.append('http://feeds.wnyc.org/radiolab')
-    rssUrls.append('http://www.npr.org/rss/podcast.php?id=344098539') # Wait wait, don't tell me
+
+    # Wait wait, don't tell me
+    rssUrls.append('http://www.npr.org/rss/podcast.php?id=344098539') 
+
+    # All songs considered: http://www.npr.org/podcasts/510019/all-songs-considered 
+    rssUrls.append('http://www.npr.org/templates/rss/podcast.php?id=510019') 
+
     #rssUrls.append('http://www.npr.org/templates/rss/podlayer.php?id=1017') # NPR business
     #rssUrls.append('http://www.npr.org/templates/rss/podlayer.php?id=1006') # NPR economy
     
