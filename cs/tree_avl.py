@@ -27,8 +27,20 @@ class AVLTree:
         else:
             self.__placeNode(node)
 
-    def __placeNode(self, node):
-        pass
+    def __placeNode(self, node, cursor = None):
+        if cursor is None:
+            cursor = self.root
+
+        if node.data >= cursor.data:
+            if cursor.right is None:
+                cursor.right = node
+            else:
+                self.__placeNode(node, cursor.right)
+        else:
+            if cursor.left is None:
+                cursor.left = node
+            else:
+                self.__placeNode(node, cursor.left)
 
 class Node:
     def __init__(self, id, data):
@@ -46,30 +58,25 @@ def insertAll(tree, nodes):
     for node in nodes:
         tree.insert(node)
 
-def BFS(node):
-    S = collections.deque()
-    S.append(node)
+def inorderTraversal(node):
+    if node.left is not None:
+        yield from inorderTraversal(node.left)
 
-    while len(S) > 0:
-        n = S.popleft()
-        yield n
-        if n.left is not None:
-            S.append(n.left)
-        if n.right is not None:
-            S.append(n.right)
+    yield node
+
+    if node.right is not None:
+        yield from inorderTraversal(node.right)
 
 def test():
     tree = AVLTree()
     nodes = [10,39,22,40,29,44,12,1000,13,99,100,98]
     insertAll(tree, nodes)
 
-    nodesOut = []
-    for node in BFS(tree.root):
-        nodesOut.append(node)
+    nodesOut = [n for n in inorderTraversal(tree.root)]
 
     nodes.sort()
     print(nodesOut, nodes)
-    pairs = [(a,b) for a in nodesOut for b in nodes]
+    pairs = [(a.data, b) for a, b in zip(nodesOut, nodes)]
     for a,b in pairs:
         print(a,b)
         assert a == b
