@@ -25,6 +25,29 @@ class AVLTree:
         self.nextId = 1
         self.root = None
 
+    def childrenHeights(node):
+        heightLeft = 0
+        if node.left is not None:
+            heightLeft = node.left.height
+        heightRight = 0
+        if node.right is not None:
+            heightRight = node.right.height
+
+        return (heightLeft, heightRight)
+
+    def rotate(self, node):
+        print('rotate')
+        heightLeft, heightRight = AVLTree.childrenHeights(node)
+
+        if heightLeft > heightRight:
+            return self.rotateLeft(node)
+
+    def rotateLeft(self, node):
+        print('rotate left')
+        node.parent.left = node.right
+        node.right = node.parent
+        node.parent = None
+
     def insert(self, data):
         node = Node(self.nextId, data)
         self.nextId += 1
@@ -32,9 +55,14 @@ class AVLTree:
         if self.root == None:
             self.root = node
         else:
-            self.__placeNode(node)
+            self.placeNode(node)
 
-    def __placeNode(self, node, cursor = None):
+        # AVL re-balancing.
+        heightLeft, heightRight = AVLTree.childrenHeights(self.root)
+        if abs(heightLeft - heightRight) >= 2:
+            self.rotate(self.root.left)
+
+    def placeNode(self, node, cursor = None):
         if cursor is None:
             cursor = self.root
 
@@ -44,20 +72,18 @@ class AVLTree:
                 node.parent = cursor
                 updateHeightFromLeaf(node)
             else:
-                self.__placeNode(node, cursor.right)
+                return self.placeNode(node, cursor.right)
         else:
             if cursor.left is None:
                 cursor.left = node
                 node.parent = cursor
                 updateHeightFromLeaf(node)
             else:
-                self.__placeNode(node, cursor.left)
+                return self.placeNode(node, cursor.left)
 
 def updateHeightFromLeaf(node, h = 0):
-    if node.height == None:
-        node.height = h
 
-    if node.height < h:
+    if node.height == None or node.height < h:
         node.height = h
 
     if node.parent is not None:
@@ -77,7 +103,8 @@ class Node:
         height = self.height
         if height == None:
             height = 'None'
-        return "%s (id: %s, height: %s)" % (self.data, self.id, height)
+        #return "%s (id: %s, h: %s)" % (self.data, self.id, height)
+        return "%s (h: %s)" % (self.data, height)
 
     def __repr__(self):
         return "%s" % self.data
@@ -105,7 +132,7 @@ def treeIterateAdaptor(tree):
 
 def test():
     tree = AVLTree()
-    nodes = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
+    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
     insertAll(tree, nodes)
 
     nodesOut = [n for n in inorderTraversal(tree.root)]

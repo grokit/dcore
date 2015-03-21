@@ -77,10 +77,6 @@ class BST:
         return L
 
     def traverseInorder(self):
-        """
-        TODO: Replace fn by yield.
-        """
-
         S = [(self.root, 0)]
         while len(S) != 0:
             (n, s) = S.pop()
