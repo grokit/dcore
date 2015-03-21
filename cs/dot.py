@@ -15,17 +15,20 @@ def graphToPng(graphIterator, name='graph'):
     L.append('graph [ordering="out"];')
 
     for node in graphIterator:
-        L.append('%s [label="%s"];' % (node.id, str(node.id) + "_" +str(node.data)))
+        # Unique id -> what to display in the node circle.
+        L.append('%s [label="%s"];' % (node.id, str(node)))
+
+        # Parent
         if node.parent is not None:
-            L.append('%s -> %s [color=lawngreen, constraint=false]; // (c->parent)' % (nodeToId[node], nodeToId[node.parent]))
+            L.append('%s -> %s [color=blue, constraint=false]; // (c->parent)' % (node.id, node.parent.id))
+
         for c in node.children:
-            print(c)
             if c is not None:
                 L.append('%s -> %s;' % (node.id, c.id))
 
     L.append("}")
     s = "\n".join(L)
-    #print(s)
+    name = os.path.expanduser('~/' + name)
     fh = open('%s.dot' % name, 'w')
     fh.write(s)
     fh.close()
