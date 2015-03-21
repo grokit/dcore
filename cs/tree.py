@@ -69,26 +69,3 @@ def printTree(root):
         C = ", ".join(C)
         print('Node[%i]: value: %s, parent: %s, children(s): %s.' % (nodeToId[node], node.data, nodeToId[node.parent], C))
         
-def generatePng(root, name='graph'):
-    gb = 'dot'
-    L = []
-    L.append("digraph G{")
-    L.append('graph [ordering="out"];')
-
-    nodeToId = idTree(root)
-    for node in DFS(root):
-        L.append('%s [label="%s"];' % (nodeToId[node], str(nodeToId[node]) + "_" +str(node.data)))
-        if node.parent is not None:
-            L.append('%s -> %s [color=lawngreen, constraint=false]; // (c->parent)' % (nodeToId[node], nodeToId[node.parent]))
-        for c in node.children:
-            L.append('%s -> %s;' % (nodeToId[node], nodeToId[c]))
-
-    L.append("}")
-    s = "\n".join(L)
-    #print(s)
-    fh = open('%s.dot' % name, 'w')
-    fh.write(s)
-    fh.close()
-
-    cmd = gb + ' -Tpng %s.dot -O' % name
-    os.system(cmd)

@@ -12,6 +12,8 @@ AVL tree.
 
 import collections
 
+import dot 
+
 class AVLTree:
 
     def __init__(self):
@@ -67,17 +69,25 @@ def inorderTraversal(node):
     if node.right is not None:
         yield from inorderTraversal(node.right)
 
+def treeIterateAdaptor(tree):
+    for node in inorderTraversal(tree.root):
+        node.parent = None
+        node.children = [node.left, node.right]
+        yield node
+
 def test():
     tree = AVLTree()
-    nodes = [10,39,22,40,29,44,12,1000,13,99,100,98]
+    nodes = [1, 6, 10,39,22,45, 29,44,50,125012,1000,13,99,100,98]
     insertAll(tree, nodes)
 
     nodesOut = [n for n in inorderTraversal(tree.root)]
 
+    dot.graphToPng(treeIterateAdaptor(tree))
+
     nodes.sort()
     print(nodesOut, nodes)
     pairs = [(a.data, b) for a, b in zip(nodesOut, nodes)]
-    for a,b in pairs:
+    for a, b in pairs:
         print(a,b)
         assert a == b
 
