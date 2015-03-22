@@ -145,6 +145,14 @@ class AVLTree:
             if heightRight - heightLeft >= 2:
                 self.rotate(self.root.right, False)
 
+        # Reset all heights
+        for node in inorderTraversal(self.root):
+            node.height = 0
+
+        for node in inorderTraversal(self.root):
+            if node.left is None and node.right is None:
+                updateHeightFromLeaf(node)
+
     def placeNode(self, node, cursor = None):
         if cursor is None:
             cursor = self.root
