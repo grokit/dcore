@@ -1,6 +1,11 @@
 
 import os 
 
+def ensureDir(f):
+	d = os.path.dirname(f)
+	if not os.path.exists(d):
+		os.makedirs(d)
+
 def graphToPng(graphIterator, isBinary = True, name='graph'):
 	"""
 	Assuming nodes:
@@ -47,7 +52,8 @@ def graphToPng(graphIterator, isBinary = True, name='graph'):
 
 	L.append("}")
 	s = "\n".join(L)
-	name = os.path.expanduser('~/' + name)
+	ensureDir(os.path.expanduser('~/tmp/'))
+	name = os.path.expanduser('~/tmp/' + name)
 	fh = open('%s.dot' % name, 'w')
 	fh.write(s)
 	fh.close()

@@ -62,6 +62,8 @@ class AVLTree:
         n1.left = b
         n1.parent = n2
 
+        b.parent = n1
+
         self.root = n2
 
     def rotateLeftInner(self, node):
@@ -76,9 +78,6 @@ class AVLTree:
         n3.parent = n1
         n3.right = b2
         n3.left = n2
-
-        if b2 is not None:
-            b2.parent = n3
 
         n2.parent = n3 
         n2.right = b1
@@ -173,15 +172,20 @@ def treeIterateAdaptor(tree):
 
 def test():
     tree = AVLTree()
-    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
     #nodes = [10,9,8,7]
-    #nodes = [20, 9, 8, 15, 10, 25, 19]
     #nodes = [7,8,9,10]
-    insertAll(tree, nodes)
+    #nodes = [20, 9, 8, 15, 16, 10]
+    nodes = [20, 9, 8, 15, 16, 10, 25, 19, 30]
+    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+
+    for i, v in enumerate(nodes):
+        tree.insert(v)
+        dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_%.2i' % i)
+
+    dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_final')
 
     nodesOut = [n for n in inorderTraversal(tree.root)]
 
-    dot.graphToPng(treeIterateAdaptor(tree))
 
     nodes.sort()
     print(nodesOut, nodes)
