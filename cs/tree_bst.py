@@ -32,9 +32,9 @@ class AVLTree:
         if self.root == None:
             self.root = node
         else:
-            self.__placeNode(node)
+            self.placeNode(node)
 
-    def __placeNode(self, node, cursor = None):
+    def placeNode(self, node, cursor = None):
         if cursor is None:
             cursor = self.root
 
@@ -44,14 +44,29 @@ class AVLTree:
                 node.parent = cursor
                 updateHeightFromLeaf(node)
             else:
-                self.__placeNode(node, cursor.right)
+                self.placeNode(node, cursor.right)
         else:
             if cursor.left is None:
                 cursor.left = node
                 node.parent = cursor
                 updateHeightFromLeaf(node)
             else:
-                self.__placeNode(node, cursor.left)
+                self.placeNode(node, cursor.left)
+
+    def getNodeByValue(self, val):
+        return self.getNodeByValueIterate(val, self.root)
+
+    def getNodeByValueIterate(self, val, node):
+        if node is None:
+            return node
+
+        if val == node.data:
+            return node
+
+        if val > node.data:
+            return self.getNodeByValueIterate(val, node.right)
+        else:
+            return self.getNodeByValueIterate(val, node.left)
 
 def updateHeightFromLeaf(node, h = 0):
     if node.height == None:
@@ -77,7 +92,8 @@ class Node:
         height = self.height
         if height == None:
             height = 'None'
-        return "%s (id: %s, height: %s)" % (self.data, self.id, height)
+        #return "%s (id: %s, height: %s)" % (self.data, self.id, height)
+        return "%s" % (self.data)
 
     def __repr__(self):
         return "%s" % self.data
@@ -118,6 +134,12 @@ def test():
     for a, b in pairs:
         print(a,b)
         assert a == b
+
+    # Verify the get, get successor and get predecessor code. (Assumes no duplicate)
+    for node, val in  [(a, b) for a, b in zip(nodesOut, nodes)]:
+        nodeFound = tree.getNodeByValue(val)
+        #print('@', nodeFound, val)
+        assert nodeFound.data == val
 
 if __name__ == '__main__':
     test()
