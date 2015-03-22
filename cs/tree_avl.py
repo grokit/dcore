@@ -35,31 +35,58 @@ class AVLTree:
 
         return (heightLeft, heightRight)
 
-    def rotate(self, node):
-        print('rotate')
+    def rotate(self, node, isLeftNode):
+        print('rotate', isLeftNode)
         heightLeft, heightRight = AVLTree.childrenHeights(node)
 
-        if heightLeft > heightRight:
-            self.rotateLeft(node)
-            return
+        if isLeftNode:
+            if heightLeft > heightRight:
+                self.rotateLeftOuter(node)
+                return
+            else:
+                self.rotateLeftInner(node)
+                #self.rotateLeftOuter(crot)
+                return
         else:
-            self.rotateRight(node)
-            #self.rotateLeft(None)
-            return
+            pass
+            """
+            if heightLeft > heightRight:
+                crot = node.right
+                self.rotateLeftInner(crot)
+                self.rotateLeftOuter(crot)
+                return
+            else:
+                self.rotateLeftOuter(node)
+                return
+            """
 
-    def rotateLeft(self, node):
-        print('rotate left: %s' % node)
+    def rotateLeftOuter(self, node):
         node.parent.left = node.right
         node.right = node.parent
         node.parent = None
         self.root = node
 
-    def rotateRight(self, node):
-        print('rotate right: %s' % node)
-        node.parent.right = node.left
-        node.left = node.parent
-        node.parent = None
-        self.root = node
+    def rotateLeftInner(self, node):
+        n1 = node.parent
+        n2 = node
+        n3 = node.right
+        b1 = n3.left
+        b2 = n3.right 
+
+        n1.left = n3
+
+        n3.parent = n1
+        n3.right = b2
+        n3.left = n2
+
+        if b2 is not None:
+            b2.parent = n3
+
+        n2.parent = n3 
+        n2.right = b1
+
+        if b1 is not None:
+            b1.parent = n2
 
     def insert(self, data):
         node = Node(self.nextId, data)
@@ -73,9 +100,9 @@ class AVLTree:
         # AVL re-balancing. 
         heightLeft, heightRight = AVLTree.childrenHeights(self.root)
         if heightLeft - heightRight >= 2:
-            self.rotate(self.root.left)
+            self.rotate(self.root.left, True)
         if heightRight - heightLeft >= 2:
-            self.rotate(self.root.right)
+            self.rotate(self.root.right, False)
 
     def placeNode(self, node, cursor = None):
         if cursor is None:
@@ -147,9 +174,9 @@ def treeIterateAdaptor(tree):
 
 def test():
     tree = AVLTree()
-    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
     #nodes = [10,9,8,7]
-    nodes = [7,8,9,10]
+    #nodes = [7,8,9,10]
     insertAll(tree, nodes)
 
     nodesOut = [n for n in inorderTraversal(tree.root)]
