@@ -49,8 +49,31 @@ class AVLTree:
                 self.rotateLeftOuter(crot)
                 return
         else:
-            pass
+            if heightRight > heightLeft:
+                self.rotateRightOuter(node)
+                return
+            else:
+                crot = node.left
+                self.rotateRightInner(node)
+                self.rotateRightOuter(crot)
+                return
 
+    def rotateRightOuter(self, node):
+        n1 = node.parent
+        n2 = node
+        b = n2.left
+
+        n2.parent = None
+        n2.left = n1
+
+        n1.right = b
+        n1.parent = n2
+
+        if b is not None:
+            b.parent = n1
+
+        self.root = n2
+        
     def rotateLeftOuter(self, node):
         n1 = node.parent
         n2 = node
@@ -62,7 +85,8 @@ class AVLTree:
         n1.left = b
         n1.parent = n2
 
-        b.parent = n1
+        if b is not None:
+            b.parent = n1
 
         self.root = n2
 
@@ -81,6 +105,25 @@ class AVLTree:
 
         n2.parent = n3 
         n2.right = b1
+
+        if b1 is not None:
+            b1.parent = n2
+
+    def rotateRightInner(self, node):
+        n1 = node.parent
+        n2 = node
+        n3 = node.left
+        b1 = n3.right
+        b2 = n3.left 
+
+        n1.right = n3
+
+        n3.parent = n1
+        n3.left = b2
+        n3.right = n2
+
+        n2.parent = n3 
+        n2.left = b1
 
         if b1 is not None:
             b1.parent = n2
@@ -175,17 +218,15 @@ def test():
     #nodes = [10,9,8,7]
     #nodes = [7,8,9,10]
     #nodes = [20, 9, 8, 15, 16, 10]
-    nodes = [20, 9, 8, 15, 16, 10, 25, 19, 30]
-    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    #nodes = [20, 9, 8, 15, 16, 10, 25, 19, 30]
+    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
 
     for i, v in enumerate(nodes):
         tree.insert(v)
         dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_%.2i' % i)
 
     dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_final')
-
     nodesOut = [n for n in inorderTraversal(tree.root)]
-
 
     nodes.sort()
     print(nodesOut, nodes)
