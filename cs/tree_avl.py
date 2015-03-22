@@ -40,13 +40,26 @@ class AVLTree:
         heightLeft, heightRight = AVLTree.childrenHeights(node)
 
         if heightLeft > heightRight:
-            return self.rotateLeft(node)
+            self.rotateLeft(node)
+            return
+        else:
+            self.rotateRight(node)
+            #self.rotateLeft(None)
+            return
 
     def rotateLeft(self, node):
-        print('rotate left')
+        print('rotate left: %s' % node)
         node.parent.left = node.right
         node.right = node.parent
         node.parent = None
+        self.root = node
+
+    def rotateRight(self, node):
+        print('rotate right: %s' % node)
+        node.parent.right = node.left
+        node.left = node.parent
+        node.parent = None
+        self.root = node
 
     def insert(self, data):
         node = Node(self.nextId, data)
@@ -57,10 +70,12 @@ class AVLTree:
         else:
             self.placeNode(node)
 
-        # AVL re-balancing.
+        # AVL re-balancing. 
         heightLeft, heightRight = AVLTree.childrenHeights(self.root)
-        if abs(heightLeft - heightRight) >= 2:
+        if heightLeft - heightRight >= 2:
             self.rotate(self.root.left)
+        if heightRight - heightLeft >= 2:
+            self.rotate(self.root.right)
 
     def placeNode(self, node, cursor = None):
         if cursor is None:
@@ -103,8 +118,8 @@ class Node:
         height = self.height
         if height == None:
             height = 'None'
-        #return "%s (id: %s, h: %s)" % (self.data, self.id, height)
-        return "%s (h: %s)" % (self.data, height)
+        return "%s (id: %s, h: %s)" % (self.data, self.id, height)
+        #return "%s (h: %s)" % (self.data, height)
 
     def __repr__(self):
         return "%s" % self.data
@@ -132,7 +147,9 @@ def treeIterateAdaptor(tree):
 
 def test():
     tree = AVLTree()
-    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    #nodes = [10,9,8,7]
+    nodes = [7,8,9,10]
     insertAll(tree, nodes)
 
     nodesOut = [n for n in inorderTraversal(tree.root)]
