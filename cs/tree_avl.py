@@ -50,16 +50,6 @@ class AVLTree:
                 return
         else:
             pass
-            """
-            if heightLeft > heightRight:
-                crot = node.right
-                self.rotateLeftInner(crot)
-                self.rotateLeftOuter(crot)
-                return
-            else:
-                self.rotateLeftOuter(node)
-                return
-            """
 
     def rotateLeftOuter(self, node):
         n1 = node.parent
@@ -70,6 +60,7 @@ class AVLTree:
         n2.right = n1
 
         n1.left = b
+        n1.parent = n2
 
         self.root = n2
 
@@ -182,9 +173,9 @@ def treeIterateAdaptor(tree):
 
 def test():
     tree = AVLTree()
-    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
     #nodes = [10,9,8,7]
-    nodes = [20, 9, 8, 15, 10]
+    #nodes = [20, 9, 8, 15, 10, 25, 19]
     #nodes = [7,8,9,10]
     insertAll(tree, nodes)
 
