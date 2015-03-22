@@ -16,6 +16,7 @@ Implementation of AVL tree.
 """
 
 import collections
+import random
 
 import dot 
 
@@ -24,6 +25,7 @@ class AVLTree:
     def __init__(self):
         self.nextId = 1
         self.root = None
+        self.balance = True
 
     def childrenHeights(node):
         heightLeft = 0
@@ -36,7 +38,6 @@ class AVLTree:
         return (heightLeft, heightRight)
 
     def rotate(self, node, isLeftNode):
-        print('rotate', isLeftNode)
         heightLeft, heightRight = AVLTree.childrenHeights(node)
 
         if isLeftNode:
@@ -138,7 +139,8 @@ class AVLTree:
             self.placeNode(node)
 
         # AVL re-balancing. 
-        if True:
+        # @@WRONG: I think you have to re-balance at all levels, not just root.
+        if self.balance:
             heightLeft, heightRight = AVLTree.childrenHeights(self.root)
             if heightLeft - heightRight >= 2:
                 self.rotate(self.root.left, True)
@@ -227,11 +229,17 @@ def test():
     #nodes = [7,8,9,10]
     #nodes = [20, 9, 8, 15, 16, 10]
     #nodes = [20, 9, 8, 15, 16, 10, 25, 19, 30]
-    nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
+    #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
 
+    nodes = []
+    for i in range(10):
+        #nodes.append( random.randint(0, 200) )
+        nodes.append( i )
+
+    tree.balance = True
     for i, v in enumerate(nodes):
         tree.insert(v)
-        dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_%.2i' % i)
+        #dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_%.2i' % i)
 
     dot.graphToPng(treeIterateAdaptor(tree), name = 'graph_final')
     nodesOut = [n for n in inorderTraversal(tree.root)]
