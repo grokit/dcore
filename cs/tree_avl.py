@@ -1,12 +1,16 @@
 """
 Implementation of AVL tree.
 
+AVL trees are a simple to understand balanced binary search tree.
+
 # Notes
 
 - Care about balancing left/right *height*, not left/right number of children.
+- When rotate a node at the bottom of the tree, have to rebalance all the way up.
 
 # TODOs
 
+- NOT COMPLETED YET, DO NOT USE THIS CLASS :P
 - Duplicates?
 
 # References
@@ -139,7 +143,7 @@ class AVLTree:
             self.placeNode(node)
 
         # AVL re-balancing. 
-        # @@WRONG: I think you have to re-balance at all levels, not just root.
+        # @@WRONG: need to re-balance from leaf to root, not only at root level.
         if self.balance:
             heightLeft, heightRight = AVLTree.childrenHeights(self.root)
             if heightLeft - heightRight >= 2:
