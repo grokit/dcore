@@ -1,25 +1,28 @@
 """
-Implementation of AVL tree.
-
-# Notes
-
-- Care about balancing left/right *height*, not left/right number of children.
-
-# TODOs
-
-- Duplicates?
-
-# References
-
-- MIT intro to algo: https://www.youtube.com/watch?v=FNeL18KsWPc
-- http://en.wikipedia.org/wiki/AVL_tree
 """
 
 import collections
 
 import dot 
 
-class AVLTree:
+class NodeType:
+    NoParent = 0
+    LeftOfParent = 1
+    RightOfParent = 2
+
+    def getNodeType(node):
+        if node.parent is None:
+            return NodeType.NoParent
+
+        if node.parent.left is not None and node.parent.left == node:
+            return NodeType.RightOfParent
+
+        if node.parent.right is not None and node.parent.right == node:
+            return NodeType.LeftOfParent
+
+        raise Exception("Invalid node: %s." % node)
+
+class TreeBST:
 
     def __init__(self):
         self.nextId = 1
@@ -119,8 +122,38 @@ def treeIterateAdaptor(tree):
         dotNode.height = node.height
         yield dotNode
 
+def smallest(node):
+    if node.left is None:
+        return node
+    else:
+        return smalleft(node.left)
+
+def successor(node):
+
+    nodeType = NodeType.getNodeType(node)
+
+    if nodeType == NodeType.NoParent:
+        if node.right is None:
+            return None
+        else:
+            return smallest(node.right)
+
+    if nodeType == NodeType.LeftOfParent:
+        if node.right is None:
+            return node.parent
+        else:
+            return smallest(node.right)
+
+    if nodeType == NodeType.RightOfParent:
+        if node.right is None:
+            return None
+        else:
+            return smallest(node.right)
+
+    raise Exception()
+
 def test():
-    tree = AVLTree()
+    tree = TreeBST()
     nodes = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
     insertAll(tree, nodes)
 
@@ -136,10 +169,18 @@ def test():
         assert a == b
 
     # Verify the get, get successor and get predecessor code. (Assumes no duplicate)
-    for node, val in  [(a, b) for a, b in zip(nodesOut, nodes)]:
+    for node, val in [(a, b) for a, b in zip(nodesOut, nodes)]:
         nodeFound = tree.getNodeByValue(val)
         #print('@', nodeFound, val)
         assert nodeFound.data == val
+
+        i = nodes.index(val)
+        nodeNext = successor(nodeFound)
+        if i == len(nodes) - 1:
+            assert nodeNext is None
+        else:
+            assert nodeNext is not None
+            assert nodeNext.data == nodes[i+1]
 
 if __name__ == '__main__':
     test()
