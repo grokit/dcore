@@ -2,6 +2,7 @@
 """
 
 import collections
+import random
 
 import dot 
 
@@ -167,8 +168,17 @@ def getTree():
 
 def getTreeRandomNoDuplicate():
     tree = TreeBST()
-    values = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
+    values = []
+    H = set()
+
+    while len(values) < 100:
+        v = random.randint(0, 1000)
+        if v not in H:
+            values.append(v)
+            H.add(v)
+
     insertAll(tree, values)
+
     return tree, values
 
 def verifyTreeMatchesValues(tree, values):
@@ -200,14 +210,14 @@ def verifySuccessors(tree, values):
             assert nodeNext.data == values[i+1]
 
 def test():
-    tree, values = getTreeRandomNoDuplicate()
+    for i in range(100):
+        tree, values = getTreeRandomNoDuplicate()
 
-    if False:
-        dot.graphToPng(treeIterateAdaptor(tree))
+        if False:
+            dot.graphToPng(treeIterateAdaptor(tree))
 
-    verifyTreeMatchesValues(tree, values)
-    verifySuccessors(tree, values)
-
+        verifyTreeMatchesValues(tree, values)
+        verifySuccessors(tree, values)
 
 if __name__ == '__main__':
     test()
