@@ -1,4 +1,5 @@
 """
+Binary Search Tree (BST).
 """
 
 import collections
