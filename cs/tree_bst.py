@@ -136,33 +136,27 @@ def largest(node):
         return largest(node.right)
 
 def successor(node):
+    if node.right is not None:
+        return smallest(node.right)
 
     nodeType = NodeType.getNodeType(node)
 
     if nodeType == NodeType.NoParent:
-        if node.right is None:
-            return None
-        else:
-            return smallest(node.right)
+        return None
 
     if nodeType == NodeType.LeftOfParent:
-        if node.right is None:
-            return node.parent
-        else:
-            return smallest(node.right)
+        return node.parent
 
     if nodeType == NodeType.RightOfParent:
-        if node.right is None:
-            n = node.parent
-            while True:
-                nt = NodeType.getNodeType(n)
-                if nt == NodeType.LeftOfParent:
-                    return n.parent
-                if nt == NodeType.NoParent:
-                    return None
-                n = n.parent
-        else:
-            return smallest(node.right)
+        # First right parent.
+        n = node.parent
+        while True:
+            nt = NodeType.getNodeType(n)
+            if nt == NodeType.LeftOfParent:
+                return n.parent
+            if nt == NodeType.NoParent:
+                return None
+            n = n.parent
 
     raise Exception()
 
@@ -176,6 +170,7 @@ def predecessor(node):
         return None
 
     if nodeType == NodeType.LeftOfParent:
+        # First left parent.
         n = node.parent
         while True:
             nt = NodeType.getNodeType(n)
