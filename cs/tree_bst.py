@@ -15,10 +15,10 @@ class NodeType:
             return NodeType.NoParent
 
         if node.parent.left is not None and node.parent.left == node:
-            return NodeType.RightOfParent
+            return NodeType.LeftOfParent
 
         if node.parent.right is not None and node.parent.right == node:
-            return NodeType.LeftOfParent
+            return NodeType.RightOfParent
 
         raise Exception("Invalid node: %s." % node)
 
@@ -126,11 +126,13 @@ def smallest(node):
     if node.left is None:
         return node
     else:
-        return smalleft(node.left)
+        return smallest(node.left)
 
 def successor(node):
+    print(locals())
 
     nodeType = NodeType.getNodeType(node)
+    print(nodeType)
 
     if nodeType == NodeType.NoParent:
         if node.right is None:
@@ -146,7 +148,14 @@ def successor(node):
 
     if nodeType == NodeType.RightOfParent:
         if node.right is None:
-            return None
+            n = node.parent
+            while True:
+                nt = NodeType.getNodeType(n)
+                if nt == NodeType.LeftOfParent:
+                    return n.parent
+                if nt == NodeType.NoParent:
+                    return None
+                n = n.parent
         else:
             return smallest(node.right)
 
@@ -171,7 +180,7 @@ def test():
     # Verify the get, get successor and get predecessor code. (Assumes no duplicate)
     for node, val in [(a, b) for a, b in zip(nodesOut, nodes)]:
         nodeFound = tree.getNodeByValue(val)
-        #print('@', nodeFound, val)
+        print('@', nodeFound, val)
         assert nodeFound.data == val
 
         i = nodes.index(val)
