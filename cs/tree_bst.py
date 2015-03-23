@@ -129,10 +129,8 @@ def smallest(node):
         return smallest(node.left)
 
 def successor(node):
-    print(locals())
 
     nodeType = NodeType.getNodeType(node)
-    print(nodeType)
 
     if nodeType == NodeType.NoParent:
         if node.right is None:
@@ -161,16 +159,26 @@ def successor(node):
 
     raise Exception()
 
-def test():
+def getTree():
     tree = TreeBST()
-    nodes = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
-    insertAll(tree, nodes)
+    values = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
+    insertAll(tree, values)
+    return tree, values
 
-    nodesOut = [n for n in inorderTraversal(tree.root)]
+def getTreeRandomNoDuplicate():
+    tree = TreeBST()
+    values = [22, 45, 29, 44, 50, 125012,1000,13,99,100,98]
+    insertAll(tree, values)
+    return tree, values
 
-    dot.graphToPng(treeIterateAdaptor(tree))
+def test():
+    tree, nodes = getTreeRandomNoDuplicate()
+
+    if False:
+        dot.graphToPng(treeIterateAdaptor(tree))
 
     nodes.sort()
+    nodesOut = [n for n in inorderTraversal(tree.root)]
     print(nodesOut, nodes)
     pairs = [(a.data, b) for a, b in zip(nodesOut, nodes)]
     for a, b in pairs:
