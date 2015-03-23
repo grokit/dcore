@@ -171,33 +171,43 @@ def getTreeRandomNoDuplicate():
     insertAll(tree, values)
     return tree, values
 
-def test():
-    tree, nodes = getTreeRandomNoDuplicate()
-
-    if False:
-        dot.graphToPng(treeIterateAdaptor(tree))
-
-    nodes.sort()
-    nodesOut = [n for n in inorderTraversal(tree.root)]
-    print(nodesOut, nodes)
-    pairs = [(a.data, b) for a, b in zip(nodesOut, nodes)]
+def verifyTreeMatchesValues(tree, values):
+    values = sorted(values)
+    valuesOut = [n for n in inorderTraversal(tree.root)]
+    print(valuesOut, values)
+    pairs = [(a.data, b) for a, b in zip(valuesOut, values)]
     for a, b in pairs:
         print(a,b)
         assert a == b
 
+def verifySuccessors(tree, values):
+
+    values = sorted(values)
+
     # Verify the get, get successor and get predecessor code. (Assumes no duplicate)
-    for node, val in [(a, b) for a, b in zip(nodesOut, nodes)]:
+    valuesOut = [n for n in inorderTraversal(tree.root)]
+    for node, val in [(a, b) for a, b in zip(valuesOut, values)]:
         nodeFound = tree.getNodeByValue(val)
         print('@', nodeFound, val)
         assert nodeFound.data == val
 
-        i = nodes.index(val)
+        i = values.index(val)
         nodeNext = successor(nodeFound)
-        if i == len(nodes) - 1:
+        if i == len(values) - 1:
             assert nodeNext is None
         else:
             assert nodeNext is not None
-            assert nodeNext.data == nodes[i+1]
+            assert nodeNext.data == values[i+1]
+
+def test():
+    tree, values = getTreeRandomNoDuplicate()
+
+    if False:
+        dot.graphToPng(treeIterateAdaptor(tree))
+
+    verifyTreeMatchesValues(tree, values)
+    verifySuccessors(tree, values)
+
 
 if __name__ == '__main__':
     test()
