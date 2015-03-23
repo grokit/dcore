@@ -129,6 +129,12 @@ def smallest(node):
     else:
         return smallest(node.left)
 
+def largest(node):
+    if node.right is None:
+        return node
+    else:
+        return largest(node.right)
+
 def successor(node):
 
     nodeType = NodeType.getNodeType(node)
@@ -157,6 +163,30 @@ def successor(node):
                 n = n.parent
         else:
             return smallest(node.right)
+
+    raise Exception()
+
+def predecessor(node):
+    if node.left is not None:
+        return largest(node.left)
+
+    nodeType = NodeType.getNodeType(node)
+
+    if nodeType == NodeType.NoParent:
+        return None
+
+    if nodeType == NodeType.LeftOfParent:
+        n = node.parent
+        while True:
+            nt = NodeType.getNodeType(n)
+            if nt == NodeType.RightOfParent:
+                return n.parent
+            if nt == NodeType.NoParent:
+                return None
+            n = n.parent
+
+    if nodeType == NodeType.RightOfParent:
+        return node.parent
 
     raise Exception()
 
@@ -203,11 +233,19 @@ def verifySuccessors(tree, values):
 
         i = values.index(val)
         nodeNext = successor(nodeFound)
+        nodePrev = predecessor(nodeFound)
+
         if i == len(values) - 1:
             assert nodeNext is None
         else:
             assert nodeNext is not None
             assert nodeNext.data == values[i+1]
+
+        if i == 0:
+            assert nodePrev is None
+        else:
+            assert nodePrev is not None
+            assert nodePrev.data == values[i-1]
 
 def test():
     for i in range(100):
@@ -221,4 +259,3 @@ def test():
 
 if __name__ == '__main__':
     test()
-
