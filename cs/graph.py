@@ -64,6 +64,9 @@ class Vertex:
     
     def __str__(self):
         return "Vextex.label: %s" % (self.label)
+
+    def __repr__(self):
+	    return self.__str__()
     
 class Edge:
     "Connect the vertices together."
@@ -99,8 +102,8 @@ def graphFromDotString(dotStr):
         G.addBidirectionalEdgeFromLabels(e.frm, e.to, e.weight)
     
     return G
-    
-if __name__ == '__main__':
+
+def getTestGraph():
     dotGraph = """
     graph 
     {
@@ -113,5 +116,8 @@ if __name__ == '__main__':
     }
     """
     G = graphFromDotString(dotGraph)    
-    print(G)
+    return G
+
+if __name__ == '__main__':
+    print(getTestGraph())
     

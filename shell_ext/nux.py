@@ -23,6 +23,11 @@ def lock():
 def battery():
     os.system('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
 
+def crashplan():
+    command = '/usr/local/crashplan/bin/CrashPlanDesktop'
+    print(command)
+    os.system(command)
+
 def wifi():
     #  wicd-curses does not seem to work...
     command = 'nm-applet&'

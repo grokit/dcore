@@ -1,7 +1,8 @@
 """
 Implementation of AVL tree.
 
-AVL trees are a simple to understand balanced binary search tree.
+An AVL tree is essentially a balanced binary search tree.
+AVL trees are functionnaly the same as red-black tress, but easier to understand.
 
 # Notes
 
@@ -21,6 +22,8 @@ AVL trees are a simple to understand balanced binary search tree.
 
 import collections
 import random
+
+random.seed(0)
 
 import dot 
 
@@ -236,7 +239,7 @@ def test():
     #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
 
     nodes = []
-    for i in range(10):
+    for i in range(40):
         #nodes.append( random.randint(0, 200) )
         nodes.append( i )
 
