@@ -6,7 +6,6 @@ import dcore.system_description as private_data
 
 _meta_shell_command = 'gmail'
 
-
 def getArgs():
 
     parser = argparse.ArgumentParser()

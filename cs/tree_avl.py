@@ -102,14 +102,19 @@ class AVLTree:
         n1 = node.parent
         n2 = node
         n3 = node.right
-        b1 = n3.left
-        b2 = n3.right 
+
+        b1 = None
+        b2 = None
+        if n3 is not None:
+            b1 = n3.left
+            b2 = n3.right 
 
         n1.left = n3
 
-        n3.parent = n1
-        n3.right = b2
-        n3.left = n2
+        if n3 is not None:
+            n3.parent = n1
+            n3.right = b2
+            n3.left = n2
 
         n2.parent = n3 
         n2.right = b1
@@ -147,12 +152,26 @@ class AVLTree:
 
         # AVL re-balancing. 
         # @@WRONG: need to re-balance from leaf to root, not only at root level.
+        """
         if self.balance:
             heightLeft, heightRight = AVLTree.childrenHeights(self.root)
             if heightLeft - heightRight >= 2:
                 self.rotate(self.root.left, True)
             if heightRight - heightLeft >= 2:
                 self.rotate(self.root.right, False)
+        """
+
+        if self.balance:
+            itNode = node
+            while itNode != None:
+
+                heightLeft, heightRight = AVLTree.childrenHeights(itNode)
+                if heightLeft - heightRight >= 2:
+                    self.rotate(itNode.left, True)
+                elif heightRight - heightLeft >= 2:
+                    self.rotate(itNode.right, False)
+
+                itNode = itNode.parent
 
         # Reset all heights
         for node in inorderTraversal(self.root):
@@ -171,6 +190,7 @@ class AVLTree:
                 cursor.right = node
                 node.parent = cursor
                 updateHeightFromLeaf(node)
+                return node
             else:
                 return self.placeNode(node, cursor.right)
         else:
@@ -178,6 +198,7 @@ class AVLTree:
                 cursor.left = node
                 node.parent = cursor
                 updateHeightFromLeaf(node)
+                return node
             else:
                 return self.placeNode(node, cursor.left)
 
@@ -239,7 +260,7 @@ def test():
     #nodes = [76, 1,2,3,4, 22, 45, 29, 44, 50, 1000,13,99,100,98]
 
     nodes = []
-    for i in range(40):
+    for i in range(10):
         #nodes.append( random.randint(0, 200) )
         nodes.append( i )
 

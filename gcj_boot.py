@@ -12,7 +12,11 @@ def readProblems(file, readProblemChunk):
 def solve(solveFn, readProblemChunk, ffilter = '.*'):
     files = [f for f in os.listdir('.') if f[-3:] == '.in' and re.search(ffilter, f) is not None]
 
-    fhStats = open('processing.stats', 'a')
+    dir = os.path.expanduser('~/gcj_stats')
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    fhStats = open(os.path.join(dir, 'processing.stats'), 'a')
+
     for file in files:
         logLine = "Processing '%s'." % file
         print(logLine)
@@ -35,3 +39,4 @@ def solve(solveFn, readProblemChunk, ffilter = '.*'):
 
         fhStats.write('Done at %s.\n' % time.strftime("%Y-%m-%d %H:%m:%S"))
         fhStats.flush()
+

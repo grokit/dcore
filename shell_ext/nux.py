@@ -38,6 +38,9 @@ def sleep():
     command = 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
     os.system(command)
 
+def apps():
+    startapps()
+
 def startapps():
     os.system('nohup dropbox start&')
     os.system('nohup diodon&')
