@@ -1,0 +1,3 @@
+
+def convertDocsToMarkdown(docxFilename):
+    pass

@@ -52,6 +52,9 @@ def date(f, arg):
     t=time.strftime('%Y-%m-%d')
     return "%s_%s" % (t, f)
 
+def custom(f, arg):
+    return f.replace('__', '_')
+
 if __name__ == '__main__':
     files = os.listdir('.')
     files = [f for f in files if os.path.isfile(f)]
@@ -59,7 +62,8 @@ if __name__ == '__main__':
     fnMap = {
             'remove_spaces': removeSpace,
             'prefix': prefix,
-            'date': date
+            'date': date,
+            'custom': custom
             }
 
     args = getArgs()
