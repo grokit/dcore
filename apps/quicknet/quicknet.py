@@ -6,10 +6,6 @@ Meant as a simple tool to hack things together when you want to leverage python'
 For one liners you might want to take a look at 'curl' as well.
 
 # TODO
-
-- Move to dcore.
-- Find a better way than the if chain to 
-
 # Bugs
 
 """
