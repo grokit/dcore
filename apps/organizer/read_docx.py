@@ -4,6 +4,17 @@ import zipfile
 import re
 import datetime
 import os
+import argparse
+
+_meta_shell_command = 'convert_docx'
+
+def getArgs():
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('file', type = str, help="File to convert.")
+    args = parser.parse_args()
+
+    return args
 
 def _getFileContentFromZip(f, fileRegex):
     with zipfile.ZipFile(f) as zf:
@@ -73,6 +84,10 @@ def getCreatedAt(f):
     core = _getCoreContent(f)
     dateStr = re.search(r'dcterms:created.*?>(.*?)<', core).group(1)
     # Parsing ISO: 2015-06-21T21:04:00Z
+    # 2012-08-07T16:44:00.0000000Z 
+    if len(dateStr.split('.')) == 2:
+        assert dateStr.split('.')[1][-1] == 'Z'
+        dateStr = dateStr.split('.')[0] + 'Z'
     date = datetime.datetime.strptime(dateStr, '%Y-%m-%dT%H:%M:%SZ')
     return date.strftime("%Y-%m-%d") #?? this is localtime or UTC?
 
@@ -112,7 +127,8 @@ def writeFinal(name, dateStr, md, media):
         open(fout, 'wb').write(m[1])
     
 if __name__ == '__main__':
-    filename = 'challenge.docx'
+    args = getArgs()
+    filename = args.file
     
     createdAt = getCreatedAt(filename)
     md = getAsMarkdown(filename)
