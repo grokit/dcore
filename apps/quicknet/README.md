@@ -8,6 +8,6 @@ For one liners you might want to take a look at 'curl' as well.
 
 # Example(s)
 
-Example: send a test TCP packet to localhost port 500:
+Send a test TCP packet to localhost port 500:
 
     quicknet -m tcp -t localhost:500 -p Test payload.
