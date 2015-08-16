@@ -17,7 +17,7 @@ import dcore.search_files as fsearch
 import dcore.system_description as sd
 
 shell_meta_search = '_meta_shell_command'
-_meta_shell_command = 'genscripts'
+_meta_shell_command = 'generate_shortcuts'
 
 def findPyFiles():
     dirsMap = sd.getFilesMap()

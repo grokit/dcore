@@ -42,6 +42,8 @@ GLOBS_SEARCH_IN_LONG = ['*.py',
                    '*.config',
                    '*.markdown',
                    '*.meta',
+                   '*.msnp24',
+                   '*.m25',
                    '*.pl']
                    
 GLOBS_SEARCH_IN_SHORT = ['*.py', '*.pl', '*.cs', '*.csproj', '*.sln', '*.bat', '*.cmd', '*.cpp', '*.c', '*.h', '*.hpp']

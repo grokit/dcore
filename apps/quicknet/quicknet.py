@@ -89,7 +89,7 @@ def special():
         except:
             time.sleep(5)
 
-def tcpSend(ip, payload):
+def tcpSend(ip, port, payload):
     
     if False:
         payload = payload.replace("\\n", "\n")
@@ -101,7 +101,7 @@ def tcpSend(ip, payload):
         else:
             payload = [payload]
 
-    ip, port = ip.split(':')[0], int(ip.split(':')[1])        
+    #ip, port = ip.split(':')[0], int(ip.split(':')[1])        
     
     #for pp in payload:
     
@@ -219,7 +219,7 @@ if __name__ == '__main__':
     payload = None
     
     print(args)
-    if args.special is not None:
+    if args.special is True:
         special()
         sys.exit(0)
 

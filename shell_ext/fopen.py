@@ -49,6 +49,7 @@ if __name__ == '__main__':
 	    raise Exception("Cannot find: %s." % target)
 
     cmd = '%s %s' % (editor, known[target])
+    print(cmd)
     os.system(cmd)
 
 

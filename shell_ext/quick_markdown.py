@@ -46,60 +46,66 @@ html_post = """
 </html>
 """
 
+# From: https://github.com/remy/mit-license/blob/master/themes
 css = """
-body 
-{
+body {
     margin: 20px 0;
-    margin-left: 75px;
-    margin-right: 75px;
-    background: #ffffff;
+    margin-left: 160px;
+    margin-right: 160px;
+    /*background: #F5F5F5;*/
+    font-family: 'Georgia', serif; 
+    font-size: 18px; 
+    color: #000;
 }
 
-body, th, td, input, textarea 
-{
-    font-family: Helvetica;
-    font-size: 14px;
+
+h1 {
+	font-family: Georgia, "Times New Roman", Times, serif; 
+	border-bottom: 2px solid gray;
+	color: #626456;
 }
 
-h1, h2, h3 
-{
-    margin-top: 0.5em;
-    font-family: Helvetica;
-    color: #3f64b7;
+h2,h3,h4,h5,h6 {
+	font-family: Georgia, "Times New Roman", Times, serif; 
+	color: #8D8E85;
 }
 
-h1 
-{
-    font-size: 2.1em;
+p {
+	/*
+	margin-top: 0.5em;
+	line-height: 1.5em;
+	font-size: 1.1em;
+	*/
 }
 
-h2 
-{
-    font-size: 1.6em;
+a {
+	text-decoration: none;
+	border-bottom: 1px dotted #B8D03B;
+	color: #3C7BCF;
 }
 
-h3 
-{
-    font-size: 1.1em;
+a:hover {
+	border: none;
+	background: #B8D03B;
+	color: #FFFFFF;
 }
 
-p 
-{
-    margin-top: 0.5em;
-    line-height: 1.5em;
-    font-size: 1.1em;
+pre {
+  border: 1pt solid #AEBDCC;
+  font-size: 0.8em;
+  background-color: #F3F5F7;
+  padding: 5pt;
+  font-family: courier, monospace;
+  white-space: pre;
+  /* begin css 3 or browser specific rules */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  /* end css 3 or browser specific rules */
 }
 
-pre
-{
-    padding: 10px;
-    /*border-style: dashed;*/
-    background: #f9f9f9;
-}
-
-a 
-{
-}
 """
 
 html_pre = html_pre.replace('__css__', css)
