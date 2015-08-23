@@ -60,6 +60,8 @@ What is the UID for a document that is not formerly in he system (e.g. a .pdf fi
     - parse web
     - mine metadata
 
+- Need to completely split the data system from the website. The website should be able to understand the output from the data-system, the dependency should only be from website to data system, not the inverse.
+
 ## B
 
 - Move a bunch of disparate stuff (e.g. recipes or old reading notes) under the repository that is private.
