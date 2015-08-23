@@ -33,6 +33,8 @@ The goal is to allow to quickly take notes with metadata, allows the system to s
 
 Have to be able to TAKE notes very easily, INCLUDING PICTURES. It is fine if it is eventually transformed in a mode that is harder to add pictures (for example .docx for collecting, eventually converting to makrdown + .png).
 
+**The problem of easy capture and dating**. If I leverage other systems, I will most likely not have date of creation. A compromise (in the case where I did not enter it as a tag in-document).
+
 ### Tag System
 
 See mentioned in web/root.
@@ -44,6 +46,10 @@ See mentioned in web/root.
 - Once parsed, another system gets a copy of the reference (.pdf or .html or whatever) and saves it in a data file.
 
 The idea is to never be in a situation that you cannot find refered work because it has been 301'ed or censored. But at the same time it is painstaking and hard to keep track to have to manage manual copies.
+
+Need to be able to be both in-document and external to document.
+
+What is the UID for a document that is not formerly in he system (e.g. a .pdf file that I can't tag into)? Put uid_<uid> in the filename?
 
 # TODO
 
