@@ -61,3 +61,5 @@ What is the UID for a document that is not formerly in he system (e.g. a .pdf fi
     - mine metadata
 
 ## B
+
+- Move a bunch of disparate stuff (e.g. recipes or old reading notes) under the repository that is private.
