@@ -5,6 +5,9 @@ System that eases taking and ordering notes.
 
 ## System Design
 
+    meta: try design principle: keep a very tight and concise data-model, defer implementation details.
+    If the data-model is clear and complete, implementation can change independently and bad implementation will not influence and spill-over into the eventual convergence of the system.
+
 - Every document has a unique ID.
   - Place where it renders to on the web is derivable from solely unique-ID.
     - What to do for document that CANNOT (e.j. require a different type of server) have this? Make sure unique-ID generates a page that then link to the external system.
