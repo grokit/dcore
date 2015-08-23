@@ -15,6 +15,8 @@ System that eases taking and ordering notes.
 - Documents can link to each-other by unique-ID, transformed into web link if public, reference section if private, error if reference to blank.
   - Make it possible / relatively easy for a documen to change unique-ID. Could be a script, or something that tracks all previous unique-ID and indicate when an "old link" is used.
 
+- There is an inherent compromise between a system that is immediate (can always answer questions / can just be rendered on the fly) and a system that require a complete parse before questions can be answered. A good compromise could be in between where you do not need a parse to generate the documents (unlike now), but if any reference was newly introduced, it will fail and will not be fixed until the next complete parse. In this model, there is a metadata definition that contains the data from the last parse and is querried at runtime.
+
 ## Features Wanted
 
 ### Public AND Private
