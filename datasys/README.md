@@ -48,4 +48,10 @@ The idea is to never be in a situation that you cannot find refered work because
 # TODO
 
 ## A
+
+- Gather disparate code under this roof
+    - docx to markdown
+    - parse web
+    - mine metadata
+
 ## B
