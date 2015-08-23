@@ -3,6 +3,11 @@
 
 System that eases taking and ordering notes.
 
+## System Principles
+
+- All data is stored in plain text files. It can be structured, but it should always be easy to see, understand and modify the data using a normal text editor. 
+    - Does not mean there are not scripts to automate things, but fundamentally the data is the principal interface.
+
 ## System Design
 
     meta: try design principle: keep a very tight and concise data-model, defer implementation details.
@@ -34,6 +39,10 @@ The goal is to allow to quickly take notes with metadata, allows the system to s
 Have to be able to TAKE notes very easily, INCLUDING PICTURES. It is fine if it is eventually transformed in a mode that is harder to add pictures (for example .docx for collecting, eventually converting to makrdown + .png).
 
 **The problem of easy capture and dating**. If I leverage other systems, I will most likely not have date of creation. A compromise (in the case where I did not enter it as a tag in-document).
+
+#### The DataIzer: A Way to put Data in the System
+
+Have a directory that can just accumulates files (e.g. /data_in). When a script is run, it destroys the original (well, place in a temp 'del me once in a while folder') and outputs document in a form that is understood by the system.
 
 ### Tag System
 
