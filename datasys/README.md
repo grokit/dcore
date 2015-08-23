@@ -51,6 +51,11 @@ Need to be able to be both in-document and external to document. If external the
 
 What is the UID for a document that is not formerly in he system (e.g. a .pdf file that I can't tag into)? Put uid_<uid> in the filename?
 
+### Metadata
+
+Create a metadata directory. Can be a set of JSON files.
+Metadata covers both public and private, so be aware that tags and such are not private?
+
 # TODO
 
 ## A
