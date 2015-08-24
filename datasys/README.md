@@ -65,9 +65,21 @@ What is the UID for a document that is not formerly in he system (e.g. a .pdf fi
 Create a metadata directory. Can be a set of JSON files.
 Metadata covers both public and private, so be aware that tags and such are not private?
 
+# Current System as it Is (Needs Reform)
+
+- TheArchive.txt has misc topics, random notes. All mixed in. All have titles, but no organization beyond that.
+- Some reading notes scattered on HD.
+- Docx files left and right, some in google drive, some as archived content.
+- Misc notes in google keep, usually important stuff is eventually folded in another document.
+
+## How To Reform System
+
+-
+
 # TODO
 
 ## A
+
 
 - Gather disparate code under this roof
     - docx to markdown
