@@ -61,7 +61,7 @@ The idea is to never be in a situation that you cannot find refered work because
 
 Need to be able to be both in-document and external to document. If external then a .meta file applies for all documents in the folder (but not sub-folders). This set of files is seen as one document (the UID refers to the render page, but should be able to find the list of files in the master metadata manifest).
 
-What is the UID for a document that is not formerly in he system (e.g. a .pdf file that I can't tag into)? Put .uid_<uid>. in the filename? (e.g.: reading_notes.docx -> reading_notes.uid_8237291.docx)?
+What is the UID for a document that is not formerly in he system (e.g. a .pdf file that I can't tag into)? Put .uid_<uid>. in the filename? (e.g.: reading_notes.docx -> reading_notes.uid_8237291.docx)? Should UID be random number or just reflect the filename but that we know not to change?
 
 ### Metadata
 
