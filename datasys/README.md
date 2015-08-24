@@ -11,6 +11,8 @@ Has in-built system for establishing and reviwing reviewing goals.
 - All data is stored in plain text files. It can be structured, but it should always be easy to see, understand and modify the data using a normal text editor. 
     - Does not mean there are not scripts to automate things, but fundamentally the data is the principal interface.
 
+- A document is a **folder**. A document folder is never nested (does not contain documents in sub-folders). Single files just get put in a folder, either named or generate folder name with UID. Reason for using folder is that is allows to easily append media to document and have option to "auto-add to appendix" and then move later for anythind that is not listed manually as link in markdown. Allows to just "put stuff that relates to that topic at that place".
+
 ## System Design
 
     meta: try design principle: keep a very tight and concise data-model, defer implementation details.
