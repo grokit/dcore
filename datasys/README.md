@@ -30,6 +30,24 @@ Has in-built system for establishing and reviwing reviewing goals.
 
 - There is an inherent compromise between a system that is immediate (can always answer questions / can just be rendered on the fly) and a system that require a complete parse before questions can be answered. A good compromise could be in between where you do not need a parse to generate the documents (unlike now), but if any reference was newly introduced, it will fail and will not be fixed until the next complete parse. In this model, there is a metadata definition that contains the data from the last parse and is querried at runtime.
 
+## Command Line Tools
+
+Eventually just move that into the command line application for dsys.
+
+        # Documentation
+        dsys commands                 : list all commands available (use reflection)
+        
+        # Creation
+        dsys new <filename or folder> : creates a new document (at proper location) with the content
+        dsys new <title>              : creates a new document with today's date at proper place
+    
+        # Search
+        dsys list                     : list all documents
+        dsys search                   : full search in document content and metadata
+        dsys stags                    : list document that have tag
+        dsys tags_list                : list all tags
+        dsys index                    : index and create metadata
+
 ## Features Wanted
 
 ### Public AND Private
