@@ -12,6 +12,9 @@ Has in-built system for establishing and reviwing reviewing goals.
     - Does not mean there are not scripts to automate things, but fundamentally the data is the principal interface.
 
 - A document is a **folder**. A document folder is never nested (does not contain documents in sub-folders). Single files just get put in a folder, either named or generate folder name with UID. Reason for using folder is that is allows to easily append media to document and have option to "auto-add to appendix" and then move later for anythind that is not listed manually as link in markdown. Allows to just "put stuff that relates to that topic at that place".
+    - Any tag or metadata in a file belonging to that document applies to the document as a whole.
+
+- Everything is a document that has a UID. For cases like TheArchive.txt, it is just a different concept of a document that has a lot of sub-topic. This is idiosyncratic to this document, and it is fine to have such document which define funny structures as long as it folds to a document.
 
 ## System Design
 
