@@ -70,7 +70,9 @@ Perhaps a good idea would be to always generate a random UID, but if it is chang
     ... once I want to name my document:
     uid::us828dh=document_legible_uid
     
-Now both uid will map to this document, can run a script to want all places that refer to the old one so that eventually can just remmove unused UIDs.
+Now both uid will map to this document, can run a script to want all places that refer to the old one so that eventually can just remmove unused UIDs. But probably since the website URL
+
+Important distinction: UID != URL. Each document can have > 1 URL and it is fine (although always have /uid/<uid> for all documents -- not recommended to have > 1 UID), the real UID is unique and always the rightmost in the uid declaration. Think of the previous UIDs as redirects. Should also be coded as a redirect as far as the web is concerned.
 
 ### Metadata
 
@@ -94,7 +96,6 @@ Metadata covers both public and private, so be aware that tags and such are not 
 # TODO
 
 ## A
-
 
 - Gather disparate code under this roof
     - docx to markdown
