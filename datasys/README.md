@@ -1,7 +1,10 @@
 
 # Data System
 
-System that eases taking and ordering notes.
+System that eases taking, ordering and archiving notes.
+Allows for effective search, editing and publishing.
+Has in-built system for establishing and reviwing reviewing forefront.
+Has in-built system for establishing and reviwing reviewing goals.
 
 ## System Principles
 
@@ -71,6 +74,9 @@ Metadata covers both public and private, so be aware that tags and such are not 
 - Some reading notes scattered on HD.
 - Docx files left and right, some in google drive, some as archived content.
 - Misc notes in google keep, usually important stuff is eventually folded in another document.
+- A todo file + inbox keep track of current task "in next week / month".
+- Some goal settings in calendar, journal, todo files. Sort of hap-hazard system of reviewing goals.
+- No real tracking of rate of accomplishment of goals or rate of time investment.
 
 ## How To Reform System
 
