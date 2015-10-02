@@ -32,8 +32,6 @@ cacheFile = r't:\temp\%s.cache' % os.path.split(__file__)[1]
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
-#path_ext_folder = os.path.join(os.environ['DTG_ROOT'], r'scripts-private\path_ext')
-
 def remember_dir():
     
     dirs = [os.getcwd()]
