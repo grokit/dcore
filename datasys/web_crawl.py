@@ -3,9 +3,12 @@ Web-crawler to allow archiving part of the web.
 
 # Use-Cases
 
+- Concept of in-website VS outside of website.
 - Save a complete demain and immediate resources.
 - Save all mp3 under a domain with depth limit of 10.
 - Save all first-degree references outside of the domain as .pdf.
+- Save means that there will be a format where you have all URL1 -> URL2 links PLUS a file that represents the bytes of all URL elements.
+    - e.g.: JSON URL1 -> URL2 + all files as url saved as files.
 """
 
 import urllib.request

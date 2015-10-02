@@ -1,5 +1,6 @@
 
 import markdown
+import codecs
 import sys
 import glob
 
@@ -111,7 +112,7 @@ pre {
 html_pre = html_pre.replace('__css__', css)
 
 javanowing = False
-html_pre_post = True
+html_pre_post = False
 
 def do():
     
@@ -126,7 +127,7 @@ def do():
     print("Using files: %s" % files)
     
     for file in files:
-        fh = open(file, 'r')
+        fh = codecs.open(file, 'r', encoding="utf-8", errors="xmlcharrefreplace")
         mdstr = fh.read()
         fh.close()
 
@@ -134,7 +135,7 @@ def do():
 
         filename = file + '.html'
         filename = filename.replace('.md', '')
-        fh = open(filename, 'w')
+        fh = codecs.open(filename, 'w', encoding='utf-8')
         if javanowing:
             fh.write(autor_pre + html + autor_post)
         elif html_pre_post:

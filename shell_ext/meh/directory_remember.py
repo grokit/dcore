@@ -23,13 +23,16 @@ import sys
 import os
 import argparse
 
-from tkinter import Tk
+try:
+    from tkinter import Tk
+except:
+    pass
 
 cacheFile = r't:\temp\%s.cache' % os.path.split(__file__)[1]
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
-path_ext_folder = os.path.join(os.environ['DTG_ROOT'], r'scripts-private\path_ext')
+#path_ext_folder = os.path.join(os.environ['DTG_ROOT'], r'scripts-private\path_ext')
 
 def remember_dir():
     
@@ -43,13 +46,14 @@ def remember_dir():
     dirs = get_file_content()
     
     # create shortcut files
-    i = 0
-    for dir in dirs:
-        new_file = path_ext_folder + r'\cd%s.bat' % i
-        fh = open(new_file, 'w')
-        fh.write('cd "%s"' % dir)
-        fh.close()
-        i += 1
+    if False:
+        i = 0
+        for dir in dirs:
+            new_file = path_ext_folder + r'\cd%s.bat' % i
+            fh = open(new_file, 'w')
+            fh.write('cd "%s"' % dir)
+            fh.close()
+            i += 1
 
 def get_file_content():
     fh = open(cacheFile, 'r')
@@ -128,11 +132,14 @@ def do():
         filec = get_file_content()
         dir = filec[args.goto_clip]
         
-        r = Tk()
-        r.withdraw()
-        r.clipboard_clear()
-        r.clipboard_append(dir)
-        r.destroy()  
+        if Tk is not None:
+            r = Tk()
+            r.withdraw()
+            r.clipboard_clear()
+            r.clipboard_append(dir)
+            r.destroy()  
+        else:
+            print('Tk not available, clipboard functions will not work.')
         
         print("'%s' now in clipboard" % dir)
         exit(0)       
