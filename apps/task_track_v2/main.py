@@ -3,7 +3,8 @@
 """
 
 import argparse
-import json
+
+import work_done 
 
 def getArgs():
 
@@ -14,9 +15,6 @@ def getArgs():
     args = parser.parse_args()
     return args
 
-class TaskEncoder(json.JSONEncoder):
-    def default(self, o):
-        return o.__dict__
 
 class Test:
 
