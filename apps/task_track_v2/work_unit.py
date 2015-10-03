@@ -70,12 +70,16 @@ def fromFile(filename):
 	wd.sort( key= lambda x: x.date )
 	return wd
 
-def unitTests():
-	filename = 'unit-tests.json'
+def createTestData():
 	wd = []
 	
 	wd.append( WorkDone('test', 1, 'test item 1',datetime.datetime.fromtimestamp(1443888930.2002168, datetime.timezone.utc) ) )
 	wd.append( WorkDone('test', 3.1, 'test\n\n\n item 2', datetime.datetime.fromtimestamp(1443888931.2002168, datetime.timezone.utc)))
+	return wd
+
+def unitTests():
+	filename = 'unit-tests-%s.json' % __file__
+	wd = createTestData()
 	toFile(filename, wd)
 
 	wdRead = fromFile(filename)

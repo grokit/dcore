@@ -6,6 +6,10 @@ import argparse
 import os
 
 import work_unit
+import html_render
+import options
+
+_meta_shell_command = 'tt2'
 
 def getArgs():
 
@@ -38,7 +42,10 @@ def commandLineEnterWorkDone(dbFile):
 
 if __name__ == '__main__':
     args = getArgs()
-    dbFile = os.path.expanduser('~/sync/work_tracking_db.json')
+    dbFile = options.dbFile
     commandLineEnterWorkDone(dbFile)
 
+    htmlFile = options.htmlFile
+    wd = work_unit.fromFile(dbFile)
+    html_render.render(wd, htmlFile)
 
