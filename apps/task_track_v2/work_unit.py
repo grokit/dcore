@@ -27,8 +27,8 @@ def dateTimeToStr(d):
 	return d.isoformat()
 
 class Encoder(json.JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+	def default(self, o):
+		return o.__dict__
 
 class WorkDone:
 	def __init__(self, typei, length, comment = '', date = dateNow()):
@@ -54,7 +54,8 @@ def toFile(filename, workDoneSet):
 	
 	workDoneSetWrite = list(map( dateToStr, workDoneSet ))
 
-	encoded = Encoder().encode(workDoneSetWrite)
+	#encoded = Encoder().encode(workDoneSetWrite)
+	encoded = json.dumps(workDoneSetWrite, cls=Encoder, indent=4)
 	open(filename, 'w').write(encoded)
 
 def fromFile(filename):
