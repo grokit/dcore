@@ -8,6 +8,7 @@ import os
 import work_unit
 import html_render
 import options
+import serialization_json
 
 _meta_shell_command = 'tt'
 
@@ -33,13 +34,12 @@ def commandLineEnterWorkDone(dbFile):
     workUnit = work_unit.WorkDone(type, length, comment)
 
     if os.path.isfile(dbFile):
-        W = work_unit.fromFile(dbFile)
+        W = serialization_json.fromFile(dbFile)
     else:
         W = []
 
     W.append(workUnit)
-    # @@@bug: do not rewrite all file (do not want to delete extra data put manually into tasks).
-    work_unit.toFile(dbFile, W)
+    serialization_json.toFile(dbFile, W)
 
 if __name__ == '__main__':
     args = getArgs()
@@ -47,6 +47,6 @@ if __name__ == '__main__':
     commandLineEnterWorkDone(dbFile)
 
     htmlFile = options.htmlFile
-    wd = work_unit.fromFile(dbFile)
+    wd = serialization_json.fromFile(dbFile)
     html_render.render(wd, htmlFile)
 
