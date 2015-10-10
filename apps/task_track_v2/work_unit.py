@@ -8,6 +8,9 @@ import json
 import datetime 
 import time
 import copy
+import os
+
+import options
 
 def dateNow():
 	return datetime.datetime.now(datetime.timezone.utc)
@@ -79,7 +82,7 @@ def createTestData():
 	return wd
 
 def unitTests():
-	filename = 'unit-tests-%s.json' % __file__
+	filename = os.path.join(options.utFolder, 'unit-tests-%s.json' % __file__)
 	wd = createTestData()
 	toFile(filename, wd)
 
