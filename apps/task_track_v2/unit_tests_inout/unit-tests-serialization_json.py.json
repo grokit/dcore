@@ -1,20 +1,20 @@
 [
     {
-        "type": "test",
+        "date": "2015-10-03T16:15:30.200216+00:00",
         "comment": "test item 1",
-        "length": 1,
-        "date": "2015-10-03T16:15:30.200216+00:00"
+        "type": "test",
+        "length": 1
     },
     {
-        "type": "test",
+        "date": "2015-10-03T16:15:31.200216+00:00",
         "comment": "test\n\n\n item 2",
-        "length": 3.1,
-        "date": "2015-10-03T16:15:31.200216+00:00"
+        "type": "test",
+        "length": 3.1
     },
     {
-        "type": "test",
+        "date": "2015-10-10T22:27:52.859020+00:00",
         "comment": "test3",
-        "length": 1.1,
-        "date": "2015-10-10T22:20:08.114541+00:00"
+        "type": "test",
+        "length": 1.1
     }
 ]

@@ -1,3 +1,8 @@
+"""
+Serializes / deserializes the basic class that represent a unit of work done.
+
+It should not have functionality besides reading / writing a set of that class to / from a file.
+"""
 
 import json
 import datetime 
@@ -24,10 +29,10 @@ class Encoder(json.JSONEncoder):
 		return o.__dict__
 
 def toFile(filename, workDoneSet):
+	# @@@bug: do not rewrite all file (do not want to delete extra data put manually into tasks).
 	# @@improvement: make file easy to read / modify manually
 	# date as localtime with proper ISO8601 encoding
 	# endlines between entries
-	# @@@bug: do not rewrite all file (do not want to delete extra data put manually into tasks).
 
 	def dateToStr(w):
 		ww = copy.deepcopy(w)
@@ -46,35 +51,34 @@ def fromFile(filename):
 	"""
 
 	jl = json.loads( open(filename).read() )
-	wd = []
+	workUnits = []
 	for item in jl:
 		workDone = WorkDone( item['type'], item['length'], item['comment'], dateStrToDateTime(item['date']) )
-		wd.append(workDone)
-	wd.sort( key= lambda x: x.date )
-	return wd
+		workUnits.append(workDone)
+	workUnits.sort( key= lambda x: x.date )
+	return workUnits
 
 def createTestData():
-	wd = []
-	
-	wd.append( WorkDone('test', 1, 'test item 1',datetime.datetime.fromtimestamp(1443888930.2002168, datetime.timezone.utc) ) )
-	wd.append( WorkDone('test', 3.1, 'test\n\n\n item 2', datetime.datetime.fromtimestamp(1443888931.2002168, datetime.timezone.utc)))
-	return wd
+	workUnits = []
+	workUnits.append( WorkDone('test', 1, 'test item 1',datetime.datetime.fromtimestamp(1443888930.2002168, datetime.timezone.utc) ) )
+	workUnits.append( WorkDone('test', 3.1, 'test\n\n\n item 2', datetime.datetime.fromtimestamp(1443888931.2002168, datetime.timezone.utc)))
+	return workUnits
 
 def unitTests():
 	filename = os.path.join(options.utFolder, 'unit-tests-%s.json' % __file__)
-	wd = createTestData()
-	toFile(filename, wd)
+	workUnits = createTestData()
+	toFile(filename, workUnits)
 
 	wdRead = fromFile(filename)
-	for i in range(len(wd)):
-		assert wd[i].type == wdRead[i].type
-		assert wd[i].length == wdRead[i].length
-		assert wd[i].comment == wdRead[i].comment
-		assert wd[i].date == wdRead[i].date
+	for i in range(len(workUnits)):
+		assert workUnits[i].type == wdRead[i].type
+		assert workUnits[i].length == wdRead[i].length
+		assert workUnits[i].comment == wdRead[i].comment
+		assert workUnits[i].date == wdRead[i].date
 	
 	# Test default CTOR / serialization.
-	wd.append( WorkDone('test', 1.1, 'test3') )
-	toFile(filename, wd)
+	workUnits.append( WorkDone('test', 1.1, 'test3') )
+	toFile(filename, workUnits)
 	wdRead = fromFile(filename)
 
 if __name__ == '__main__':
