@@ -9,7 +9,7 @@ import work_unit
 import html_render
 import options
 
-_meta_shell_command = 'tt2'
+_meta_shell_command = 'tt'
 
 def getArgs():
 
@@ -38,6 +38,7 @@ def commandLineEnterWorkDone(dbFile):
         W = []
 
     W.append(workUnit)
+    # @@@bug: do not rewrite all file (do not want to delete extra data put manually into tasks).
     work_unit.toFile(dbFile, W)
 
 if __name__ == '__main__':

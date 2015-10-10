@@ -4,8 +4,13 @@ http://d3js.org/ ??
 
 import work_unit
 
+import os
+
+def scriptDir():
+    return os.path.dirname(os.path.abspath(__file__))
+
 def render(wd, htmlFilename):
-	template = open('template.html').read()
+	template = open(os.path.join(scriptDir(), 'template.html')).read()
 	open(htmlFilename, 'w').write(template)
 
 def unitTests():

@@ -23,7 +23,7 @@ var width = 800,
     barHeight = 20;
 
 var x = d3.scale.linear()
-    .domain([0, d3.max(data)])
+    .domain([d3.min(data), d3.max(data)])
     .range([0, width]);
 
 var chart = d3.select(".chart")
