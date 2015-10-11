@@ -1,10 +1,11 @@
 """
 # TODO
 
-OK tt: unit tests in their directories
-OK: tt: separate serialization from class
-MEH tt: better html plot!!!! ←- without this it’s pointless
-tt: time in seattle time
+OK  unit tests in their directories
+OK:  separate serialization from class
+- better html plot!!!! ←- without this it’s pointless
+- time in seattle time
+- stats mode with UT in command line (look back past X days, concatenate on days)
 """
 
 import argparse

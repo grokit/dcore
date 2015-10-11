@@ -1,6 +1,5 @@
 
 import re
-#import sys
 
 _meta_shell_command = 'http_clean'
 
