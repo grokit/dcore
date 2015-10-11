@@ -1,7 +1,6 @@
 """
-http://d3js.org/ ??
-
-http://alignedleft.com/tutorials/d3
+Render using http://d3js.org/.
+Excellent tutorial here: http://alignedleft.com/tutorials/d3.
 """
 
 import os
@@ -21,5 +20,3 @@ def unitTests():
 
 if __name__ == '__main__':
 	unitTests()
-
-

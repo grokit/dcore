@@ -17,8 +17,22 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var data = [4, 8, 15, 16, 23, 42, 200];
-var mDA = Math.max(data)
+////////// ////////// ////////// //////////
+// Could model data this way:
+// var work_done = [
+//     {
+//         length: 1.2,
+//         type: "cs"
+//     },
+//     {
+//         length: 3,
+//         type: "medi"
+//     }
+// ];
+////////// ////////// ////////// //////////
+ 
+var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
+// template system where to insert the data.
 
 var width = 800
 var barWidth = 20
@@ -27,8 +41,8 @@ var chart = d3.select(".chart")
     .attr("width", width)
     .attr("height", Math.max.apply(Math, data))
 
-var bar = chart.selectAll("g")
-    .data(data)
+var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
+    .data(data) // ... for each data point ...
     .enter().append("g")
     .attr("transform", function(d, i) { return "translate(" + i * barWidth + ", 0)" });
 
