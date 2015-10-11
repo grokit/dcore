@@ -62,7 +62,17 @@ bar.append("text")
 	.attr("fill", "white")
 	.text(function(d) {return d})
 
+var xScale = d3.scale.linear()
+	.domain([0, Math.max.apply(Math, data)])
+	.range([0, width])
+
+var xAxis = d3.svg.axis()
+	  .scale(xScale)
+	  .orient("bottom")
+
+chart.append("g")
+    .call(xAxis)
+
 d3.select("body").append("p").text("Keep up the good work!")
 </script>
-
 
