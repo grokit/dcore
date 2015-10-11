@@ -8,7 +8,7 @@ _meta_shell_command = 'ff'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('grep', type=str, nargs='?', default = None)
+    parser.add_argument('grep', type=str, nargs='+', default = None)
     # NOT CODED:
     #parser.add_argument('-f', '--filenames_only', action="store_true")
     args = parser.parse_args()
@@ -76,9 +76,10 @@ def do():
 
 
     if args.grep is not None:
-        args.grep = args.grep.lower()
-        print('Filter-in with: %s.' % args.grep)
-        F = filterInCaseInsensitive(F, args.grep)
+        gg = " ".join(args.grep)
+        gg = gg.lower()
+        print('Filter-in with: %s.' % gg)
+        F = filterInCaseInsensitive(F, gg)
 
     for f in F:
         print(f)
