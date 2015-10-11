@@ -15,16 +15,18 @@
 
 ////////// ////////// ////////// //////////
 // Could model data this way:
-// var work_done = [
-//     {
-//         length: 1.2,
-//         type: "cs"
-//     },
-//     {
-//         length: 3,
-//         type: "medi"
-//     }
-// ];
+var work_done = [
+     {
+         length: 1.2,
+         type: "cs",
+	 date: 9831938
+     },
+     {
+         length: 3,
+         type: "medi",
+	 date: 3123 
+     }
+];
 ////////// ////////// ////////// //////////
  
 var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
@@ -32,7 +34,7 @@ var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this ta
 
 var width = 800
 var barWidth = width / data.length
-var height = Math.max.apply(Math, data)
+var height = Math.max.apply(Math, data) 
 
 var chart = d3.select(".chart")
     .attr("width", width)
@@ -43,8 +45,6 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
     .enter().append("g")
     // Here 'd' is the data, 'i' is the position of the data in the array.
     .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
-
-//var scaleD = d3.scale.linear().domain([d3.min(data), d3.max(data)]).range([0, width]);
 
 bar.append("rect")
     .attr("width", barWidth-2)
@@ -63,15 +63,14 @@ bar.append("text")
 	.text(function(d) {return d})
 
 var xScale = d3.scale.linear()
-	.domain([0, Math.max.apply(Math, data)])
-	.range([0, width])
+	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,
+	.range([0, width])                       // ... is mapped to c...d linearly.
 
 var xAxis = d3.svg.axis()
-	  .scale(xScale)
-	  .orient("bottom")
+	.scale(xScale)
+	.orient("bottom")
 
-chart.append("g")
-    .call(xAxis)
+// chart.append("g") .attr("transform", "translate(0," + (height-25) + ")") .call(xAxis)
 
 d3.select("body").append("p").text("Keep up the good work!")
 </script>
