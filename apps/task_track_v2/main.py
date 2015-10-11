@@ -1,5 +1,10 @@
 """
 # TODO
+
+OK tt: unit tests in their directories
+OK: tt: separate serialization from class
+MEH tt: better html plot!!!! ←- without this it’s pointless
+tt: time in seattle time
 """
 
 import argparse
