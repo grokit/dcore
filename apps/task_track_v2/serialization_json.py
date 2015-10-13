@@ -44,6 +44,9 @@ def fromFile(filename):
 	workUnits = []
 	for item in jl:
 		workDone = work_unit.WorkDone( item['type'], item['length'], item['comment'], date_convention.dateStrToDateTime(item['date']) )
+		# Fixed messed-up time file, only do to change timezone / apply offset.
+		#workDone.date = workDone.date.replace(tzinfo=date_convention.timeZone)
+		#workDone.date -= datetime.timedelta(hours=7)
 		workUnits.append(workDone)
 	workUnits.sort( key= lambda x: x.date )
 	return workUnits
