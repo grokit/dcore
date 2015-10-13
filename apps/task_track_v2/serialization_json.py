@@ -53,8 +53,8 @@ def fromFile(filename):
 
 def createTestData():
 	workUnits = []
-	workUnits.append( work_unit.WorkDone('test', 1, 'test item 1',datetime.datetime.fromtimestamp(1443888930.2002168, date_convention.timeZone) ) )
-	workUnits.append( work_unit.WorkDone('test', 3.1, 'test\n\n\n item 2', datetime.datetime.fromtimestamp(1443888931.2002168, date_convention.timeZone)))
+	workUnits.append( work_unit.WorkDone('test', 1, 'test item 1',datetime.datetime.fromtimestamp(1443888930.2, date_convention.timeZone) ) )
+	workUnits.append( work_unit.WorkDone('test', 3.1, 'test\n\n\n item 2', datetime.datetime.fromtimestamp(1443888931.2, date_convention.timeZone)))
 	return workUnits
 
 def unitTests():

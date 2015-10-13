@@ -15,26 +15,32 @@
 
 ////////// ////////// ////////// //////////
 // Could model data this way:
-var work_done = [
+var data = [
      {
-         length: 1.2,
+         ttt: 100.2,
          type: "cs",
-	 date: 9831938
+	 date: 1111 
      },
      {
-         length: 3,
+         ttt: 300,
          type: "medi",
-	 date: 3123 
+	 date: 1121
      }
 ];
+//data = data.slice()
 ////////// ////////// ////////// //////////
  
-var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
+// var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
 // template system where to insert the data.
 
 var width = 800
 var barWidth = width / data.length
-var height = Math.max.apply(Math, data) 
+
+var rawValues = []
+for(var i = 0; i < data.length; ++i){
+	rawValues.push(data[i].ttt)
+}
+var height = Math.max.apply(Math, rawValues) 
 
 var chart = d3.select(".chart")
     .attr("width", width)
@@ -48,10 +54,11 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
 
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d})
-    .attr("height", function(d){return d})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d * 5) + ")"})
+    .attr("y", function(d){return height-d.ttt})
+    .attr("height", function(d){return d.ttt})
+    .attr("fill", function(d){return "rgb(100, 0, " + (d.ttt * 5) + ")"})
 
+    /*
 bar.append("text")
 	.attr("x", barWidth / 2 )
 	.attr("y", function(d,i){return height-d + 20})
@@ -61,6 +68,7 @@ bar.append("text")
 	.attr("font-size", "16px")
 	.attr("fill", "white")
 	.text(function(d) {return d})
+	*/
 
 var xScale = d3.scale.linear()
 	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,
