@@ -5,15 +5,10 @@ A unit of work (done).
 import datetime
 
 import options
-
-def dateNow():
-	return datetime.datetime.now(datetime.timezone.utc)
-
-def dateNowStr():
-	return dateNow().isoformat()
+import date_convention
 
 class WorkDone:
-	def __init__(self, typei, length, comment = '', date = dateNow()):
+	def __init__(self, typei, length, comment = '', date = date_convention.dateNow()):
 		assert type(typei) == str
 		assert type(length) == int or type(length) == float
 		assert type(comment) == str
