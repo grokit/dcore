@@ -13,32 +13,15 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-////////// ////////// ////////// //////////
-// Could model data this way:
-var data = [
-     {
-         ttt: 100.2,
-         type: "cs",
-	 date: 1111 
-     },
-     {
-         ttt: 300,
-         type: "medi",
-	 date: 1121
-     }
-];
-//data = data.slice()
-////////// ////////// ////////// //////////
+// template::data. Do not remove this tag, it tells the template system where to insert the data.
+var data = [ { taskDuration: 100.2, type: "cs", date: 1111 }, { taskDuration: 300, type: "medi", date: 1121 } ];
  
-// var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
-// template system where to insert the data.
-
 var width = 800
 var barWidth = width / data.length
 
 var rawValues = []
 for(var i = 0; i < data.length; ++i){
-	rawValues.push(data[i].ttt)
+	rawValues.push(data[i].taskDuration)
 }
 var height = Math.max.apply(Math, rawValues) 
 
@@ -54,9 +37,9 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
 
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d.ttt})
-    .attr("height", function(d){return d.ttt})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d.ttt * 5) + ")"})
+    .attr("y", function(d){return height-d.taskDuration})
+    .attr("height", function(d){return d.taskDuration})
+    .attr("fill", function(d){return "rgb(100, 0, " + (d.taskDuration * 5) + ")"})
 
     /*
 bar.append("text")
