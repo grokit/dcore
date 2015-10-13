@@ -7,11 +7,12 @@ import dcore.osext as osext
 import dcore.files as files
 import dcore.system_description as private_data
 
-_meta_shell_command = 'backup'
+_meta_shell_command = '__DEPRECATED_backup'
 
 backup_in = r'T:\backups\auto'
 
-to_backup_online = r'C:\david\sync\skydrive'
+# disable for now
+# to_backup_online = r'C:\david\sync\skydrive'
 
 exe_7zip = r'c:\david\sync\app\7zip\7z.exe'
 

@@ -17,6 +17,8 @@ if __name__ == '__main__':
     
     R = []
     while(len(R) < n):
+	# os.urandom(n): Return a string of n random bytes suitable for cryptographic use.
+	# see: https://docs.python.org/3.5/library/os.html
         b = ord(os.urandom(1))
         if b < len(vocab):
             R.append(vocab[b])

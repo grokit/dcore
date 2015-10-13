@@ -1,7 +1,5 @@
 """
-@@BUG:
-
-- Simple search is case sensitive unless I lower everything at scraping time. (see: @@lowercase_bug)
+tag::bug: Simple search is case sensitive unless I lower everything at scraping time (see: @@lowercase_bug).
 
 See: 
     SQL-centric: http://www.sqlite.org/docs.html
@@ -9,11 +7,10 @@ See:
         - Regex: http://stackoverflow.com/questions/5365451/problem-with-regexp-python-and-sqlite
 """
 
-import options
-import decorate
-
 import dcore.search_files
 
+import options
+import decorate
 import os
 import re
 import shutil
@@ -196,7 +193,7 @@ def isMatchFilterExt(filename, filterExt):
     return False
             
 def search(db_file_fullpath, query, filterExt = [], isRegex = False):
-    query = query.lower() ## @@a1
+    query = query.lower()
     print("db.search (%s, %s)" % (db_file_fullpath, query))
     
     if query is None or query == "":

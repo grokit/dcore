@@ -15,6 +15,8 @@ import dcore.system_description as system_description
 
 _meta_shell_command = 'fopen'
 
+import os
+
 def getArgs():
     
     parser = argparse.ArgumentParser()
@@ -28,7 +30,7 @@ def getArgs():
 def printList(D):
     
     for k, v in D.items():
-        print('%-20s: %s' % (k, v))
+        print('%-20s: %s' % (k, os.path.realpath(v)))
     
 if __name__ == '__main__':
     

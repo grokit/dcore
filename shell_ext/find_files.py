@@ -1,3 +1,9 @@
+"""
+# TODO
+- Normal mode just split all words, and a cascading grep would yield result then yield.
+- Have an 'exact string' mode as an option.
+- grep should not be obligatory
+"""
 
 import os
 import argparse
@@ -8,7 +14,7 @@ _meta_shell_command = 'ff'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('grep', type=str, nargs='+', default = None)
+    parser.add_argument('grep', type=str, nargs='?', default = None)
     # NOT CODED:
     #parser.add_argument('-f', '--filenames_only', action="store_true")
     args = parser.parse_args()
@@ -48,7 +54,7 @@ def gen():
     # root = '~/sync/dev/Dropbox/scripts/dcore/shell_ext'
     root = '~/sync'
     F = getAllFiles(os.path.expanduser(root))
-    F = filterOutIfArrayInElement(F, ['.git', '__pycache__'])
+    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__'])
     return F
 
 def do():
@@ -74,9 +80,10 @@ def do():
         print('Saving cache at: %s.' % cacheLoc)
         pickle.dump(Cache(F), open(cacheLoc, 'wb'))
 
-
     if args.grep is not None:
-        gg = " ".join(args.grep)
+        gg = args.grep
+        if type(gg) == list:
+            gg = " ".join(args.grep)
         gg = gg.lower()
         print('Filter-in with: %s.' % gg)
         F = filterInCaseInsensitive(F, gg)

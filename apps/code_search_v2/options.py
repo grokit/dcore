@@ -27,6 +27,7 @@ GLOBS_SEARCH_IN_LONG = ['*.py',
                    '*.bat',
                    '*.cmd',
                    '*.csv',
+                   '*.pub',
                    '*.csproj',
                    '*.csdef',
                    '*.cscfg',
@@ -42,6 +43,7 @@ GLOBS_SEARCH_IN_LONG = ['*.py',
                    '*.config',
                    '*.markdown',
                    '*.meta',
+                   '*.js',
                    '*.msnp24',
                    '*.m25',
                    '*.pl']
@@ -52,4 +54,5 @@ EXCLUDE_FILE_OR_PATH = [
     '.bzr',
     '.hg',
     '.git',
-    '.svn']
+    '.svn',
+    'node_modules']

@@ -3,22 +3,15 @@ TODO
 
 #A
 
-- when cannot index a file, have that log alongside the DB to bebug what went wrong when couldn't find something.
-- have a mode where I only index filenames -- to replace 'ff'
-- lowercases everything
+- have an actual n-gram index mode so that can avoid searching in some files for keyword set
 
 #B
 
-- always save match in a log file with exact time of query (in the '.code_search_cache' dir.)
-- file search with regex
-- allow to search a subset of extentions
-- case insensitive search
+- more thoughtful solution for lowercasing
+- allow to search a subset of extensions
 - be able to say which file extentions are included in DB
 
 #C
-
-- file content with regex
-
 """
 
 _meta_shell_command = 'scode'
