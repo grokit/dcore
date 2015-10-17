@@ -12,7 +12,9 @@ import datetime
 
 _meta_shell_command = 'ff'
 
-search_root = r't:\src\working'
+search_root = r'~/sync'
+cacheLoc = os.path.expanduser('~/sync/ff_cache.pickle')
+cacheExpiryInSeconds = 1*60*60
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -69,7 +71,6 @@ def do():
         exit(-1)
     
     cache = None
-    cacheLoc = os.path.expanduser('~/sync/ff_cache.pickle')
 
     F = None
     if os.path.isfile(cacheLoc):
@@ -77,7 +78,7 @@ def do():
         cache = pickle.load(open(cacheLoc, 'rb'))
         cacheAge = dateNow() - cache.date
         print('Cache age = %s.' % cacheAge)
-        if cacheAge.total_seconds() < 30*24*(60*60):
+        if cacheAge.total_seconds() < cacheExpiryInSeconds:
             F = cache.F
         else:
             print('Cache too old, wiping.')
