@@ -1,8 +1,8 @@
 """
 # TODO
 - Normal mode just split all words, and a cascading grep would yield result then yield.
-- Have an 'exact string' mode as an option.
-- grep should not be obligatory
+    - Have an 'exact string' mode as an option.
+- Have a command line flag to just re-do indexing.
 """
 
 import os
@@ -12,9 +12,12 @@ import datetime
 
 _meta_shell_command = 'ff'
 
+search_root = r't:\src\working'
+
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('grep', type=str, nargs='?', default = None)
+    parser.add_argument('-e', '--exact_match', action='store_true', default=False)
+    parser.add_argument('grep', type=str, nargs='+', default = None)
     # NOT CODED:
     #parser.add_argument('-f', '--filenames_only', action="store_true")
     args = parser.parse_args()
@@ -52,24 +55,29 @@ class Cache:
 
 def gen():
     # root = '~/sync/dev/Dropbox/scripts/dcore/shell_ext'
-    root = '~/sync'
-    F = getAllFiles(os.path.expanduser(root))
+    # root = '~/sync'
+    # @@@@ have a way to specify this in command line or option
+    F = getAllFiles(os.path.expanduser(search_root))
     F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__'])
     return F
 
 def do():
     args = getArgs()
-
+    print(args)
+    if args.grep is None:
+        print('Search argument cannot be None. Args: %s.' % args)
+        exit(-1)
+    
     cache = None
     cacheLoc = os.path.expanduser('~/sync/ff_cache.pickle')
 
     F = None
     if os.path.isfile(cacheLoc):
-        print('Loading cache from: %s.', cacheLoc)
+        print('Loading cache from: %s.' % cacheLoc)
         cache = pickle.load(open(cacheLoc, 'rb'))
         cacheAge = dateNow() - cache.date
         print('Cache age = %s.' % cacheAge)
-        if cacheAge.total_seconds() < 12*(60*60):
+        if cacheAge.total_seconds() < 30*24*(60*60):
             F = cache.F
         else:
             print('Cache too old, wiping.')
@@ -82,11 +90,20 @@ def do():
 
     if args.grep is not None:
         gg = args.grep
-        if type(gg) == list:
+        
+        if args.exact_match == False:
+            if type(gg) != list:
+                gg = [gg]
+            
+            print('Filter-in with: %s.' % gg)
+            for disc in gg:
+                disc = disc.lower()
+                F = filterInCaseInsensitive(F, disc)
+        else:
             gg = " ".join(args.grep)
-        gg = gg.lower()
-        print('Filter-in with: %s.' % gg)
-        F = filterInCaseInsensitive(F, gg)
+            gg = gg.lower()
+            print('Filter-in with: %s.' % gg)
+            F = filterInCaseInsensitive(F, gg)
 
     for f in F:
         print(f)

@@ -3,7 +3,7 @@
 
 OK  unit tests in their directories
 OK:  separate serialization from class
-- better html plot!!!! ←- without this it’s pointless
+- better html plot!!!! !!not-ascii!!!!not-ascii!!!!not-ascii!!- without this it!!not-ascii!!!!not-ascii!!!!not-ascii!!s pointless
 - time in seattle time
 - stats mode with UT in command line (look back past X days, concatenate on days)
 """

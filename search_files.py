@@ -1,4 +1,7 @@
 
+"""
+@@@deorecate this. Use much simple walker 4-liner that does not require dependency.
+"""
 import os
 import fnmatch
 

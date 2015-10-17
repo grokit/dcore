@@ -59,6 +59,7 @@ def getMetadataFromPyFiles(pyfiles):
     meta = []
     
     for file in pyfiles:
+        print('Processing file: %s.' % file)
         fh = open(file, 'r')
         lines = fh.readlines()
         fh.close()

@@ -18,6 +18,15 @@ def getArgs():
 def get_process_path():
     os.system('PowerShell Get-Process ^| Format-List Path')
 
+def apps():
+    startapps()
+    
+def startapps():
+    os.system(r'start C:\david\sync\app\ditto\Ditto.exe')
+    os.system(r'start C:\david\sync\app\autohotkey\AutoHotkey.exe C:\david\sync\scripts-private\autohotkey\Work_AutoHotkey.ahk')
+    os.system(r'start C:\david\sync\app\launchy\Launchy.exe')
+    # os.system(r'start C:\david\sync\app\conemu\ConEmu64.exe')
+    
 if __name__ == '__main__':
     args = getArgs()
     fnHash = {fnName: fn for fnName, fn in inspect.getmembers(sys.modules[__name__]) if inspect.isfunction(fn) and fnName != 'getArgs'}

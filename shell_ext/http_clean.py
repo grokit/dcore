@@ -8,7 +8,10 @@ annoying = ['^Set-.*', '^Cookie:.*', 'Reg[^ ]*?:.*']
 if __name__ == '__main__':
     inputBuf = []
     while len(inputBuf) == 0 or inputBuf[-1].find('STOP!') == -1:
-        lIn = input()
+        try:
+            lIn = input()
+        except (EOFError):
+            break        
         if lIn == None:
             break # reached EOF
         inputBuf.append( lIn )

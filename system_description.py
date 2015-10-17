@@ -1,8 +1,5 @@
 """
 # Info
-
-- This contains description on where stuff is on the system.
-
 # TODO:
 
 - Put in private data file info:
@@ -17,11 +14,13 @@ import pathlib
 
 # Stick this into every file that is auto-generated. This is used for cleanup /
 # allowing to remove the old files when a new set of files is created.
-magic_tag_intstr = '4452669129437275268177914375'
+magic_tag_intstr = 'GeneratedBy_%s_bg0sn9gtmq2jjper' % __file__
 
-def getPrivateDataFile():
+def getPrivateDataFilename():
     """
     This is a special file with special lookup logic.
+    Logic is that we start where this script it, then bubble up to root until we find 'private_data'. 
+    Like how .git repositories are found.
     """
     
     cp = pathlib.Path(os.path.realpath(__file__))
@@ -72,7 +71,7 @@ def getPythonScriptsEnv():
 
 def __loadPrivateFile():
 
-    fh = open(getPrivateDataFile(), 'r')
+    fh = open(getPrivateDataFilename(), 'r')
     jr = fh.read()
     fh.close()
 
@@ -80,12 +79,27 @@ def __loadPrivateFile():
 
     return jd
 
-def getFilesMap():
+def __expandEnvVars(D):
+    r"""
+    %userprofile%: c:\users\userid
+    $var: an_env_variable_expanded
+    """
+    return {k:os.path.expandvars(v) for (k, v) in D.items()}
+    
+def getFilesAndFoldersMap():
     jd = __loadPrivateFile()
     jd = jd['namedLocationMap']
-    dirsMap = jd[os.name]
-    dirsMap['private_data'] = getPrivateDataFile()
-    return dirsMap
+    D = jd[os.name]
+    D['private_data'] = getPrivateDataFilename()
+    
+    items = __expandEnvVars(D).items()
+    for k,v in items:
+        if not (os.path.isfile(v) or os.path.isdir(v)):
+            st = "Warning: not file or dir: %s." % v
+            print(st)
+            #raise Exception(st)
+    
+    return {k:v for (k,v) in items}
 
 # This will add all the variables declared in the JSON file as local variables.
 # This way, private_data.variable is accessible after importing the module.
@@ -95,5 +109,5 @@ for k, v in jd['variables'].items():
     localsDir[k] = v
 
 if __name__ == '__main__':
-    #dm = getFilesMap()
-    print(getPrivateDataFile())
+    #dm = getFilesAndFoldersMap()
+    print(getPrivateDataFilename())

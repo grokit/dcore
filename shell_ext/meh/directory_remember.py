@@ -1,13 +1,12 @@
 """
-_meta_shell_command = 'dr'
-
 # TODO
 
-- rdir . tata --> create .bat file so that cdtata will access this directory.
+- automatically create 'cd1.bat, cd2.bat, ...' OR for -g, create a temp bat file and execute
+- dr -r, cd00 <-- goes to latest added
 
 # TODO-B
 
-- automatically create 'cd1.bat, cd2.bat, ...' OR for -g, create a temp bat file and execute
+- rdir . tata --> create .bat file so that cdtata will access this directory.
 
 - global file to specify computer-specific dirs
 
@@ -16,8 +15,11 @@ _meta_shell_command = 'dr'
 # BUGS
 
 - cd<X> are messed-up (wrong number, offset of 1)
-
 """
+
+_meta_shell_command = 'dr'
+
+path_ext_folder = r'c:\david\sync\scripts-private\path_ext'
 
 import sys
 import os
@@ -44,12 +46,12 @@ def remember_dir():
     dirs = get_file_content()
     
     # create shortcut files
-    if False:
+    if True:
         i = 0
         for dir in dirs:
-            new_file = path_ext_folder + r'\cd%s.bat' % i
+            new_file = path_ext_folder + r'\cd%02d.bat' % i
             fh = open(new_file, 'w')
-            fh.write('cd "%s"' % dir)
+            fh.write('cd /d "%s"' % dir)
             fh.close()
             i += 1
 
