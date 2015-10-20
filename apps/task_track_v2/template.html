@@ -19,11 +19,9 @@
 var width = 800
 var barWidth = width / data.length
 
-var rawValues = []
-for(var i = 0; i < data.length; ++i){
-	rawValues.push(data[i].length)
-}
-var height = Math.max.apply(Math, rawValues) 
+yMin = 0
+yMax = d3.max(data.map(function(v){ return v.length }))
+var height = 100
 
 var chart = d3.select(".chart")
     .attr("width", width)
@@ -35,17 +33,27 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
     // Here 'd' is the data, 'i' is the position of the data in the array.
     .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
 
+// @@ scale
+
+
+console.log(yMin)
+console.log(yMax)
+
+var xScale = d3.scale.linear()
+	.domain([yMin, yMax])
+	.range([0, 100])
+
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d.length})
-    .attr("height", function(d){return d.length})
+    .attr("y", function(d){return height-xScale(d.length)})
+    .attr("height", function(d){return xScale(d.length)})
     .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
 
 /*
 bar.append("text")
 	.attr("x", barWidth / 2 )
 	.attr("y", function(d,i){return height-d + 20})
-	// .attr("dy", ".35em")
+	.attr("dy", ".35em")
 	.attr("text-anchor", "middle")
 	.attr("font-family", "sans-serif")
 	.attr("font-size", "16px")
@@ -53,15 +61,12 @@ bar.append("text")
 	.text(function(d) {return d})
 */
 
-var xScale = d3.scale.linear()
-	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,
-	.range([0, width])                       // ... is mapped to c...d linearly.
 
+/*
 var xAxis = d3.svg.axis()
 	.scale(xScale)
 	.orient("bottom")
-
-// chart.append("g") .attr("transform", "translate(0," + (height-25) + ")") .call(xAxis)
+*/
 
 d3.select("body").append("p").text("Keep up the good work!")
 </script>
