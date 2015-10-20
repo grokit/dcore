@@ -11,10 +11,9 @@
 </style>
 <svg class="chart"></svg>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="data.js"></script>
 <script>
 
-// template::data. Do not remove this tag, it tells the template system where to insert the data.
-var data = [ { taskDuration: 100.2, type: "cs", date: 1111 }, { taskDuration: 300, type: "medi", date: 1121 } ];
  
 var width = 800
 var barWidth = width / data.length
@@ -41,7 +40,7 @@ bar.append("rect")
     .attr("height", function(d){return d.taskDuration})
     .attr("fill", function(d){return "rgb(100, 0, " + (d.taskDuration * 5) + ")"})
 
-    /*
+/*
 bar.append("text")
 	.attr("x", barWidth / 2 )
 	.attr("y", function(d,i){return height-d + 20})
@@ -51,7 +50,7 @@ bar.append("text")
 	.attr("font-size", "16px")
 	.attr("fill", "white")
 	.text(function(d) {return d})
-	*/
+*/
 
 var xScale = d3.scale.linear()
 	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,
