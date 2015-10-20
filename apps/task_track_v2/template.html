@@ -33,22 +33,21 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
     // Here 'd' is the data, 'i' is the position of the data in the array.
     .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
 
-// @@ scale
-
+var yScale = d3.scale.linear()
+	.domain([yMin, yMax])
+	.range([0, 100])
 
 console.log(yMin)
 console.log(yMax)
 
-var xScale = d3.scale.linear()
-	.domain([yMin, yMax])
-	.range([0, 100])
-
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-xScale(d.length)})
-    .attr("height", function(d){return xScale(d.length)})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
+    .attr("y", function(d){return height-yScale(d.length)})
+    .attr("height", function(d){return yScale(d.length)})
+    .attr("fill", function(d){return "rgb(15, 20, " + Math.round((80 + yScale(d.length))*(100/180)) + ")"})
+console.log("rgb(15, 20, " + Math.round((20 + yScale(5.2))*(100/120)) + ")")
 
+console.log(yScale(5.2))
 /*
 bar.append("text")
 	.attr("x", barWidth / 2 )
@@ -64,7 +63,7 @@ bar.append("text")
 
 /*
 var xAxis = d3.svg.axis()
-	.scale(xScale)
+	.scale(yScale)
 	.orient("bottom")
 */
 
