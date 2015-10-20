@@ -11,30 +11,19 @@
 </style>
 <svg class="chart"></svg>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="data.js"></script>
 <script>
 
-////////// ////////// ////////// //////////
-// Could model data this way:
-var work_done = [
-     {
-         length: 1.2,
-         type: "cs",
-	 date: 9831938
-     },
-     {
-         length: 3,
-         type: "medi",
-	 date: 3123 
-     }
-];
-////////// ////////// ////////// //////////
- 
-var data = [4, 8, 15, 16, 23, 42, 200]; // template::data. Do not remove this tag, it tells the 
-// template system where to insert the data.
+//data = JSON.parse(data)
 
 var width = 800
 var barWidth = width / data.length
-var height = Math.max.apply(Math, data) 
+
+var rawValues = []
+for(var i = 0; i < data.length; ++i){
+	rawValues.push(data[i].length)
+}
+var height = Math.max.apply(Math, rawValues) 
 
 var chart = d3.select(".chart")
     .attr("width", width)
@@ -48,10 +37,11 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
 
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d})
-    .attr("height", function(d){return d})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d * 5) + ")"})
+    .attr("y", function(d){return height-d.length})
+    .attr("height", function(d){return d.length})
+    .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
 
+/*
 bar.append("text")
 	.attr("x", barWidth / 2 )
 	.attr("y", function(d,i){return height-d + 20})
@@ -61,6 +51,7 @@ bar.append("text")
 	.attr("font-size", "16px")
 	.attr("fill", "white")
 	.text(function(d) {return d})
+*/
 
 var xScale = d3.scale.linear()
 	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,

@@ -14,13 +14,14 @@
 <script src="data.js"></script>
 <script>
 
- 
+//data = JSON.parse(data)
+
 var width = 800
 var barWidth = width / data.length
 
 var rawValues = []
 for(var i = 0; i < data.length; ++i){
-	rawValues.push(data[i].taskDuration)
+	rawValues.push(data[i].length)
 }
 var height = Math.max.apply(Math, rawValues) 
 
@@ -36,9 +37,9 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
 
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d.taskDuration})
-    .attr("height", function(d){return d.taskDuration})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d.taskDuration * 5) + ")"})
+    .attr("y", function(d){return height-d.length})
+    .attr("height", function(d){return d.length})
+    .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
 
 /*
 bar.append("text")
