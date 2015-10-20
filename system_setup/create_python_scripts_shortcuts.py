@@ -20,7 +20,7 @@ shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'generate_shortcuts'
 
 def findPyFiles():
-    dirsMap = sd.getFilesMap()
+    dirsMap = sd.getFilesAndFoldersMap()
     pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
     if dirsMap.get('python_folder_private') is not None:
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
@@ -82,7 +82,7 @@ def getMetadataFromPyFiles(pyfiles):
 def createShortcuts(lMeta):
     
     file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
-    dirsMap = sd.getFilesMap()
+    dirsMap = sd.getFilesAndFoldersMap()
     
     for meta in lMeta:
         

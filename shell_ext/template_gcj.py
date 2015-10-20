@@ -1,6 +1,6 @@
 import sys
 
-_meta_shell_command = 'gcjt'
+_meta_shell_command = 'template_gcj'
 
 template = """\"\"\"
 This script may use libraries publicly available at: https://github.com/grokit/dcore.

@@ -22,7 +22,7 @@ def getDirsMap():
 
     dirsMapPrivate = {}
     try:
-        dirsMapPrivate = getFilesMap()
+        dirsMapPrivate = getFilesAndFoldersMap()
     except Exception as e:
         print("%s cannot get private directories: %s." % (__file__, e))
     dirsMap = dict(list(dirsMap.items()) + list(dirsMapPrivate.items()))

@@ -19,7 +19,6 @@
 
 _meta_shell_command = 'dr'
 
-path_ext_folder = r'c:\david\sync\scripts-private\path_ext'
 
 import sys
 import os
@@ -30,7 +29,8 @@ try:
 except:
     pass
 
-cacheFile = r't:\temp\%s.cache' % os.path.split(__file__)[1]
+path_ext_folder = r'c:\david\sync\scripts-private\path_ext'
+cacheFile = os.path.expanduser('~/%s.cache' % os.path.split(__file__)[1])
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
@@ -46,7 +46,7 @@ def remember_dir():
     dirs = get_file_content()
     
     # create shortcut files
-    if True:
+    if os.path.isdir(path_ext_folder):
         i = 0
         for dir in dirs:
             new_file = path_ext_folder + r'\cd%02d.bat' % i
