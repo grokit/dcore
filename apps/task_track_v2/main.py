@@ -12,7 +12,7 @@ import argparse
 import os
 
 import work_unit
-import html_render
+import render_html
 import options
 import serialization_json
 
@@ -54,5 +54,5 @@ if __name__ == '__main__':
 
     htmlFile = options.htmlFile
     wd = serialization_json.fromFile(dbFile)
-    html_render.render(wd, htmlFile)
+    render_html.render(wd, htmlFile)
 

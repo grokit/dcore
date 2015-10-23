@@ -34,6 +34,16 @@ def wifi():
     print(command)
     os.system(command)
 
+def tg():
+    #  wicd-curses does not seem to work...
+    cur = os.getcwd()
+    path = os.path.expanduser('~/sync/apps/tg/')
+    os.chdir(path)
+    command = './bin/telegram-cli'
+    print(command)
+    os.system(command)
+    os.chdir(cur)
+
 def sleep():
     command = 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
     os.system(command)
