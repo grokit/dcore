@@ -23,7 +23,7 @@ var rawValues = []
 for(var i = 0; i < data.length; ++i){
 	rawValues.push(data[i].length)
 }
-var height = Math.max.apply(Math, rawValues) 
+var height = Math.max.apply(Math, rawValues)
 
 var chart = d3.select(".chart")
     .attr("width", width)
@@ -65,4 +65,3 @@ var xAxis = d3.svg.axis()
 
 d3.select("body").append("p").text("Keep up the good work!")
 </script>
-

@@ -13,8 +13,6 @@
 - when adding a new cd<X>, do it at the end, not begin (avoid moving cd<x> for no reason)
 
 # BUGS
-
-- cd<X> are messed-up (wrong number, offset of 1)
 """
 
 _meta_shell_command = 'dr'
