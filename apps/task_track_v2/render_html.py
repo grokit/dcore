@@ -22,7 +22,6 @@ def render(wd, htmlFilename):
 	def dateToUnixTime(w):
 		ww = copy.deepcopy(w)
 		dd = time.mktime(ww.date.timetuple())
-		print(type(dd))
 		ww.date = dd
 		return ww
 

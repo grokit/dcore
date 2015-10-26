@@ -17,6 +17,9 @@ def getArgs():
     args = parser.parse_args()
     return args
 
+def youtubedl_upgrade():
+    sudo pip install --upgrade youtube_dl
+
 def lock():
     os.system('gnome-screensaver-command -l')
 
