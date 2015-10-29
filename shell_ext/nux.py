@@ -18,7 +18,7 @@ def getArgs():
     return args
 
 def youtubedl_upgrade():
-    sudo pip install --upgrade youtube_dl
+    os.system('sudo pip install --upgrade youtube_dl')
 
 def lock():
     os.system('gnome-screensaver-command -l')
