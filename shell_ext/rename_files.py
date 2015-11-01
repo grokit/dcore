@@ -30,8 +30,8 @@ def isNum(s):
         return False
     return True
 
-def removeSpace(filename, _):
-    to = re.sub('[ ()]', '_', f)
+def removeSpace(filename, args):
+    to = re.sub('[ ()]', '_', filename)
 
     L = []
     for i in range(0, len(to)):
@@ -42,6 +42,17 @@ def removeSpace(filename, _):
         L.append(to[i])
     to = ''.join(L)
     return to
+
+def removeNonAZ(filename, args):
+    v = 'abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+    fout = []
+    for l in filename:
+        if l in v:
+            fout.append(l)
+        else:
+            fout.append('_')
+    return "".join(fout)
 
 def prefix(f, arg):
     if arg is None:
@@ -61,6 +72,7 @@ if __name__ == '__main__':
 
     fnMap = {
             'remove_spaces': removeSpace,
+            'remove_non_az': removeNonAZ,
             'prefix': prefix,
             'date': date,
             'custom': custom
@@ -70,7 +82,7 @@ if __name__ == '__main__':
     mode = args.mode
 
     if mode not in fnMap:
-        print('Error, mode not in map. Mode: %s, map: %s.' % (mode, ", ".join(fnMap.keys())))
+        raise Exception('Error, mode not in map. Mode: %s, map: %s.' % (mode, ", ".join(fnMap.keys())))
 
     print('Applying %s.' % mode)
     fn = fnMap[mode] 
