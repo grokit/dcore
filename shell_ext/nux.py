@@ -17,25 +17,32 @@ def getArgs():
     args = parser.parse_args()
     return args
 
+def osExec(cmd):
+    print(cmd)
+    os.system(cmd)
+
 def youtubedl_upgrade():
-    os.system('sudo pip install --upgrade youtube_dl')
+    osExec('sudo pip install --upgrade youtube_dl')
+
+def mempigs():
+    osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
 
 def lock():
-    os.system('gnome-screensaver-command -l')
+    osExec('gnome-screensaver-command -l')
 
 def battery():
-    os.system('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
+    osExec('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
 
 def crashplan():
     command = '/usr/local/crashplan/bin/CrashPlanDesktop'
     print(command)
-    os.system(command)
+    osExec(command)
 
 def wifi():
     #  wicd-curses does not seem to work...
     command = 'nm-applet&'
     print(command)
-    os.system(command)
+    osExec(command)
 
 def tg():
     #  wicd-curses does not seem to work...
@@ -44,44 +51,44 @@ def tg():
     os.chdir(path)
     command = './bin/telegram-cli'
     print(command)
-    os.system(command)
+    osExec(command)
     os.chdir(cur)
 
 def sleep():
     command = 'dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
-    os.system(command)
+    osExec(command)
 
 def apps():
     startapps()
 
 def startapps():
-    os.system('nohup dropbox start&')
-    os.system('nohup diodon&')
-    os.system('nohup shutter --min_at_startup&')
+    osExec('nohup dropbox start&')
+    osExec('nohup diodon&')
+    #osExec('nohup shutter --min_at_startup&')
 
 def vol_up():
-    os.system('amixer -q sset Master 10%+')
+    osExec('amixer -q sset Master 10%+')
 
 def vol_down():
-    os.system('amixer -q sset Master 10%-')
+    osExec('amixer -q sset Master 10%-')
 
 def vol_mute_toggle():
-    os.system('amixer -q sset Master toggle')
-    os.system('amixer -q sset Headphone toggle')
-    os.system('amixer -q sset Speaker toggle')
-    os.system('amixer -q sset PCM toggle')
+    osExec('amixer -q sset Master toggle')
+    osExec('amixer -q sset Headphone toggle')
+    osExec('amixer -q sset Speaker toggle')
+    osExec('amixer -q sset PCM toggle')
 
 def unmute():
-    os.system('amixer set Master unmute') 
-    os.system('amixer set Headphone unmute') 
-    os.system('amixer set Speaker unmute') 
-    os.system('amixer set PCM unmute') 
+    osExec('amixer set Master unmute') 
+    osExec('amixer set Headphone unmute') 
+    osExec('amixer set Speaker unmute') 
+    osExec('amixer set PCM unmute') 
 
 def mute():
-    os.system('amixer set Master mute')
-    os.system('amixer set Headphone mute') 
-    os.system('amixer set Speaker mute') 
-    os.system('amixer set PCM mute') 
+    osExec('amixer set Master mute')
+    osExec('amixer set Headphone mute') 
+    osExec('amixer set Speaker mute') 
+    osExec('amixer set PCM mute') 
 
 if __name__ == '__main__':
     args = getArgs()
