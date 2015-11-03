@@ -16,20 +16,12 @@ if os.path.isdir('t:/src/working'):
     search_roots = ['t:/src/working', 'c:/david/sync']
 
 cacheLoc = os.path.normpath(os.path.expanduser('~/sync/ff_cache.pickle'))
-<<<<<<< HEAD
-cacheExpiryInSeconds = 40*60*60
-=======
 cacheExpiryInSeconds = 30*24*60*60
->>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
 
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--exact_match', action='store_true', default=False)
-<<<<<<< HEAD
-    parser.add_argument('grep', type=str, nargs='+', default = None)
-=======
     parser.add_argument('grep', type=str, nargs='*', default = None)
->>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     args = parser.parse_args()
     return args
@@ -72,11 +64,7 @@ def gen():
     for search_root in search_roots:
         for f in getAllFiles(os.path.expanduser(search_root)):
             F.append(f)
-<<<<<<< HEAD
-    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__'])
-=======
     F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])
->>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
     return F
 
 def do():
