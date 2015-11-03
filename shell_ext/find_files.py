@@ -1,8 +1,7 @@
 """
 # TODO
-- Normal mode just split all words, and a cascading grep would yield result then yield.
-    - Have an 'exact string' mode as an option.
-- Have a command line flag to just re-do indexing.
+
+- Have an 'exact string' mode as an option.
 """
 
 import os
@@ -17,12 +16,20 @@ if os.path.isdir('t:/src/working'):
     search_roots = ['t:/src/working', 'c:/david/sync']
 
 cacheLoc = os.path.normpath(os.path.expanduser('~/sync/ff_cache.pickle'))
+<<<<<<< HEAD
 cacheExpiryInSeconds = 40*60*60
+=======
+cacheExpiryInSeconds = 30*24*60*60
+>>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
 
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--exact_match', action='store_true', default=False)
+<<<<<<< HEAD
     parser.add_argument('grep', type=str, nargs='+', default = None)
+=======
+    parser.add_argument('grep', type=str, nargs='*', default = None)
+>>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     args = parser.parse_args()
     return args
@@ -65,7 +72,11 @@ def gen():
     for search_root in search_roots:
         for f in getAllFiles(os.path.expanduser(search_root)):
             F.append(f)
+<<<<<<< HEAD
     F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__'])
+=======
+    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])
+>>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
     return F
 
 def do():
@@ -82,14 +93,14 @@ def do():
             F = cache.F
         else:
             print('Cache too old, wiping.')
-
+    
     if F is None:
         print("Generating cache from %s, this could take a while... grab a coffee and relax :)." % search_roots)
         F = gen()
         print('Saving cache at: %s.' % cacheLoc)
         pickle.dump(Cache(F), open(cacheLoc, 'wb'))
-
-    if args.grep is not None:
+    
+    if len(args.grep) != 0:
         gg = args.grep
         
         if args.exact_match == False:

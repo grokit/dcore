@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
@@ -71,3 +72,78 @@ var xAxis = d3.svg.axis()
 d3.select("body").append("p").text("Keep up the good work!")
 </script>
 
+=======
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.chart rect {
+}
+
+.chart text {
+}
+
+</style>
+<svg class="chart"></svg>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="data.js"></script>
+<script>
+
+//data = JSON.parse(data)
+
+var width = 800
+var barWidth = width / data.length
+
+yMin = 0
+yMax = d3.max(data.map(function(v){ return v.length }))
+var height = 100
+
+var chart = d3.select(".chart")
+    .attr("width", width)
+    .attr("height", height)
+
+var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
+    .data(data) // ... for each data point ...
+    .enter().append("g")
+    // Here 'd' is the data, 'i' is the position of the data in the array.
+    .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
+
+// @@ scale
+
+
+console.log(yMin)
+console.log(yMax)
+
+var xScale = d3.scale.linear()
+	.domain([yMin, yMax])
+	.range([0, 100])
+
+bar.append("rect")
+    .attr("width", barWidth-2)
+    .attr("y", function(d){return height-xScale(d.length)})
+    .attr("height", function(d){return xScale(d.length)})
+    .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
+
+/*
+bar.append("text")
+	.attr("x", barWidth / 2 )
+	.attr("y", function(d,i){return height-d + 20})
+	.attr("dy", ".35em")
+	.attr("text-anchor", "middle")
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "16px")
+	.attr("fill", "white")
+	.text(function(d) {return d})
+*/
+
+
+/*
+var xAxis = d3.svg.axis()
+	.scale(xScale)
+	.orient("bottom")
+*/
+
+d3.select("body").append("p").text("Keep up the good work!")
+</script>
+
+>>>>>>> b5c776192e415919cd1af02f5d51a62420dd5184
