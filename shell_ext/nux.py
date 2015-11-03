@@ -66,6 +66,9 @@ def startapps():
     osExec('nohup diodon&')
     #osExec('nohup shutter --min_at_startup&')
 
+def vol_ctrl():
+    osExec('pavucontrol')
+
 def vol_up():
     osExec('amixer -q sset Master 10%+')
 
