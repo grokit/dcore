@@ -13,8 +13,6 @@
 - when adding a new cd<X>, do it at the end, not begin (avoid moving cd<x> for no reason)
 
 # BUGS
-
-- cd<X> are messed-up (wrong number, offset of 1)
 """
 
 _meta_shell_command = 'dr'
@@ -68,12 +66,11 @@ def set_file_content(fileList):
     
     fh = open(cacheFile, 'w')
     
-    file_cache = {}
+    fileList = list(set(fileList))
+    fileList.sort()
     for file in fileList:
-        if file_cache.get(file) == None:
-            file_cache[file] = True
-            fh.write(file)
-            fh.write("\n")        
+        fh.write(file)
+        fh.write("\n")        
     fh.close()
     
 def print_stored_dirs():

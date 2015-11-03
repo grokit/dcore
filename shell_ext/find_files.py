@@ -1,8 +1,7 @@
 """
 # TODO
-- Normal mode just split all words, and a cascading grep would yield result then yield.
-    - Have an 'exact string' mode as an option.
-- Have a command line flag to just re-do indexing.
+
+- Have an 'exact string' mode as an option.
 """
 
 import os
@@ -12,16 +11,18 @@ import datetime
 
 _meta_shell_command = 'ff'
 
-search_root = r'~/sync'
-cacheLoc = os.path.expanduser('~/sync/ff_cache.pickle')
-cacheExpiryInSeconds = 1*60*60
+search_roots = [r'~/sync']
+if os.path.isdir('t:/src/working'):
+    search_roots = ['t:/src/working', 'c:/david/sync']
+
+cacheLoc = os.path.normpath(os.path.expanduser('~/sync/ff_cache.pickle'))
+cacheExpiryInSeconds = 30*24*60*60
 
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--exact_match', action='store_true', default=False)
-    parser.add_argument('grep', type=str, nargs='+', default = None)
-    # NOT CODED:
-    #parser.add_argument('-f', '--filenames_only', action="store_true")
+    parser.add_argument('grep', type=str, nargs='*', default = None)
+    parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     args = parser.parse_args()
     return args
 
@@ -29,7 +30,7 @@ def getAllFiles(rootdir = '.'):
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
-            F.append( os.path.join(dirpath, f) )
+            F.append(os.path.normpath(os.path.join(dirpath, f)))
     return F
 
 def elementInList(f, filterArray):
@@ -59,21 +60,19 @@ def gen():
     # root = '~/sync/dev/Dropbox/scripts/dcore/shell_ext'
     # root = '~/sync'
     # @@@@ have a way to specify this in command line or option
-    F = getAllFiles(os.path.expanduser(search_root))
-    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__'])
+    F = []
+    for search_root in search_roots:
+        for f in getAllFiles(os.path.expanduser(search_root)):
+            F.append(f)
+    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])
     return F
 
 def do():
     args = getArgs()
     print(args)
-    if args.grep is None:
-        print('Search argument cannot be None. Args: %s.' % args)
-        exit(-1)
     
-    cache = None
-
     F = None
-    if os.path.isfile(cacheLoc):
+    if not args.reset and os.path.isfile(cacheLoc):
         print('Loading cache from: %s.' % cacheLoc)
         cache = pickle.load(open(cacheLoc, 'rb'))
         cacheAge = dateNow() - cache.date
@@ -82,14 +81,14 @@ def do():
             F = cache.F
         else:
             print('Cache too old, wiping.')
-
+    
     if F is None:
-        print('Generating cache... this could take a while... grab a coffee and relax :).')
+        print("Generating cache from %s, this could take a while... grab a coffee and relax :)." % search_roots)
         F = gen()
         print('Saving cache at: %s.' % cacheLoc)
         pickle.dump(Cache(F), open(cacheLoc, 'wb'))
-
-    if args.grep is not None:
+    
+    if len(args.grep) != 0:
         gg = args.grep
         
         if args.exact_match == False:
@@ -106,8 +105,8 @@ def do():
             print('Filter-in with: %s.' % gg)
             F = filterInCaseInsensitive(F, gg)
 
-    for f in F:
-        print(f)
+        for f in F:
+            print(f)
 
 if __name__ == '__main__':
     do()

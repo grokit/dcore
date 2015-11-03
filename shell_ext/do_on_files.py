@@ -46,8 +46,6 @@ def isDataSentToScript():
 
 def getStdinData():
     return codecs.getwriter('utf-8')(sys.stdin).read()
-    #return sys.stdin.read() 
-
     
 def aiTryJuiceFileFromFuzzyLine(str):
     """
@@ -72,7 +70,6 @@ def aiTryJuiceFileFromFuzzyLine(str):
         return pot[0]
     
     # Could also try to pattern match for [a-z]:.*\.[az09...]
-    
     return None
     
 def aiTryToJuiceAllPossibleFiles(str):    
@@ -134,7 +131,7 @@ def do():
     
     parser.add_argument('command', nargs='+')
     parser.add_argument('-f', '--filelist_file')
-    parser.add_argument('-m', '--magic_juice', action="store_true")
+    parser.add_argument('-m', '--magic_juice', default=False, action="store_true")
     parser.add_argument('-v', '--verbose', type=int)
     
     args = parser.parse_args()
@@ -176,13 +173,13 @@ def do():
         log("magic files extracted:\r\n%s" % lstToStr(magicLst))
         if args.magic_juice is True:
             elLst = elLst + magicLst
+            elLst = list(set(elLst))
     
     fileLst = []
     for el in elLst:
         if os.path.isfile(el):
             fileLst.append(el)
         else:
-            # @@todo have a different log level for this, ALWAYS log
             log('Skipping: %s, not a file.' % el)
     
     for file in fileLst:
@@ -190,11 +187,6 @@ def do():
         log("Executing: '%s'" % cmd)
         
         os.system(cmd)
-        """
-        rc = subprocess.call(cmd)
-        if rc is not 0:
-            log('Warning: executed program returned value: %s' % rc)
-        """
 
 if __name__ == '__main__':
     do()
