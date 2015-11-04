@@ -1,4 +1,6 @@
 
+Back-link to this document: https://github.com/grokit/dcore
+
 # DCore: What is it
 
 The 'DCore' lib has two purposes:
