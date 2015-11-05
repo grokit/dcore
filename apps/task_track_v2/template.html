@@ -34,19 +34,21 @@ var bar = chart.selectAll("nothing_yet") // By default, selecting something that
     .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
 
 // @@ scale
+// @@ next: data.date: need a way to scale in 30 chunks, and groupin together days based on which bucket they fall in
+// --------------------- would also be better to either filter or join by activite
 
 
 console.log(yMin)
 console.log(yMax)
 
-var xScale = d3.scale.linear()
+var yScale = d3.scale.linear()
 	.domain([yMin, yMax])
 	.range([0, 100])
 
 bar.append("rect")
     .attr("width", barWidth-2)
-    .attr("y", function(d){return height-xScale(d.length)})
-    .attr("height", function(d){return xScale(d.length)})
+    .attr("y", function(d){return height-yScale(d.length)})
+    .attr("height", function(d){return yScale(d.length)})
     .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
 
 /*
@@ -64,7 +66,7 @@ bar.append("text")
 
 /*
 var xAxis = d3.svg.axis()
-	.scale(xScale)
+	.scale(yScale)
 	.orient("bottom")
 */
 
