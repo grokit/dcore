@@ -47,7 +47,7 @@ def getArgs():
 def date():
     return str(datetime.datetime.now()).split(' ')[0]
 
-file = os.path.normpath(os.path.expanduser('~/dcore/journals/%s_journal.txt' % date()))
+file = os.path.normpath(os.path.expanduser('~/sync/dcore_data/journals/%s_journal.txt' % date()))
 stop = '!!!'
 
 if __name__ == '__main__':
