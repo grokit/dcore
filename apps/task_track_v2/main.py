@@ -19,17 +19,13 @@ import serialization_json
 _meta_shell_command = 'tt'
 
 def getArgs():
-
     parser = argparse.ArgumentParser()
-
     #parser.add_argument('-t', '--to', required=True)
     #parser.add_argument('subject', nargs='+')
     args = parser.parse_args()
     return args
 
-
 class Test:
-
     def __init__(self):
         self.a = 1
 

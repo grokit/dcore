@@ -21,7 +21,12 @@ _meta_shell_command = 'generate_shortcuts'
 
 def findPyFiles():
     dirsMap = system_description.getFilesAndFoldersMap()
-    pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
+
+    pyPublic = dirsMap['python_folder_public']
+
+    print('Getting files from: ' + pyPublic)
+
+    pyfiles = fsearch.getAllFilesRecursively('*.py', pyPublic)
     if dirsMap.get('python_folder_private') is not None:
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
     pyfiles = [pyfile for pyfile in pyfiles if pyfile.find('__') == -1]
@@ -104,6 +109,7 @@ def createShortcuts(lMeta):
 def do():
     delCurrentShortcuts()
     pyFiles = findPyFiles()
+    for p in pyFiles: print(p)
     meta = getMetadataFromPyFiles(pyFiles)
     createShortcuts(meta)
     

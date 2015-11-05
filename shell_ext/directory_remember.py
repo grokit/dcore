@@ -49,7 +49,7 @@ def remember_dir():
     if os.path.isdir(path_ext_folder):
         i = 0
         for dir in dirs:
-            new_file = path_ext_folder + r'\cd%02d.bat' % i
+            new_file = os.path.join(path_ext_folder, r'cd%02d.bat' % i)
             fh = open(new_file, 'w')
             fh.write('cd /d "%s"' % dir)
             fh.close()

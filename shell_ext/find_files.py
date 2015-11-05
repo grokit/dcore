@@ -60,16 +60,12 @@ class Cache:
         self.date = dateNow() 
 
 def gen():
-    # root = '~/sync/dev/Dropbox/scripts/dcore/shell_ext'
-    # root = '~/sync'
-    # @@@@ have a way to specify this in command line or option
     F = []
-    
-    
-    
+
     for search_root in search_roots:
+        search_root = os.path.expanduser(search_root)
         assert os.path.isdir(search_root)
-        for f in getAllFiles(os.path.expanduser(search_root)):
+        for f in getAllFiles(search_root):
             F.append(f)
     F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])
     return F

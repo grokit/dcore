@@ -7,14 +7,16 @@ import os
 
 def dcoreRoot():
     paths = []
-    paths.append(os.path.expanduser('~/sync/dcore'))
+    paths.append(os.path.expanduser('~/sync/dcore_data'))
     paths.append(r'c:\david\dcore_home')
     root = [f for f in paths if os.path.isdir(f)]
-    assert len(root) == 1
+    if len(root) != 1:
+        raise Exception('root != 1: %s' % root)
     return root[0]
 
 def pathExt():
-    return r'c:\david\scripts-private\path_ext'
+	return os.path.normpath(os.path.join(dcoreRoot(), './path_ext'))
     
 if __name__ == '__main__':
-    pass
+	print(dcoreRoot())
+	print(pathExt())
