@@ -9,13 +9,16 @@ import argparse
 import pickle
 import datetime
 
+import dcore.data as data
+
 _meta_shell_command = 'ff'
 
 search_roots = [r'~/sync']
-if os.path.isdir('t:/src/working'):
-    search_roots = ['t:/src/working', 'c:/david/sync']
+if os.path.isdir('c:/src/working'):
+    search_roots = ['c:/src/working', 'c:/david']
+    #search_roots = ['c:/david/dev/books']
 
-cacheLoc = os.path.normpath(os.path.expanduser('~/sync/ff_cache.pickle'))
+cacheLoc = os.path.join(data.dcoreRoot(), os.path.split(__file__)[1] + ".cache")
 cacheExpiryInSeconds = 30*24*60*60
 
 def getArgs():
@@ -61,7 +64,11 @@ def gen():
     # root = '~/sync'
     # @@@@ have a way to specify this in command line or option
     F = []
+    
+    
+    
     for search_root in search_roots:
+        assert os.path.isdir(search_root)
         for f in getAllFiles(os.path.expanduser(search_root)):
             F.append(f)
     F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])

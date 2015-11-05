@@ -14,7 +14,7 @@ backup_in = r'T:\backups\auto'
 # disable for now
 # to_backup_online = r'C:\david\sync\skydrive'
 
-exe_7zip = r'c:\david\sync\app\7zip\7z.exe'
+exe_7zip = r'c:\david\app\7zip\7z.exe'
 
 if __name__ == '__main__':
     backup_loc = os.path.abspath('.')

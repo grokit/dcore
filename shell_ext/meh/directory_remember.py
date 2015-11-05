@@ -27,8 +27,10 @@ try:
 except:
     pass
 
-path_ext_folder = r'c:\david\sync\scripts-private\path_ext'
-cacheFile = os.path.expanduser('~/%s.cache' % os.path.split(__file__)[1])
+import dcore.data as data
+    
+path_ext_folder = data.pathExt()
+cacheFile = os.path.join(data.dcoreRoot(), '%s.cache' % os.path.split(__file__)[1])
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
@@ -52,7 +54,9 @@ def remember_dir():
             fh.write('cd /d "%s"' % dir)
             fh.close()
             i += 1
-
+    else:
+        raise Exception(path_ext_folder)
+        
 def get_file_content():
     fh = open(cacheFile, 'r')
     data = fh.read()
