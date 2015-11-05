@@ -37,18 +37,21 @@ _meta_shell_command = 'jl'
 import os
 import datetime
 import argparse
+import platform
+
+import dcore.data as data
+
+def date():
+    return str(datetime.datetime.now()).split(' ')[0]
+    
+file = os.path.join(data.dcoreRoot(), 'journals/%s_journal.markdown' % date())
+stop = '!!!'
 
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
     parser.add_argument('-f', '--filename_copy_to_journal_directory', action='store_true', default=False, help='Copies the file to the journal current directory and inserts a link in the markdown file.')
     return parser.parse_args()
-    
-def date():
-    return str(datetime.datetime.now()).split(' ')[0]
-
-file = os.path.normpath(os.path.expanduser('~/sync/dcore_data/journals/%s_journal.txt' % date()))
-stop = '!!!'
 
 if __name__ == '__main__':
     

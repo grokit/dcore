@@ -14,13 +14,13 @@ import re
 import sys
 
 import dcore.search_files as fsearch
-import dcore.system_description as sd
+import dcore.system_description as system_description
 
 shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'generate_shortcuts'
 
 def findPyFiles():
-    dirsMap = sd.getFilesAndFoldersMap()
+    dirsMap = system_description.getFilesAndFoldersMap()
     pyfiles = fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])
     if dirsMap.get('python_folder_private') is not None:
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
@@ -29,7 +29,7 @@ def findPyFiles():
 
 def delCurrentShortcuts():
     
-    file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
+    file_ext, output_dir, file_template = system_description.getPythonScriptsEnv()
     
     # @@b1: adapt for linux: scan all files where find magic number.
     shellFiles = fsearch.getAllFilesRecursively('*.bat', output_dir)
@@ -41,7 +41,7 @@ def delCurrentShortcuts():
         fh.close()
         
         for line in lines:
-            if line.find(sd.magic_tag_intstr) != -1:
+            if line.find(system_description.magic_tag_intstr) != -1:
                 toDel.append(file)
                 break
     
@@ -54,7 +54,7 @@ def getMetadataFromPyFiles(pyfiles):
     meta: (python file, shell command, special flags)
     """
     
-    file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
+    file_ext, output_dir, file_template = system_description.getPythonScriptsEnv()
     
     meta = []
     
@@ -81,8 +81,8 @@ def getMetadataFromPyFiles(pyfiles):
 
 def createShortcuts(lMeta):
     
-    file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
-    dirsMap = sd.getFilesAndFoldersMap()
+    file_ext, output_dir, file_template = system_description.getPythonScriptsEnv()
+    dirsMap = system_description.getFilesAndFoldersMap()
     
     for meta in lMeta:
         

@@ -66,6 +66,9 @@ def date(f, arg):
 def custom(f, arg):
     return f.replace('__', '_')
 
+def changeExt(f, arg):
+    return os.path.splitext(f)[0] + '.markdown'
+    
 if __name__ == '__main__':
     files = os.listdir('.')
     files = [f for f in files if os.path.isfile(f)]
@@ -73,6 +76,7 @@ if __name__ == '__main__':
     fnMap = {
             'remove_spaces': removeSpace,
             'remove_non_az': removeNonAZ,
+            'change_ext': changeExt,
             'prefix': prefix,
             'date': date,
             'custom': custom
@@ -91,6 +95,3 @@ if __name__ == '__main__':
         to = fn(f, args.rest)
         print('%s -> %s' % (f, to))
         os.rename(f, to)
-
-
-			

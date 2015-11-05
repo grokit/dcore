@@ -1,6 +1,11 @@
 """
-# Info
-# TODO:
+# TODO
+
+## As
+
+- Wrap inside dcore.data and put in a less prominent directory.
+
+## Bs
 
 - Put in private data file info:
     - Obviously, just use this for low security stuff (such as added layer of security when sending as mail), passwords for accounts I do not care about, ...
@@ -40,7 +45,7 @@ def getAutogenFileTemplate():
 
     __custom__
 
-    """ % (__file__, magic_tag)
+    """ % (os.path.normpath(__file__), magic_tag)
 
     if os.name == 'nt':
         pass
@@ -101,6 +106,7 @@ def getFilesAndFoldersMap():
     
     return {k:v for (k,v) in items}
 
+# @@bug BAN THIS. This is way to magicky.
 # This will add all the variables declared in the JSON file as local variables.
 # This way, private_data.variable is accessible after importing the module.
 jd = __loadPrivateFile()
