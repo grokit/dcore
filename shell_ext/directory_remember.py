@@ -21,6 +21,7 @@ _meta_shell_command = 'dr'
 import sys
 import os
 import argparse
+import platform
 
 try:
     from tkinter import Tk
@@ -121,7 +122,10 @@ def do():
         exit(0) 
     
     if args.edit:
-        os.system('np ' + cacheFile)
+        if platform.system().lower() == 'windows':
+            os.system('np ' + cacheFile)
+        else:
+            os.system('vim ' + cacheFile)
         exit(0)      
     
     if args.remember:
