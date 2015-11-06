@@ -16,14 +16,14 @@ On Linux, you need to prepend '. ':
         - this can also solve the "private data" issue: just have a flat file, implementation is all public, it will just complain of a missing key if not there.
 """
 
-import dcore.system_description as sd
 
 import os
 import re
 import sys
 import argparse
 
-import dcore.system_description as private_data
+import dcore.system_description as sd
+import dcore.data as data
 
 _meta_shell_command = 'gendirs'
 
@@ -64,7 +64,7 @@ def do():
         for shortcut, folder in dirsMap.items():
             print(shortcut, folder)
             
-            fileOut = dirsMap['dirs_shortcuts'] + "/" + 'cd' + shortcut + file_ext
+            fileOut = output_dir + "/" + 'cd' + shortcut + file_ext
             folder = explandTemplates(folder)
             dswitch = ""
             if os.name == 'nt':

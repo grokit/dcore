@@ -16,6 +16,9 @@
 import os
 import json
 import pathlib
+import platform
+
+import dcore.data as data
 
 # Stick this into every file that is auto-generated. This is used for cleanup /
 # allowing to remove the old files when a new set of files is created.
@@ -62,7 +65,7 @@ def getPythonScriptsEnv():
 
     if os.name == 'nt':
         file_ext = '.bat'
-        output_dir = os.getcwd() + '\\path_ext'
+        output_dir = data.pathExt()
         file_template = file_template.replace('__custom__', "python ""__py_file__"" __opt_cmd__ %*")
 
     elif os.name == 'posix':
@@ -108,7 +111,7 @@ def getFilesAndFoldersMap():
 
 # @@bug BAN THIS. This is way to magicky.
 # This will add all the variables declared in the JSON file as local variables.
-# This way, private_data.variable is accessible after importing the module.
+# This way, system_description.variable is accessible after importing the module.
 jd = __loadPrivateFile()
 localsDir = locals()
 for k, v in jd['variables'].items():
