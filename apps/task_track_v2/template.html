@@ -21,13 +21,15 @@ function getUnixTimeXDaysAgo(x){
 	return d
 }
 
+var timePeriodInDay = 7
+
 // Only keep cs events...
 data = data.filter(function(d){return d.type == "cs"})
-// ... of the last 30 days.
-data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(30)})
+// ... of the last timePeriodInDay days.
+data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
 
-var width = 800
-var barWidth = width / data.length
+var width = 1200
+var barWidth = width / timePeriodInDay
 
 yMin = 0
 yMax = d3.max(data.map(function(v){ return v.length }))
@@ -40,7 +42,7 @@ var chart = d3.select(".chart")
     .attr("height", height)
 
 // @@ scale
-// @@ next: data.date: need a way to scale in 30 chunks, and groupin together days based on which bucket they fall in
+// @@ next: data.date: need a way to scale in timePeriodInDay chunks, and groupin together days based on which bucket they fall in
 // --------------------- would also be better to either filter or join by activite
 var xScale = d3.scale.linear()
 	.domain([xMin, xMax])
@@ -88,12 +90,12 @@ var xAxis = d3.svg.axis()
 	.orient("bottom")
 */
 
-d3.select("body").append("p").text("Keep up the good work!")
+// d3.select("body").append("p").text("Keep up the good work!")
 
 var totalWorked = 0
 for(var i = 0; i < data.length; ++i){
 	totalWorked += data[i].length
 }
 
-d3.select("body").append("p").text("You have worked " + totalWorked + " hours this month, or " + totalWorked/30 + " per day.")
+d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDay + " days, or " + totalWorked/timePeriodInDay + " hour(s) per day.")
 </script>
