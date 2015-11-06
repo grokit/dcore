@@ -8,6 +8,8 @@ import os
 import sys
 import pathlib
 
+import dcore.data as data
+
 SYS_PATH_ADD_IF_NOT_PRESENT = [
 r'c:\python32',
 r'c:\python33',
@@ -36,6 +38,7 @@ def listRemoveDuplicates(lst):
     return lst
 
 def getSysPathAsList():
+    raise Exception("Do not use this as this gets the merge system and user path.")
     return os.environ['path'].split(';')
 
 def setPermanentEnvironmentVariable(name, var):
@@ -56,10 +59,15 @@ def isValidPath(p):
 
 def do():
     
-    #sPath = getSysPathAsList()
+    # Completely whacks user's path variable. Know what you are doing before running this :).
+    
     sPath = []
     
-    sPath.append(os.path.join(getRootPath(), './path_ext'))
+    sPath.append(os.path.join(data.pathExt()))
+    
+    # Special folders for windows env.
+    sPath.append(r'C:\Program Files\Git\cmd')
+    sPath.append(r'c:\Windows\SysWOW64\WindowsPowerShell\v1.0')
     sPath.append(os.path.join(getRootPath(), './../scripts/path_ext'))
     
     sPath.append(getRootPath())
@@ -79,8 +87,8 @@ def do():
     setPermanentEnvironmentVariable('PATH', sPath)
     
     sysEnvVarsAddOrClobber = {
-    'PYTHONPATH': getRootPath() + ';' + r'c:\david\scripts',
-    'DESKTOP': os.path.join(os.environ['userprofile'], 'desktop')
+        'PYTHONPATH': getRootPath() + ';' + r'c:\david\scripts',
+        'DESKTOP': os.path.join(os.environ['userprofile'], 'desktop')
     }
     
     for k, v in sysEnvVarsAddOrClobber.items():

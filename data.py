@@ -5,14 +5,13 @@ Define where data is.
 import sys
 import os
 
+import platform
+
 def dcoreRoot():
-    paths = []
-    paths.append(os.path.expanduser('~/sync/dcore_data'))
-    paths.append(r'c:\david\dcore_home')
-    root = [f for f in paths if os.path.isdir(f)]
-    if len(root) != 1:
-        raise Exception('root != 1: %s' % root)
-    return root[0]
+    if platform.system().lower() == "windows":
+        return r'c:\david\dcore_home'
+    else:
+        return os.path.expanduser('~/sync/dcore_data')
 
 def pathExt():
 	return os.path.normpath(os.path.join(dcoreRoot(), './path_ext'))
