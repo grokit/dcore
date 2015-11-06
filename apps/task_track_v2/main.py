@@ -50,5 +50,5 @@ if __name__ == '__main__':
 
     htmlFile = options.htmlFile
     wd = serialization_json.fromFile(dbFile)
-    render_html.render(wd, htmlFile)
+    render_html.render(wd, htmlFile, options.dataFile)
 

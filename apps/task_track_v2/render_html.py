@@ -13,7 +13,7 @@ import options
 import work_unit
 import serialization_json  
 
-def render(wd, htmlFilename):
+def render(wd, htmlFilename, dataFilename):
 	template = open(os.path.join(options.mainDir, 'template.html')).read()
 	open(htmlFilename, 'w').write(template)
 
@@ -27,7 +27,7 @@ def render(wd, htmlFilename):
 
 	workUnits = list(map( dateToUnixTime, workUnits))
 
-	filenameOut = 'data.js'
+	filenameOut = dataFilename
 	ser = json.dumps(workUnits, cls=serialization_json.Encoder, indent=4)
 	# Need to dump as javascript object...
 	lines = ser.split('\n')
