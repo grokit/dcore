@@ -9,59 +9,78 @@
 }
 
 </style>
-<svg class="chart"></svg>
+<body>
+</body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="data.js"></script>
 <script>
 
-//data = JSON.parse(data)
-
-var width = 800
-var barWidth = width / data.length
-
-var rawValues = []
-for(var i = 0; i < data.length; ++i){
-	rawValues.push(data[i].length)
+function getUnixTimeXDaysAgo(x){
+	var d = new Date()
+	d.setDate(d.getDate() - x)
+	d = Math.floor(d.getTime()/1000)
+	return d
 }
-var height = Math.max.apply(Math, rawValues)
 
-var chart = d3.select(".chart")
-    .attr("width", width)
-    .attr("height", height)
+function genChart(data, timePeriodInDay){
 
-var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
-    .data(data) // ... for each data point ...
-    .enter().append("g")
-    // Here 'd' is the data, 'i' is the position of the data in the array.
-    .attr("transform", function(d, i) { return "translate(" + i * (width / data.length) + ", 0)" });
+	// Only keep cs events...
+	data = data.filter(function(d){return d.type == "cs"})
+	// ... of the last timePeriodInDay days.
+	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
 
-bar.append("rect")
-    .attr("width", barWidth-2)
-    .attr("y", function(d){return height-d.length})
-    .attr("height", function(d){return d.length})
-    .attr("fill", function(d){return "rgb(100, 0, " + (d.length * 5) + ")"})
+	var width = 1200
+	var barWidth = width / (timePeriodInDay-1)
 
-/*
-bar.append("text")
-	.attr("x", barWidth / 2 )
-	.attr("y", function(d,i){return height-d + 20})
-	// .attr("dy", ".35em")
-	.attr("text-anchor", "middle")
-	.attr("font-family", "sans-serif")
-	.attr("font-size", "16px")
-	.attr("fill", "white")
-	.text(function(d) {return d})
-*/
+	yMin = 0
+	yMax = d3.max(data.map(function(v){ return v.length }))
+	xMin = d3.min(data.map(function(v){ return v.date }))
+	xMax = d3.max(data.map(function(v){ return v.date }))
+	var height = 100
 
-var xScale = d3.scale.linear()
-	.domain([0, Math.max.apply(Math, data)]) // Input from a...b,
-	.range([0, width])                       // ... is mapped to c...d linearly.
+	var chart = d3.select("body")
+	    .append("svg:svg")
+	    .attr("width", width)
+	    .attr("height", height)
+	
+	var xScale = d3.scale.linear()
+		.domain([xMin, xMax])
+		.range([0, width])
 
-var xAxis = d3.svg.axis()
-	.scale(xScale)
-	.orient("bottom")
+	var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
+	    .data(data) // ... for each data point ...
+	    .enter().append("g")
+	    // Here 'd' is the data, 'i' is the position of the data in the array.
+	    .attr("transform", function(d, i) { return "translate(" + xScale(d.date) + ", 0)" });
 
-// chart.append("g") .attr("transform", "translate(0," + (height-25) + ")") .call(xAxis)
+	var yScale = d3.scale.linear()
+		.domain([yMin, yMax])
+		.range([0, 100])
 
-d3.select("body").append("p").text("Keep up the good work!")
+	bar.append("rect")
+	    .attr("width", barWidth-2)
+	    .attr("y", function(d){return height-yScale(d.length)})
+	    .attr("height", function(d){return yScale(d.length)})
+	    .attr("fill", function(d){
+			    var r = 0
+			    var g = d.length*50
+			    if(g<=75){g=75}
+			    if(g>=255){g=200}
+			    var b = 50
+			    return "rgb("+r+", "+g+", "+b+")"
+			    })
+
+	var totalWorked = 0
+	for(var i = 0; i < data.length; ++i){
+		totalWorked += data[i].length
+	}
+
+	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDay + " days, or " + totalWorked/timePeriodInDay + " hour(s) per day.")
+}
+
+genChart(data, 7)
+genChart(data, 30)
+genChart(data, 90)
 </script>
+<body>
+</body>
