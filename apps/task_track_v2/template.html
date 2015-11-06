@@ -21,81 +21,64 @@ function getUnixTimeXDaysAgo(x){
 	return d
 }
 
-var timePeriodInDay = 7
+function genChart(data, timePeriodInDay){
 
-// Only keep cs events...
-data = data.filter(function(d){return d.type == "cs"})
-// ... of the last timePeriodInDay days.
-data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
+	// Only keep cs events...
+	data = data.filter(function(d){return d.type == "cs"})
+	// ... of the last timePeriodInDay days.
+	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
 
-var width = 1200
-var barWidth = width / timePeriodInDay
+	var width = 1200
+	var barWidth = width / timePeriodInDay
 
-yMin = 0
-yMax = d3.max(data.map(function(v){ return v.length }))
-xMin = d3.min(data.map(function(v){ return v.date }))
-xMax = d3.max(data.map(function(v){ return v.date }))
-var height = 100
+	yMin = 0
+	yMax = d3.max(data.map(function(v){ return v.length }))
+	xMin = d3.min(data.map(function(v){ return v.date }))
+	xMax = d3.max(data.map(function(v){ return v.date }))
+	var height = 100
 
-var chart = d3.select(".chart")
-    .attr("width", width)
-    .attr("height", height)
+	var chart = d3.select(".chart")
+	    .attr("width", width)
+	    .attr("height", height)
 
-// @@ scale
-// @@ next: data.date: need a way to scale in timePeriodInDay chunks, and groupin together days based on which bucket they fall in
-// --------------------- would also be better to either filter or join by activite
-var xScale = d3.scale.linear()
-	.domain([xMin, xMax])
-	.range([0, width])
+	// @@ scale
+	// @@ next: data.date: need a way to scale in timePeriodInDay chunks, and groupin together days based on which bucket they fall in
+	// --------------------- would also be better to either filter or join by activite
+	var xScale = d3.scale.linear()
+		.domain([xMin, xMax])
+		.range([0, width])
 
-var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
-    .data(data) // ... for each data point ...
-    .enter().append("g")
-    // Here 'd' is the data, 'i' is the position of the data in the array.
-    .attr("transform", function(d, i) { return "translate(" + xScale(d.date) + ", 0)" });
+	var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
+	    .data(data) // ... for each data point ...
+	    .enter().append("g")
+	    // Here 'd' is the data, 'i' is the position of the data in the array.
+	    .attr("transform", function(d, i) { return "translate(" + xScale(d.date) + ", 0)" });
 
-var yScale = d3.scale.linear()
-	.domain([yMin, yMax])
-	.range([0, 100])
+	var yScale = d3.scale.linear()
+		.domain([yMin, yMax])
+		.range([0, 100])
 
-bar.append("rect")
-    .attr("width", barWidth-2)
-    .attr("y", function(d){return height-yScale(d.length)})
-    .attr("height", function(d){return yScale(d.length)})
-    .attr("fill", function(d){
-		    var r = 0
-		    var g = d.length*50
-		    if(g<=75){g=75}
-		    if(g>=255){g=200}
-		    var b = 50
-		    return "rgb("+r+", "+g+", "+b+")"
-		    })
+	bar.append("rect")
+	    .attr("width", barWidth-2)
+	    .attr("y", function(d){return height-yScale(d.length)})
+	    .attr("height", function(d){return yScale(d.length)})
+	    .attr("fill", function(d){
+			    var r = 0
+			    var g = d.length*50
+			    if(g<=75){g=75}
+			    if(g>=255){g=200}
+			    var b = 50
+			    return "rgb("+r+", "+g+", "+b+")"
+			    })
 
-/*
-bar.append("text")
-	.attr("x", barWidth / 2 )
-	.attr("y", function(d,i){return height-d + 20})
-	.attr("dy", ".35em")
-	.attr("text-anchor", "middle")
-	.attr("font-family", "sans-serif")
-	.attr("font-size", "16px")
-	.attr("fill", "white")
-	.text(function(d) {return d})
-*/
+	var totalWorked = 0
+	for(var i = 0; i < data.length; ++i){
+		totalWorked += data[i].length
+	}
 
-
-/*
-var xAxis = d3.svg.axis()
-	.scale(yScale)
-	.orient("bottom")
-*/
-
-// d3.select("body").append("p").text("Keep up the good work!")
-
-var totalWorked = 0
-for(var i = 0; i < data.length; ++i){
-	totalWorked += data[i].length
+	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDay + " days, or " + totalWorked/timePeriodInDay + " hour(s) per day.")
 }
 
-d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDay + " days, or " + totalWorked/timePeriodInDay + " hour(s) per day.")
+genChart(data, 30)
+genChart(data, 90)
 </script>
