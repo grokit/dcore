@@ -24,7 +24,7 @@ function getUnixTimeXDaysAgo(x){
 // Only keep cs events...
 data = data.filter(function(d){return d.type == "cs"})
 // ... of the last 30 days.
-data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(25)})
+data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(30)})
 
 var width = 800
 var barWidth = width / data.length
@@ -89,4 +89,11 @@ var xAxis = d3.svg.axis()
 */
 
 d3.select("body").append("p").text("Keep up the good work!")
+
+var totalWorked = 0
+for(var i = 0; i < data.length; ++i){
+	totalWorked += data[i].length
+}
+
+d3.select("body").append("p").text("You have worked " + totalWorked + " hours this month, or " + totalWorked/30 + " per day.")
 </script>
