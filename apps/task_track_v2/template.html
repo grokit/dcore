@@ -22,15 +22,11 @@ function getUnixTimeXDaysAgo(x){
 	return d
 }
 
-function onEach(x, fn){
-	for(var i = 0; i < x.length; ++i){
-		fn(x[i])
-	}
-}
+function onEach(x, fn){ for(var i = 0; i < x.length; ++i){ fn(x[i]) } }
 
-function dataToBuckets(data, nBuckets){
-	var min = 1000000000000; onEach(data, function(x){ if(min > x.date){min=x.date} })
-	var max = 0; onEach(data, function(x){ if(max < x.date){max=x.date} })
+function dataToBuckets(data, nBuckets, min, max){
+	// var max = 0; onEach(data, function(x){ if(max < x.date){max=x.date} })
+	// var min = max; onEach(data, function(x){ if(min > x.date){min=x.date} })
 
 	var step = (max-min)/nBuckets
 
@@ -51,24 +47,29 @@ function dataToBuckets(data, nBuckets){
 	return dataT
 }
 
-function genChart(data, timePeriodInDays){
+function genChart(data, timePeriodInDays, activityFilter){
 
 	// Only keep cs events...
-	data = data.filter(function(d){return d.type == "cs"})
+	if(activityFilter != null){
+		data = data.filter(function(d){return d.type == "cs"})
+	}
 	// ... of the last timePeriodInDays days.
 	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDays)})
 
-	data = dataToBuckets(data, timePeriodInDays)
+	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgo(timePeriodInDays), getUnixTimeXDaysAgo(0))
 
 	var width = 1000 
 	var barWidth = width / (timePeriodInDays-1)
 
 	yMin = 0
 	yMax = d3.max(data.map(function(v){ return v.length }))
-	xMin = d3.min(data.map(function(v){ return v.date }))
+	//xMin = d3.min(data.map(function(v){ return v.date }))
+	//xMin = getUnixTimeXDaysAgo(timePeriodInDays)
+	xMin = 0
 	xMax = d3.max(data.map(function(v){ return v.date }))
-	var height = 100
+	var height = 70 
 
+	d3.select("body").append("p").text("Activity: " + activityFilter)
 	var chart = d3.select("body")
 	    .append("svg:svg")
 	    .attr("width", width)
@@ -96,7 +97,7 @@ function genChart(data, timePeriodInDays){
 			    var r = 0
 			    var g = d.length*50
 			    if(g<=75){g=75}
-			    if(g>=255){g=200}
+			    if(g>=200){g=200}
 			    var b = 50
 			    return "rgb("+r+", "+g+", "+b+")"
 			    })
@@ -110,9 +111,10 @@ function genChart(data, timePeriodInDays){
 	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
 }
 
-genChart(data, 7)
-genChart(data, 30)
-genChart(data, 90)
+genChart(data, 7, "cs")
+genChart(data, 30, "cs")
+genChart(data, 90, "cs")
+genChart(data, 365, "cs")
 </script>
 <body>
 </body>
