@@ -14,7 +14,17 @@
 <script src="data.js"></script>
 <script>
 
+function getUnixTimeXDaysAgo(x){
+	var d = new Date()
+	d.setDate(d.getDate() - x)
+	d = Math.floor(d.getTime()/1000)
+	return d
+}
+
+// Only keep cs events...
 data = data.filter(function(d){return d.type == "cs"})
+// ... of the last 30 days.
+data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(25)})
 
 var width = 800
 var barWidth = width / data.length
@@ -56,7 +66,6 @@ bar.append("rect")
 		    if(g<=75){g=75}
 		    if(g>=255){g=200}
 		    var b = 50
-		    console.log(g)
 		    return "rgb("+r+", "+g+", "+b+")"
 		    })
 
