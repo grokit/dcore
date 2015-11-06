@@ -22,15 +22,46 @@ function getUnixTimeXDaysAgo(x){
 	return d
 }
 
-function genChart(data, timePeriodInDay){
+function onEach(x, fn){
+	for(var i = 0; i < x.length; ++i){
+		fn(x[i])
+	}
+}
+
+function dataToBuckets(data, nBuckets){
+	var min = 1000000000000; onEach(data, function(x){ if(min > x.date){min=x.date} })
+	var max = 0; onEach(data, function(x){ if(max < x.date){max=x.date} })
+
+	var step = (max-min)/nBuckets
+
+	dataT = []
+	for(var i = 0; i < nBuckets; ++i){
+		var o = new Object()
+		o.date = i*step
+		o.length = 0
+		dataT.push(o)
+	}
+
+	onEach(data, function(x){
+		var ii = Math.floor(nBuckets*(x.date - min)/(max-min))
+		if(ii == nBuckets){ ii -= 1 }
+		dataT[ii].length += x.length
+	})
+
+	return dataT
+}
+
+function genChart(data, timePeriodInDays){
 
 	// Only keep cs events...
 	data = data.filter(function(d){return d.type == "cs"})
-	// ... of the last timePeriodInDay days.
-	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
+	// ... of the last timePeriodInDays days.
+	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDays)})
+
+	data = dataToBuckets(data, timePeriodInDays)
 
 	var width = 1000 
-	var barWidth = width / (timePeriodInDay-1)
+	var barWidth = width / (timePeriodInDays-1)
 
 	yMin = 0
 	yMax = d3.max(data.map(function(v){ return v.length }))
@@ -75,8 +106,8 @@ function genChart(data, timePeriodInDay){
 		totalWorked += data[i].length
 	}
 
-	hoursPerDay = Math.floor(100*totalWorked/timePeriodInDay)/100
-	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDay + " days, or " + hoursPerDay + " hour(s) per day.")
+	hoursPerDay = Math.floor(100*totalWorked/timePeriodInDays)/100
+	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
 }
 
 genChart(data, 7)
