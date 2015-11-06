@@ -29,7 +29,7 @@ function genChart(data, timePeriodInDay){
 	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDay)})
 
 	var width = 1200
-	var barWidth = width / timePeriodInDay
+	var barWidth = width / (timePeriodInDay-1)
 
 	yMin = 0
 	yMax = d3.max(data.map(function(v){ return v.length }))
@@ -37,9 +37,12 @@ function genChart(data, timePeriodInDay){
 	xMax = d3.max(data.map(function(v){ return v.date }))
 	var height = 100
 
-	var chart = d3.select(".chart")
+	var chart = d3.select("body")
+	    .append("svg:svg")
 	    .attr("width", width)
 	    .attr("height", height)
+	
+	    d3.select("body").append("p")
 
 	var xScale = d3.scale.linear()
 		.domain([xMin, xMax])
@@ -79,3 +82,5 @@ function genChart(data, timePeriodInDay){
 genChart(data, 30)
 genChart(data, 90)
 </script>
+<body>
+</body>
