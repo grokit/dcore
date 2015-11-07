@@ -23,7 +23,7 @@ _meta_shell_command = 'generate_shortcuts'
 def findPyFiles():
     dirsMap = system_description.getFilesAndFoldersMap()
 
-    pyPublic = dirsMap['python_folder_public']
+    pyPublic = data.dcoreRoot()
 
     print('Getting files from: ' + pyPublic)
 
@@ -34,6 +34,7 @@ def findPyFiles():
     return pyfiles
 
 def delCurrentShortcuts():
+    raise Exception("Not implemented")
     
     file_ext, output_dir, file_template = system_description.getPythonScriptsEnv()
     
@@ -97,6 +98,7 @@ def createShortcuts(lMeta):
         fileContent = fileContent.replace('__opt_cmd__', meta[2])
         
         fileOut = placeForScriptsThatOSHasPATHSetTo + "/" + meta[1] + file_ext
+        fileOut = os.path.normpath(fileOut)
         
         print( (meta, fileOut) )
         
@@ -108,7 +110,7 @@ def createShortcuts(lMeta):
            os.system('chmod +x %s' % fileOut)    
 
 def do():
-    delCurrentShortcuts()
+    #delCurrentShortcuts()
     pyFiles = findPyFiles()
     for p in pyFiles: print(p)
     meta = getMetadataFromPyFiles(pyFiles)

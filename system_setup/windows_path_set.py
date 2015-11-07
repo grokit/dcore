@@ -8,9 +8,10 @@ import os
 import sys
 import pathlib
 
-import dcore.data as data
+# import dcore.data as data
+import data
 
-
+"""
 def getRootPath():
     # dcore root supposed to be one dir up from here.
     # Would be better to rely on a tag file in the root directory.
@@ -19,6 +20,7 @@ def getRootPath():
 
 def getShortcutsPath():
 	return os.path.join(getRootPath(), './dcore/path_ext')
+"""
 
 def listRemoveDuplicates(lst):
     # Maintain relative order in the original list.
@@ -61,9 +63,9 @@ def do():
     # Special folders for windows env.
     sPath.append(r'C:\Program Files\Git\cmd')
     sPath.append(r'c:\Windows\SysWOW64\WindowsPowerShell\v1.0')
-    sPath.append(os.path.join(getRootPath(), './../scripts/path_ext'))
+    sPath.append(os.path.join(data.dcoreRoot(), './../scripts/path_ext'))
     
-    sPath.append(getRootPath())
+    sPath.append(data.dcoreRoot())
 
     pathAddIfNotPresent = [
         r'c:\python32',
@@ -71,6 +73,7 @@ def do():
         r'c:\python34',
         r'c:\python35',
         r'c:\python36',
+        os.path.expanduser(r'~\AppData\Local\Programs\Python\Python35-32'),
     ]
 
     for p in pathAddIfNotPresent:
@@ -86,10 +89,13 @@ def do():
     sPath = ";".join(sPath)
     
     #print(sPath)
+    # @@@bug instead of setting PATH, should run all commands with full path from dcore. This way, no need for sys path. We know
+    #        that information at script generation time.
     setPermanentEnvironmentVariable('PATH', sPath)
     
+    pythonPath = os.path.abspath( data.dcoreRoot() + '/..' )
     sysEnvVarsAddOrClobber = {
-        'PYTHONPATH': getRootPath() + ';' + r'c:\david\scripts',
+        'PYTHONPATH':  pythonPath + ';' + r'c:\david\scripts',
         'DESKTOP': os.path.join(os.environ['userprofile'], 'desktop')
     }
     
