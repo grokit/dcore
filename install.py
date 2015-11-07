@@ -10,6 +10,8 @@ import sys
 import os
 
 if __name__ == '__main__':
+
+	"""
     magicMark = "# Magic dcore tag: fh89h98h3f9hf39hf98ahsfd9djh." 
     dcoreLoc = os.path.normpath(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..'))
     ppathMod = 'export PYTHONPATH=$PYTHONPATH:%s' % dcoreLoc
@@ -19,6 +21,7 @@ if __name__ == '__main__':
     if magicMark not in profile:
         profile = magicMark + "\n" + ppathMod + "\n" + profile
         open(profileF, 'w').write(profile)
+	"""
 
     import system_setup.create_python_scripts_shortcuts
     system_setup.create_python_scripts_shortcuts.do()
