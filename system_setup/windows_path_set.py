@@ -10,13 +10,6 @@ import pathlib
 
 import dcore.data as data
 
-SYS_PATH_ADD_IF_NOT_PRESENT = [
-r'c:\python32',
-r'c:\python33',
-r'c:\python34',
-r'c:\python35',
-r'c:\python36',
-]
 
 def getRootPath():
     # dcore root supposed to be one dir up from here.
@@ -71,7 +64,16 @@ def do():
     sPath.append(os.path.join(getRootPath(), './../scripts/path_ext'))
     
     sPath.append(getRootPath())
-    for p in SYS_PATH_ADD_IF_NOT_PRESENT:
+
+    pathAddIfNotPresent = [
+        r'c:\python32',
+        r'c:\python33',
+        r'c:\python34',
+        r'c:\python35',
+        r'c:\python36',
+    ]
+
+    for p in pathAddIfNotPresent:
         sPath.append(p)
     
     sPath = [os.path.normpath(p) for p in sPath]
