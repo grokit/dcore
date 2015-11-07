@@ -12,6 +12,7 @@ The 'DCore' lib has two purposes:
 # TODO
 
 - Have an install.sh that justs sets everything up so that you can be on a new nix or windows system and just get started.
+    - https://docs.python.org/3.5/tutorial/modules.html
     - Make sure the scripts shortcut are install so that can be easier to setup other things in cron.
     - Steps missing:
         - First run: setting pythonpath so that import dcore works from everywhere
