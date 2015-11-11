@@ -1,8 +1,10 @@
 
-import markdown
 import codecs
 import sys
 import glob
+import argparse
+
+import markdown # 3rd party
 
 """
 #TODO
@@ -11,7 +13,7 @@ import glob
 
 _meta_shell_command = 'markdown'
 
-autor_pre = """
+autoreplyJavascriptHeader = """
 <html>
 <head>
 <script type="text/JavaScript">
@@ -24,7 +26,7 @@ function timedRefresh(timeoutPeriod)
 </script>
 </head>
 <body onload="JavaScript:timedRefresh(1000);">
-<b>Warning: enabled Markdown writing mode.</b>
+<b>Warning: enabled Markdown auto-refresh mode.</b>
 """
 
 autor_post = """
@@ -72,11 +74,6 @@ h2,h3,h4,h5,h6 {
 }
 
 p {
-	/*
-	margin-top: 0.5em;
-	line-height: 1.5em;
-	font-size: 1.1em;
-	*/
 }
 
 a {
@@ -115,10 +112,13 @@ javanowing = False
 html_pre_post = False
 
 def do():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--filename')
+    args = parser.parse_args()
     
     files = []
-    if len(sys.argv) == 2:
-        files += sys.argv[1]
+    if args.filename is not None:
+        files = [args.filename]
     
     if len(files) == 0:
         files += glob.glob('*.markdown')
@@ -136,8 +136,10 @@ def do():
         filename = file + '.html'
         filename = filename.replace('.md', '')
         fh = codecs.open(filename, 'w', encoding='utf-8')
+        
+        print('Writing: %s.' % filename)
         if javanowing:
-            fh.write(autor_pre + html + autor_post)
+            fh.write(autoreplyJavascriptHeader + html + autor_post)
         elif html_pre_post:
             fh.write(html_pre + html + html_post)
         else:
