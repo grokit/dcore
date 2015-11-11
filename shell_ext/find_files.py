@@ -18,7 +18,7 @@ if os.path.isdir('c:/src/working'):
     search_roots = ['c:/src/working', 'c:/david']
     #search_roots = ['c:/david/dev/books']
 
-cacheLoc = os.path.join(data.dcoreRoot(), os.path.split(__file__)[1] + ".cache")
+cacheLoc = os.path.join(data.dcoreData(), os.path.split(__file__)[1] + ".cache")
 cacheExpiryInSeconds = 30*24*60*60
 
 def getArgs():

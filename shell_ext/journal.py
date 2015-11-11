@@ -44,7 +44,7 @@ import dcore.data as data
 def date():
     return str(datetime.datetime.now()).split(' ')[0]
     
-file = os.path.normpath(os.path.join(data.dcoreRoot(), 'journals/%s_journal.markdown' % date()))
+file = os.path.normpath(os.path.join(data.dcoreData(), 'journals/%s_journal.markdown' % date()))
 stop = '!!!'
 
 def getArgs():

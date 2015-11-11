@@ -31,12 +31,15 @@ def getPrivateDataFilename():
     Like how .git repositories are found.
     """
     
+    return os.path.join(data.dcoreData(), "private_file_v2")
+    """
     cp = pathlib.Path(os.path.realpath(__file__))
 
     while not cp.parents[0].joinpath('private_data').is_file():
         cp = cp.parents[0]
 
     return cp.parents[0].joinpath('private_data').as_posix()
+    """
 
 def getAutogenFileTemplate():
 
@@ -79,13 +82,17 @@ def getPythonScriptsEnv():
 
 def __loadPrivateFile():
 
-    fh = open(getPrivateDataFilename(), 'r')
-    jr = fh.read()
-    fh.close()
+    if os.path.isfile(getPrivateDataFilename()):
+        fh = open(getPrivateDataFilename(), 'r')
+        jr = fh.read()
+        fh.close()
 
-    jd = json.loads(jr)
+        jd = json.loads(jr)
+    else:
+        print('Warning: cannot find private file %s.' % getPrivateDataFilename())
+        jr = "{}"
 
-    return jd
+    return json.loads(jr)
 
 def __expandEnvVars(D):
     r"""
@@ -96,26 +103,33 @@ def __expandEnvVars(D):
     
 def getFilesAndFoldersMap():
     jd = __loadPrivateFile()
-    jd = jd['namedLocationMap']
-    D = jd[os.name]
-    D['private_data'] = getPrivateDataFilename()
-    
-    items = __expandEnvVars(D).items()
-    for k,v in items:
-        if not (os.path.isfile(v) or os.path.isdir(v)):
-            st = "Warning: not file or dir: %s." % v
-            print(st)
-            #raise Exception(st)
-    
-    return {k:v for (k,v) in items}
+
+    if 'namedLocationMap' in jd.keys():
+        jd = jd['namedLocationMap']
+        D = jd[os.name]
+        D['private_data'] = getPrivateDataFilename()
+        
+        items = __expandEnvVars(D).items()
+        for k,v in items:
+            if not (os.path.isfile(v) or os.path.isdir(v)):
+                st = "Warning: not file or dir: %s." % v
+                print(st)
+                #raise Exception(st)
+        
+        return {k:v for (k,v) in items}
+    else:
+        return {}
 
 # @@bug BAN THIS. This is way to magicky.
 # This will add all the variables declared in the JSON file as local variables.
 # This way, system_description.variable is accessible after importing the module.
+# Could relegate this as private.py and ONLY be used for passwords and the such ... but need to explain in exception when not found that this is data the user needs to set.
 jd = __loadPrivateFile()
 localsDir = locals()
-for k, v in jd['variables'].items():
-    localsDir[k] = v
+if 'variable' in jd.keys():
+    if jd['variable'] != Null:
+        for k, v in jd['variables'].items():
+            localsDir[k] = v
 
 if __name__ == '__main__':
     #dm = getFilesAndFoldersMap()

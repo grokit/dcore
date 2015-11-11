@@ -22,7 +22,7 @@ import re
 import sys
 import argparse
 
-import dcore.system_description as sd
+import dcore.system_description as system_description
 import dcore.data as data
 
 _meta_shell_command = 'gendirs'
@@ -48,16 +48,16 @@ def do():
 
     args = parser.parse_args()
     
-    dirsMap = sd.getFilesAndFoldersMap()
+    dirsMap = system_description.getFilesAndFoldersMap()
     
     if args.list == True:
         for k, v in dirsMap.items():
             print("%-15s: %s" % (k, v))
         sys.exit(0)
     elif args.gen == True: 
-        file_ext, output_dir, file_template = sd.getPythonScriptsEnv()
+        file_ext, output_dir, file_template = system_description.getPythonScriptsEnv()
         
-        fileContentTemplate = sd.getAutogenFileTemplate()
+        fileContentTemplate = system_description.getAutogenFileTemplate()
         
         # Generate all folder shortcuts with 'cd' prefix.
         # So if a folder has the shortcut 'app', you can access it on the console by doing 'cdapp'
