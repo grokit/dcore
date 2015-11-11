@@ -1,8 +1,7 @@
 """
-Prime number factorization is O(log(n)).
+Prime number factorization is O(log(n)) ?or there is no known general efficient algorithm for integer factorization?
 
-@@todo move to cs/*
-@@todo: gcd.py, factorize.py, prime.py, n_choose_k.py.
+@@todo: gcd.py, factorize.py, prime.py, n_choose_k.py, lcm.py.
 
 # Links
 
@@ -19,6 +18,7 @@ def primeFactorization(n):
 	"""
 	This is the slow, by trial O(n) algorithm.
 	"""
+
 	for i in range(2, n):
 		if n % i == 0:
 			return [i] + primeFactorization(n//i)

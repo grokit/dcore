@@ -10,6 +10,10 @@ Does this solution solve:
    Big:   ?.
 \"\"\"
 
+from dcore.cs.gcd import gcd
+from dcore.cs.lcm import lcm
+from dcore.cs.factorization import primeFactorization as factorization
+
 import dcore.gcj_boot as boot
 
 def readProblem(fh):
