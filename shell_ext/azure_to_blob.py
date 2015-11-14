@@ -63,7 +63,7 @@ def unitTest():
     
     print(listBlobs(blob_service))
     write(blob_service, 'testFile', ('abc'*int(1e5)).encode())
-    writeFilename(blob_service, 'testFile2', r'C:\david\onedrive\backup_scripts_2015-11-10_13-24-44.7z')
+    writeFilename(blob_service, 'testFile2', r'')
     
 if __name__ == '__main__':
     
