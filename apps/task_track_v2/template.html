@@ -24,6 +24,7 @@ function getUnixTimeXDaysAgo(x){
 	return d
 }
 
+// @@ review currying.
 function onEach(x, fn){ for(var i = 0; i < x.length; ++i){ fn(x[i]) } }
 
 function dataToBuckets(data, nBuckets, min, max){
@@ -53,7 +54,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 
 	// Only keep cs events...
 	if(activityFilter != null){
-		data = data.filter(function(d){return d.type == "cs"})
+		data = data.filter(function(d){return d.type == activityFilter})
 	}
 	// ... of the last timePeriodInDays days.
 	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDays)})
