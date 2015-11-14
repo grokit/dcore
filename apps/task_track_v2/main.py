@@ -20,8 +20,7 @@ _meta_shell_command = 'tt'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    #parser.add_argument('-t', '--to', required=True)
-    #parser.add_argument('subject', nargs='+')
+    parser.add_argument('-r', '--regen_html', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -44,11 +43,13 @@ def commandLineEnterWorkDone(dbFile):
     serialization_json.toFile(dbFile, W)
 
 if __name__ == '__main__':
-    args = getArgs()
-    dbFile = options.dbFile
-    commandLineEnterWorkDone(dbFile)
+	dbFile = options.dbFile
 
-    htmlFile = options.htmlFile
-    wd = serialization_json.fromFile(dbFile)
-    render_html.render(wd, htmlFile, options.dataFile)
+	args = getArgs()
+	if not args.regen_html:
+		commandLineEnterWorkDone(dbFile)
+
+	htmlFile = options.htmlFile
+	wd = serialization_json.fromFile(dbFile)
+	render_html.render(wd, htmlFile, options.dataFile)
 

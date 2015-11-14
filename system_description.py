@@ -86,8 +86,6 @@ def __loadPrivateFile():
         fh = open(getPrivateDataFilename(), 'r')
         jr = fh.read()
         fh.close()
-
-        jd = json.loads(jr)
     else:
         print('Warning: cannot find private file %s.' % getPrivateDataFilename())
         jr = "{}"
@@ -126,10 +124,9 @@ def getFilesAndFoldersMap():
 # Could relegate this as private.py and ONLY be used for passwords and the such ... but need to explain in exception when not found that this is data the user needs to set.
 jd = __loadPrivateFile()
 localsDir = locals()
-if 'variable' in jd.keys():
-    if jd['variable'] != Null:
-        for k, v in jd['variables'].items():
-            localsDir[k] = v
+if 'variables' in jd.keys():
+    for k, v in jd['variables'].items():
+        localsDir[k] = v
 
 if __name__ == '__main__':
     #dm = getFilesAndFoldersMap()
