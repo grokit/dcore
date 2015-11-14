@@ -38,29 +38,61 @@ import os
 import datetime
 import argparse
 import platform
+import shutil
 
 import dcore.data as data
 
-def date():
-    return str(datetime.datetime.now()).split(' ')[0]
+def dateForFile():
+    return datetime.datetime.now().strftime("%Y-%m-%d")
     
-file = os.path.normpath(os.path.join(data.dcoreData(), 'journals/%s_journal.markdown' % date()))
-stop = '!!!'
-
+def dateForFolder():
+    return datetime.datetime.now().strftime("%Y-%m-%d")    
+    
+def dateForAnnotation():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
-    parser.add_argument('-f', '--filename_copy_to_journal_directory', action='store_true', default=False, help='Copies the file to the journal current directory and inserts a link in the markdown file.')
+    parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
     return parser.parse_args()
 
-if __name__ == '__main__':
+def markdownAddFileAsLink(mdfile, newfile):
+    print(mdfile, newfile)
+    annotation = '![](%s)' % os.path.relpath(newfile, os.path.split(mdfile)[0])
     
+    fh = open(mdfile, 'r')
+    fileContent = fh.read()
+    fh = open(mdfile, 'w')
+    fh.write('\n%s\n' % annotation + fileContent)
+    
+def do():    
     args = getArgs()
     
+    filePath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
+    
+    if not os.path.exists(filePath):
+        print('No such path `%s`, creating.' % filePath)
+        os.makedirs(filePath)
+        
+    file = os.path.abspath(os.path.join(filePath, '%s_journal.markdown' % dateForFile()))
+    
     print('Using file: %s.' % file)
+    if not os.path.isfile(file):
+        open(file, 'w').write('New file: %s.' % file)
     
     if args.filename_copy_to_journal_directory:
-        raise Exception("Not implemented yet.")
+        src = os.path.abspath(args.filename_copy_to_journal_directory)
+        dst = os.path.abspath(os.path.join(filePath, os.path.split(args.filename_copy_to_journal_directory)[1]))
+        
+        if True:
+            if os.path.isfile(dst):
+                raise Exception('Already a file at `%s`, not copying.' % dst)
+        
+        print('copy `%s` -> `%s`.' %(src, dst))
+        shutil.copyfile(src, dst)
+        markdownAddFileAsLink(file, dst)
+        exit(0)
     
     if args.open:
         if platform.system() == 'Windows':
@@ -71,9 +103,7 @@ if __name__ == '__main__':
         os.system(c)
         exit(0)
     
-    if not os.path.isfile(file):
-        open(file, 'w').write('New file for %s.' % date())
-    
+    stop = '!!!'
     fh = open(file, 'r')
     print("Type '%s' to end." % stop)
     inputBuf = []
@@ -86,8 +116,14 @@ if __name__ == '__main__':
             break # reached EOF
         inputBuf.append( lIn )
     
-    inputBuf = ['# ' + date() + '\n'] + inputBuf
+    inputBuf = ['# ' + dateForAnnotation() + '\n'] + inputBuf
     
     fileContent = fh.read()
     fh = open(file, 'w')
     fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
+    
+if __name__ == '__main__':
+    do()
+    #print(dateForFile())
+    #print(dateForAnnotation())
+    

@@ -26,6 +26,7 @@ def getArgs():
     parser.add_argument('-e', '--exact_match', action='store_true', default=False)
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
+    parser.add_argument('-o', '--open', action="store_true", help="Open in text editor all files that match.")
     args = parser.parse_args()
     return args
 
@@ -110,6 +111,11 @@ def do():
 
         for f in F:
             print(f)
+        
+        if args.open is True:
+            for f in F:
+                cmd = 'np %s' % f
+                os.system(cmd)
 
 if __name__ == '__main__':
     do()
