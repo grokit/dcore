@@ -103,7 +103,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 
 	bar.append("rect")
 	    .attr("width", barWidth-2)
-	    .attr("x", function(d){ return xScale(d.date)})
+	    .attr("x", function(d){ return xScale(d.date)-barWidth})
 	    .attr("y", function(d){return height-yScale(d.length)})
 	    .attr("height", function(d){return yScale(d.length)})
 	    .attr("fill", function(d){
@@ -123,7 +123,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 				   return d.length
 		   })
 		   .attr("x", function(d, i) {
-				   return xScale(d.date) + barWidth/2
+				   return xScale(d.date)- barWidth + barWidth/2
 		   })
 		   .attr("y", function(d, i) {
 				   return 14
