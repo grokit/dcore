@@ -35,14 +35,14 @@ function getUnixTimeXDaysAgo(x){
 // @@ review currying.
 function onEach(x, fn){ for(var i = 0; i < x.length; ++i){ fn(x[i]) } }
 
-function dataToBuckets(data, nBuckets, min, max){
+function dataToBuckets(data, timePeriodInDays, min, max){
 	// var max = 0; onEach(data, function(x){ if(max < x.date){max=x.date} })
 	// var min = max; onEach(data, function(x){ if(min > x.date){min=x.date} })
 
-	var step = (max-min)/nBuckets
+	var step = (max-min)/timePeriodInDays
 
 	dataT = []
-	for(var i = 0; i < nBuckets; ++i){
+	for(var i = 0; i < timePeriodInDays; ++i){
 		var o = new Object()
 		o.date = i*step
 		o.length = 0
@@ -50,8 +50,8 @@ function dataToBuckets(data, nBuckets, min, max){
 	}
 
 	onEach(data, function(x){
-		var ii = Math.floor(nBuckets*(x.date - min)/(max-min))
-		if(ii == nBuckets){ ii -= 1 }
+		var ii = Math.floor(timePeriodInDays*(x.date - min)/(max-min))
+		if(ii == timePeriodInDays){ ii -= 1 }
 		dataT[ii].length += x.length
 	})
 
@@ -70,17 +70,18 @@ function genChart(data, timePeriodInDays, activityFilter){
 	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgo(timePeriodInDays), getUnixTimeXDaysAgo(0))
 
 	var width = 1000 
-	var barWidth = width / (timePeriodInDays-1)
+	var barWidth = width / (timePeriodInDays)
 	// barWidth *= 0.2
 
 	yMin = 0
 	yMax = d3.max(data.map(function(v){ return v.length }))
+
 	xMin = d3.min(data.map(function(v){ return v.date }))
 	//xMin = getUnixTimeXDaysAgo(timePeriodInDays)
 	//xMin = 0
 	xMax = d3.max(data.map(function(v){ return v.date }))
-	var height = 70 
 
+	var height = 70 
 	d3.select("body").append("p").text("Activity: " + activityFilter)
 	var chart = d3.select("body")
 	    .append("svg:svg")
@@ -89,7 +90,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	
 	var xScale = d3.scale.linear()
 		.domain([xMin, xMax])
-		.range([0, width])
+		.range([0, width-barWidth])
 
 	var bar = chart.selectAll("nothing_yet") // By default, selecting something that does no exist returns an empty set.
 	    .data(data) // ... for each data point ...
@@ -103,7 +104,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 
 	bar.append("rect")
 	    .attr("width", barWidth-2)
-	    .attr("x", function(d){ return xScale(d.date)-barWidth})
+	    .attr("x", function(d){ return xScale(d.date)})
 	    .attr("y", function(d){return height-yScale(d.length)})
 	    .attr("height", function(d){return yScale(d.length)})
 	    .attr("fill", function(d){
@@ -123,7 +124,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 				   return d.length
 		   })
 		   .attr("x", function(d, i) {
-				   return xScale(d.date)- barWidth + barWidth/2
+				   return xScale(d.date) + barWidth/2
 		   })
 		   .attr("y", function(d, i) {
 				   return 14
