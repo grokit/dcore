@@ -7,7 +7,7 @@ The 'DCore' lib has two purposes:
 
 - Place to put scripts that the main applications I develop can depend on and share (a core lib of some sort).
 - Neat collection of scripts that make the computer a better development platform that I install on everyone of my computers.
-- Easy install cloud service to any cloud node I own.
+- Easy install cloud service to any cloud node I own (`git clone ..., python install.py`).
 
 # TODO
 
@@ -16,6 +16,7 @@ The 'DCore' lib has two purposes:
 
 - Have an install.sh that justs sets everything up so that you can be on a new nix or windows system and just get started.
     - https://docs.python.org/3.5/tutorial/modules.html
+        - Think whether it would make sense to package dcore as an official module.
     - Make sure the scripts shortcut are install so that can be easier to setup other things in cron.
     - Steps missing:
         - First run: setting pythonpath so that import dcore works from everywhere
