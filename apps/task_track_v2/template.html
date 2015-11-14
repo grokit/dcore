@@ -2,7 +2,6 @@
 # TODO
 
 - Have day markers even if no data.
-- Center things so that last day shows up correctly.
 
 -->
 
@@ -74,7 +73,9 @@ function genChart(data, timePeriodInDays, activityFilter){
 	// barWidth *= 0.2
 
 	yMin = 0
-	yMax = d3.max(data.map(function(v){ return v.length }))
+	// yMax = d3.max(data.map(function(v){ return v.length }))
+	// This is in hours... the REAL solution here would be to have the amount of time max for ALL data.
+	yMax = 8
 
 	xMin = d3.min(data.map(function(v){ return v.date }))
 	//xMin = getUnixTimeXDaysAgo(timePeriodInDays)
@@ -116,6 +117,9 @@ function genChart(data, timePeriodInDays, activityFilter){
 			    return "rgb("+r+", "+g+", "+b+")"
 			    })
 
+	var txtSize = barWidth*0.5
+	if (txtSize > 18){txtSize = 18}
+
 	chart.selectAll("nothing_here")
 		   .data(data)
 		   .enter()
@@ -127,10 +131,10 @@ function genChart(data, timePeriodInDays, activityFilter){
 				   return xScale(d.date) + barWidth/2
 		   })
 		   .attr("y", function(d, i) {
-				   return 14
+				   return txtSize
 		   })
 		   .attr("font-family", "sans-serif")
-		   .attr("font-size", "14px")
+		   .attr("font-size", txtSize + "px")
 		   .attr("fill", "black")
 		   .attr("text-anchor", "middle")
 
@@ -139,7 +143,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 		totalWorked += data[i].length
 	}
 
-	hoursPerDay = Math.floor(100*totalWorked/timePeriodInDays)/100
+	hoursPerDay = Math.floor(10*totalWorked/timePeriodInDays)/10
 	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
 }
 
