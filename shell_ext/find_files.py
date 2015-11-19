@@ -8,6 +8,7 @@ import os
 import argparse
 import pickle
 import datetime
+import platform
 
 import dcore.data as data
 
@@ -114,7 +115,10 @@ def do():
         
         if args.open is True:
             for f in F:
-                cmd = 'np %s' % f
+                if platform.system() == 'Windows':
+                    cmd = 'np %s' % f
+                else:
+                    cmd = 'vim %s' % f
                 os.system(cmd)
 
 if __name__ == '__main__':

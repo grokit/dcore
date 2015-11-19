@@ -20,7 +20,7 @@
 
 # Bugs
 
-- Uploading could corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
+- Uploading DOES corrupt file: compute md5 and check boundary using latest 2 chunks, not 1.
 - The IP in the link is sometimes not the public IP.
 
 # Notes
