@@ -24,9 +24,23 @@
 
 // @@TODO: be able to say: 'want from 2015-08 to 2015-09'. Generate reports by months.
 //         ^^ maybe this would be easier in python, then just create linkable html files.
-function getUnixTimeXDaysAgo(x){
+function getUnixTimeXDaysAgoFromNextMidnight(x){
 	var d = new Date()
+	d.setHours( 24 );
+	d.setMinutes( 0 );
+	d.setSeconds( 0 );
+	d.setMilliseconds( 0 );
 	d.setDate(d.getDate() - x)
+	d = Math.floor(d.getTime()/1000)
+	return d
+}
+
+function getUnixTimeAtMidnight(){
+	var d = new Date()
+	d.setHours( 24 );
+	d.setMinutes( 0 );
+	d.setSeconds( 0 );
+	d.setMilliseconds( 0 );
 	d = Math.floor(d.getTime()/1000)
 	return d
 }
@@ -64,13 +78,12 @@ function genChart(data, timePeriodInDays, activityFilter){
 		data = data.filter(function(d){return d.type == activityFilter})
 	}
 	// ... of the last timePeriodInDays days.
-	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgo(timePeriodInDays)})
+	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)})
 
-	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgo(timePeriodInDays), getUnixTimeXDaysAgo(0))
+	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays), getUnixTimeAtMidnight())
 
 	var width = 1000 
 	var barWidth = width / (timePeriodInDays)
-	// barWidth *= 0.2
 
 	yMin = 0
 	// yMax = d3.max(data.map(function(v){ return v.length }))
@@ -78,7 +91,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	yMax = 8
 
 	xMin = d3.min(data.map(function(v){ return v.date }))
-	//xMin = getUnixTimeXDaysAgo(timePeriodInDays)
+	//xMin = getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)
 	//xMin = 0
 	xMax = d3.max(data.map(function(v){ return v.date }))
 
