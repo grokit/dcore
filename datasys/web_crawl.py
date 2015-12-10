@@ -2,7 +2,10 @@
 Web-crawler to allow archiving part of the web.
 
 For something that `just works`, just use:
-wget --accept mp3,jpg --mirror --adjust-extension --convert-links --backup-converted --no-parent http://lifeofcaesar.com/ 
+wget -l 2 --accept mp3,jpg --mirror --adjust-extension --convert-links --backup-converted --no-parent http://lifeofcaesar.com/ 
+^^ does not work if files are hosted in different URL.
+
+More info: http://stackoverflow.com/questions/8755229/how-to-download-all-files-but-not-html-from-a-website-using-wget
 
 # TODO
 
@@ -53,16 +56,24 @@ class WebNode:
     def __fetchLinks(self, linksList):
         links = {l: None for l in linksList}
         for k, v in links.items():
-            links[k] = fetchContent(k) 
-            # @@ save everything to HD
-            saveLink(k, links[k])
+            try:
+                saveName = toHDCacheName(k)
+                if os.path.isfile(saveName):
+                    print('Skipping already existing file: %s.' % saveName)
+                else:
+                    links[k] = fetchContent(k) 
+                    # @@ save everything to HD
+                    saveLink(saveName, links[k])
+            except Exception as e:
+                print(e)
+                #raise e
 
         return links
 
     def __str__(self):
         return '%s: %s' % (self.url, self.links)
 
-def saveLink(k, v):
+def toHDCacheName(k):
     F = []
     for l in k:
         if l.lower() in ".abcdefghijklmnopqrstuvwxyz0123456789":
@@ -70,7 +81,10 @@ def saveLink(k, v):
         else:
             F.append('_')
     filename = "".join(F)
-    open(os.path.join('./out', filename), 'wb').write(v)
+    return os.path.join('./out', filename)
+
+def saveLink(name, content):
+    open(name, 'wb').write(content)
 
 def downloadAndParse(wnode):
     content = fetchContent(wnode.url)
