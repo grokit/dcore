@@ -1,6 +1,13 @@
 """
 Web-crawler to allow archiving part of the web.
 
+For something that `just works`, just use:
+wget --accept mp3,jpg --mirror --adjust-extension --convert-links --backup-converted --no-parent http://lifeofcaesar.com/ 
+
+# TODO
+
+- Use BFS for crawling to not get lost outside of root.
+
 # Use-Cases
 
 - Concept of in-website VS outside of website.
@@ -14,6 +21,7 @@ Web-crawler to allow archiving part of the web.
 import urllib.request
 import urllib.parse
 import re
+import os
 
 def fixUrl(u):
     return u.replace(' ', '%20')
@@ -46,10 +54,23 @@ class WebNode:
         links = {l: None for l in linksList}
         for k, v in links.items():
             links[k] = fetchContent(k) 
+            # @@ save everything to HD
+            saveLink(k, links[k])
+
         return links
 
     def __str__(self):
         return '%s: %s' % (self.url, self.links)
+
+def saveLink(k, v):
+    F = []
+    for l in k:
+        if l.lower() in ".abcdefghijklmnopqrstuvwxyz0123456789":
+            F.append(l.lower())
+        else:
+            F.append('_')
+    filename = "".join(F)
+    open(os.path.join('./out', filename), 'wb').write(v)
 
 def downloadAndParse(wnode):
     content = fetchContent(wnode.url)
@@ -106,7 +127,7 @@ def fetchContentMock(url):
 #fetchContent= fetchContentMock 
 
 if __name__ == '__main__':
-    root = WebNode('http://www.grokit.ca/')
+    root = WebNode('http://lifeofcaesar.com/')
     root.fetchSelf()
     print(root)
 

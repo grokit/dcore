@@ -18,11 +18,21 @@ def getArgs():
     return args
 
 def osExec(cmd):
+    if type(cmd) == type([]):
+        for c in cmd:
+            osExec(c)
+
     print(cmd)
     os.system(cmd)
 
 def youtubedl_upgrade():
     osExec('sudo pip install --upgrade youtube_dl')
+
+def sys_update():
+    # http://askubuntu.com/questions/196768/how-to-install-updates-via-command-line
+    osExec('sudo apt-get update')       # Fetches the list of available updates
+    osExec('sudo apt-get upgrade')      # Strictly upgrades the current packages
+    osExec('sudo apt-get dist-upgrade') # Installs updates (new ones)
 
 def mempigs():
     osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
@@ -62,9 +72,9 @@ def apps():
     startapps()
 
 def startapps():
-    osExec('nohup dropbox start&')
-    osExec('nohup diodon&')
-    #osExec('nohup shutter --min_at_startup&')
+    osExec('nohup dropbox start > /dev/null&')
+    osExec('nohup diodon > /dev/null&')
+    #osExec('nohup shutter --min_at_startup > /dev/null&')
 
 def vol_ctrl():
     osExec('pavucontrol')
