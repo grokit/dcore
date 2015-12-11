@@ -54,6 +54,8 @@ def dateForAnnotation():
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
+    parser.add_argument('-s', '--scratch', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
+    parser.add_argument('-e', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
     parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
     return parser.parse_args()
 
@@ -69,13 +71,17 @@ def markdownAddFileAsLink(mdfile, newfile):
 def do():    
     args = getArgs()
     
-    filePath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
-    
-    if not os.path.exists(filePath):
-        print('No such path `%s`, creating.' % filePath)
-        os.makedirs(filePath)
+    if args.scratch:
+        filePath = data.dcoreData()
+        file = os.path.abspath(os.path.join(filePath, 'scratch.markdown'))
+    else:
+        filePath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
         
-    file = os.path.abspath(os.path.join(filePath, '%s_journal.markdown' % dateForFile()))
+        if not os.path.exists(filePath):
+            print('No such path `%s`, creating.' % filePath)
+            os.makedirs(filePath)
+            
+        file = os.path.abspath(os.path.join(filePath, '%s_journal.markdown' % dateForFile()))
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
@@ -94,6 +100,15 @@ def do():
         markdownAddFileAsLink(file, dst)
         exit(0)
     
+    if args.explore_folder:
+        if platform.system() == 'Windows':
+            c = 'explorer %s' % filePath
+        else:
+            c = 'nautilus %s' % filePath
+        print(c)
+        os.system(c)
+        exit(0)
+        
     if args.open:
         if platform.system() == 'Windows':
             c = 'np %s' % file
