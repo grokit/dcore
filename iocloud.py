@@ -8,6 +8,12 @@ sudo easy_install3 pip
 sudo pip3.4 install azure
 sudo pip3.4 install azure-storage
 ?? how to do it for py3?
+
+# Documentation / Links 
+
+- https://azure.microsoft.com/en-us/documentation/articles/storage-python-how-to-use-blob-storage/
+- http://azure-storage.readthedocs.org/en
+
 """
 
 from azure.storage.blob import BlobService

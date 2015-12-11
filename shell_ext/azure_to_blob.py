@@ -2,11 +2,6 @@
 # Todo
 
 - Port core to cloud.py where 'save', 'read' and 'del' work as expected.
-
-# Links
-
-- https://azure.microsoft.com/en-us/documentation/articles/storage-python-how-to-use-blob-storage/
-- http://azure-storage.readthedocs.org/en
 """
 
 _meta_shell_command = 'cloudwrite'
@@ -16,7 +11,7 @@ import argparse
 import tempfile
 import datetime
 
-import iocloud
+import dcore.iocloud as iocloud
 
 containerName = 'scriptsoutput'
 
