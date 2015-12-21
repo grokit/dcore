@@ -3,7 +3,7 @@ quicknet: do simple 'net' (TCP, HTTP, HTTPS, ...) operations from the commands l
           for both the sending and receiving flows.
 
 Meant as a simple tool to hack things together when you want to leverage python's libs.
-If you are using only HTTP(S), you might want to take a look at 'curl' as well, this script is more useful if you just want to poke a server with TCP.
+If you are using only HTTP(S), you might want to take a look at 'curl' instead, this script is more useful if you just want to poke a server with TCP.
 
 # TODO
 # Bugs
