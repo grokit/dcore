@@ -28,6 +28,9 @@ def osExec(cmd):
 def youtubedl_upgrade():
     osExec('sudo pip install --upgrade youtube_dl')
 
+def pdf():
+    osExec('wine ~/.wine/drive_c/pdf/PDF\ Viewer/PDFXCview.exe&')
+
 def sys_update():
     # http://askubuntu.com/questions/196768/how-to-install-updates-via-command-line
     osExec('sudo apt-get update')       # Fetches the list of available updates
