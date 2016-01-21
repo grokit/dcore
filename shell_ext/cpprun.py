@@ -28,7 +28,7 @@ if __name__ == '__main__':
         print(cmd)
         rv |= os.system(cmd)
 
-    skipRun = True
+    skipRun = False 
 
     if not skipRun:
         if rv == 0:

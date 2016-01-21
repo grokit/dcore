@@ -42,6 +42,8 @@ import shutil
 
 import dcore.data as data
 
+stop = '!!!'
+
 def dateForFile():
     return datetime.datetime.now().strftime("%Y-%m-%d")
     
@@ -67,6 +69,19 @@ def markdownAddFileAsLink(mdfile, newfile):
     fileContent = fh.read()
     fh = open(mdfile, 'w')
     fh.write('\n%s\n' % annotation + fileContent)
+
+def annotateDate(file):
+    fh = open(file, 'r')
+    inputBuf = ['# ' + dateForAnnotation() + '\n']
+    fileContent = fh.read()
+    fh = open(file, 'w')
+    fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
+
+def appendContent(file, inputBuf):
+    fh = open(file, 'r')
+    fileContent = fh.read()
+    fh = open(file, 'w')
+    fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
     
 def do():    
     args = getArgs()
@@ -110,16 +125,16 @@ def do():
         exit(0)
         
     if args.open:
+        annotateDate(file)
         if platform.system() == 'Windows':
             c = 'np %s' % file
         else:
-            c = 'vim %s' % file
+            #c = 'vim %s' % file
+            c = 'gedit %s' % file
         print(c)
         os.system(c)
         exit(0)
     
-    stop = '!!!'
-    fh = open(file, 'r')
     print("Type '%s' to end." % stop)
     inputBuf = []
     while len(inputBuf) == 0 or inputBuf[-1].find(stop) == -1:
@@ -130,12 +145,9 @@ def do():
         if lIn == None:
             break # reached EOF
         inputBuf.append( lIn )
-    
-    inputBuf = ['# ' + dateForAnnotation() + '\n'] + inputBuf
-    
-    fileContent = fh.read()
-    fh = open(file, 'w')
-    fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
+
+    annotateDate(file)
+    appendContent(file, inputBuf)
     
 if __name__ == '__main__':
     do()

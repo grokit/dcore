@@ -77,7 +77,10 @@ def apps():
 def startapps():
     osExec('nohup dropbox start > /dev/null&')
     osExec('nohup diodon > /dev/null&')
-    #osExec('nohup shutter --min_at_startup > /dev/null&')
+    #sshots()
+
+def sshots():
+    osExec('nohup shutter --min_at_startup > /dev/null&')
 
 def vol_ctrl():
     osExec('pavucontrol')
