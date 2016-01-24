@@ -35,9 +35,10 @@ function getUnixTimeXDaysAgoFromNextMidnight(x){
 	return d
 }
 
-function getUnixTimeAtMidnight(){
+function getUnixTimeAtSeparation(){
+	// I work until ~3-4am sometimes, make the day split there :).
 	var d = new Date()
-	d.setHours( 24 );
+	d.setHours( 28 );
 	d.setMinutes( 0 );
 	d.setSeconds( 0 );
 	d.setMilliseconds( 0 );
@@ -80,7 +81,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	// ... of the last timePeriodInDays days.
 	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)})
 
-	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays), getUnixTimeAtMidnight())
+	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays), getUnixTimeAtSeparation())
 
 	var width = 1000 
 	var barWidth = width / (timePeriodInDays)
