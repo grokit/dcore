@@ -156,6 +156,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	for(var i = 0; i < data.length; ++i){
 		totalWorked += data[i].length
 	}
+	
 
 	hoursPerDay = Math.floor(10*totalWorked/timePeriodInDays)/10
 	d3.select("body").append("p").text("You have worked " + Math.floor(10*totalWorked)/10 + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
@@ -165,14 +166,9 @@ genChart(data, 7, "cs")
 genChart(data, 30, "cs")
 genChart(data, 60, "cs")
 genChart(data, 90, "cs")
-genChart(data, 120, "cs")
-
-genChart(data, 7, "exer")
-genChart(data, 30, "exer")
-genChart(data, 60, "exer")
+genChart(data, 180, "cs")
 
 genChart(data, 7, "medi")
-genChart(data, 30, "medi")
 genChart(data, 60, "medi")
 </script>
 <body>
