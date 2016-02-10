@@ -8,7 +8,9 @@ Could save a file in ~/.dcore that points to where the repo is... but that would
 # feh: change background
 # diodon: clip
 # pv: picture view
+# scrot: screenshots i3
 apt_get_packages = """
+scrot
 pv
 feh
 gparted
@@ -23,20 +25,21 @@ shutter
 tmux
 """
 
+tag = "fh89h98h3f9hf39hf98ahsfd9djh"
 bash_rc = """
-# Magic dcore tag: fh89h98h3f9hf39hf98ahsfd9djh.
+# Magic dcore tag: __tag__.
 export PYTHONPATH=$PYTHONPATH:/home/arch/sync/scripts
 export PATH=$PATH:/home/arch/sync/dcore_data/path_ext
-"""
+""".replace('__tag__', tag)
 
 import sys
 import os
 import platform
 
 if __name__ == '__main__':
-	doAptGet = False
+	doAptGet = True
 	doPath = True 
-	doShortcuts = False
+	doShortcuts = True
 
 	if doAptGet:
 		for line in apt_get_packages.splitlines():
@@ -47,16 +50,15 @@ if __name__ == '__main__':
 
 	if doPath:
 		bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
-		print(bash_rc)
-		exit(0)
 		if platform.system() == "Windows":
 			import system_setup.windows_path_set as windows_path_set
 			windows_path_set.do()
 		else:
 			fname = os.path.expanduser('~/.bashrc')
 			file = open(fname, 'r').read()
-			file = bash_rc + '\n\n' + file
-			open(fname, 'w').write(file)
+			if not tag in file:
+				file = bash_rc + '\n\n' + file
+				open(fname, 'w').write(file)
 
 	if doShortcuts:
 		import dcore.data as data
