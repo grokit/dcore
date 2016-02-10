@@ -1,17 +1,32 @@
 """
 One-run install of DCORE.
 
-Open question: wether should copy all scripts to proper target dir as 'fire-and-forget' or try to adapt to where the data is (where the user puts it). Could save a file in ~/.dcore that points to where the repo is... but that would not work well for system path.
+Open question: wether should copy all scripts to proper target dir as 'fire-and-forget' or try to adapt to where the data is (where the user puts it). 
+Could save a file in ~/.dcore that points to where the repo is... but that would not work well for system path.
 """
 
+# feh: change background
+# diodon: clip
+# pv: picture view
 apt_get_packages = """
+pv
+feh
+gparted
+diodon
+gimp
 virtualbox-qt
 p7zip-full
 vim
 git
 i3
-clipper
+shutter
 tmux
+"""
+
+bash_rc = """
+# Magic dcore tag: fh89h98h3f9hf39hf98ahsfd9djh.
+export PYTHONPATH=$PYTHONPATH:/home/arch/sync/scripts
+export PATH=$PATH:/home/arch/sync/dcore_data/path_ext
 """
 
 import sys
@@ -19,25 +34,37 @@ import os
 import platform
 
 if __name__ == '__main__':
-	for line in apt_get_packages.splitlines():
-		if line.strip() != "":
-			cmd = "sudo apt-get -y install %s" % line
-			print(cmd)
-			os.system(cmd)
+	doAptGet = False
+	doPath = True 
+	doShortcuts = False
 
+	if doAptGet:
+		for line in apt_get_packages.splitlines():
+			if line.strip() != "":
+				cmd = "sudo apt-get -y install %s" % line
+				print(cmd)
+				os.system(cmd)
 
-"""
-    if False and platform.system() == "Windows":
-        import system_setup.windows_path_set as windows_path_set
-        windows_path_set.do()
+	if doPath:
+		bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
+		print(bash_rc)
+		exit(0)
+		if platform.system() == "Windows":
+			import system_setup.windows_path_set as windows_path_set
+			windows_path_set.do()
+		else:
+			fname = os.path.expanduser('~/.bashrc')
+			file = open(fname, 'r').read()
+			file = bash_rc + '\n\n' + file
+			open(fname, 'w').write(file)
 
-    import dcore.data as data
+	if doShortcuts:
+		import dcore.data as data
 
-    data.createAllDirs()
+		data.createAllDirs()
 
-    import system_setup.create_python_scripts_shortcuts
-    system_setup.create_python_scripts_shortcuts.do()
+		import system_setup.create_python_scripts_shortcuts
+		system_setup.create_python_scripts_shortcuts.do()
 
-    #import system_setup.create_directories_shortcuts
-    #create_directories_shortcuts.do()
-"""
+		#import system_setup.create_directories_shortcuts
+		#create_directories_shortcuts.do()
