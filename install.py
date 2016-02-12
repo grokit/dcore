@@ -3,6 +3,13 @@ One-run install of DCORE.
 
 Open question: wether should copy all scripts to proper target dir as 'fire-and-forget' or try to adapt to where the data is (where the user puts it). 
 Could save a file in ~/.dcore that points to where the repo is... but that would not work well for system path.
+
+## TODO
+
+save/restore:
+- vim
+- i3
+- bashrc
 """
 
 import sys
@@ -14,6 +21,10 @@ import platform
 # pv: picture view
 # scrot: screenshots i3
 apt_get_packages = """
+xclip
+monodevelop
+mono-devel
+xbacklight
 scrot
 pv
 feh
@@ -39,7 +50,7 @@ export PATH=$PATH:%s
 """ % (tag, home_scripts, shortcuts_folder)
 
 if __name__ == '__main__':
-	doAptGet = False
+	doAptGet = True 
 	doPath = True 
 	doShortcuts = True
 
@@ -61,6 +72,9 @@ if __name__ == '__main__':
 			if not tag in file:
 				file = bash_rc + '\n\n' + file
 				open(fname, 'w').write(file)
+
+		os.system('source ~/.bashrc')
+
 
 	if doShortcuts:
 		import dcore.data as data
