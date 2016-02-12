@@ -5,6 +5,10 @@ Open question: wether should copy all scripts to proper target dir as 'fire-and-
 Could save a file in ~/.dcore that points to where the repo is... but that would not work well for system path.
 """
 
+import sys
+import os
+import platform
+
 # feh: change background
 # diodon: clip
 # pv: picture view
@@ -26,18 +30,16 @@ tmux
 """
 
 tag = "fh89h98h3f9hf39hf98ahsfd9djh"
+home_scripts = os.path.abspath('../')
+shortcuts_folder = os.path.abspath(os.path.expanduser('~/sync/dcore_data/path_ext')) # @@bug: should be able to adjust to where git checkout was done. other script puts in this folder
 bash_rc = """
-# Magic dcore tag: __tag__.
-export PYTHONPATH=$PYTHONPATH:/home/arch/sync/scripts
-export PATH=$PATH:/home/arch/sync/dcore_data/path_ext
-""".replace('__tag__', tag)
-
-import sys
-import os
-import platform
+# Magic dcore tag: %s.
+export PYTHONPATH=$PYTHONPATH:%s
+export PATH=$PATH:%s
+""" % (tag, home_scripts, shortcuts_folder)
 
 if __name__ == '__main__':
-	doAptGet = True
+	doAptGet = False
 	doPath = True 
 	doShortcuts = True
 
