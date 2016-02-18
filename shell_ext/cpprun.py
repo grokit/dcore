@@ -28,6 +28,11 @@ if __name__ == '__main__':
         print(cmd)
         rv |= os.system(cmd)
 
-    if rv == 0:
-        os.system('./' + filesc[0] + '.bin > ' + filesc[0] + '.out')
-        os.system('cat ./' + filesc[0] + '.out')
+    skipRun = False 
+
+    if not skipRun:
+        if rv == 0:
+            os.system('./' + filesc[0] + '.bin > ' + filesc[0] + '.out')
+            os.system('cat ./' + filesc[0] + '.out')
+    else:
+        print('Run skipped, change script if want other behavior.')

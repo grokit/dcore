@@ -35,18 +35,19 @@ cacheFile = os.path.join(data.dcoreData(), '%s.cache' % os.path.split(__file__)[
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
-print(cacheFile)
-
-def remember_dir():
-    
+def rememberDirs():
     dirs = [os.getcwd()]
     
-    dirs += get_file_content()
+    dirs += getFileContent()
+
+    bad = [d for d in dirs if not os.path.isdir(d)]
+    print('Removing non-existent directories: %s.' % bad)
+    dirs = [d for d in dirs if os.path.isdir(d)]
     
-    set_file_content( dirs )
+    setFileContent( dirs )
     
     # need to read again because might be different if there are duplicates
-    dirs = get_file_content()
+    dirs = getFileContent()
     
     # create shortcut files
     if os.path.isdir(path_ext_folder):
@@ -60,7 +61,7 @@ def remember_dir():
     else:
         raise Exception(path_ext_folder)
         
-def get_file_content():
+def getFileContent():
     fh = open(cacheFile, 'r')
     data = fh.read()
     fh.close()
@@ -69,7 +70,7 @@ def get_file_content():
     
     return data
     
-def set_file_content(fileList):
+def setFileContent(fileList):
     
     fh = open(cacheFile, 'w')
     
@@ -80,17 +81,17 @@ def set_file_content(fileList):
         fh.write("\n")        
     fh.close()
     
-def print_stored_dirs():
-    data = get_file_content()
+def printStoredDirs():
+    data = getFileContent()
     
     i = 0
     for file in data:
         print("%02d: %s" % (i, file))
         i += 1
     
-def clear_dirs():
+def clearDirs():
     fh = open(cacheFilePerimated, 'a')
-    for file in get_file_content():
+    for file in getFileContent():
         fh.write( file )
         fh.write( "\n" )
     fh.close()
@@ -116,11 +117,11 @@ def do():
         fh.close()
     
     if args.print:
-        print_stored_dirs()
+        printStoredDirs()
         exit(0) 
     
     if args.clear:
-        clear_dirs()
+        clearDirs()
         exit(0) 
     
     if args.edit:
@@ -131,12 +132,12 @@ def do():
         exit(0)      
     
     if args.remember:
-        remember_dir()
-        print_stored_dirs()
+        rememberDirs()
+        printStoredDirs()
         exit(0)        
     
     if args.goto_clip != None:
-        filec = get_file_content()
+        filec = getFileContent()
         dir = filec[args.goto_clip]
         
         if Tk is not None:
@@ -151,7 +152,7 @@ def do():
         print("'%s' now in clipboard" % dir)
         exit(0)       
     
-    print_stored_dirs()
+    printStoredDirs()
     
 if __name__ == '__main__':
     do()

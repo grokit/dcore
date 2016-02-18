@@ -11,6 +11,12 @@ The 'DCore' lib has two purposes:
 
 # TODO
 
+## As
+
+- Have an easy, 1-line setup where it setups an entire new machine with all my environment, including setting .bashrc, etc.
+
+## Bs
+
 - http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
 ^^ add this to source of HTMLs with MJ for reference.
 

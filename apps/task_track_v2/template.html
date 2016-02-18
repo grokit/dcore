@@ -35,9 +35,10 @@ function getUnixTimeXDaysAgoFromNextMidnight(x){
 	return d
 }
 
-function getUnixTimeAtMidnight(){
+function getUnixTimeAtSeparation(){
+	// I work until ~3-4am sometimes, make the day split there :).
 	var d = new Date()
-	d.setHours( 24 );
+	d.setHours( 28 );
 	d.setMinutes( 0 );
 	d.setSeconds( 0 );
 	d.setMilliseconds( 0 );
@@ -80,7 +81,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	// ... of the last timePeriodInDays days.
 	data = data.filter(function(d){return d.date >= getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)})
 
-	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays), getUnixTimeAtMidnight())
+	data = dataToBuckets(data, timePeriodInDays, getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays), getUnixTimeAtSeparation())
 
 	var width = 1000 
 	var barWidth = width / (timePeriodInDays)
@@ -88,7 +89,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	yMin = 0
 	// yMax = d3.max(data.map(function(v){ return v.length }))
 	// This is in hours... the REAL solution here would be to have the amount of time max for ALL data.
-	yMax = 8
+	yMax = 12
 
 	xMin = d3.min(data.map(function(v){ return v.date }))
 	//xMin = getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)
@@ -123,10 +124,10 @@ function genChart(data, timePeriodInDays, activityFilter){
 	    .attr("height", function(d){return yScale(d.length)})
 	    .attr("fill", function(d){
 			    var r = 0
-			    var g = d.length*50
-			    if(g<=75){g=75}
+			    var g = Math.floor(d.length*30) // RGB function does not like non-int apparently.
+			    if(g<=50){g=50}
 			    if(g>=200){g=200}
-			    var b = 50
+			    var b = 50;
 			    return "rgb("+r+", "+g+", "+b+")"
 			    })
 
@@ -138,7 +139,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 		   .enter()
 		   .append("text")
 		   .text(function(d, i) {
-				   return d.length
+				   return Math.floor(10*d.length)/10
 		   })
 		   .attr("x", function(d, i) {
 				   return xScale(d.date) + barWidth/2
@@ -155,21 +156,19 @@ function genChart(data, timePeriodInDays, activityFilter){
 	for(var i = 0; i < data.length; ++i){
 		totalWorked += data[i].length
 	}
+	
 
 	hoursPerDay = Math.floor(10*totalWorked/timePeriodInDays)/10
-	d3.select("body").append("p").text("You have worked " + totalWorked + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
+	d3.select("body").append("p").text("You have worked " + Math.floor(10*totalWorked)/10 + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
 }
 
 genChart(data, 7, "cs")
 genChart(data, 30, "cs")
 genChart(data, 60, "cs")
-
-genChart(data, 7, "exer")
-genChart(data, 30, "exer")
-genChart(data, 60, "exer")
+genChart(data, 90, "cs")
+genChart(data, 180, "cs")
 
 genChart(data, 7, "medi")
-genChart(data, 30, "medi")
 genChart(data, 60, "medi")
 </script>
 <body>
