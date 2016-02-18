@@ -71,7 +71,7 @@ def changeExt(f, arg):
     
 if __name__ == '__main__':
     files = os.listdir('.')
-    files = [f for f in files if os.path.isfile(f)]
+    #files = [f for f in files if os.path.isfile(f)]
 
     fnMap = {
             'remove_spaces': removeSpace,

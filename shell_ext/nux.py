@@ -94,6 +94,14 @@ def sshots():
 def vol_ctrl():
 	osExec('pavucontrol')
 
+def trackpad_on():
+    osExec('xinput list')
+    osExec('xinput set-prop 13 "Device Enabled" 1')
+
+def trackpad_off():
+    osExec('xinput list')
+    osExec('xinput set-prop 13 "Device Enabled" 0')
+
 def vol_up():
 	osExec('amixer -q sset Master 10%+')
 

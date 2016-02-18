@@ -20,7 +20,9 @@ import platform
 # diodon: clip
 # pv: picture view
 # scrot: screenshots i3
+# astyle: inside VIM, `:%astyle` to format code
 apt_get_packages = """
+astyle
 xclip
 monodevelop
 mono-devel
