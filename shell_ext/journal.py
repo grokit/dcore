@@ -85,7 +85,8 @@ def do():
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
-        open(file, 'w').write('New file: %s.' % file)
+        #open(file, 'w').write('New file: %s.' % file)
+        open(file, 'w').write("\n")
     
     if args.filename_copy_to_journal_directory:
         src = os.path.abspath(args.filename_copy_to_journal_directory)
@@ -110,6 +111,12 @@ def do():
         exit(0)
         
     if args.open:
+        
+        fh = open(file, 'r')    
+        fileContent = fh.read()
+        fh = open(file, 'w')  
+        fh.write('# ' + dateForAnnotation() + '\n' + fileContent)
+        fh.close()
         if platform.system() == 'Windows':
             c = 'np %s' % file
         else:

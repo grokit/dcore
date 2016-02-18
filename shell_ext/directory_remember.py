@@ -35,6 +35,8 @@ cacheFile = os.path.join(data.dcoreData(), '%s.cache' % os.path.split(__file__)[
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
+print(cacheFile)
+
 def remember_dir():
     
     dirs = [os.getcwd()]
