@@ -36,7 +36,6 @@ cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
 def rememberDirs():
-    
     dirs = [os.getcwd()]
     
     dirs += getFileContent()

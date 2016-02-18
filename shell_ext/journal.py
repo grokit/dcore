@@ -100,7 +100,8 @@ def do():
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
-        open(file, 'w').write('New file: %s.' % file)
+        #open(file, 'w').write('New file: %s.' % file)
+        open(file, 'w').write("\n")
     
     if args.filename_copy_to_journal_directory:
         src = os.path.abspath(args.filename_copy_to_journal_directory)

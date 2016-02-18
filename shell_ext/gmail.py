@@ -1,3 +1,10 @@
+"""
+Send e-mail from GMail address.
+
+# TODO
+
+- Move to sa-utils
+"""
 
 import smtplib
 import time
@@ -7,7 +14,6 @@ import dcore.system_description as private_data
 _meta_shell_command = 'gmail'
 
 def getArgs():
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-t', '--to', required=True)
@@ -20,7 +26,6 @@ def getArgs():
 
     args = parser.parse_args()
     return args
-
 
 def send_email(
         to,

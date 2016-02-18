@@ -13,7 +13,8 @@ def getArgs():
 if __name__ == '__main__':
     args = getArgs()
     print(args)
-    files = [f for f in os.listdir('.') if "log" in f.lower()]
+    folder = os.path.expandvars(r'%APPDATA%\SkypeToolsCoreLib')
+    files = [os.path.join(folder, f) for f in os.listdir(folder) if "log" in f.lower()]
     file = max(files, key=os.path.getctime)
     print(file)
     cmd = 'np %s' % file
