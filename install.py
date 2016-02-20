@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 One-run install of DCORE.
 
@@ -21,7 +23,9 @@ import platform
 # pv: picture view
 # scrot: screenshots i3
 # astyle: inside VIM, `:%astyle` to format code
+# cmus: command-line music player
 apt_get_packages = """
+cmus
 astyle
 xclip
 monodevelop
@@ -52,7 +56,7 @@ export PATH=$PATH:%s
 """ % (tag, home_scripts, shortcuts_folder)
 
 if __name__ == '__main__':
-	doAptGet = True 
+	doAptGet = False
 	doPath = True 
 	doShortcuts = True
 

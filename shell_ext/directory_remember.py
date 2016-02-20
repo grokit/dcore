@@ -1,17 +1,19 @@
 """
+# Documentation
+
+`dr -r` will permanently remember current directory.
+`dr` lists all directory remembered and their tags.
+
+Each directory gets a tag (by default 00...99), to go to that directory simply type:
+. cd<tag>
+
+e.g:
+cd01
+cd03
+
+Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
+
 # TODO
-
-- automatically create 'cd1.bat, cd2.bat, ...' OR for -g, create a temp bat file and execute
-- dr -r, cd00 <-- goes to latest added
-
-# TODO-B
-
-- rdir . tata --> create .bat file so that cdtata will access this directory.
-
-- global file to specify computer-specific dirs
-
-- when adding a new cd<X>, do it at the end, not begin (avoid moving cd<x> for no reason)
-
 # BUGS
 """
 
@@ -53,9 +55,14 @@ def rememberDirs():
     if os.path.isdir(path_ext_folder):
         i = 0
         for dir in dirs:
-            new_file = os.path.join(path_ext_folder, r'cd%02d.bat' % i)
+            new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
+            if platform.system() == 'Windows':
+                new_file += '.bat'
             fh = open(new_file, 'w')
-            fh.write('cd /d "%s"' % dir)
+            if platform.system() == 'Windows':
+                fh.write('cd /d "%s"' % dir)
+            else:
+                fh.write('cd "%s"' % dir)
             fh.close()
             i += 1
     else:
