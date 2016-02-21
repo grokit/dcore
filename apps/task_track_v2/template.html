@@ -74,7 +74,7 @@ function dataToBuckets(data, timePeriodInDays, min, max){
 
 function genChart(data, timePeriodInDays, activityFilter){
 
-	// Only keep cs events...
+	// Only keep target events...
 	if(activityFilter != null){
 		data = data.filter(function(d){return d.type == activityFilter})
 	}
@@ -87,16 +87,14 @@ function genChart(data, timePeriodInDays, activityFilter){
 	var barWidth = width / (timePeriodInDays)
 
 	yMin = 0
-	// yMax = d3.max(data.map(function(v){ return v.length }))
-	// This is in hours... the REAL solution here would be to have the amount of time max for ALL data.
-	yMax = 12
+	yMax = d3.max(data.map(function(v){ return v.length }))
 
 	xMin = d3.min(data.map(function(v){ return v.date }))
 	//xMin = getUnixTimeXDaysAgoFromNextMidnight(timePeriodInDays)
 	//xMin = 0
 	xMax = d3.max(data.map(function(v){ return v.date }))
 
-	var height = 70 
+	var height = 100 
 	d3.select("body").append("p").text("Activity: " + activityFilter)
 	var chart = d3.select("body")
 	    .append("svg:svg")
@@ -124,7 +122,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	    .attr("height", function(d){return yScale(d.length)})
 	    .attr("fill", function(d){
 			    var r = 0
-			    var g = Math.floor(d.length*30) // RGB function does not like non-int apparently.
+			    var g = Math.floor(255*d.length/yMax) // RGB function does not like non-int apparently.
 			    if(g<=50){g=50}
 			    if(g>=200){g=200}
 			    var b = 50;
