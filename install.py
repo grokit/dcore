@@ -24,6 +24,7 @@ import platform
 # scrot: screenshots i3
 # astyle: inside VIM, `:%astyle` to format code
 # cmus: command-line music player
+# macchanger: NOT enabled since at install it pops-open a menu :(
 apt_get_packages = """
 cmus
 astyle
