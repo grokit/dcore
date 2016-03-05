@@ -47,6 +47,11 @@ shutter
 tmux
 """
 
+maybes_code_searchers = """
+ack-grep
+silversearcher-ag
+"""
+
 tag = "fh89h98h3f9hf39hf98ahsfd9djh"
 home_scripts = os.path.abspath('../')
 shortcuts_folder = os.path.abspath(os.path.expanduser('~/sync/dcore_data/path_ext')) # @@bug: should be able to adjust to where git checkout was done. other script puts in this folder

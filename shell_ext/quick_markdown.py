@@ -133,7 +133,7 @@ def do():
 
         html = markdown.markdown(mdstr, ['fenced_code', 'codehilite'])
 
-        filename = file + '.html'
+        filename = file + '.autogen.html'
         filename = filename.replace('.md', '')
         fh = codecs.open(filename, 'w', encoding='utf-8')
         

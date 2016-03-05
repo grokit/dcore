@@ -40,6 +40,11 @@ def sys_update():
 def mempigs():
 	osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
 
+def mac():
+    osExec('sudo ifconfig wlp1s0 down')
+    osExec('sudo macchanger -r wlp1s0')
+    osExec('sudo ifconfig wlp1s0 up')
+
 def lock():
 	osExec('gnome-screensaver-command -l')
 
