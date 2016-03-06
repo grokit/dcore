@@ -45,6 +45,8 @@ git
 i3
 shutter
 tmux
+ack-grep
+silversearcher-ag
 """
 
 maybes_code_searchers = """
@@ -62,7 +64,7 @@ export PATH=$PATH:%s
 """ % (tag, home_scripts, shortcuts_folder)
 
 if __name__ == '__main__':
-	doAptGet = False
+	doAptGet = True
 	doPath = True 
 	doShortcuts = True
 
