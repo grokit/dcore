@@ -49,6 +49,7 @@ tmux
 ack-grep
 silversearcher-ag
 ack-grep
+openssh-server
 """
 
 ssh_public_key = """ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfvvkTRv6R1EHvJ5BE9YIr/VUFpRpDRyZHGp/qSXcMGooNpAMEvtbLu6cNy4wGp6Gt0QbPnec4bTlwWmOfQH2E4k080yERIC+PcvDVkOTFpw1pCJ3iiisXJDrBnNqxgczX+no9bFVsyzrnQb2e8VNkXLNAvSRu/r93XSQmqQB04R+1fy2Uhbg8fzN/5WPnkTUZG/DpP1t4IfreAoOHt1wNbGbOatrLvsZ7iL86CE34MdXTko6koeZX/uILyuEJKSqTwc30Mzi6qZiPXTr1qKA2wbrQRm3K7TWGSHJcLJ0HMvWV8S9o7CoUa7aEtbKn3jDDfVE4dzLGsUVgnCpfJYV3 arch@arch-nx64
@@ -101,6 +102,11 @@ def setupShortcuts():
     #create_directories_shortcuts.do()
 
 def setupSSH():
+
+    dirr = os.path.expanduser('~/.ssh')
+    if not os.path.exists(dirr):
+        os.makedirs(dirr)
+
     fname = os.path.expanduser('~/.ssh/authorized_keys')
 
     print('Be careful, you are adding the default ssh public key to %s, which gives access to the owner of the associated private key to this computer. Make sure you review this change.' % fname)
@@ -113,6 +119,9 @@ def setupSSH():
     fh.write(ssh_public_key)
     fh.write('\n')
     fh.close()
+
+    #os.system('sudo restart ssh')
+    os.system('sudo /etc/init.d/ssh restart')
 
 if __name__ == '__main__':
     #setupAptGet()
