@@ -105,14 +105,17 @@ def setupSSH():
 
     print('Be careful, you are adding the default ssh public key to %s, which gives access to the owner of the associated private key to this computer. Make sure you review this change.' % fname)
 
-    fh = open(fname, 'a')
+    if os.path.isfile(fname):
+        fh = open(fname, 'a')
+    else:
+        fh = open(fname, 'w')
     fh.write('\n')
     fh.write(ssh_public_key)
     fh.write('\n')
     fh.close()
 
 if __name__ == '__main__':
-    setupAptGet()
+    #setupAptGet()
     setupPath()
     setupShortcuts()
     setupSSH()
