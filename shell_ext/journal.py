@@ -131,7 +131,8 @@ def do():
             c = 'np %s' % file
         else:
             #c = 'vim %s' % file
-            c = 'gedit %s' % file
+            #c = 'gedit %s' % file
+            c = 'kate %s' % file
         print(c)
         os.system(c)
         exit(0)
