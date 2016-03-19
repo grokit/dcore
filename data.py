@@ -4,7 +4,6 @@ Define where data is.
 
 import sys
 import os
-
 import platform
 
 def createAllDirs():

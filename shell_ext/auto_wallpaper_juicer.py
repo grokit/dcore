@@ -1,4 +1,6 @@
 
+import dcore.data as data
+
 import shutil
 import os
 import urllib.request
@@ -10,7 +12,11 @@ import argparse
 
 _meta_shell_command = 'getpics'
 
-outputFolder = os.path.expanduser('~/Desktop/getpics')
+#outputFolder = os.path.expanduser('~/Desktop/getpics')
+outputFolder = os.path.join(data.dcoreData(), 'wallpapers') 
+if not os.path.exists(outputFolder):
+    os.makedirs(outputFolder)
+
 linux_setpic_cmds = ['gsettings set org.gnome.desktop.background picture-uri file:///%s']
 linux_setpic_cmds.append('feh --bg-scale %s')
 
