@@ -42,9 +42,9 @@ def rememberDirs():
     
     dirs += getFileContent()
 
-    bad = [d for d in dirs if not os.path.isdir(d)]
+    bad = [d for d in dirs if not os.path.isdir(d) and not (len(d.split(',')) == 2 and os.path.isdir(d.split(',')[1]))]
     print('Removing non-existent directories: %s.' % bad)
-    dirs = [d for d in dirs if os.path.isdir(d)]
+    dirs = [d for d in dirs if d not in bad]
     
     setFileContent( dirs )
     
@@ -55,6 +55,11 @@ def rememberDirs():
     if os.path.isdir(path_ext_folder):
         i = 0
         for dir in dirs:
+            
+            shortcut = ''
+            if ',' in dir: 
+                shortcut, dir = dir.split(',')
+            
             new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
             if platform.system() == 'Windows':
                 new_file += '.bat'
@@ -63,12 +68,39 @@ def rememberDirs():
                 fh.write('cd /d "%s"' % dir)
             else:
                 fh.write('cd "%s"' % dir)
+            
+            if shortcut != '':
+                new_file = os.path.join(path_ext_folder, r'cd%s' % shortcut)
+                if platform.system() == 'Windows':
+                    new_file += '.bat'
+                fh = open(new_file, 'w')
+                if platform.system() == 'Windows':
+                    fh.write('cd /d "%s"' % dir)
+                else:
+                    fh.write('cd "%s"' % dir)
+            
             fh.close()
             i += 1
     else:
         raise Exception(path_ext_folder)
         
 def getFileContent():
+    """
+    # File Format
+    
+        [tag,]<file>
+        ...
+        [tag,]<file>
+    
+    e.g:
+    
+        jl,/journal
+        /etc
+    
+    '/etc' is a non-tag shortcut, will be accessible with a number.
+    '/journal' will be accessible with a number OR cdjl.
+    """
+    
     fh = open(cacheFile, 'r')
     data = fh.read()
     fh.close()
@@ -78,11 +110,12 @@ def getFileContent():
     return data
     
 def setFileContent(fileList):
+    # Eliminate duplicates.
+    fileList = list(set(fileList))
+    fileList.sort()
     
     fh = open(cacheFile, 'w')
     
-    fileList = list(set(fileList))
-    fileList.sort()
     for file in fileList:
         fh.write(file)
         fh.write("\n")        
@@ -117,6 +150,7 @@ def do():
     
     args = parser.parse_args()
     #print(args)
+    print('Using cache file: %s.' % cacheFile)
     
     if not os.path.isfile(cacheFile):
         fh = open(cacheFile, 'w')
