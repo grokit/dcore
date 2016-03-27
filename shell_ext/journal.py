@@ -130,9 +130,9 @@ def do():
         if platform.system() == 'Windows':
             c = 'np %s' % file
         else:
-            #c = 'vim %s' % file
+            c = 'vim %s' % file
             #c = 'gedit %s' % file
-            c = 'kate %s' % file
+            #c = 'kate %s' % file
         print(c)
         os.system(c)
         exit(0)
@@ -148,8 +148,9 @@ def do():
             break # reached EOF
         inputBuf.append( lIn )
 
-    annotateDate(file)
+    # Since write from top, have to write content before date if want date as header.
     appendContent(file, inputBuf)
+    annotateDate(file)
     
 if __name__ == '__main__':
     do()
