@@ -56,9 +56,10 @@ def dateForAnnotation():
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
-    parser.add_argument('-s', '--scratch', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
+    parser.add_argument('-t', '--scratch', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
     parser.add_argument('-e', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
     parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
+    parser.add_argument('-s', '--save_screenshot_to_current_journal', action='store_true', default=False, help="Copies latest file in screenshot directory and copies to folder which contains today's journal.")
     return parser.parse_args()
 
 def markdownAddFileAsLink(mdfile, newfile):
@@ -83,20 +84,28 @@ def appendContent(file, inputBuf):
     fh = open(file, 'w')
     fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
     
+def getLatestScreenshotFilename():
+    ## @@@@nix: proper path here (dcore?)
+    screenshotFolder = r'C:\screenshots'
+    
+    files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
+    files.sort(key=lambda x: os.path.getmtime(x))
+    return os.path.abspath(files[0])    
+    
 def do():    
     args = getArgs()
     
     if args.scratch:
-        filePath = data.dcoreData()
-        file = os.path.abspath(os.path.join(filePath, 'scratch.markdown'))
+        journalOutputPath = data.dcoreData()
+        file = os.path.abspath(os.path.join(journalOutputPath, 'scratch.markdown'))
     else:
-        filePath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
+        journalOutputPath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
         
-        if not os.path.exists(filePath):
-            print('No such path `%s`, creating.' % filePath)
-            os.makedirs(filePath)
+        if not os.path.exists(journalOutputPath):
+            print('No such path `%s`, creating.' % journalOutputPath)
+            os.makedirs(journalOutputPath)
             
-        file = os.path.abspath(os.path.join(filePath, '%s_journal.markdown' % dateForFile()))
+        file = os.path.abspath(os.path.join(journalOutputPath, '%s_journal.markdown' % dateForFile()))
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
@@ -105,7 +114,20 @@ def do():
     
     if args.filename_copy_to_journal_directory:
         src = os.path.abspath(args.filename_copy_to_journal_directory)
-        dst = os.path.abspath(os.path.join(filePath, os.path.split(args.filename_copy_to_journal_directory)[1]))
+        dst = os.path.abspath(os.path.join(journalOutputPath, os.path.split(args.filename_copy_to_journal_directory)[1]))
+        
+        if True:
+            if os.path.isfile(dst):
+                raise Exception('Already a file at `%s`, not copying.' % dst)
+        
+        print('copy `%s` -> `%s`.' %(src, dst))
+        shutil.copyfile(src, dst)
+        markdownAddFileAsLink(file, dst)
+        exit(0)
+    
+    if args.save_screenshot_to_current_journal:
+        src = getLatestScreenshotFilename()
+        dst = os.path.abspath(os.path.join(journalOutputPath, os.path.split(src)[1]))
         
         if True:
             if os.path.isfile(dst):
@@ -118,9 +140,9 @@ def do():
     
     if args.explore_folder:
         if platform.system() == 'Windows':
-            c = 'explorer %s' % filePath
+            c = 'explorer %s' % journalOutputPath
         else:
-            c = 'nautilus %s' % filePath
+            c = 'nautilus %s' % journalOutputPath
         print(c)
         os.system(c)
         exit(0)
