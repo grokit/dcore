@@ -90,7 +90,7 @@ def getLatestScreenshotFilename():
     
     files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
     files.sort(key=lambda x: os.path.getmtime(x))
-    return os.path.abspath(files[0])    
+    return os.path.abspath(files[-1])    
     
 def do():    
     args = getArgs()
