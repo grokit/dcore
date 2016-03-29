@@ -44,6 +44,11 @@ import dcore.data as data
 
 stop = '!!!'
 
+if platform.system() == 'Windows':
+    screenshotFolder = r'C:\screenshots'
+else:
+    screenshotFolder = os.path.expanduser('~/Pictures')
+
 def dateForFile():
     return datetime.datetime.now().strftime("%Y-%m-%d")
     
@@ -85,9 +90,6 @@ def appendContent(file, inputBuf):
     fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
     
 def getLatestScreenshotFilename():
-    ## @@@@nix: proper path here (dcore?)
-    screenshotFolder = r'C:\screenshots'
-    
     files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
     files.sort(key=lambda x: os.path.getmtime(x))
     return os.path.abspath(files[-1])    
