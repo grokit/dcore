@@ -125,7 +125,7 @@ def setupSSH():
     fh.write('\n')
     fh.close()
 
-    #os.system('sudo restart ssh')
+    os.system('sudo restart ssh')
     os.system('sudo /etc/init.d/ssh restart')
 
 if __name__ == '__main__':
