@@ -31,6 +31,7 @@ class Test:
 def commandLineEnterWorkDone(dbFile):
     type = input('What category of work did you do?\n')
     length = float(input('How long did you work for (hours)?\n'))
+    if length < 0: raise Exception('Invalid len: %f.' % length)
     comment = input('Comment?\n')
     workUnit = work_unit.WorkDone(type, length, comment)
 
