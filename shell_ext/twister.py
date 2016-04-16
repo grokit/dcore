@@ -2,6 +2,7 @@
 import argparse
 import hashlib 
 import binascii
+import getpass
 
 import dcore.system_description as private_data
 
@@ -30,5 +31,6 @@ def hash(v):
 if __name__ == '__main__':
     args = getArgs()
     lkey = " ".join(args.src)
-    v = hash(lkey)
+    pw = getpass.getpass(prompt='Enter key:\n')
+    v = hash("%s-%s" % (lkey, pw))
     print(v)
