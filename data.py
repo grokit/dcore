@@ -22,6 +22,9 @@ def createAllDirs():
 def dcoreRoot():
     return os.path.abspath(os.path.split(__file__)[0])
 
+def dcoreTempData(tolerateNonExist = False):
+    return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
+
 def dcoreData(tolerateNonExist = False):
 
     usualPath = os.path.abspath(os.path.expanduser('~/sync/dcore_data'))

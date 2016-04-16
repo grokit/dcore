@@ -12,8 +12,8 @@ import argparse
 
 _meta_shell_command = 'getpics'
 
-#outputFolder = os.path.expanduser('~/Desktop/getpics')
-outputFolder = os.path.join(data.dcoreData(), 'wallpapers') 
+#outputFolder = os.path.expanduser('~/wallpapers')
+outputFolder = os.path.join(data.dcoreTempData(), 'wallpapers') 
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
 
