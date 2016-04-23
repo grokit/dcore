@@ -33,7 +33,7 @@ except:
 import dcore.data as data
     
 path_ext_folder = data.pathExt()
-cacheFile = os.path.join(data.dcoreTempData(), '%s.cache' % os.path.split(__file__)[1])
+cacheFile = os.path.join(data.dcoreData(), '%s.cache' % os.path.split(__file__)[1])
 cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
