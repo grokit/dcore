@@ -12,6 +12,7 @@ def isCppFile(filename):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str, nargs='?', default = None)
+    parser.add_argument('-r', '--run', action="store_true")
     args = parser.parse_args()
 
     filec = []
@@ -24,15 +25,19 @@ if __name__ == '__main__':
     rv = 0;
     for file in filesc:
         cmd = 'g++ -Wl,--no-as-needed -std=c++11 -pthread %s -o %s.bin' % (file, file)
+
+        #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
+
         print(cmd)
         rv |= os.system(cmd)
 
-    skipRun = False 
-
-    if not skipRun:
+    if args.run == True:
         if rv == 0:
-            os.system('./' + filesc[0] + '.bin > ' + filesc[0] + '.out')
-            os.system('cat ./' + filesc[0] + '.out')
+            cmd = './' + filesc[0] + '.bin > ' + filesc[0] + '.out'
+            print(cmd)
+            os.system(cmd)
+            cmd = 'cat ./' + filesc[0] + '.out'
+            os.system(cmd)
     else:
-        print('Run skipped, change script if want other behavior.')
+        print('Run skipped, see command-line arguments if want to auto-run output.')
