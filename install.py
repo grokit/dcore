@@ -18,20 +18,30 @@ import sys
 import os
 import platform
 
-# feh: change background
-# diodon: clip
-# pv: picture view
-# scrot: screenshots i3
 # astyle: inside VIM, `:%astyle` to format code
-# cmus: command-line music player
 # macchanger: NOT enabled since at install it pops-open a menu :(
 apt_get_packages = """
 g++
-cmus
 astyle
 xclip
 monodevelop
 mono-devel
+p7zip-full
+vim
+git
+tmux
+ack-grep
+ack-grep
+openssh-server
+"""
+
+# cmus: command-line music player
+# feh: change background
+# diodon: clip
+# pv: picture view
+# scrot: screenshots i3
+apt_get_packages_extended = """
+cmus
 xbacklight
 scrot
 pv
@@ -40,23 +50,19 @@ gparted
 diodon
 gimp
 virtualbox-qt
-p7zip-full
-vim
-git
+eclipse-platform
 i3
 shutter
-tmux
-ack-grep
 silversearcher-ag
-ack-grep
-openssh-server
+python-pip
 kate
 calibre
 mplayer2
 vlc-nox
 keepass2
-python-pip
 """
+
+apt_get_packages += apt_get_packages_extended
 
 ssh_public_key = """ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfvvkTRv6R1EHvJ5BE9YIr/VUFpRpDRyZHGp/qSXcMGooNpAMEvtbLu6cNy4wGp6Gt0QbPnec4bTlwWmOfQH2E4k080yERIC+PcvDVkOTFpw1pCJ3iiisXJDrBnNqxgczX+no9bFVsyzrnQb2e8VNkXLNAvSRu/r93XSQmqQB04R+1fy2Uhbg8fzN/5WPnkTUZG/DpP1t4IfreAoOHt1wNbGbOatrLvsZ7iL86CE34MdXTko6koeZX/uILyuEJKSqTwc30Mzi6qZiPXTr1qKA2wbrQRm3K7TWGSHJcLJ0HMvWV8S9o7CoUa7aEtbKn3jDDfVE4dzLGsUVgnCpfJYV3 arch@arch-nx64
 """

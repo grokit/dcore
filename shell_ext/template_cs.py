@@ -9,9 +9,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-public class HelloWorld
+public class Solution
 {
-	static public void Main ()
+	static public void Main (string[] args)
 	{
 		Console.WriteLine ("Start");
 	}
