@@ -41,6 +41,7 @@ openssh-server
 # pv: picture view
 # scrot: screenshots i3
 apt_get_packages_extended = """
+guake
 cmus
 xbacklight
 scrot
