@@ -61,6 +61,7 @@ calibre
 mplayer2
 vlc-nox
 keepass2
+gitk
 """
 
 apt_get_packages += apt_get_packages_extended
