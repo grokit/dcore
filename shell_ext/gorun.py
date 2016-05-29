@@ -16,10 +16,8 @@ if __name__ == '__main__':
     r = r & 0xffff
 
     if r == 0 and args.run == True:
-        cmd = './bin > std.out'
+        cmd = './bin | tee std.out'
         print(cmd)
-        os.system(cmd)
-        cmd = 'cat ./std.out'
         os.system(cmd)
     else:
         print('Run skipped, see command-line arguments if want to auto-run output.')
