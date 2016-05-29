@@ -1,3 +1,0 @@
-
-def convertDocsToMarkdown(docxFilename):
-    pass
