@@ -22,8 +22,6 @@
 <script src="data.js"></script>
 <script>
 
-// @@TODO: be able to say: 'want from 2015-08 to 2015-09'. Generate reports by months.
-//         ^^ maybe this would be easier in python, then just create linkable html files.
 function getUnixTimeXDaysAgoFromNextMidnight(x){
 	var d = new Date()
 	d.setHours( 24 );
@@ -162,9 +160,9 @@ function genChart(data, timePeriodInDays, activityFilter){
 
 genChart(data, 7, "cs")
 genChart(data, 30, "cs")
-genChart(data, 60, "cs")
-genChart(data, 90, "cs")
-genChart(data, 240, "cs")
+//genChart(data, 60, "cs")
+//genChart(data, 90, "cs")
+//genChart(data, 240, "cs")
 
 genChart(data, 7, "medi")
 genChart(data, 60, "medi")
