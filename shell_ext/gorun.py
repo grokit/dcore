@@ -2,6 +2,7 @@
 _meta_shell_command = 'gorun'
 
 import os
+import subprocess
 import argparse
 
 if __name__ == '__main__':
@@ -11,9 +12,10 @@ if __name__ == '__main__':
 
     cmd = 'go build -o bin'
     print(cmd)
-    os.system(cmd)
+    r = os.system(cmd)
+    r = r & 0xffff
 
-    if args.run == True:
+    if r == 0 and args.run == True:
         cmd = './bin > std.out'
         print(cmd)
         os.system(cmd)
