@@ -8,10 +8,10 @@ Could save a file in ~/.dcore that points to where the repo is... but that would
 
 ## TODO
 
-save/restore:
-- vim
-- i3
-- bashrc
+Save / restore files in user's root directory which defines how app work:
+    - vim
+    - i3
+    - bashrc
 """
 
 import sys
@@ -64,15 +64,13 @@ keepass2
 gitk
 """
 
+apt_get_packages_maybes_meh = """
+"""
+
 apt_get_packages += apt_get_packages_extended
 
 ssh_public_key = """ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfvvkTRv6R1EHvJ5BE9YIr/VUFpRpDRyZHGp/qSXcMGooNpAMEvtbLu6cNy4wGp6Gt0QbPnec4bTlwWmOfQH2E4k080yERIC+PcvDVkOTFpw1pCJ3iiisXJDrBnNqxgczX+no9bFVsyzrnQb2e8VNkXLNAvSRu/r93XSQmqQB04R+1fy2Uhbg8fzN/5WPnkTUZG/DpP1t4IfreAoOHt1wNbGbOatrLvsZ7iL86CE34MdXTko6koeZX/uILyuEJKSqTwc30Mzi6qZiPXTr1qKA2wbrQRm3K7TWGSHJcLJ0HMvWV8S9o7CoUa7aEtbKn3jDDfVE4dzLGsUVgnCpfJYV3 arch@arch-nx64
 """
-
-maybes_code_searchers = """
-silversearcher-ag
-"""
-
 
 def setupAptGet():
     for line in apt_get_packages.splitlines():
