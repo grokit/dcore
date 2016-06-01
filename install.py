@@ -62,6 +62,7 @@ mplayer2
 vlc-nox
 keepass2
 gitk
+okular
 """
 
 apt_get_packages_maybes_meh = """
