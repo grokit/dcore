@@ -11,7 +11,7 @@ import markdown # 3rd party
 
 """
 
-_meta_shell_command = 'markdown'
+_meta_shell_command = 'qmarkdown'
 
 autoreplyJavascriptHeader = """
 <html>
