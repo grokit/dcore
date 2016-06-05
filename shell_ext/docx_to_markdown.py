@@ -33,7 +33,7 @@ if __name__ == '__main__':
     os.system(cmd)
 
     # Markdown converter does not handle utf8 well.
-    # fileReplace(fout, fout, {'“': '"', '”': '"', "’":"'"})
+    fileReplace(fout, fout, {'“': '"', '”': '"', "’":"'"})
 
     # Flatten media to current directory.
     mediaFolder = './media'
@@ -46,4 +46,8 @@ if __name__ == '__main__':
 
     # Fix output markdown file
     fileReplace(fout, fout, {'./media/': './', r'\#': '#'})
+
+    cmd = 'markdown %s > %s' % (fout, fout.replace('.md', '.html'))
+    print(cmd)
+    os.system(cmd)
 
