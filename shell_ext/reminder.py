@@ -14,31 +14,35 @@ import dcore.shell_ext.gmail as gmail
 _meta_shell_command = 'reminder'
 
 def getArgs():
-	
-	parser = argparse.ArgumentParser()
-	
-	parser.add_argument('subject', nargs='+')
-	parser.add_argument('-t', '--to', default= private_data.primary_email)
-	parser.add_argument('-b', '--body', default='')
-	parser.add_argument('-a', '--attachment')
-	parser.add_argument('-w', '--work_email', action='store_true', default=False, help='Send to work e-mail instead of default one.')
-	
-	args = parser.parse_args()
-	return args
+    
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('subject', nargs='+')
+    parser.add_argument('-t', '--to', default= private_data.primary_email)
+    parser.add_argument('-b', '--body', default='')
+    parser.add_argument('-a', '--attachment')
+    parser.add_argument('-w', '--work_email', action='store_true', default=False, help='Send to work e-mail instead of default one.')
+    
+    args = parser.parse_args()
+    return args
 
 def attachToBody(toAttach, originBody):
-	abytes = open(toAttach, 'rb').read()
-	return originBody + "\n\n ** Attachment: %s ** \n\n%s" % (toAttach, base64.b64encode(abytes))
-	
+    abytes = open(toAttach, 'rb').read()
+    return originBody + "\n\n ** Attachment: %s ** \n\n%s\n\n" % (toAttach, base64.b64encode(abytes))
+    
 if __name__ == '__main__':
-	
-	args = getArgs()
-	print(args)
-	
-	if args.attachment is not None:
-		args.body = attachToBody(args.attachment, args.body)
-	
-	if args.work_email:
-		args.to = private_data.email_work 
+    
+    args = getArgs()
+    print(args)
+    
+    args.body = "Sent by %s, subject: %s.\n\n" % (__file__, args.subject)
+    
+    if args.attachment is not None:
+        args.body += attachToBody(args.attachment, args.body)
 
-	gmail.do(args.to, " ".join(args.subject), args.body)
+    args.body += "app tag: sq1m9oj9c5oirkqvjz4lug90f0dl52ac\n\n"
+    
+    if args.work_email:
+        args.to = private_data.email_work 
+
+    gmail.do(args.to, " ".join(args.subject), args.body)
