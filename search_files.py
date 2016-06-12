@@ -1,8 +1,3 @@
-"""
-# TODO
-
-Deprecate this. Use much simple walker 4-liner that does not require dependency.
-"""
 
 import os
 import fnmatch
@@ -12,7 +7,7 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir = '.'):
   E.g.: getAllFilesRecursively(['*.txt'], './folder/to/files')
   E.g.: getAllFilesRecursively(['*.txt', '*.bat'])
   
-  @note This function is ALWAYS recursive.
+  @note This function looks in folders recursively.
   @return List of fullpath string to files matching extensions provided.
   """
   
