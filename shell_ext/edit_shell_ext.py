@@ -20,7 +20,6 @@ def findExecutableScripts():
 
     tag = scripts_info.shell_meta_search
 
-    #pyfiles = [pyfile for pyfile in pyfiles if pyfile.find(tag) != -1]
     of = []
     for pfile in pyfiles:
         lines = open(pfile).readlines()
@@ -37,16 +36,13 @@ def findExecutableScripts():
     return of 
 
 if __name__ == '__main__':
-    
     args = getArgs()
-    print(args)
 
     editor = 'vim'
 
     efiles = findExecutableScripts()
 
     filename = []
-
     for f, tag in efiles:
         if tag == args.shortcut_to_edit:
             filename.append(f)
