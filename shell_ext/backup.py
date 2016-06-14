@@ -25,7 +25,7 @@ if __name__ == '__main__':
      
     # -mhe: encrypt file names
     # -mx=3: compression level 3 (0:lowest, 9:highest)
-    pw = private_data.sk0
+    pw = private_data.k_lsk_scripts_plaintext_01
     cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (exe_7zip, pw, archive_name, pathToBackup)
 
     print(cmd)

@@ -22,7 +22,7 @@ def hash20160417(v):
     """
 
     scriptSalt = '7vuv4a$yj"vTm)u4omdk^f0rk5\sd9(MiGe7o$cfsym>JLpb%bBgwk7@i6L/ogri2*rcj8h77-j00z;61k75xew'
-    secretSalt = private_data.sk0
+    secretSalt = private_data.k_lsk_scripts_plaintext_01
     salt = "%s-%s" % (scriptSalt, secretSalt)
 
     dk = hashlib.pbkdf2_hmac('sha256', v.encode(), salt.encode(), 1000000)
