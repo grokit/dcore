@@ -29,13 +29,16 @@ def getArgs():
 def attachToBody(toAttach, originBody):
     abytes = open(toAttach, 'rb').read()
     return originBody + "\n\n ** Attachment: %s ** \n\n%s\n\n" % (toAttach, base64.b64encode(abytes))
+
+def argsToStr(args):
+    return " ".join(args)
     
 if __name__ == '__main__':
     
     args = getArgs()
     print(args)
     
-    args.body = "Sent by %s, subject: %s.\n\n" % (__file__, args.subject)
+    args.body = "Reminder: %s.\n\n" % (argsToStr(args.subject))
     
     if args.attachment is not None:
         args.body += attachToBody(args.attachment, args.body)
@@ -45,4 +48,4 @@ if __name__ == '__main__':
     if args.work_email:
         args.to = private_data.email_work 
 
-    gmail.do(args.to, " ".join(args.subject), args.body)
+    gmail.do(args.to, argsToStr(args.subject), args.body)
