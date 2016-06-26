@@ -25,11 +25,11 @@ def chmod_777():
     os.system('icacls "." /grant Everyone:(F) /T')
 
 def startapps():
-    os.system(r'start C:\david\app\launchy\Launchy.exe')
-    os.system(r'start C:\david\app\ditto\Ditto.exe')
-    os.system(r'start C:\david\app\autohotkey\AutoHotkey.exe C:\david\scripts-private\autohotkey\Work_AutoHotkey.ahk')
-    os.system(r'start C:\david\app\greenshot\Greenshot.exe')
-    # os.system(r'start C:\david\app\conemu\ConEmu64.exe')
+    os.system(r'start C:\persrepo\app\launchy\Launchy.exe')
+    os.system(r'start C:\persrepo\app\ditto\Ditto.exe')
+    os.system(r'start C:\persrepo\app\autohotkey\AutoHotkey.exe C:\persrepo\scripts-private\autohotkey\Work_AutoHotkey.ahk')
+    os.system(r'start C:\persrepo\app\greenshot\Greenshot.exe')
+    # os.system(r'start C:\persrepo\app\conemu\ConEmu64.exe')
     
 if __name__ == '__main__':
     args = getArgs()

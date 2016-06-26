@@ -1,3 +1,6 @@
+"""
+In most cases it's probably simpler to just do `go run <file>`.
+"""
 
 _meta_shell_command = 'gorun'
 
