@@ -15,7 +15,7 @@ if __name__ == '__main__':
         filesc = [args.file]
     else:
         files = os.listdir('.')
-        filesc = [file for file in files if file[-4:].lower() == 'java']
+        filesc = [file for file in files if os.path.splitext(file)[1] == '.java']
 
     rv = 0;
     for file in filesc:
