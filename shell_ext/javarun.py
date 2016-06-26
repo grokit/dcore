@@ -25,7 +25,8 @@ if __name__ == '__main__':
 
     if rv == 0:
         os.system('echo begin > out.out')
-        for file in [f.replace('.class', '') for f in os.listdir('.') if '.class' in f]:
+        for file in filesc:
+            file = file.replace('.java', '')
             cmd = 'java %s >> out.out' % file
             print(cmd)
             os.system(cmd)
