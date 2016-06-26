@@ -24,11 +24,11 @@ if __name__ == '__main__':
         rv |= os.system(cmd)
 
     if rv == 0:
-        os.system('echo begin > out.out')
         for file in filesc:
             file = file.replace('.java', '')
-            cmd = 'java %s >> out.out' % file
+            fout = '%s.java.out' % file
+            cmd = 'java %s > %s' % (file, fout)
             print(cmd)
             os.system(cmd)
-            os.system('cat out.out')
+            os.system('cat %s' % fout)
 
