@@ -13,15 +13,20 @@ It removes hurdles that hinders quick note-taking:
 
 # Suggested Workflow
 
-Take small notes using jl.
+Take small notes using jl. If something is imporant:
+
+    - Add a title: begin the line with `#`
+    - Add a tag as `tag::your_tag`.
+
+Both of those notation are searcheable and listable by jl.
 
 ## Type a journal entry
 
     $ jl
     Here is my journal entry.
-    :END
+    :end
 
-Note that the ':END' is a marker that you are done typing text. Until it is typed, the notes is not written to HD.
+Note that the ':end' is a marker that you are done typing text. Until it is typed, the notes is not written to HD.
     
 ## Insert file as journal entry (directly in text file)
     
@@ -50,6 +55,7 @@ jl needs to be changed so that by default it writes to the blob and only when gi
 # BUGS
 
 - scratch.markdown is one level too high.
+- if screenshot file has invalid chars can cause problems in markdown. should just escape whatever is not [a-zA-Z-_].
 """
 
 _meta_shell_command = 'jl'
@@ -60,21 +66,7 @@ import argparse
 import platform
 import shutil
 
-# Todo: eventually have the curated notes and blog post also searcheable.
-#       Think if that should be a different (search) script. Probably should (do one thing and one thing well).
-otherNotesRoots = []
-
-dataLocation = os.path.expanduser('~/notes')
-try:
-    # If you are using dcore system, take root from there.
-    import dcore.data as data
-    dataLocation = data.dcoreData()
-except ImportError as e:
-    pass
-
-print('Using folder: %s.' % dataLocation)
-
-stop = ':END'
+stop = ':end'
 
 if platform.system() == 'Windows':
     screenshotFolder = r'C:\screenshots'
@@ -92,12 +84,12 @@ def dateForAnnotation():
     
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-l', '--list_interesting_meta', action='store_true', default=False, help='List manualy titled entries.')
-    parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
-    parser.add_argument('-t', '--scratch', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
-    parser.add_argument('-e', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
+    parser.add_argument('-s', '--search', action='store_true', default=False, help='Basic search: dumps search metadata, use grep to narrow down.')
+    parser.add_argument('-e', '--edit', action='store_true', default=False, help='Open target file (current note or scratch) in text editor.')
+    parser.add_argument('-l', '--low_note', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
+    parser.add_argument('-x', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
     parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
-    parser.add_argument('-s', '--save_screenshot_to_current_journal', action='store_true', default=False, help="Copies latest file in screenshot directory and copies to folder which contains today's journal.")
+    parser.add_argument('-p', '--save_screenshot_to_current_journal', action='store_true', default=False, help="Copies latest file in screenshot directory and copies to folder which contains today's journal.")
     return parser.parse_args()
 
 def markdownAddFileAsLink(mdfile, newfile):
@@ -128,13 +120,23 @@ def getLatestScreenshotFilename():
     return os.path.abspath(files[-1])    
     
 def do():    
+    # Todo: eventually have the curated notes and blog post also searcheable.
+    #       Think if that should be a different (search) script. Probably should (do one thing and one thing well).
+    otherNotesRoots = []
+
+    dataLocation = os.path.expanduser('~/notes')
+    try:
+        # If you are using dcore system, take root from there.
+        import dcore.data as data
+        dataLocation = data.dcoreData()
+    except ImportError as e:
+        pass
+
+    print('Using folder: %s.' % dataLocation)
+
+
     args = getArgs()
-
-    if args.list_interesting_meta:
-        """
-        This is not com
-        """
-
+    if args.search:
         journalOutputPath = dataLocation
         os.chdir(journalOutputPath)
         
@@ -150,10 +152,7 @@ def do():
         os.system(cmd)
         exit(0)
     
-    if args.scratch:
-        journalOutputPath = dataLocation
-        file = os.path.abspath(os.path.join(journalOutputPath, 'scratch.markdown'))
-    else:
+    if not args.low_note:
         journalOutputPath = os.path.abspath(os.path.join(dataLocation, 'journals/%s/' % dateForFolder()))
         
         if not os.path.exists(journalOutputPath):
@@ -161,6 +160,9 @@ def do():
             os.makedirs(journalOutputPath)
             
         file = os.path.abspath(os.path.join(journalOutputPath, '%s_journal.markdown' % dateForFile()))
+    else:
+        journalOutputPath = dataLocation
+        file = os.path.abspath(os.path.join(os.path.join(journalOutputPath, 'journals'), 'scratch.markdown'))
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
@@ -201,14 +203,12 @@ def do():
         os.system(c)
         exit(0)
         
-    if args.open:
+    if args.edit:
         annotateDate(file)
         if platform.system() == 'Windows':
             c = 'np %s' % file
         else:
             c = 'vim %s' % file
-            #c = 'gedit %s' % file
-            #c = 'kate %s' % file
         print(c)
         os.system(c)
         exit(0)
@@ -230,6 +230,3 @@ def do():
     
 if __name__ == '__main__':
     do()
-    #print(dateForFile())
-    #print(dateForAnnotation())
-    
