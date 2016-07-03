@@ -1,13 +1,27 @@
 """
-# USAGE
+# Why
+
+Make it easy to take, and later search, small notes from command line.
+
+It removes hurdles that hinders quick note-taking:
+
+    - Native to console, avoid having to switch to a UI application and works on all OS.
+    - Fully scriptable (just 1 python script with no _forced_ dependencies).
+    - Centralizes all notes to a folder, avoid having to `pushd.; cd ~/notes; take notes; popd;` everytime you want to take a note.
+    - Append some metadata such as time of entry to notes.
+    - Have convention for entering notes that make them easily searcheable by title or tags.
+
+# Suggested Workflow
+
+Take small notes using jl.
 
 ## Type a journal entry
 
     $ jl
     Here is my journal entry.
-    !!!
+    :END
 
-Note that the '!!!' is a marker that you are done typing text.    
+Note that the ':END' is a marker that you are done typing text. Until it is typed, the notes is not written to HD.
     
 ## Insert file as journal entry (directly in text file)
     
@@ -30,6 +44,12 @@ Note that the '!!!' is a marker that you are done typing text.
 # TODO
 
 - jl -c : store whatever is in clipboard as text
+
+jl needs to be changed so that by default it writes to the blob and only when give proper title does it create new directory. then after one has been created make it easy to append to without send data to wo having to re-specify name
+
+# BUGS
+
+- scratch.markdown is one level too high.
 """
 
 _meta_shell_command = 'jl'
@@ -40,9 +60,21 @@ import argparse
 import platform
 import shutil
 
-import dcore.data as data
+# Todo: eventually have the curated notes and blog post also searcheable.
+#       Think if that should be a different (search) script. Probably should (do one thing and one thing well).
+otherNotesRoots = []
 
-stop = '!!!'
+dataLocation = os.path.expanduser('~/notes')
+try:
+    # If you are using dcore system, take root from there.
+    import dcore.data as data
+    dataLocation = data.dcoreData()
+except ImportError as e:
+    pass
+
+print('Using folder: %s.' % dataLocation)
+
+stop = ':END'
 
 if platform.system() == 'Windows':
     screenshotFolder = r'C:\screenshots'
@@ -60,6 +92,7 @@ def dateForAnnotation():
     
 def getArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-l', '--list_interesting_meta', action='store_true', default=False, help='List manualy titled entries.')
     parser.add_argument('-o', '--open', action='store_true', default=False, help='Just opens the file in text editor.')
     parser.add_argument('-t', '--scratch', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
     parser.add_argument('-e', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
@@ -78,7 +111,7 @@ def markdownAddFileAsLink(mdfile, newfile):
 
 def annotateDate(file):
     fh = open(file, 'r')
-    inputBuf = ['# ' + dateForAnnotation() + '\n']
+    inputBuf = ['(time: ' + dateForAnnotation() + ')\n']
     fileContent = fh.read()
     fh = open(file, 'w')
     fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
@@ -96,12 +129,32 @@ def getLatestScreenshotFilename():
     
 def do():    
     args = getArgs()
+
+    if args.list_interesting_meta:
+        """
+        This is not com
+        """
+
+        journalOutputPath = dataLocation
+        os.chdir(journalOutputPath)
+        
+        # Pound and date is inserted automatically, so skipped.
+        # The really interesting information is what users tagged with a markdown style title.
+        cmd = r'ag "^# [^0-9]"'
+        print(cmd)
+        os.system(cmd)
+
+        # Also cool: tags. Right now this is really basic, could in the future do full-python search.
+        cmd = r'ag "tag::"'
+        print(cmd)
+        os.system(cmd)
+        exit(0)
     
     if args.scratch:
-        journalOutputPath = data.dcoreData()
+        journalOutputPath = dataLocation
         file = os.path.abspath(os.path.join(journalOutputPath, 'scratch.markdown'))
     else:
-        journalOutputPath = os.path.abspath(os.path.join(data.dcoreData(), 'journals/%s/' % dateForFolder()))
+        journalOutputPath = os.path.abspath(os.path.join(dataLocation, 'journals/%s/' % dateForFolder()))
         
         if not os.path.exists(journalOutputPath):
             print('No such path `%s`, creating.' % journalOutputPath)
@@ -111,7 +164,6 @@ def do():
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
-        #open(file, 'w').write('New file: %s.' % file)
         open(file, 'w').write("\n")
     
     if args.filename_copy_to_journal_directory:
@@ -161,7 +213,7 @@ def do():
         os.system(c)
         exit(0)
     
-    print("Type '%s' to end." % stop)
+    print("Type your note, then '%s' to save and exit." % stop)
     inputBuf = []
     while len(inputBuf) == 0 or inputBuf[-1].find(stop) == -1:
         try:

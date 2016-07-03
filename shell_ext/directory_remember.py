@@ -14,6 +14,12 @@ cd03
 Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
+
+- Also be able to remember files:
+    - dr -r: remember current dir.
+    - dr [filename] <tag>: remember file. After this, dr -e [file or tag] staight-up open in vim.
+    ^^ then retire the `fopen` utility.
+
 # BUGS
 """
 
