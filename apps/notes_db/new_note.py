@@ -37,7 +37,7 @@ import argparse
 import platform
 import shutil
 
-stop = ':end'
+STOP_MARKER = ':end'
 
 if platform.system() == 'Windows':
     screenshotFolder = r'C:\screenshots'
@@ -72,20 +72,19 @@ def markdownAddFileAsLink(mdfile, newfile):
 
 def annotateDate(file):
     fh = open(file, 'r')
-    annotation = '(time::' + dateForAnnotation() + ')\n'
+    annotation = 'time::' + dateForAnnotation() + '\n'
     fileContent = fh.read()
     fh = open(file, 'w')
     fh.write(annotation + '\n' + fileContent)
 
 def renderInputBuf(fileAsArray):
-    # @@BUG: stop -> STOP_MARKER to make it clear it's global.
-    return "\n".join(fileAsArray).strip(stop) 
+    return "\n".join(fileAsArray).strip(STOP_MARKER) 
 
-def appendContent(file, inputBuf):
+def appendContent(file, noteContent):
     fh = open(file, 'r')
     fileContent = fh.read()
     fh = open(file, 'w')
-    fh.write(renderInputBuf(inputBuf) + '\n' + fileContent)
+    fh.write(noteContent + '\n' + fileContent)
     
 def getLatestScreenshotFilename():
     files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
@@ -143,9 +142,9 @@ def do():
         os.system(c)
         exit(0)
     
-    print("Type your note, then '%s' to save and exit." % stop)
+    print("Type your note, then '%s' to save and exit." % STOP_MARKER)
     inputBuf = []
-    while len(inputBuf) == 0 or inputBuf[-1].find(stop) == -1:
+    while len(inputBuf) == 0 or inputBuf[-1].find(STOP_MARKER) == -1:
         try:
             lIn = input()
         except (EOFError):
@@ -182,8 +181,10 @@ def ingest(note_md, dataLocation):
         open(noteFilename, 'w').write("\n")
 
     # Since write from top, have to write content before date if want date as header.
-    appendContent(noteFilename, inputBuf)
+    appendContent(noteFilename, note_md)
     annotateDate(noteFilename)
+    
+    return noteFilename
 
 if __name__ == '__main__':
     do()
