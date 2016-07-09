@@ -2,6 +2,7 @@
 Transform a flat note file to directories.
 """
 
+import os
 import re
 import datetime
 
@@ -12,7 +13,7 @@ def timeStrToUnixTime(timeStr):
     return 0
 
 def unixTimeAsSafeStr(unixTime):
-    dt = datetime.fromtimestamp(unixTime)
+    dt = datetime.datetime.fromtimestamp(unixTime)
     return dt.strftime("%Y-%m-%d")    
 
 def toFolderName(title, unixTime):
@@ -22,7 +23,7 @@ def toFolderName(title, unixTime):
             l = '-'
         buf.append(l)
     safeTitle = "".join(buf)
-    return unixTimeAsSafeStr(unixtime) + '_' + safeTitle
+    return unixTimeAsSafeStr(unixTime) + '_' + safeTitle
 
 def detectTitle(line):
     title = None
@@ -58,19 +59,19 @@ class Note:
 
         note.title = title
         note.unixtime = time
-        note.content = nodeMd
+        note.content = noteMd
         return note
 
     def writeSelf(self, folderOut):
         topFolderName = toFolderName(self.title, self.unixtime)
-        folderWriteTo = os.path.join(folderOut, toFolderName)
+        folderWriteTo = os.path.join(folderOut, topFolderName)
         fileWriteTo = os.path.join(folderWriteTo, 'note.md')
 
         assert not os.path.exists(folderWriteTo)
         os.makedirs(folderWriteTo)
 
         with open(fileWriteTo, 'w') as fh:
-            fh.write(note.content)
+            fh.write(self.content)
 
 def splitFlatFileInNoteChunck(lines):
     assert type([]) == type(lines)
@@ -104,8 +105,8 @@ def ingest(filename, folderOut):
     notes = splitFlatFileInNoteChunck(contentLines)
 
     for note in notes:
-        #objNote = Note.fromText(note)
-        #objNote.writeSelf(folderOut)
+        objNote = Note.fromText(note)
+        objNote.writeSelf(folderOut)
 
     # Clear file
     open(filename, 'w').write('\n')
