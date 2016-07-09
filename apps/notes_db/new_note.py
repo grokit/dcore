@@ -1,7 +1,7 @@
 """
 # Overview 
 
-Take notes from command-line, put them in note-taking system.
+**Take notes from command-line, put them in note-taking system.**
 
 It removes hurdles that hinders quick note-taking:
 
@@ -26,7 +26,6 @@ Note that the ':end' is a marker that you are done typing text. Until it is type
 ## Save a copy of file in same directory as journal
     
     $ nn -f filename
-    
 """
 
 _meta_shell_command = 'nn'
@@ -174,6 +173,10 @@ def resolveDataLocation(dataLocation = None):
     return dataLocation, file
 
 def ingest(note_md, dataLocation):
+    """
+    Principal function: given note data, add metadata then write to the note-taking system.
+    """
+
     _, noteFilename = resolveDataLocation(dataLocation)
 
     print('Using file: %s.' % noteFilename)
@@ -188,4 +191,3 @@ def ingest(note_md, dataLocation):
 
 if __name__ == '__main__':
     do()
-
