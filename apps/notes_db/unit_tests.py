@@ -26,11 +26,13 @@ time::2016-07-09 10:43
 It was cloudy and nice. Like always!
 """
 
-def testSimpleNoteTakingInsertsTime():
+TEST_OUTPUT = './test/output'
+TEST_INPUT = './test/input'
 
+def testSimpleNoteTakingInsertsTime():
     import new_note
     
-    noteFilename = new_note.ingest(simpleNote, './test/output')
+    noteFilename = new_note.ingest(simpleNote, TEST_OUTPUT)
     lines = open(noteFilename).readlines()
     
     expect = 'time::'
@@ -42,15 +44,14 @@ def testSimpleNoteTakingInsertsTime():
 def testIngest():
     import ingest
 
-    folder = './test/input'
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-    filename = './test/input/ingest.md'
+    if not os.path.exists(TEST_INPUT):
+        os.makedirs(TEST_INPUT)
+    filename = os.path.join(TEST_INPUT, 'ingest.md')
     fh = open(filename, 'w')
     fh.write(simulatedIngestDotMd)
     fh.close()
 
-    ingest.ingest(filename)
+    ingest.ingest(filename, TEST_OUTPUT)
 
 if __name__ == '__main__':
     #testSimpleNoteTakingInsertsTime()
