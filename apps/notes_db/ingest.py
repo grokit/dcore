@@ -3,18 +3,21 @@ Transform a flat note file to directories.
 """
 
 import os
-import re
+import time
 import datetime
 
 TITLE_SAFE_CHARSET = set('abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
+# @@TODO: harmonize and take from same dependency as new_note.py
+TIME_FORMAT = '%Y-%m-%d %H:%M'
+
 def timeStrToUnixTime(timeStr):
-    # @@@@@TODO
-    return 0
+    dateObj = datetime.datetime.strptime(timeStr, TIME_FORMAT)
+    return time.mktime(dateObj.timetuple())
 
 def unixTimeAsSafeStr(unixTime):
     dt = datetime.datetime.fromtimestamp(unixTime)
-    return dt.strftime("%Y-%m-%d")    
+    return dt.strftime(TIME_FORMAT).split(' ')[0]    
 
 def toFolderName(title, unixTime):
     buf = []
@@ -35,6 +38,7 @@ def detectTitle(line):
 # @@TODO: separate serialization from object repr (note_serialization.py)
 class Note:
 
+    @staticmethod
     def fromText(noteMd):
         note = Note()
 
