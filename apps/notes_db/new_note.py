@@ -135,8 +135,9 @@ def do():
     if args.edit:
         annotateDate(file)
         if platform.system() == 'Windows':
-            c = 'np %s' % file
+            c = 'notepad %s' % file
         else:
+            # @@TODO: use env. var for text editor.
             c = 'vim %s' % file
         print(c)
         os.system(c)
@@ -153,7 +154,7 @@ def do():
             break # reached EOF
         inputBuf.append( lIn )
 
-    ingest(renderInputBuf(inputBuf), file, dataLocation)
+    ingest(renderInputBuf(inputBuf), dataLocation)
 
 def resolveDataLocation(dataLocation = None):
     if dataLocation == None:
@@ -173,7 +174,8 @@ def resolveDataLocation(dataLocation = None):
     file = os.path.abspath(os.path.join(os.path.join(dataLocation, ''), 'ingest.md'))
     return dataLocation, file
 
-def ingest(note_md, noteFilename, folder):
+def ingest(note_md, dataLocation):
+    _, noteFilename = resolveDataLocation(dataLocation)
 
     print('Using file: %s.' % noteFilename)
     if not os.path.isfile(noteFilename):
