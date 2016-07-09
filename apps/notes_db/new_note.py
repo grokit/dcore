@@ -72,16 +72,20 @@ def markdownAddFileAsLink(mdfile, newfile):
 
 def annotateDate(file):
     fh = open(file, 'r')
-    inputBuf = ['(time::' + dateForAnnotation() + ')\n']
+    annotation = '(time::' + dateForAnnotation() + ')\n'
     fileContent = fh.read()
     fh = open(file, 'w')
-    fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
+    fh.write(annotation + '\n' + fileContent)
+
+def renderInputBuf(fileAsArray):
+    # @@BUG: stop -> STOP_MARKER to make it clear it's global.
+    return "\n".join(fileAsArray).strip(stop) 
 
 def appendContent(file, inputBuf):
     fh = open(file, 'r')
     fileContent = fh.read()
     fh = open(file, 'w')
-    fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
+    fh.write(renderInputBuf(inputBuf) + '\n' + fileContent)
     
 def getLatestScreenshotFilename():
     files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
@@ -89,27 +93,9 @@ def getLatestScreenshotFilename():
     return os.path.abspath(files[-1])    
     
 def do():
-    dataLocation = os.path.expanduser('~/sync/notes')
-    try:
-        # If you are using dcore system, take root from there.
-        import dcore.data as data
-        dataLocation = data.dcoreData()
-    except ImportError as e:
-        pass
-
-    print('Using folder: %s.' % dataLocation)
-    if not os.path.isdir(dataLocation):
-        print('Folder does not exist, creating.')
-        os.makedirs(dataLocation)
+    dataLocation, file = resolveDataLocation()
 
     args = getArgs()
-    
-    journalOutputPath = dataLocation
-    file = os.path.abspath(os.path.join(os.path.join(journalOutputPath, ''), 'ingest.md'))
-    
-    print('Using file: %s.' % file)
-    if not os.path.isfile(file):
-        open(file, 'w').write("\n")
     
     if args.filename_copy_to_journal_directory:
         src = os.path.abspath(args.filename_copy_to_journal_directory)
@@ -167,9 +153,36 @@ def do():
             break # reached EOF
         inputBuf.append( lIn )
 
+    ingest(renderInputBuf(inputBuf), file, dataLocation)
+
+def resolveDataLocation(dataLocation = None):
+    if dataLocation == None:
+        dataLocation = os.path.expanduser('~/sync/notes')
+        try:
+            # If you are using dcore system, take root from there.
+            import dcore.data as data
+            dataLocation = data.dcoreData()
+        except ImportError as e:
+            pass
+
+        print('Using folder: %s.' % dataLocation)
+        if not os.path.isdir(dataLocation):
+            print('Folder does not exist, creating.')
+            os.makedirs(dataLocation)
+
+    file = os.path.abspath(os.path.join(os.path.join(dataLocation, ''), 'ingest.md'))
+    return dataLocation, file
+
+def ingest(note_md, noteFilename, folder):
+
+    print('Using file: %s.' % noteFilename)
+    if not os.path.isfile(noteFilename):
+        open(noteFilename, 'w').write("\n")
+
     # Since write from top, have to write content before date if want date as header.
-    appendContent(file, inputBuf)
-    annotateDate(file)
-    
+    appendContent(noteFilename, inputBuf)
+    annotateDate(noteFilename)
+
 if __name__ == '__main__':
     do()
+
