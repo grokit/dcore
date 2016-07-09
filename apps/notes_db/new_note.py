@@ -58,6 +58,7 @@ def getArgs():
     parser.add_argument('-e', '--edit', action='store_true', default=False, help='Open target file (current note or scratch) in text editor.')
     parser.add_argument('-x', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
     parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
+    parser.add_argument('-p', '--save_screenshot_to_current_journal', action='store_true', default=False, help="Copies latest file in screenshot directory and copies to folder which contains today's journal.")
     return parser.parse_args()
 
 def markdownAddFileAsLink(mdfile, newfile):
