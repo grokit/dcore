@@ -68,3 +68,12 @@ By default provide `nn` application (**N**ew **N**ote) which allows entering dat
 # Swallowing Word Documents
 
 User pandoc to convert .docx to Markdown. I have an utility that helps converting into a nicer note format, I may integrate with those scripts.
+
+# Command-Line Utilities:
+
+nn: New Note, Create a new note from command line, auto-add some metadata (e.g. time of creation) to the note.
+sn: Search Notes, Search in notes.
+in: Ingest Notes, Break-Down the ingest.md file into smaller notes which each get their own folder.
+sc: Screenshot Copy, Put last screenshot take in ingest directory and link in ingest.md.
+
+

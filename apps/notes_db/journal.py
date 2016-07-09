@@ -5,11 +5,14 @@ Make it easy to take, and later search, small notes from command line.
 
 It removes hurdles that hinders quick note-taking:
 
-    - Native to console, avoid having to switch to a UI application and works on all OS.
+    - Native to console, avoid having to switch to a UI application and works
+      on all OS.
     - Fully scriptable (just 1 python script with no _forced_ dependencies).
-    - Centralizes all notes to a folder, avoid having to `pushd.; cd ~/notes; take notes; popd;` everytime you want to take a note.
+    - Centralizes all notes to a folder, avoid having to `pushd.; cd ~/notes;
+      take notes; popd;` everytime you want to take a note.
     - Append some metadata such as time of entry to notes.
-    - Have convention for entering notes that make them easily searcheable by title or tags.
+    - Have convention for entering notes that make them easily searcheable by
+      title or tags.
 
 # Suggested Workflow
 
@@ -26,7 +29,8 @@ Both of those notation are searcheable and listable by jl.
     Here is my journal entry.
     :end
 
-Note that the ':end' is a marker that you are done typing text. Until it is typed, the notes is not written to HD.
+Note that the ':end' is a marker that you are done typing text. Until it is
+typed, the notes is not written to HD.
     
 ## Insert file as journal entry (directly in text file)
     
@@ -41,8 +45,10 @@ Note that the ':end' is a marker that you are done typing text. Until it is type
 ## Maybe could make this more like an entry generator
 
 - Everything goes in a daily folder.
-- Text entries are just appended in a section of markdown document for the day (as link).
-- Files are copied to the dir, with an automatic link inserted in markdown document (jl -f <filename>).
+- Text entries are just appended in a section of markdown document for the day
+  (as link).
+- Files are copied to the dir, with an automatic link inserted in markdown
+  document (jl -f <filename>).
 - If want to turn unto an article, just rename folder.
 - Can add options for tags and cie.    
     
@@ -50,12 +56,15 @@ Note that the ':end' is a marker that you are done typing text. Until it is type
 
 - jl -c : store whatever is in clipboard as text
 
-jl needs to be changed so that by default it writes to the blob and only when give proper title does it create new directory. then after one has been created make it easy to append to without send data to wo having to re-specify name
+jl needs to be changed so that by default it writes to the blob and only when
+give proper title does it create new directory. then after one has been created
+make it easy to append to without send data to wo having to re-specify name
 
 # BUGS
 
 - scratch.markdown is one level too high.
-- if screenshot file has invalid chars can cause problems in markdown. should just escape whatever is not [a-zA-Z-_].
+- if screenshot file has invalid chars can cause problems in markdown. should
+  just escape whatever is not [a-zA-Z-_].
 """
 
 _meta_shell_command = 'jl'
@@ -84,12 +93,21 @@ def dateForAnnotation():
     
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--search', action='store_true', default=False, help='Basic search: dumps search metadata, use grep to narrow down.')
-    parser.add_argument('-e', '--edit', action='store_true', default=False, help='Open target file (current note or scratch) in text editor.')
-    parser.add_argument('-l', '--low_note', action='store_true', default=False, help="Use scratch-file instead of today's file (for stuff that is not really important, e.g. code snippets).")
-    parser.add_argument('-x', '--explore_folder', action='store_true', default=False, help='Open journal folder in nautilus / explorer.')
-    parser.add_argument('-f', '--filename_copy_to_journal_directory', help='Copies the file to the journal current directory and inserts a link in the markdown file.')
-    parser.add_argument('-p', '--save_screenshot_to_current_journal', action='store_true', default=False, help="Copies latest file in screenshot directory and copies to folder which contains today's journal.")
+    parser.add_argument('-s', '--search', action='store_true', default=False,
+help='Basic search: dumps search metadata, use grep to narrow down.')
+    parser.add_argument('-e', '--edit', action='store_true', default=False,
+help='Open target file (current note or scratch) in text editor.')
+    parser.add_argument('-l', '--low_note', action='store_true', default=False,
+help="Use scratch-file instead of today's file (for stuff that is not really
+important, e.g. code snippets).")
+    parser.add_argument('-x', '--explore_folder', action='store_true',
+default=False, help='Open journal folder in nautilus / explorer.')
+    parser.add_argument('-f', '--filename_copy_to_journal_directory',
+help='Copies the file to the journal current directory and inserts a link in
+the markdown file.')
+    parser.add_argument('-p', '--save_screenshot_to_current_journal',
+action='store_true', default=False, help="Copies latest file in screenshot
+directory and copies to folder which contains today's journal.")
     return parser.parse_args()
 
 def markdownAddFileAsLink(mdfile, newfile):
@@ -115,13 +133,15 @@ def appendContent(file, inputBuf):
     fh.write("\n".join(inputBuf).strip(stop) + '\n' + fileContent)
     
 def getLatestScreenshotFilename():
-    files = [os.path.join(screenshotFolder, f) for f in os.listdir(screenshotFolder)]
+    files = [os.path.join(screenshotFolder, f) for f in
+os.listdir(screenshotFolder)]
     files.sort(key=lambda x: os.path.getmtime(x))
     return os.path.abspath(files[-1])    
     
 def do():    
     # Todo: eventually have the curated notes and blog post also searcheable.
-    #       Think if that should be a different (search) script. Probably should (do one thing and one thing well).
+    #       Think if that should be a different (search) script. Probably
+    #       should (do one thing and one thing well).
     otherNotesRoots = []
 
     dataLocation = os.path.expanduser('~/notes')
@@ -141,28 +161,33 @@ def do():
         os.chdir(journalOutputPath)
         
         # Pound and date is inserted automatically, so skipped.
-        # The really interesting information is what users tagged with a markdown style title.
+        # The really interesting information is what users tagged with a
+        # markdown style title.
         cmd = r'ag "^# [^0-9]"'
         print(cmd)
         os.system(cmd)
 
-        # Also cool: tags. Right now this is really basic, could in the future do full-python search.
+        # Also cool: tags. Right now this is really basic, could in the future
+        # do full-python search.
         cmd = r'ag "tag::"'
         print(cmd)
         os.system(cmd)
         exit(0)
     
     if not args.low_note:
-        journalOutputPath = os.path.abspath(os.path.join(dataLocation, 'journals/%s/' % dateForFolder()))
+        journalOutputPath = os.path.abspath(os.path.join(dataLocation,
+'journals/%s/' % dateForFolder()))
         
         if not os.path.exists(journalOutputPath):
             print('No such path `%s`, creating.' % journalOutputPath)
             os.makedirs(journalOutputPath)
             
-        file = os.path.abspath(os.path.join(journalOutputPath, '%s_journal.markdown' % dateForFile()))
+        file = os.path.abspath(os.path.join(journalOutputPath,
+'%s_journal.markdown' % dateForFile()))
     else:
         journalOutputPath = dataLocation
-        file = os.path.abspath(os.path.join(os.path.join(journalOutputPath, 'journals'), 'scratch.markdown'))
+        file = os.path.abspath(os.path.join(os.path.join(journalOutputPath,
+'journals'), 'scratch.markdown'))
     
     print('Using file: %s.' % file)
     if not os.path.isfile(file):
@@ -170,7 +195,8 @@ def do():
     
     if args.filename_copy_to_journal_directory:
         src = os.path.abspath(args.filename_copy_to_journal_directory)
-        dst = os.path.abspath(os.path.join(journalOutputPath, os.path.split(args.filename_copy_to_journal_directory)[1]))
+        dst = os.path.abspath(os.path.join(journalOutputPath,
+os.path.split(args.filename_copy_to_journal_directory)[1]))
         
         if True:
             if os.path.isfile(dst):
@@ -183,7 +209,8 @@ def do():
     
     if args.save_screenshot_to_current_journal:
         src = getLatestScreenshotFilename()
-        dst = os.path.abspath(os.path.join(journalOutputPath, os.path.split(src)[1]))
+        dst = os.path.abspath(os.path.join(journalOutputPath,
+os.path.split(src)[1]))
         
         if True:
             if os.path.isfile(dst):
@@ -224,7 +251,8 @@ def do():
             break # reached EOF
         inputBuf.append( lIn )
 
-    # Since write from top, have to write content before date if want date as header.
+    # Since write from top, have to write content before date if want date as
+    # header.
     appendContent(file, inputBuf)
     annotateDate(file)
     
