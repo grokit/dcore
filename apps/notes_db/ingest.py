@@ -24,6 +24,12 @@ def toFolderName(title, unixTime):
     safeTitle = "".join(buf)
     return unixTimeAsSafeStr(unixtime) + '_' + safeTitle
 
+def detectTitle(line):
+    title = None
+    if len(line) >= 2 and line[0] == '#' and line[1] != '#':
+        title = line[1:].strip()
+    return title
+
 # @@TODO: move to note.py 
 # @@TODO: separate serialization from object repr (note_serialization.py)
 class Note:
@@ -37,8 +43,9 @@ class Note:
         # @@TODO: hadle tags to make searcheable
         for line in lines:
             # Title is the first leading-pound of the note.
-            if time is None and len(line) >= 2 and line[0] == '#' and line[1] != '#':
-                title = line[1:].strip()
+            potTitle = detectTitle(line)
+            if title is None and potTitle is not None:
+                title = potTitle
 
             if 'time::' in line:
                 assert time is None
@@ -65,6 +72,29 @@ class Note:
         with open(fileWriteTo, 'w') as fh:
             fh.write(note.content)
 
+def splitFlatFileInNoteChunck(lines):
+    assert type([]) == type(lines)
+
+    buf = []
+    potTitle = None
+    for line in lines:
+        newTitle = detectTitle(line)
+        if newTitle != None and potTitle == None:
+            potTitle = newTitle
+        elif newTitle != None and potTitle != None:
+            # We have two titles, can write completed section.
+            asStr = "".join(buf)
+            yield asStr
+
+            buf = []
+            potTitle = newTitle 
+            newTitle = None
+        buf.append(line)
+
+    if potTitle is not None and len(buf) > 0:
+        asStr = "".join(buf)
+        yield asStr
+
 def ingest(filename, folderOut):
     # Keep a copy just in case.
     open(filename + '.delme', 'w').write(open(filename).read())
@@ -74,22 +104,11 @@ def ingest(filename, folderOut):
     notes = splitFlatFileInNoteChunck(contentLines)
 
     for note in notes:
-        objNote = Note.fromText(note)
-        objNote.writeSelf(folderOut)
+        #objNote = Note.fromText(note)
+        #objNote.writeSelf(folderOut)
 
     # Clear file
     open(filename, 'w').write('\n')
-
-def splitFlatFileInNoteChunck(lines):
-    assert type([]) == type(lines)
-
-    buf = []
-    for line in lines:
-        buf.append(line)
-
-    asStr = "\n".join(buf)
-    yield asStr
-
 
 if __name__ == '__main__':
     pass
