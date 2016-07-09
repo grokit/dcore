@@ -1,5 +1,5 @@
 
-import new_note
+import os
 
 # Note as entered by user.
 simpleNote = """
@@ -27,6 +27,8 @@ It was cloudy and nice. Like always!
 """
 
 def testSimpleNoteTakingInsertsTime():
+
+    import new_note
     
     noteFilename = new_note.ingest(simpleNote, './test/output')
     lines = open(noteFilename).readlines()
@@ -37,5 +39,20 @@ def testSimpleNoteTakingInsertsTime():
             return
     raise Exception('Did not find time annotation.')
 
+def testIngest():
+    import ingest
+
+    folder = './test/input'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    filename = './test/input/ingest.md'
+    fh = open(filename, 'w')
+    fh.write(simulatedIngestDotMd)
+    fh.close()
+
+    ingest.ingest(filename)
+
 if __name__ == '__main__':
-    testSimpleNoteTakingInsertsTime()
+    #testSimpleNoteTakingInsertsTime()
+    testIngest()
+
