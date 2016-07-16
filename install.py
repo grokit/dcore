@@ -12,6 +12,10 @@ Save / restore files in user's root directory which defines how app work:
     - vim
     - i3
     - bashrc
+
+# BUGS
+
+- Now that path extention is in ~/.profile instead of ~/.bashrc, requires reboot after install. Why sourcing file not enough?
 """
 
 import sys
@@ -88,9 +92,9 @@ def setupPath():
     home_scripts = os.path.abspath('../')
     shortcuts_folder = os.path.abspath(os.path.expanduser('~/sync/dcore_data/path_ext')) # @@bug: should be able to adjust to where git checkout was done. other script puts in this folder
     bash_rc = """
-    # Magic dcore tag: %s.
-    export PYTHONPATH=$PYTHONPATH:%s
-    export PATH=$PATH:%s
+# Magic dcore tag: %s.
+export PYTHONPATH=$PYTHONPATH:%s
+export PATH=$PATH:%s
     """ % (tag, home_scripts, shortcuts_folder)
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
@@ -98,13 +102,13 @@ def setupPath():
             import system_setup.windows_path_set as windows_path_set
             windows_path_set.do()
     else:
-            fname = os.path.expanduser('~/.bashrc')
+            fname = os.path.expanduser('~/.profile')
             file = open(fname, 'r').read()
             if not tag in file:
                     file = bash_rc + '\n\n' + file
                     open(fname, 'w').write(file)
 
-    os.system('source ~/.bashrc')
+    os.system('source ~/.profile')
 
 def setupShortcuts():
     import dcore.data as data
@@ -143,5 +147,5 @@ if __name__ == '__main__':
     #setupAptGet()
     setupPath()
     setupShortcuts()
-    setupSSH()
+    #setupSSH()
 

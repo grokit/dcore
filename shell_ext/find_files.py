@@ -4,6 +4,8 @@
 - Have an 'exact string' mode as an option.
 """
 
+print('pre-Starting ff')
+
 import os
 import argparse
 import pickle
@@ -13,6 +15,8 @@ import platform
 import dcore.data as data
 
 _meta_shell_command = 'ff'
+
+print('Starting ff')
 
 search_roots = [r'~/sync']
 if os.path.isdir('c:/src/working'):
@@ -86,6 +90,7 @@ def do():
             F = cache.F
         else:
             print('Cache too old, wiping.')
+            F = None
     
     if F is None:
         print("Generating cache from %s, this could take a while... grab a coffee and relax :)." % search_roots)
