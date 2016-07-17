@@ -32,6 +32,9 @@ def findPyFiles():
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_private'])
     if dirsMap.get('python_folder_public') is not None:
         pyfiles += fsearch.getAllFilesRecursively('*.py', dirsMap['python_folder_public'])        
+
+    pyfiles += fsearch.getAllFilesRecursively('*.py', os.path.expanduser('~/sync/dev/notes_db'))        
+
     pyfiles = [pyfile for pyfile in pyfiles if pyfile.find('__') == -1]
     return pyfiles
 

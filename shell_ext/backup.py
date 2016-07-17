@@ -3,7 +3,6 @@ import os
 import shutil
 import time
 
-import dcore.osext as osext
 import dcore.files as files
 import dcore.system_description as private_data
 
@@ -11,7 +10,7 @@ _meta_shell_command = 'backup'
 
 #backup_in = r'/media/usbd'
 backup_in = r'/media/arch/f5252dc7-fbae-4c98-9a5e-58988d4936d3'
-backup_path = r'~/sync'
+backup_path = r'~/'
 
 bin7Zip = r'7z'
 
@@ -33,4 +32,3 @@ if __name__ == '__main__':
 
     print(cmd)
     os.system(cmd)
-    

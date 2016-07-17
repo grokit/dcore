@@ -10,6 +10,7 @@ OK:  separate serialization from class
 
 import argparse
 import os
+import webbrowser
 
 import work_unit
 import render_html
@@ -21,6 +22,7 @@ _meta_shell_command = 'tt'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--regen_html', action='store_true')
+    parser.add_argument('-o', '--open', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -44,13 +46,19 @@ def commandLineEnterWorkDone(dbFile):
     serialization_json.toFile(dbFile, W)
 
 if __name__ == '__main__':
-	dbFile = options.dbFile
+    dbFile = options.dbFile
+    htmlFile = options.htmlFile
 
-	args = getArgs()
-	if not args.regen_html:
-		commandLineEnterWorkDone(dbFile)
+    args = getArgs()
 
-	htmlFile = options.htmlFile
-	wd = serialization_json.fromFile(dbFile)
-	render_html.render(wd, htmlFile, options.dataFile)
+    if args.open is True:
+        webbrowser.open_new_tab(htmlFile)
+        exit(0)
+
+    if not args.regen_html:
+        commandLineEnterWorkDone(dbFile)
+
+    wd = serialization_json.fromFile(dbFile)
+    render_html.render(wd, htmlFile, options.dataFile)
+
 

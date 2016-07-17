@@ -1,9 +1,7 @@
 """
 # TODO
-- Can list_files the shortcuts available
-- Make this part of system setup & have the files in the global configure thingie.
-- Be able to open my scripts shortcuts: if conflict in resolve, throw an exception (have a generic 'checkMatch()' algorithm).
-- fopen new file_abc <-- abc gets created and automatically accessible by the next fopen file_abc
+
+- Merge with dr: remember files and directories, allow to navigate and open in text editor.
 """
 
 import os
