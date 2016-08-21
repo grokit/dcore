@@ -40,7 +40,7 @@ export PATH=$PATH:%s
 
 def setupShortcuts():
     data.createAllDirs()
-    system_setup.create_python_scripts_shortcuts.do()
+    create_python_scripts_shortcuts.do()
 
 if __name__ == '__main__':
     setupShortcutsBootstrap()

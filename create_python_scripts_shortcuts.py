@@ -13,7 +13,6 @@ import re
 import sys
 
 import dcore.search_files as fsearch
-#import dcore.system_description as system_description
 import dcore.data as data
 
 shell_meta_search = '_meta_shell_command'
@@ -38,18 +37,18 @@ def getAutogenFileTemplate():
     magic_tag = 'Magic number for easy deletion: %s.' % magic_tag_intstr
 
     file_template = r"""
-    # Automatically created by '%s', do not modify.
-    # %s
+# Automatically created by '%s', do not modify.
+# %s
 
-    __custom__
-
-    """ % (os.path.normpath(__file__), magic_tag)
+__custom__ """ % (os.path.normpath(__file__), magic_tag)
 
     return file_template
     
 def getMetadataFromPyFiles(pyfiles):
     """
     meta: (python file, shell command, special flags)
+
+    :::meta[0, 1 or 2] is confusing. Just create a class with names entities.
     """
     
     meta = []
@@ -79,10 +78,11 @@ def createShortcuts(lMeta):
     placeForScriptsThatOSHasPATHSetTo = data.pathExt()
     
     for meta in lMeta:
-        
         fileContent = file_template
         fileContent = fileContent.replace('__py_file__', meta[0])
         fileContent = fileContent.replace('__opt_cmd__', meta[2])
+
+        fileContent = fileContent.replace('__custom__', 'python3 %s $*' % meta[0])
         
         fileOut = placeForScriptsThatOSHasPATHSetTo + "/" + meta[1] 
         fileOut = os.path.normpath(fileOut)
