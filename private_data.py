@@ -35,7 +35,7 @@ def __expandEnvVars(D):
     
 # :::cleanup BAN THIS. This is way to magicky.
 # This will add all the variables declared in the JSON file as local variables.
-# This way, system_description.variable is accessible after importing the module.
+# This way, private_data.variable is accessible after importing the module.
 # Could relegate this as private.py and ONLY be used for passwords and the such ... but need to explain in exception when not found that this is data the user needs to set.
 jd = __loadPrivateFile()
 localsDir = locals()

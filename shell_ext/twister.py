@@ -4,7 +4,7 @@ import hashlib
 import binascii
 import getpass
 
-import dcore.system_description as private_data
+import dcore.private_data as private_data
 
 _meta_shell_command = 'twister'
 
