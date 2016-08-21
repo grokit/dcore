@@ -20,7 +20,7 @@ _meta_shell_command = 'generate_shortcuts'
 magic_tag_intstr = 'GeneratedBy_%s_bg0sn9gtmq2jjper' % __file__
 
 def isOK(file):
-    if file.find('__'): return False
+    if file.find('__') != -1: return False
     dirname = os.path.dirname(file)
     if '/deprecated/' in dirname: return False
     return True
@@ -28,7 +28,7 @@ def isOK(file):
 def findPyFiles():
     pyPublic = data.dcoreRoot()
 
-    print('Getting files from: ' + pyPublic)
+    #print('Getting files from: ' + pyPublic)
 
     pyfiles = fsearch.getAllFilesRecursively('*.py', pyPublic)
     pyfiles = [pyfile for pyfile in pyfiles if isOK(pyfile)]
@@ -59,7 +59,7 @@ def getMetadataFromPyFiles(pyfiles):
     
     meta = []
     for file in pyfiles:
-        print('Processing file: %s.' % file)
+        #print('Processing file: %s.' % file)
         fh = open(file, 'r')
         lines = fh.readlines()
         fh.close()
@@ -102,7 +102,6 @@ def createShortcuts(lMeta):
 
 def do():
     pyFiles = findPyFiles()
-    for p in pyFiles: print(p)
     if len(pyFiles) > 0:
         meta = getMetadataFromPyFiles(pyFiles)
         createShortcuts(meta)
