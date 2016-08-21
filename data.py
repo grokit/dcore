@@ -6,6 +6,10 @@ import sys
 import os
 import platform
 
+def tagShortcutsForDeletion():
+    #:::replace with truly random.
+    return "9sdj09dj9sa8j9d8sjs9djdsa9jas9d8jsad9jsda98jsad89sjda89sjda9"
+
 def dcoreRoot():
     """
     Root of where all scripts are: where this file is.

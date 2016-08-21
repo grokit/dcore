@@ -16,8 +16,7 @@ def setupShortcutsBootstrap():
     We put all shortcuts in dcore-owned directory and add it to executable PATH loaded by shell.
     """
 
-    #:::replace with truly random.
-    tag = "fh89h98h3f9hf39hf98ahsfd9djh"
+    tag = data.tagShortcutsForDeletion()
     home_scripts = os.path.abspath('../')
 
     shortcuts_folder = data.pathExt()
@@ -48,7 +47,21 @@ def setupShortcuts():
     data.createAllDirs()
     create_python_scripts_shortcuts.do()
 
+def delOld():
+    folder = data.pathExt()
+
+    tag = data.tagShortcutsForDeletion()
+    files = os.listdir(folder)
+    for file in files:
+        with open(file, 'r') as fh:
+            content = fh.read()
+
+        if tag in content:
+            print('Deleting %s.' % file)
+            os.remove(file)
+
 if __name__ == '__main__':
+    delOld()
     setupShortcutsBootstrap()
     setupShortcuts()
 

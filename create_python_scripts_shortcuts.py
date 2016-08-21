@@ -17,7 +17,6 @@ import dcore.data as data
 
 shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'generate_shortcuts'
-magic_tag_intstr = 'GeneratedBy_%s_bg0sn9gtmq2jjper' % __file__
 
 def isOK(file):
     if file.find('__') != -1: return False
@@ -43,13 +42,11 @@ def delCurrentShortcuts():
 
 def getAutogenFileTemplate():
 
-    magic_tag = 'Magic number for easy deletion: %s.' % magic_tag_intstr
-
     file_template = r"""
 # Automatically created by '%s', do not modify.
-# %s
+# Tag for easy deletion: %s
 
-__custom__ """ % (os.path.normpath(__file__), magic_tag)
+__custom__ """ % (os.path.normpath(__file__), data.tagShortcutsForDeletion())
 
     return file_template
     
