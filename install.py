@@ -51,7 +51,7 @@ def delOld():
     folder = data.pathExt()
 
     tag = data.tagShortcutsForDeletion()
-    files = os.listdir(folder)
+    files = [os.path.join(folder, f) for f in os.listdir(folder)]
     for file in files:
         with open(file, 'r') as fh:
             content = fh.read()
