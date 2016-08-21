@@ -7,8 +7,7 @@ import os
 import platform
 
 def tagShortcutsForDeletion():
-    #:::replace with truly random.
-    return "9sdj09dj9sa8j9d8sjs9djdsa9jas9d8jsad9jsda98jsad89sjda89sjda9"
+    return "0jb02xhs83hayd9fugb7wu2as3q419ki"
 
 def dcoreRoot():
     """
