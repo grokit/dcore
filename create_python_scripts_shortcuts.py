@@ -103,8 +103,9 @@ def createShortcuts(lMeta):
 def do():
     pyFiles = findPyFiles()
     for p in pyFiles: print(p)
-    meta = getMetadataFromPyFiles(pyFiles)
-    createShortcuts(meta)
+    if len(pyFiles) > 0:
+        meta = getMetadataFromPyFiles(pyFiles)
+        createShortcuts(meta)
     
 if __name__ == "__main__":
 	do()

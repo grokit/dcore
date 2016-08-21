@@ -36,7 +36,13 @@ export PATH=$PATH:%s
             file = bash_rc + '\n\n' + file
             open(fname, 'w').write(file)
 
-    os.system('source ~/.profile')
+    """
+    :::issue here reported on cmd
+    print('sourcing')
+    cmd = 'source %s' % fname
+    print(cmd)
+    os.system(cmd)
+    """
 
 def setupShortcuts():
     data.createAllDirs()
