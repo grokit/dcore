@@ -19,13 +19,19 @@ shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'generate_shortcuts'
 magic_tag_intstr = 'GeneratedBy_%s_bg0sn9gtmq2jjper' % __file__
 
+def isOK(file):
+    if file.find('__'): return False
+    dirname = os.path.dirname(file)
+    if '/deprecated/' in dirname: return False
+    return True
+
 def findPyFiles():
     pyPublic = data.dcoreRoot()
 
     print('Getting files from: ' + pyPublic)
 
     pyfiles = fsearch.getAllFilesRecursively('*.py', pyPublic)
-    pyfiles = [pyfile for pyfile in pyfiles if pyfile.find('__') == -1]
+    pyfiles = [pyfile for pyfile in pyfiles if isOK(pyfile)]
 
     return pyfiles
 
