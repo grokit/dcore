@@ -1,0 +1,176 @@
+commit 11f939293c1b9f37086e76b0f939496173cfd7bd
+Author: arch <arch@a.com>
+Date:   Tue Aug 16 21:47:43 2016 -0700
+
+    turns out too complicated
+
+diff --git a/ingest.py b/ingest.py
+index 6000c15..1aed5da 100644
+--- a/ingest.py
++++ b/ingest.py
+@@ -12,6 +12,7 @@ import argparse
+ import data
+ import util
+ import meta
++import search
+ 
+ _meta_shell_command = 'ingest'
+ 
+@@ -88,18 +89,19 @@ class Note:
+             return set()
+         return self.meta['tag']
+ 
+-    def writeSelf(self, folderOut):
++    def writeSelf(self, folderOut, append = False):
+         topFolderName = toFolderName(self.title, self.unixtime)
+         folderWriteTo = os.path.join(folderOut, topFolderName)
+ 
+-        while os.path.exists(folderWriteTo):
++        while not append and os.path.exists(folderWriteTo):
+             print('Warning: `%s` already exist, picking next folder.' % folderWriteTo)
+             folderWriteTo = folderWriteTo + '_'
+ 
+         fileWriteTo = os.path.join(folderWriteTo, 'note.md')
+-        os.makedirs(folderWriteTo)
++        if not os.path.exists(folderWriteTo):
++            os.makedirs(folderWriteTo)
+ 
+-        with open(fileWriteTo, 'w') as fh:
++        with open(fileWriteTo, 'a') as fh:
+             print('Wrote note titled `%s` to `%s`.' % (self.title, fileWriteTo))
+             fh.write(self.content)
+ 
+@@ -166,11 +168,33 @@ def ingest(folderOut, contentLines):
+         objNote = Note.fromText(note)
+ 
+         if 'merge' in objNote.tags():
+-            raise Exception('Merge')
++            raise Exception('Unqualified merge. Please use merge-tag where tag is a hint for what it should be merged to.')
+ 
+-        print(objNote.meta)
++        merged = False
++        for t in objNote.tags():
++            if 'merge' in t:
+ 
+-        objNote.writeSelf(processedLoc)
++                assert not merged
++
++                query = t.split('merge')[1]
++                if ' ' in query:
++                    query = query.split(' ')[0]
++                if query[0] == '-':
++                    query = query[1:]
++
++                print('Searching merge with query: ', query)
++                matches = search.searchInFiles(search.gatherFiles(), query)
++
++                if len(matches) == 0:
++                    print('Cannot find match, skipping merge.')
++                    break
++
++                select = util.manualSelect(matches)
++                merged = True
++                objNote.writeSelf(os.path.dirname(select.filename), merged)
++
++        if not merged:
++            objNote.writeSelf(processedLoc, merged)
+ 
+     return processedLoc
+ 
+diff --git a/search.py b/search.py
+index bea11da..2db8a28 100644
+--- a/search.py
++++ b/search.py
+@@ -29,6 +29,7 @@ import re
+ import math
+ 
+ import data
++import util
+ 
+ # ns: Note Search
+ _meta_shell_command = 'ns'
+@@ -80,7 +81,7 @@ def score(matches):
+         if '/low/' in os.path.split(m.filename)[0]:
+             m.score -= 10
+ 
+-def searchInFiles(files):
++def searchInFiles(files, query):
+     matches = []
+     for f in files:
+         with open(f) as fh:
+@@ -92,6 +93,7 @@ def searchInFiles(files):
+                     g = m.group(0)
+                     match = Match(f, l) 
+ 
++                    # :::bug this should be done on-demand, not be serialized in Match object.
+                     ctx = []
+                     cr = G_ARGS.context_range 
+                     if cr % 2 == 1:
+@@ -115,31 +117,22 @@ def isLineTitle(line):
+         return True
+     return False
+ 
+-def manualSelect(items):
+-
+-    print('Select an item by entering its corresponding number.')
+-    i = 0
+-    for x in items:
+-        print('%.1d: %s' % (i, x.filename))
+-        i += 1
+-
+-    s = input()
+-    s = int(s)
+-
+-    return items[s]
+ 
+ def sortMatches(matches):
+     return sorted(matches, key=lambda x: x.score, reverse=True)
+ 
++def gatherFiles():
++    root = data.notesRoot()
++    files = getAllFiles(root)
++    files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
++    return files
++
+ if __name__ == '__main__':
+     print(G_ARGS)
+     query = " ".join(G_ARGS.search_query)
+ 
+-    root = data.notesRoot()
+-    files = getAllFiles(root)
+-    files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
+-    
+-    matches = searchInFiles(files)
++    files = gatherFiles()
++    matches = searchInFiles(files, query)
+     if G_ARGS.search_titles_only:
+         matches = [m for m in matches if isLineTitle(m.line)]
+     score(matches)
+@@ -165,6 +158,6 @@ if __name__ == '__main__':
+ 
+         selected = matches[0]
+         if not G_ARGS.open_first_matching_file and len(matches) > 1:
+-            selected = manualSelect(matches)
++            selected = util.manualSelect(matches)
+         os.system('vim %s' % selected.filename)
+ 
+diff --git a/util.py b/util.py
+index b594265..e251ecc 100644
+--- a/util.py
++++ b/util.py
+@@ -11,3 +11,15 @@ def createFileIfNotExist(file):
+         with open(file, 'w') as fh:
+             fh.write('')
+ 
++def manualSelect(items):
++
++    print('Select an item by entering its corresponding number.')
++    i = 0
++    for x in items:
++        print('%.1d: %s' % (i, x.filename))
++        i += 1
++
++    s = input()
++    s = int(s)
++
++    return items[s]
