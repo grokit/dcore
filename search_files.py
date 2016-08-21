@@ -6,9 +6,6 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir = '.'):
   """
   E.g.: getAllFilesRecursively(['*.txt'], './folder/to/files')
   E.g.: getAllFilesRecursively(['*.txt', '*.bat'])
-  
-  @note This function looks in folders recursively.
-  @return List of fullpath string to files matching extensions provided.
   """
   
   #Allow user to call using both '*.txt' and ['*.txt']
@@ -21,7 +18,6 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir = '.'):
     for file in files:
       
       add = False
-      
       for glob in in_allowedExtensionsGlobList:
         if fnmatch.fnmatch(file, glob):
           add = True
@@ -31,6 +27,7 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir = '.'):
         normalizedFullPath = os.path.abspath(fullPathFile)
         fileList.append(normalizedFullPath)
   
+  # return: List of fullpath string to files matching extensions provided.
   return fileList
 
 def filterFilesByExtension(lstFullPathFilenames, lstExtensionsToKeep):
@@ -45,30 +42,3 @@ def filterFilesByExtension(lstFullPathFilenames, lstExtensionsToKeep):
       fileList.append(file)
   return fileList
 
-def test_module():
-  #Just run
-  folders = getAllFoldersRecursively()
-  #assert os.path.dirname(__file__) in folders
-  
-  #Simple check
-  files = getAllFilesRecursively(['*.py'], '.')
-  #assert os.path.split(__file__)[1] in files  #not ness run from curr.path!
-  
-  myFiles = ['c:\\folder1\\aFile.cpp', 
-             'c:\\folder2\\bFile.cpp', 
-             'c:\\folder3\\cFile.exe', 
-             'c:\\folder4\\app_launch.bin',
-             'c:\\folder4\\bin_but_not_ext.exe',
-             'c:\\folder4\\Makefile'
-             ]
-  myFilesFiltered = filterFilesByExtension(myFiles, ['*.cpp', '*.bin', 'Makefile'])
-  print (myFilesFiltered)
-  assert myFiles[0] in myFilesFiltered
-  assert myFiles[1] in myFilesFiltered
-  assert myFiles[2] not in myFilesFiltered
-  assert myFiles[3] in myFilesFiltered
-  assert myFiles[4] not in myFilesFiltered
-  assert myFiles[5] in myFilesFiltered
-
-if __name__ == '__main__':
-  test_module()

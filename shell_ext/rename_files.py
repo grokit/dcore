@@ -19,6 +19,7 @@ _meta_shell_command = 'rename_files'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', nargs='?', default='remove_spaces')
+    #parser.add_argument('mode', nargs='?', default='remove_non_az')
     parser.add_argument('rest', nargs='?')
     args = parser.parse_args()
     return args
@@ -43,8 +44,8 @@ def removeSpace(filename, args):
     to = ''.join(L)
     return to
 
-def removeNonAZ(filename, args):
-    v = 'abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+def removeAgressive(filename, args):
+    v = set('abcdefghijklmnopqrstuvwxyz.-_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
 
     fout = []
     for l in filename:
@@ -75,7 +76,7 @@ if __name__ == '__main__':
 
     fnMap = {
             'remove_spaces': removeSpace,
-            'remove_non_az': removeNonAZ,
+            'remove_aggressive': removeAgressive,
             'change_ext': changeExt,
             'prefix': prefix,
             'date': date,
