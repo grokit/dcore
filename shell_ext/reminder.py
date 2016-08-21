@@ -1,6 +1,7 @@
 ﻿"""
 # TODO
 - Add a compose mode where you can just type text of paste from clipboard until reach EOS character.
+- Just use TLS, forbid un-encrypted connection.
 """
 
 import argparse
@@ -8,8 +9,7 @@ import time
 import base64
 
 import dcore.system_description as private_data
-# @@ MOVE gmail as a library -- not supposed to link to other leaf scripts.
-import dcore.shell_ext.gmail as gmail
+import apps.gmail.gmail as gmail
 
 _meta_shell_command = 'reminder'
 
