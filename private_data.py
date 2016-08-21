@@ -1,7 +1,7 @@
 """
 Allows to load env parameters (incuding passwords, etc) from private files outside of repository.
 
-File is due for house-cleaning and renaming.
+File is due for house-cleaning.
 """
 
 import os
