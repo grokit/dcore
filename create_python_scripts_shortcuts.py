@@ -22,7 +22,10 @@ magic_tag_intstr = 'GeneratedBy_%s_bg0sn9gtmq2jjper' % __file__
 def isOK(file):
     if file.find('__') != -1: return False
     dirname = os.path.dirname(file)
-    if '/deprecated/' in dirname: return False
+    dirs = dirname.split('/')
+    for d in dirs:
+        if d == 'deprecated':
+            return False
     return True
 
 def findPyFiles():
