@@ -30,7 +30,8 @@ def dateForFolder():
     return datetime.datetime.now().strftime("%Y-%m-%d")    
     
 def dateForAnnotation():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    #:::bug: use same for all scripts, date.py or globals.py
+    return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
     
 def getArgs():
     parser = argparse.ArgumentParser()

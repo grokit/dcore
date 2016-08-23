@@ -9,7 +9,7 @@ import time
 import base64
 
 import dcore.private_data as private_data
-import apps.gmail.gmail as gmail
+import dcore.apps.gmail.gmail as gmail
 
 _meta_shell_command = 'reminder'
 
