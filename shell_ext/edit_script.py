@@ -1,6 +1,6 @@
 
 import dcore.search_files as fsearch
-import dcore.system_setup.create_python_scripts_shortcuts as scripts_info
+import dcore.create_python_scripts_shortcuts as scripts_info
 import dcore.data as data
 
 import argparse
