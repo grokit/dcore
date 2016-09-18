@@ -16,7 +16,7 @@ _meta_shell_command = 'rename_time_tag'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('filename')
+    parser.add_argument('filepath')
     args = parser.parse_args()
     return args
     
@@ -25,8 +25,9 @@ def pre():
 
 if __name__ == '__main__':
     args = getArgs()
-    f = args.filename
+    f = args.filepath
+    folder, file = os.path.split(args.filepath)
 
-    to = "%s_%s" % (pre(), f)
+    to = os.path.join(folder, "%s_%s" % (pre(), file))
     print('%s -> %s' % (f, to))
     os.rename(f, to)

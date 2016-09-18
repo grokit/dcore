@@ -13,6 +13,7 @@ Guiding principles:
 # TODO
 
 - See other TODOs in individual python files.
+- Merge tag: merge::/artices/tata  <--- on data-check.py or whatever move there, only refuse if alredy last folder there.
 
 # File and Folders Organization 
 	
