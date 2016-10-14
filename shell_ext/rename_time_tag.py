@@ -1,9 +1,19 @@
 #!/usr/bin/python3
 
 """
-Rename file with today's time-stamp:
+Rename file or folder with today's timestamp:
 
     myfile.txt -> 2016-08-20_myfile.txt
+
+# BUGS
+
+arch@arch-nx64:~/sync/archive/media_pics_and_videos/mine/2016$ rename_time_tag _/tata/
+_/tata/ -> _/tata/2016-09-25_
+Traceback (most recent call last):
+File "/home/arch/sync/scripts/dcore/shell_ext/rename_time_tag.py", line 33, in <module>
+  os.rename(f, to)
+  OSError: [Errno 22] Invalid argument: '_/tata/' -> '_/tata/2016-09-25_'
+
 """
 
 import re

@@ -16,19 +16,12 @@ import dcore.data as data
 
 _meta_shell_command = 'ff'
 
-print('Starting ff')
-
 search_roots = [r'~/sync']
-if os.path.isdir('c:/src/working'):
-    search_roots = ['c:/src/working', 'c:/david']
-    #search_roots = ['c:/david/dev/books']
-
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
 cacheExpiryInSeconds = 30*24*60*60
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-e', '--exact_match', action='store_true', default=False)
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     parser.add_argument('-o', '--open', action="store_true", help="Open in text editor all files that match.")
@@ -101,19 +94,10 @@ def do():
     if len(args.grep) != 0:
         gg = args.grep
         
-        if args.exact_match == False:
-            if type(gg) != list:
-                gg = [gg]
-            
-            print('Filter-in with: %s.' % gg)
-            for disc in gg:
-                disc = disc.lower()
-                F = filterInCaseInsensitive(F, disc)
-        else:
-            gg = " ".join(args.grep)
-            gg = gg.lower()
-            print('Filter-in with: %s.' % gg)
-            F = filterInCaseInsensitive(F, gg)
+        gg = " ".join(args.grep)
+        gg = gg.lower()
+        print('Filter-in with: %s.' % gg)
+        F = filterInCaseInsensitive(F, gg)
 
         for f in F:
             print(f)
