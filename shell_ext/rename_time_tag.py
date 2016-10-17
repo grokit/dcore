@@ -36,8 +36,15 @@ def pre():
 if __name__ == '__main__':
     args = getArgs()
     f = args.filepath
-    folder, file = os.path.split(args.filepath)
 
-    to = os.path.join(folder, "%s_%s" % (pre(), file))
+    if os.path.isfile(f):
+        folder, file = os.path.split(args.filepath)
+        to = os.path.join(folder, "%s_%s" % (pre(), file))
+    else:
+        assert os.path.isdir(f)
+        to = os.path.basename(os.path.normpath(f))
+        to = "%s_%s" % (pre(), to)
+
     print('%s -> %s' % (f, to))
     os.rename(f, to)
+
