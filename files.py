@@ -3,25 +3,23 @@ import os
 import shutil
 import time
 
+PATTERN = '.v%.2d'
+
 def getUniqueDateFile(base, ext = '.txt'):
-    filename = base + time.strftime("%Y-%m-%d_%H-%M-%S") + ext
+    filename = time.strftime("%Y-%m-%d_") + base + ext
     
-    # If file already exist, pick a different filename.
-    # I would prefer if that used a predictable, increasing sequence instead of random.
-    while os.path.isfile(filename):
-        random.seed(time.time())
-        randomArr = 'abcdefghijklmnpoqrstuvwxyz'
-        randomChar = randomArr[random.randint(0, len(randomArr)-1)]
-        filename = filename.replace('.', '_%s.' % randomChar )
+    # Postfix with file version, keep picking new names if prior versions already exit.
+    n = 1
+    while n == 1 or os.path.isfile(filename):
+        pre, ext = os.path.splitext(filename)
+
+        if os.path.splitext(pre)[1] != '' and os.path.splitext(pre)[1] == PATTERN % (n-1):
+            pre2, ext2 = os.path.splitext(pre)
+            ext2 = ext2.replace(PATTERN % (n-1), '')
+            pre = pre2 + ext2
+
+        ext = "%s%s" % (PATTERN % n, ext)
+        n += 1
+        filename = pre + ext
     
     return filename
-    
-"""
-def rm_then_mk_folder(folder):
-  
-  if os.path.isdir(folder):
-    shutil.rmtree(folder)
-  
-  if not os.path.isdir(folder):
-    os.mkdir(folder)
-"""
