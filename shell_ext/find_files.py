@@ -18,7 +18,7 @@ _meta_shell_command = 'ff'
 
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 30*24*60*60
+cacheExpiryInSeconds = 21*24*60*60 # Before automatically force regenerating.
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -104,10 +104,7 @@ def do():
         
         if args.open is True:
             for f in F:
-                if platform.system() == 'Windows':
-                    cmd = 'np %s' % f
-                else:
-                    cmd = 'vim %s' % f
+                cmd = 'vim %s' % f
                 os.system(cmd)
 
 if __name__ == '__main__':
