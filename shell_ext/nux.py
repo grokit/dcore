@@ -1,6 +1,10 @@
 """
 Shortcuts to Linux commands.
 
+nux <command-name>
+
+`command-name` are reflected so to add a command just declare a new function.
+
 startx: 'sudo /etc/init.d/lightdm start'
 """
 

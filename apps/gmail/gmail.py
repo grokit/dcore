@@ -1,9 +1,5 @@
 """
 Send e-mail from GMail address.
-
-# TODO
-
-- Move to sa-utils
 """
 
 import smtplib
@@ -11,8 +7,7 @@ import time
 import argparse
 import dcore.private_data as private_data
 
-_meta_shell_command = 'gmail'
-
+"""
 def getArgs():
     parser = argparse.ArgumentParser()
 
@@ -26,17 +21,16 @@ def getArgs():
 
     args = parser.parse_args()
     return args
+"""
 
-def send_email(
+def sendEmail(
         to,
         gmail_user=private_data.low_security_email,
         gmail_pwd=private_data.low_security_email_pw,
         subject="subject",
         body="body"):
 
-    print(
-        "%s sends to %s, subject: '%s', body='%s'" %
-        (gmail_user, to, subject, body))
+    #print( "%s sends to %s, subject: '%s', body='%s'" % (gmail_user, to, subject, body))
 
     if isinstance(to, type('')):
         to = [to]
@@ -44,11 +38,10 @@ def send_email(
     if isinstance(subject, type([])):
         subject = " ".join(subject)
 
-    # Prepare actual message
-    message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (
-        gmail_user, ", ".join(to), subject, body)
-
+    # From, To, Subject are part of protocol, will show up as mail subject, etc.
+    message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body) 
     success = False
+
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.ehlo()
@@ -65,10 +58,12 @@ def send_email(
 
 
 def do(to, subject, body):
-    send_email(to, body=body, subject=subject)
+    sendEmail(to, body=body, subject=subject)
 
+"""
 if __name__ == '__main__':
 
     args = getArgs()
     print(args)
     do(args.to, args.subject, args.body)
+"""
