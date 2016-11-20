@@ -1,3 +1,10 @@
+"""
+Opens a Python script from its shortcut in the `dcore` system.
+
+Usage:
+
+    edits <script-shortcut>
+"""
 
 import dcore.search_files as fsearch
 import dcore.create_python_scripts_shortcuts as scripts_info
