@@ -137,7 +137,6 @@ def getAllFiles():
 
 if __name__ == '__main__':
     G_ARGS = getArgs()
-    print(G_ARGS)
     query = " ".join(G_ARGS.search_query)
 
     files = getAllFiles()

@@ -24,7 +24,8 @@ def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
-    parser.add_argument('-o', '--open', action="store_true", help="Open in text editor all files that match.")
+    parser.add_argument('-o', '--open', action="store_true", help="Open with OS-configured program.")
+    parser.add_argument('-v', '--vim', action="store_true", help="Open in text editor all files that match.")
     args = parser.parse_args()
     return args
 
@@ -103,6 +104,11 @@ def do():
             print(f)
         
         if args.open is True:
+            for f in F:
+                cmd = 'gnome-open %s' % f
+                os.system(cmd)
+
+        if args.vim is True:
             for f in F:
                 cmd = 'vim %s' % f
                 os.system(cmd)
