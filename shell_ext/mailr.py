@@ -14,7 +14,7 @@ _meta_shell_command = 'mailr'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--num_mail_read', default=10)
+    parser.add_argument('-n', '--num_mail_read', default=10, type=int)
     args = parser.parse_args()
     return args
     
