@@ -1,7 +1,5 @@
 ﻿"""
-# TODO
-- Add a compose mode where you can just type text of paste from clipboard until reach EOS character.
-- Just use TLS, forbid un-encrypted connection. VERIFY!
+MailW: Mail Write. Send mail using pre-configured (username, pw) on machine.
 """
 
 import argparse
@@ -12,7 +10,7 @@ import sys
 import dcore.private_data as private_data
 import dcore.apps.gmail.gmail as gmail
 
-_meta_shell_command = 'reminder'
+_meta_shell_command = 'mailw'
 
 TEMPLATE = """
 Reminder: %s.

@@ -66,7 +66,7 @@ def getLastNMails(N):
         mail.login(username, pw)
 
         # To see which boxes are available.
-        if True:
+        if False:
             boxes = mail.list()
             for b in boxes:
                 print(b)
