@@ -14,22 +14,26 @@ def getArgs():
     args = parser.parse_args()
     return args
     
-if __name__ == '__main__':
-    
-    args = getArgs()
-
+def screenshotsFilenameByModDate():
     loc = os.path.expanduser('~/Pictures')
     sshots = os.listdir(loc)
     sshots = [os.path.abspath(os.path.join(loc, f)) for f in sshots]
     sshots = [f for f in sshots if 'Selection' in f or 'scrot' in f]
 
+    # Get last modified file that matched pattern.
+    sshots.sort(key=lambda x: os.path.getmtime(x))
+    return sshots
+
+if __name__ == '__main__':
+    
+    args = getArgs()
+
     if args.list:
-        print(sshots)
+        print(screenshotsFilenameByModDate())
         sys.exit(0)
 
     if args.open_last:
-        # Get last modified file that matched pattern.
-        sshots.sort(key=lambda x: os.path.getmtime(x))
+        sshots = screenshotsFilenameByModDate()
         cmd = 'eog %s' % sshots[-1]
         print(cmd)
         os.system(cmd)
@@ -37,5 +41,8 @@ if __name__ == '__main__':
 
     cmd = "scrot -e 'mv $f ~/Pictures'"
     print(cmd)
-    os.system(cmd)
+    r = os.system(cmd)
+    if r != 0:
+        raise Exception('sshot failed.')
+    os.system('notify-send --icon=gtk-info sshot "Screenshot taken: %s."' % screenshotsFilenameByModDate()[-1])
 
