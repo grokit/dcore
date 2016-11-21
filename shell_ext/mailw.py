@@ -58,9 +58,6 @@ if __name__ == '__main__':
     else:
         body = sin
 
-    if args.attachment_filename is not None:
-        body += attachToBody(args.attachment_filename, body)
-
     if args.work_email:
         args.to = private_data.email_work 
 
@@ -68,4 +65,8 @@ if __name__ == '__main__':
     if isinstance(body, type(u'.')):
         body = body.encode('ascii', 'replace')
         body = body.decode()
-    gmail.sendEmail(args.to, subject, body)
+
+    if subject == 'NONE' and args.attachment_filename is not None:
+        subject = args.attachment_filename
+
+    gmail.sendEmail(args.to, subject, body, args.attachment_filename)

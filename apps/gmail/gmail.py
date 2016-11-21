@@ -5,10 +5,17 @@ Tip: don't use an e-mail address you care about, use a non-important e-mail addr
      and assume that any data sent can be read by a 3rd party.
 """
 
-import smtplib
-import imaplib
 import time
 import argparse
+import os
+
+import smtplib
+import imaplib
+import email.mime.multipart
+import email.mime.text
+import email.mime.application
+import email.utils
+
 import dcore.private_data as private_data
 
 def __getCredentials():
@@ -30,27 +37,33 @@ def __connect():
     server.login(gmail_user, gmail_pwd)
     return server, gmail_user
 
-def sendEmail(to, subject, body):
+def sendEmail(to, subject, body, filenameAttach = None):
+    username, _ = __getCredentials()
 
-    if isinstance(to, type('')):
-        to = [to]
+    msg = email.mime.multipart.MIMEMultipart()
+    msg['From'] = username
+    msg['To'] = to
+    msg['Date'] = email.utils.formatdate(localtime=True)
+    msg['Subject'] = subject
 
-    if isinstance(subject, type([])):
-        subject = " ".join(subject)
+    msg.attach(email.mime.text.MIMEText(body))
 
-    success = False
-    try:
-        server, gmail_user = __connect()
-        # From, To, Subject are part of protocol, will show up as mail subject, etc.
-        message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body) 
-        server.sendmail(gmail_user, to, message)
-        server.close()
-        success = True
-    except Exception as e:
-        print("Mail sent failed. Exception: %s." % e)
+    # Adapted from: http://stackoverflow.com/questions/3362600/how-to-send-email-attachments-with-python
+    if filenameAttach != None:
+        with open(filenameAttach, "rb") as fh:
+            part = email.mime.application.MIMEApplication( fh.read(), Name=os.path.basename(filenameAttach) )
+            part['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(filenameAttach)
+            # If you call attach(...) again, can have a 2nd, 3rd, ... file.
+            msg.attach(part)
 
-    if success:
-        print('Mail sent.')
+    server, gmail_user = __connect()
+    # From, To, Subject are part of protocol, will show up as mail subject, etc.
+    message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body) 
+    server.sendmail(gmail_user, to, msg.as_string())
+    server.close()
+
+    # If it fails, it will throw exception.
+    print('Mail sent.')
 
 def getLastNMails(N):
 

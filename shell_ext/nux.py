@@ -61,10 +61,10 @@ def crashplan():
 	osExec(command)
 
 def low():
-	osExec('xbacklight -set 15')
+	osExec('xbacklight -set 10')
 
 def med():
-	osExec('xbacklight -set 50')
+	osExec('xbacklight -set 75')
 
 def high():
 	osExec('xbacklight -set 100')
