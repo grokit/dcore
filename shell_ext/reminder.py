@@ -70,4 +70,4 @@ if __name__ == '__main__':
     if isinstance(body, type(u'.')):
         body = body.encode('ascii', 'replace')
         body = body.decode()
-    gmail.do(args.to, subject, body)
+    gmail.sendEmail(args.to, subject, body)
