@@ -48,7 +48,8 @@ def sendEmail(to, subject, body, filenameAttach = None):
 
     msg.attach(email.mime.text.MIMEText(body))
 
-    # Adapted from: http://stackoverflow.com/questions/3362600/how-to-send-email-attachments-with-python
+    # Adapted from: 
+    # - http://stackoverflow.com/questions/3362600/how-to-send-email-attachments-with-python
     if filenameAttach != None:
         with open(filenameAttach, "rb") as fh:
             part = email.mime.application.MIMEApplication( fh.read(), Name=os.path.basename(filenameAttach) )
