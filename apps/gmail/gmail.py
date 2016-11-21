@@ -65,10 +65,19 @@ def getLastNMails(N):
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
         mail.login(username, pw)
 
-        mail.list()
+        # To see which boxes are available.
+        if True:
+            boxes = mail.list()
+            for b in boxes:
+                print(b)
+
+        # Somehow this does not work. Would have to look deeper on how to get sent mails.
+        #mail.select("[Gmail]/Sent Mail")
+        
         mail.select("inbox")
+
         result, data = mail.search(None, "ALL")
-        ids = lastMailId = data[0].split() 
+        ids = data[0].split() 
 
         N = min(N, len(ids))
         for i in range(N):
@@ -89,7 +98,7 @@ def getLastNMails(N):
     return M
 
 if __name__ == '__main__':
-    mails = getLastNMails(5)
+    mails = getLastNMails(2)
     for m in mails:
         print('~'*80)
         print(m)
