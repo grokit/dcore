@@ -10,6 +10,7 @@ _meta_shell_command = 'sshot'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--open_last', action="store_true", default=False)
+    parser.add_argument('-e', '--edit_last', action="store_true", default=False)
     parser.add_argument('-l', '--list', action="store_true", default=False)
     args = parser.parse_args()
     return args
@@ -32,9 +33,11 @@ if __name__ == '__main__':
         print(screenshotsFilenameByModDate())
         sys.exit(0)
 
-    if args.open_last:
+    if args.open_last or args.edit_last:
         sshots = screenshotsFilenameByModDate()
         cmd = 'eog %s' % sshots[-1]
+        if args.edit_last:
+            cmd = 'shotwell %s' % sshots[-1]
         print(cmd)
         os.system(cmd)
         sys.exit(0)
