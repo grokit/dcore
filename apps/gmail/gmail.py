@@ -11,6 +11,7 @@ import os
 
 import smtplib
 import imaplib
+# Also check examples: https://docs.python.org/3/library/email-examples.html
 import email.mime.multipart
 import email.mime.text
 import email.mime.application
@@ -65,6 +66,7 @@ def sendEmail(to, subject, body, filenameAttach = None):
 
     # If it fails, it will throw exception.
     print('Mail sent.')
+    return msg.as_string()
 
 def getLastNMails(N):
 

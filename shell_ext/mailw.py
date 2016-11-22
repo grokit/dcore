@@ -69,4 +69,7 @@ if __name__ == '__main__':
     if subject == 'NONE' and args.attachment_filename is not None:
         subject = args.attachment_filename
 
-    gmail.sendEmail(args.to, subject, body, args.attachment_filename)
+    msgAsStr = gmail.sendEmail(args.to, subject, body, args.attachment_filename)
+    print(msgAsStr)
+
+
