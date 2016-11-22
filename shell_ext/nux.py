@@ -39,7 +39,7 @@ def keyben():
 def youtubedl_upgrade():
     osExec('sudo pip3 install --upgrade youtube_dl')
 
-def pdf()
+def pdf():
     osExec('wine ~/.wine/drive_c/pdf/PDF\ Viewer/PDFXCview.exe&')
 
 def mempigs():

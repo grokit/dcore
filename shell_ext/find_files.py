@@ -46,6 +46,7 @@ def filterOutIfArrayInElement(F, filterArray):
     return [f for f in F if not elementInList(f, filterArray)]
 
 def filterInCaseInsensitive(F, astr):
+    astr = astr.lower()
     return [f for f in F if astr in f.lower()]
 
 def dateNow():
@@ -94,11 +95,9 @@ def do():
     
     if len(args.grep) != 0:
         gg = args.grep
-        
-        gg = " ".join(args.grep)
-        gg = gg.lower()
-        print('Filter-in with: %s.' % gg)
-        F = filterInCaseInsensitive(F, gg)
+        print('Filter-in with: [%s]. Ordering and case ignored.' % ", ".join(gg))
+        for sub in gg:
+            F = filterInCaseInsensitive(F, sub)
 
         for f in F:
             print(f)
