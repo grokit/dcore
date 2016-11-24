@@ -3,6 +3,7 @@ import argparse
 import hashlib 
 import binascii
 import getpass
+import base64
 
 import dcore.private_data as private_data
 
@@ -15,7 +16,7 @@ def getArgs():
     args = parser.parse_args()
     return args
 
-def hash20160417(v):
+def __hash20160417(v):
     """
     v: value to `twist`.
     return: twisted value as hex-string representation of binary result.
@@ -28,8 +29,18 @@ def hash20160417(v):
     dk = hashlib.pbkdf2_hmac('sha256', v.encode(), salt.encode(), 1000000)
     return binascii.hexlify(dk).decode()
 
-# Just point to latest hash function. ALWAYS keep past hash functions in case need to recover an old hash.
-hash = hash20160417
+def __fileToSecret(filename):
+    with open(filename, 'rb') as fh:
+        return base64.b64encode(fh.read()).decode()
+
+# Just point to latest hash function. ALWAYS keep past hash functions in case need to recover an old key.
+hash = __hash20160417
+
+def fileTwister(filename):
+    return twister(__fileToSecret(filename))
+
+def twister(secret):
+    return hash(secret)
 
 if __name__ == '__main__':
     args = getArgs()
@@ -37,15 +48,9 @@ if __name__ == '__main__':
     if args.secret is not None:
         secret = args.secret
     elif args.file is not None:
-        secret = open(args.file).readlines()
-        if len(secret) != 1:
-            raise Exception('Secret file has more than one line.')
-        secret = secret[0].strip()
+        secret = __fileToSecret(args.file)
     else:
         secret = getpass.getpass(prompt='Enter secret:\n')
 
-    #print('Secret: `%s`.' % secret)
-
-    v = hash(secret)
-    print(v)
+    print(twister(secret))
 
