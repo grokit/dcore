@@ -10,6 +10,18 @@ Create a note document (or append to if already exists) in the note_db folder an
 ## Save a copy of file in same directory as journal
     
     $ nn -f filename
+
+# TODO
+
+- More search points if:
+    - Search is in title
+    - Has UUID
+    - Has tag
+    - Had an `important` or `todo` tag.
+
+- critical.sh -> proper python script -- maybe produce html page.
+
+- nn --sshot or something like that: copy last screenshot or last 1 hour screenshot to dir with last touched note.md file.
 """
 
 _meta_shell_command = 'nn'

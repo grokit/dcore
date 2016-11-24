@@ -2,8 +2,7 @@
 quicknet: do simple 'net' (TCP, HTTP, HTTPS, ...) operations from the commands line
           for both the sending and receiving flows.
 
-Meant as a simple tool to hack things together when you want to leverage python's libs.
-If you just need HTTP(S) one-liner, user `curl` instead. This scripts is more useful if you need a combination of protocol as well as the ability to script request/responses with Python.
+Meant as a simple tool to hack things together when you want to leverage python's libs. If you just need HTTP(S) one-liner, user `curl` instead. This scripts is more useful if you need a combination of protocol as well as the ability to script request/responses with Python.
 
 # TODO
 # Bugs

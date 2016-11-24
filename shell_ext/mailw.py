@@ -16,8 +16,6 @@ TEMPLATE = """
 Reminder: %s.
 
 %s
-
-app tag: sq1m9oj9c5oirkqvjz4lug90f0dl52ac.
 """
 
 def getArgs():
@@ -70,6 +68,6 @@ if __name__ == '__main__':
         subject = args.attachment_filename
 
     msgAsStr = gmail.sendEmail(args.to, subject, body, args.attachment_filename)
-    print(msgAsStr)
+    print("\n".join(msgAsStr.splitlines()[0:30]))
 
 

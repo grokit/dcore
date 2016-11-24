@@ -1,11 +1,18 @@
 """
 Shortcuts to Linux commands.
 
+I use this maily together with i3, where i3 shortcuts map to commands in this script.
+
+# Usage
+
 nux <command-name>
 
 `command-name` are reflected so to add a command just declare a new function.
 
+# Misc Notes
+
 startx: 'sudo /etc/init.d/lightdm start'
+
 """
 
 _meta_shell_command = 'nux'
@@ -27,6 +34,9 @@ def osExec(cmd):
             osExec(c)
     print(cmd)
     os.system(cmd)
+
+def sleep():
+    osExec('sudo pm-suspend')
 
 def keybfr():
     # Get list of all keyboards available:
@@ -51,7 +61,8 @@ def mac():
     osExec('sudo ifconfig wlp1s0 up')
 
 def lock():
-    osExec('gnome-screensaver-command -l')
+    #osExec('gnome-screensaver-command -l')
+    osExec('i3lock')
 
 def battery():
     osExec('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
@@ -129,6 +140,14 @@ def unmute():
     osExec('amixer set Headphone unmute') 
     osExec('amixer set Speaker unmute') 
     osExec('amixer set PCM unmute') 
+
+def update():
+    # This does not upgrade the distribution, it justs updates
+    # all packages on system.
+    # http://askubuntu.com/questions/196768/how-to-install-updates-via-command-line
+    osExec('sudo apt-get update')        # Fetches the list of available updates
+    osExec('sudo apt-get upgrade')       # Strictly upgrades the current packages
+    osExec('sudo apt-get dist-upgrade')  # Installs updates (new ones)
 
 def mute():
     osExec('amixer set Master mute')
