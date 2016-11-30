@@ -22,6 +22,9 @@ Create a note document (or append to if already exists) in the note_db folder an
 - critical.sh -> proper python script -- maybe produce html page.
 
 - nn --sshot or something like that: copy last screenshot or last 1 hour screenshot to dir with last touched note.md file.
+
+- nn -l --last: open last modified note.md
+- nn --recent: last 10 by modified time, option to open any of them
 """
 
 _meta_shell_command = 'nn'

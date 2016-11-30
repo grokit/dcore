@@ -15,11 +15,19 @@ def getArgs():
     args = parser.parse_args()
     return args
     
+IS_SSHOT = ['vlcsnap', 'Selection', 'scrot']
+
 def screenshotsFilenameByModDate():
     loc = os.path.expanduser('~/Pictures')
     sshots = os.listdir(loc)
     sshots = [os.path.abspath(os.path.join(loc, f)) for f in sshots]
-    sshots = [f for f in sshots if 'Selection' in f or 'scrot' in f]
+
+    T = set()
+    for pre in IS_SSHOT:
+        for f in sshots:
+            if pre in f:
+                T.add(f)
+    sshots = list(T)
 
     # Get last modified file that matched pattern.
     sshots.sort(key=lambda x: os.path.getmtime(x))

@@ -2,7 +2,7 @@
 Shortcuts to Linux commands.
 
 I use this maily together with i3, where i3 shortcuts map to commands in this script.
-
+e
 # Usage
 
 nux <command-name>
@@ -39,8 +39,7 @@ def sleep():
     osExec('sudo pm-suspend')
 
 def keybfr():
-    # Get list of all keyboards available:
-    # localectl list-x11-keymap-layouts
+    # Get list of all keyboards available: localectl list-x11-keymap-layouts
     osExec('setxkbmap ca') # ca is the proper fr keyboard :).
 
 def keyben():
@@ -56,13 +55,14 @@ def mempigs():
     osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
 
 def mac():
+    # Randomize MAC address. You may need to disconnect, reconnect.
     osExec('sudo ifconfig wlp1s0 down')
     osExec('sudo macchanger -r wlp1s0')
     osExec('sudo ifconfig wlp1s0 up')
 
 def lock():
-    #osExec('gnome-screensaver-command -l')
-    osExec('i3lock')
+    osExec('gnome-screensaver-command -l')
+    #osExec('i3lock') # Big ugly white, and both screensavers sometimes overlap.
 
 def battery():
     osExec('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
@@ -73,7 +73,7 @@ def crashplan():
     osExec(command)
 
 def low():
-    osExec('xbacklight -set 10')
+    osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
 
 def med():
     osExec('xbacklight -set 75')
@@ -84,7 +84,6 @@ def high():
 def wifi():
     #  wicd-curses does not seem to work...
     command = 'nm-applet&'
-    print(command)
     osExec(command)
 
 def tg():
@@ -93,7 +92,6 @@ def tg():
     path = os.path.expanduser('~/sync/apps/tg/')
     os.chdir(path)
     command = './bin/telegram-cli'
-    print(command)
     osExec(command)
     os.chdir(cur)
 
@@ -105,23 +103,34 @@ def apps():
     startapps()
 
 def startapps():
-    osExec('nohup dropbox start > /dev/null&')
-    osExec('nohup diodon > /dev/null&')
-    #sshots()
+    "Used in i3 startup, do not rename."
 
-def sshots():
+    osExec('nohup dropbox start > /dev/null&')
     osExec('nohup shutter --min_at_startup > /dev/null&')
+
+    # Security hazard...
+    #osExec('nohup diodon > /dev/null&')
+
+def trackpad_on():
+    osExec('xinput list')
+    cmd ='xinput set-prop 13 "Device Enabled" 1' 
+    print(cmd)
+    print('Execute above command only if device match.')
+    #osExec(cmd)
+
+def trackpad_off():
+    osExec('xinput list')
+    cmd = 'xinput set-prop 13 "Device Enabled" 0'
+    print(cmd)
+    print('Execute above command only if device match.')
+    #osExec(cmd)
 
 def vol_ctrl():
     osExec('pavucontrol')
 
-def trackpad_on():
-    osExec('xinput list')
-    osExec('xinput set-prop 13 "Device Enabled" 1')
-
-def trackpad_off():
-    osExec('xinput list')
-    osExec('xinput set-prop 13 "Device Enabled" 0')
+def vol_more_than_max():
+    # See pavucontrol for a UI for those settings.
+    osExec('pacmd set-sink-volume 0 99999')
 
 def vol_up():
     osExec('amixer -q sset Master 10%+')
@@ -141,6 +150,12 @@ def unmute():
     osExec('amixer set Speaker unmute') 
     osExec('amixer set PCM unmute') 
 
+def mute():
+    osExec('amixer set Master mute')
+    osExec('amixer set Headphone mute') 
+    osExec('amixer set Speaker mute') 
+    osExec('amixer set PCM mute') 
+
 def update():
     # This does not upgrade the distribution, it justs updates
     # all packages on system.
@@ -148,12 +163,6 @@ def update():
     osExec('sudo apt-get update')        # Fetches the list of available updates
     osExec('sudo apt-get upgrade')       # Strictly upgrades the current packages
     osExec('sudo apt-get dist-upgrade')  # Installs updates (new ones)
-
-def mute():
-    osExec('amixer set Master mute')
-    osExec('amixer set Headphone mute') 
-    osExec('amixer set Speaker mute') 
-    osExec('amixer set PCM mute') 
 
 if __name__ == '__main__':
     args = getArgs()

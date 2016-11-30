@@ -24,25 +24,30 @@ def getArgs():
     args = parser.parse_args()
     return args
 
-if __name__ == '__main__':
-
-    args = getArgs()
-
-    pathToBackup = os.path.expanduser(args.folder_in)
-    
-    archive_name = files.getUniqueDateFile(args.archive_name, '.k_lsk-01.7z')
-    archive_name = os.path.join(args.folder_out, archive_name)
-     
+def getPW():
     pw = None
     try:
         # If private data is set, use default password.
         pw = private_data.k_lsk_scripts_plaintext_01
+        keyTag = 'k_lsk-01'
     except Exception as e:
         pass
 
     if pw is None or args.ask_for_password:
         pw = getpass.getpass('Enter password. input.strip() is applied.\n')
         pw = pw.strip()
+        keyTag = 'k_custom'
+
+    return pw, keyTag
+
+if __name__ == '__main__':
+
+    args = getArgs()
+    pw, keyTag = getPW()
+
+    pathToBackup = os.path.expanduser(args.folder_in)
+    archive_name = files.getUniqueDateFile(args.archive_name, '.%s.7z' % keyTag)
+    archive_name = os.path.join(args.folder_out, archive_name)
 
     # -mhe: encrypt file names
     # -mx=3: compression level 3 (0:lowest, 9:highest)

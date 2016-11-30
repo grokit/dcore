@@ -2,6 +2,10 @@
 # TODO
 
 - Have an 'exact string' mode as an option.
+
+# BUGS
+
+- It does not intex and list files that begin with .period.
 """
 
 print('pre-Starting ff')

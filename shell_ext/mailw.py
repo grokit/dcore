@@ -59,15 +59,19 @@ if __name__ == '__main__':
     if args.work_email:
         args.to = private_data.email_work 
 
+    if subject == 'NONE' and args.attachment_filename is not None:
+        subject = args.attachment_filename
+
     body = decorum(subject, body)
     if isinstance(body, type(u'.')):
         body = body.encode('ascii', 'replace')
         body = body.decode()
 
-    if subject == 'NONE' and args.attachment_filename is not None:
-        subject = args.attachment_filename
-
     msgAsStr = gmail.sendEmail(args.to, subject, body, args.attachment_filename)
-    print("\n".join(msgAsStr.splitlines()[0:30]))
+    L = msgAsStr.splitlines()
+    if len(L) > 30:
+        L = L[0:30]
+        L += ['[... truncated ...]']
+    print("\n".join(L))
 
 

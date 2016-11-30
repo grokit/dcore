@@ -22,8 +22,8 @@ _meta_shell_command = 'tt'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--regen_html', action='store_true')
-    parser.add_argument('-o', '--open', action='store_true')
-    parser.add_argument('-d', '--open_db', action='store_true', help='Open database file with text editor.')
+    parser.add_argument('-o', '--open_browser', action='store_true')
+    parser.add_argument('-v', '--edit_db', action='store_true', help='Open database file with text editor.')
     args = parser.parse_args()
     return args
 
@@ -52,13 +52,13 @@ if __name__ == '__main__':
 
     args = getArgs()
 
-    if args.open_db is True:
+    if args.edit_db is True:
         cmd = 'vim %s' % options.dbFile
         print(cmd)
         os.system(cmd)
         exit(0)
 
-    if args.open is True:
+    if args.open_browser is True:
         webbrowser.open_new_tab(htmlFile)
         exit(0)
 
