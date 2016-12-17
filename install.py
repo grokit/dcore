@@ -8,13 +8,13 @@ import sys
 import os
 import platform
 
-import dcore.data as data
-import dcore.create_python_scripts_shortcuts as create_python_scripts_shortcuts
-
 def setupShortcutsBootstrap():
     """
     We put all shortcuts in dcore-owned directory and add it to executable PATH loaded by shell.
     """
+
+    # This import should be fine as it does not depend on path.
+    import data
 
     tag = data.tagShortcutsForDeletion()
     home_scripts = os.path.abspath('../')
@@ -22,29 +22,27 @@ def setupShortcutsBootstrap():
     shortcuts_folder = data.pathExt()
 
     bash_rc = """
-# Magic dcore tag: %s.
+# Magic dcore tag: %s_BEGIN.
 export PYTHONPATH=$PYTHONPATH:%s
 export PATH=$PATH:%s
-    """ % (tag, home_scripts, shortcuts_folder)
+# %s_END
+    """ % (tag, home_scripts, shortcuts_folder, tag)
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
     fname = os.path.expanduser('~/.profile')
     file = open(fname, 'r').read()
     if not tag in file:
-            file = bash_rc + '\n\n' + file
-            open(fname, 'w').write(file)
+        file = bash_rc + '\n\n' + file
+        open(fname, 'w').write(file)
+    else:
+        print('Warning: skipping writing new `%s` since it looks like tag is already present.' % fname)
 
-    """
-    :::issue here reported on cmd
-    print('sourcing')
     cmd = 'source %s' % fname
     print(cmd)
     os.system(cmd)
-    """
 
 def setupShortcuts():
-    data.createAllDirs()
     create_python_scripts_shortcuts.do()
 
 def delOld():
@@ -60,8 +58,25 @@ def delOld():
             print('Deleting %s.' % file)
             os.remove(file)
 
+def tryImports():
+    try:
+        import dcore.data as data
+        import dcore.create_python_scripts_shortcuts as create_python_scripts_shortcuts
+        global data
+        global create_python_scripts_shortcuts
+        return True
+    except ImportError as e:
+        return False
+
 if __name__ == '__main__':
+
+    if not tryImports():
+        print('Not bootstrapped, ')
+        print('Attempting to bootstrap. You may need to restart your terminal for changes to take effect.')
+        setupShortcutsBootstrap()
+        exit(0)
+
+    data.createAllDirsIfNotExist()
     delOld()
-    setupShortcutsBootstrap()
     setupShortcuts()
 

@@ -1,5 +1,8 @@
 """
 Define where data is.
+
+BE CAREFUL WITH dcore IMPORTS IN THAT FILE. It is used during install, anything that depends
+on path being set properly will fail the install.
 """
 
 import sys
@@ -27,10 +30,9 @@ def pathExt():
     """
     return os.path.normpath(os.path.join(dcoreData(), './path_ext'))
 
-def createAllDirs():
+def createAllDirsIfNotExist():
     """
     Run once on install, creates directories for scripts if does not exist already.
-    :::rename: ifNotExist
     """
     dirs = []
     dirs.append(dcoreData())
