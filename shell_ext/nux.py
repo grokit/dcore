@@ -130,7 +130,7 @@ def vol_ctrl():
 
 def vol_more_than_max():
     # See pavucontrol for a UI for those settings.
-    osExec('pacmd set-sink-volume 0 99999')
+    osExec('pacmd set-sink-volume 0 85000')
 
 def vol_up():
     osExec('amixer -q sset Master 10%+')

@@ -12,8 +12,7 @@ import dcore.apps.gmail.gmail as gmail
 
 _meta_shell_command = 'mailw'
 
-TEMPLATE = """
-Reminder: %s.
+TEMPLATE = """%s
 
 %s
 """

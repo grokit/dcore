@@ -4,6 +4,11 @@ Opens a Python script from its shortcut in the `dcore` system.
 Usage:
 
     edits <script-shortcut>
+
+# TODO
+
+- Replace with `editw`: edit the file that `which` points to.
+which python3 | xargs vim -> editw python3
 """
 
 import dcore.search_files as fsearch

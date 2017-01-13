@@ -77,7 +77,6 @@ def gen():
 
 def do():
     args = getArgs()
-    print(args)
     
     F = None
     if not args.reset and os.path.isfile(cacheLoc):

@@ -2,6 +2,7 @@
 """
 
 import os
+import time
 import argparse
 import sys
 
@@ -12,6 +13,10 @@ def getArgs():
     parser.add_argument('-o', '--open_last', action="store_true", default=False)
     parser.add_argument('-e', '--edit_last', action="store_true", default=False)
     parser.add_argument('-l', '--list', action="store_true", default=False)
+
+    # Move all recent screenshots to current directory:
+    # sshot -r | xargs mv -t .
+    parser.add_argument('-r', '--list_recent', action="store_true", default=False)
     args = parser.parse_args()
     return args
     
@@ -38,7 +43,20 @@ if __name__ == '__main__':
     args = getArgs()
 
     if args.list:
-        print(screenshotsFilenameByModDate())
+        L = screenshotsFilenameByModDate()
+        L.sort(key=lambda x: os.path.getmtime(x))
+        for l in L:
+            print(l)
+        sys.exit(0)
+
+    if args.list_recent:
+        L = screenshotsFilenameByModDate()
+        tnow = time.time()
+        delta_hours = 2
+        L = [l for l in L if tnow - os.path.getmtime(l) < delta_hours * 60 * 60]
+        L.sort(key=lambda x: os.path.getmtime(x))
+        for l in L:
+            print(l)
         sys.exit(0)
 
     if args.open_last or args.edit_last:

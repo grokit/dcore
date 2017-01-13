@@ -8,6 +8,9 @@ Provide search and search + quick-action.
 Score depends on:
     Folder. Article = bonus.
     More points if mentioned more than once in filename
+    uuid
+    name in title
+    name in top level folder 
 
 List of:
     Order (not score): time (newer better) for when score is ==.
@@ -126,7 +129,7 @@ def manualSelect(items):
 
     return items[s]
 
-def sortMatches(matches):
+def sortMatchesByScore(matches):
     return sorted(matches, key=lambda x: x.score, reverse=True)
 
 def getAllFiles():
@@ -146,7 +149,7 @@ if __name__ == '__main__':
         matches = [m for m in matches if isLineTitle(m.line)]
     score(matches)
 
-    matches = sortMatches(matches)
+    matches = sortMatchesByScore(matches)
     for m in matches:
         print(m)
 
@@ -159,7 +162,7 @@ if __name__ == '__main__':
         for k in dedup:
             dedup_matches.append(dedup[k])
         matches = dedup_matches
-        matches = sortMatches(matches)
+        matches = sortMatchesByScore(matches)
 
         if len(matches) == 0:
             print('Not opening since no file matched.')

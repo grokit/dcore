@@ -28,8 +28,8 @@ def getPW():
     pw = None
     try:
         # If private data is set, use default password.
-        pw = private_data.k_lsk_scripts_plaintext_01
-        keyTag = 'k_lsk-01'
+        pw = private_data.k_lsk_scripts_plaintext_02
+        keyTag = 'k_lsk-02'
     except Exception as e:
         pass
 

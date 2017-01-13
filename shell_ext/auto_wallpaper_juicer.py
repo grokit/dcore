@@ -12,7 +12,6 @@ import argparse
 
 _meta_shell_command = 'getpics'
 
-#outputFolder = os.path.expanduser('~/wallpapers')
 outputFolder = os.path.join(data.dcoreTempData(), 'wallpapers') 
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
@@ -53,13 +52,11 @@ def getUrlsFiles(html, regex):
     imgs = re.findall(regex, html, re.MULTILINE)
     return imgs
 
-
+ALLOWEDCHARS = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
 def substIllegalCharsInFilename(filename):
-    allowedChars = """abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890."""
-
     lstOutChars = []
     for char in filename:
-        if char in allowedChars:
+        if char in ALLOWEDCHARS:
             lstOutChars.append(char)
         else:
             lstOutChars.append('_')
@@ -87,8 +84,6 @@ def downloadAllUrls(urls):
 def saveUrlFetched(url, url_content):
     filename = outputFolder + "/" + substIllegalCharsInFilename(url).lower()
     file = open(filename, 'w')
-    # print(type(url_content))
-    #import pdb; pdb.set_trace()
     file.write(url_content)
     file.close()
 
@@ -139,7 +134,6 @@ def getArgs():
 
 if __name__ == '__main__':
     args = getArgs()
-    print(args)
 
     if not os.path.exists(outputFolder):
         os.makedirs(outputFolder)
@@ -170,9 +164,9 @@ if __name__ == '__main__':
             f) for f in os.listdir(outputFolder) if re.search(
             r'\.jpg$',
             f) is not None]
+
     rI = random.randint(0, len(pics)-1)
     pic = pics[rI]
     for linux_setpic_cmd in linux_setpic_cmds:
         cmd = linux_setpic_cmd % pic
-        print(cmd)
         os.system(cmd)
