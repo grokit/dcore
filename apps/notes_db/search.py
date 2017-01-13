@@ -8,9 +8,8 @@ Provide search and search + quick-action.
 Score depends on:
     Folder. Article = bonus.
     More points if mentioned more than once in filename
-    uuid
-    name in title
     name in top level folder 
+    being inside node.md, and not some other file
 
 List of:
     Order (not score): time (newer better) for when score is ==.
@@ -24,6 +23,50 @@ Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-wi
 
 ns --list-tags
 List all tags and popularity.
+
+~~~~
+bad search example: git
+Select an item by entering its corresponding number.
+0 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
+1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
+2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
+3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
+4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
+5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
+6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
+7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
+
+->
+
+0 (15.75): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
+1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
+2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
+3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
+4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
+5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
+6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
+7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
+
+->
+
+0 (23.75): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
+1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
+2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
+3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
+4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
+5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
+6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
+7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
+
+->
+0 (27.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
+1 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
+2 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
+3 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
+4 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
+5 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
+6 (-9.75): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
+7 (-9.75): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
 """
 
 import os
@@ -32,6 +75,7 @@ import re
 import math
 
 import data
+import meta
 
 # ns: Note Search
 _meta_shell_command = 'ns'
@@ -70,16 +114,80 @@ class Match:
         s = "%s (%s):\n%s" % (self.filename, self.score, content)
         return s
 
-def score(matches):
+def titleLevel(line):
+    """
+    titleLevel("# a title") -> 1
+    titleLevel("## a title") -> 2
+    titleLevel("### a title") -> 3
+    titleLevel("#### a title") -> 4
+    titleLevel("no markdown title") -> 0
+    """
+
+    level = 0
+    if len(line) >= 1 and line[0] == '#':
+        level += 1
+    if len(line) >= 2 and line[1] == '#':
+        level += 1
+    if len(line) >= 3 and line[2] == '#':
+        level += 1
+    if len(line) >= 4 and line[3] == '#':
+        level += 1
+
+    return level
+
+def score(matches, search_query):
     for m in matches:
+
+        with open(m.filename) as fh:
+            i = 0
+            lines = fh.readlines()
+            metadata = meta.extract("\n".join(lines))
+
+            # Bonus if mentionned a lot in file.
+            nmention = 0
+            for l in lines:
+                match = re.search(query, l, re.IGNORECASE)
+                if match is not None:
+                    nmention += 1
+
+            if nmention > 0:
+                if nmention > 20:
+                    nmention = 20
+                m.score += 5 * (nmention / 20)
+
+            # Bonus if in title, even better if towards beginning of file.
+            for l in lines:
+                match = re.search(query, l, re.IGNORECASE)
+
+                multiplier = 1 - (i / len(lines))
+
+                if match is not None:
+                    level = titleLevel(l)
+                    if level != 0:
+                        m.score += multiplier * (2 + 5 * (4-titleLevel(l)) / 4.0)
+
+            # BIG bonus if query matches UUID.
+            uuid = None
+            for metad in metadata:
+                if metad.metaType == 'uuid':
+                    assert uuid is None
+                    uuid = metad.value
+
+            if uuid is not None and re.search(query, uuid, re.IGNORECASE):
+                m.score += 8
+
+        # Some folder have special score.
         if isLineTitle(m.line):
             m.score += 4
         if '/articles/' in os.path.split(m.filename)[0]:
             m.score += 10
-        if 'quality-b' in os.path.split(m.filename)[0]:
+        if '/quality-b/' in os.path.split(m.filename)[0]:
             m.score -= 5
         if '/low/' in os.path.split(m.filename)[0]:
             m.score -= 10
+
+        # Bonus if query matches anything in title.
+
 
 def searchInFiles(files):
     matches = []
@@ -116,18 +224,18 @@ def isLineTitle(line):
         return True
     return False
 
-def manualSelect(items):
+def manualSelect(matches):
 
     print('Select an item by entering its corresponding number.')
     i = 0
-    for x in items:
-        print('%.1d: %s' % (i, x.filename))
+    for x in matches:
+        print('%.1d (%.2f): %s' % (i, x.score, x.filename))
         i += 1
 
     s = input()
     s = int(s)
 
-    return items[s]
+    return matches[s]
 
 def sortMatchesByScore(matches):
     return sorted(matches, key=lambda x: x.score, reverse=True)
@@ -147,7 +255,7 @@ if __name__ == '__main__':
     matches = searchInFiles(files)
     if G_ARGS.search_titles_only:
         matches = [m for m in matches if isLineTitle(m.line)]
-    score(matches)
+    score(matches, G_ARGS.search_query)
 
     matches = sortMatchesByScore(matches)
     for m in matches:
