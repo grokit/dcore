@@ -16,57 +16,12 @@ List of:
 
 ## Bs
 
--i: only search documents tagged important
 Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 
--t: use pre-defined (atom) text editor instead of vim
-
 ns --list-tags
-List all tags and popularity.
+    List all tags and popularity.
+    --uuid list of uuids
 
-~~~~
-bad search example: git
-Select an item by entering its corresponding number.
-0 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
-1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
-2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
-3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
-4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
-5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
-6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
-7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
-
-->
-
-0 (15.75): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
-1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
-2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
-3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
-4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
-5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
-6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
-7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
-
-->
-
-0 (23.75): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
-1 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
-2 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
-3 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
-4 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
-5 (10.00): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
-6 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
-7 (-10.00): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
-
-->
-0 (27.00): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/git/note.md
-1 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/00-quality-b/paper-read/GoogleDataFlow/data-processing-frameworks.md
-2 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/note.md
-3 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/fun-do/note.md
-4 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/linux/less-good.md
-5 (10.25): /home/arch/sync/dcore_data/notes_db/notes/articles/lessons-and-principles/life-lessons-and-principles/my-life-lessons-Bs.md
-6 (-9.75): /home/arch/sync/dcore_data/notes_db/notes/low/2016-08-09_My-Engineering-Books/note.md
-7 (-9.75): /home/arch/sync/dcore_data/notes_db/notes/low/2016-10-08_Deep-learning-free-book-by-university-of-mtl-professor/note.md
 """
 
 import os
@@ -186,8 +141,12 @@ def score(matches, search_query):
         if '/low/' in os.path.split(m.filename)[0]:
             m.score -= 10
 
-        # Bonus if query matches anything in title.
-
+        # Bonus if query matches anything in top level folder.
+        folderName = os.path.split(m.filename)[0]
+        if '/' in folderName:
+            folderName = folderName.split('/')[-1]
+            if re.search(query, folderName, re.IGNORECASE):
+                m.score += 10
 
 def searchInFiles(files):
     matches = []
