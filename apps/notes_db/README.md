@@ -1,4 +1,17 @@
 
+# TODO
+
+- See other TODOs in individual python files.
+
+tags
+    tag[SEP]now --> $ now either opens only one or list 
+    could make generic with topen <tag>
+    tag lost
+
+html / js dashboard
+    really need a simple dashboard, with `copy to clipboard` for vim open
+    would be really nice if could refresh from dashboard
+
 # Overview
 
 NotesDB: Take notes from a single Markdown file, and organize them in folders with metadata. Provide search utility which interprets metadata and folder structure (e.g. if search query in title, search will show before a note that has search query in body, search by tags, ...).
@@ -10,10 +23,6 @@ Guiding principles:
 - In the folder of the note, feel free to add files, images, etc.
 - The user is responsible for moving important notes to a different folder. Search will prioritize notes which are in the important folder.
 
-# TODO
-
-- See other TODOs in individual python files.
-- Merge tag: merge::/artices/tata  <--- on data-check.py or whatever move there, only refuse if alredy last folder there.
 
 # File and Folders Organization 
 	
