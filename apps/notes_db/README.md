@@ -8,10 +8,6 @@ tags
     could make generic with topen <tag>
     tag lost
 
-html / js dashboard
-    really need a simple dashboard, with `copy to clipboard` for vim open
-    would be really nice if could refresh from dashboard
-
 # Overview
 
 NotesDB: Take notes from a single Markdown file, and organize them in folders with metadata. Provide search utility which interprets metadata and folder structure (e.g. if search query in title, search will show before a note that has search query in body, search by tags, ...).
@@ -23,18 +19,28 @@ Guiding principles:
 - In the folder of the note, feel free to add files, images, etc.
 - The user is responsible for moving important notes to a different folder. Search will prioritize notes which are in the important folder.
 
+Addressed scenarios:
+
+- Just want to take a quick note that is searcheable later, want note sytem to automatically append date and file. Should be easy to add different tags for later search.
+- Support for long-lived articles as well as ad-hoc notes.
+- Search in body of notes, order match with metadata (similar to google: more likely to be a match if other high quality nodes refer it, ...).
+- Do not impose a lot of rules, let every note be a folder and user is free to add data to that folder.
+- Link between notes.
+- Easy to sync over git, mostly text files, other data (images, files) are not trapped in the system.
+- Keep todo list from single todo markers in disparate files.
+- Support todo list.
+- Can open from anywhere in console, easy for quick-edit.
 
 # File and Folders Organization 
 	
-	$root/ingest.md: All notes captured go there. Feel free to copy / paste from your favorite note capturing tool (e.g. Word or Google Docs).
+	/ingest.md: All notes captured go there. Feel free to copy / paste from your favorite note capturing tool (e.g. Word or Google Docs).
     
-    $root/low/: Notes go there by default.
+    ::::::TODO: replace low -> auto
+    /low/: Notes go there by default.
     
-    $root/articles/: Move things there that are more important.
+    /articles/: Move things there that are more important.
 
-    $root/tasks/: Thins currently being worked on.
-
-::::TODO: replace low -> auto
+    /tasks/: Thins currently being worked on.
 
 # Note Format and Metadata Conventions
 
@@ -42,15 +48,15 @@ Take notes in a single file, break down between notes with Markdown first-level 
 
 	# Grocery List
 
-	time::2016-08-02
+	time:::2016-08-02
 
 	Bread
 	Cheese
 
 	# Meeting Notes
 
-	time::2016-08-07
-	tag::work
+	time:::2016-08-07
+	tag:::work
 
 	Schedule less meetings.
 
@@ -60,17 +66,17 @@ This is interpreted as two different notes, and will end up in different directo
 
 Metadata can be anywhere in the note and follows the format: 
 
-	category::name(s)
+	category:::name(s)
 
 For example:
 
-	tag::work
-	tag::vacation, bali
-	time::2016-08-07
+	tag:::work
+	tag:::vacation, bali
+	time:::2016-08-07
 	
 The note-taker application will automatically insert time metadata. If there is no time metadata, the parser will insert time-of-parse as time metadata.
 
-All metadata in the `category::name` format is kept on the same line. This is to allow search using `ack` or `ag` if search.py is not convenient for you.
+All metadata in the `category:::name` format is kept on the same line. This is to allow search using `ack` or `ag` if search.py is not convenient for you.
 
 ### Metadata: Tag 
 
@@ -89,18 +95,18 @@ Might want to eventually have a cron job which outputs a webpage in a ./dashboar
 
 ### Metadata: UUID
 
-UUID has this form: `uuid::notes_db_readme`.
+UUID has this form: `uuid:::notes_db_readme`.
 
 A UUID is _unique_: cannot have the same UUID on more than one document. However, a document can have multiple UUIDs. The reason for that is to allow UUID renames. UUID are used in order to publish on the web, so want to be able to rename and have two URLs point to the same document. For example:
 
-    uuid::notes_db, notes_db_better
+    uuid:::notes_db, notes_db_better
 
 In this case, both `notes_db` and `notes_db_better` uniquely identify the document. The last uuid is deemed to be the most recent, so for URLs could redirect all UUIDs which is not the last one listed using a 301 to the URL of the las UUID.
 
 UUIDs links:
 
-    luid::notes_db
-    link-uuid::notes_db
+    luid:::notes_db
+    link-uuid:::notes_db
 
 Both mean exactly the same thing. Use in order to have a link to another document by UUID.
 Note that luid is missing a u intentionally in order not to turn up in a grep-search.

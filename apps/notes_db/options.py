@@ -1,0 +1,3 @@
+
+# RENAME TO: META_SEPARATOR
+MSEP = '::'
