@@ -35,8 +35,6 @@ low: don't search beyond 3 months, older it is, lower score it gets
 had tag:::important: + ranking
 movenow: move to folder that has now. Can do that with any search folder (think how to consolidate).
 
-do bills (received tax, etc)
-
 notes:
     refactor such that can know every score comes from which rule (class-like with name)
     only lookback 3 months for low

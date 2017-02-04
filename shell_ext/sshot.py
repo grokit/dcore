@@ -5,8 +5,16 @@ import os
 import time
 import argparse
 import sys
+import platform
 
 _meta_shell_command = 'sshot'
+
+# Where system put screenshot. OK of some don't exist on some system, 
+# will just get skipped. For write operation, uses FIRST valid folder.
+SRC_FOLDER = ['~/Pictures', '~/Desktop/screenshots']
+SRC_FOLDER = [os.path.expanduser(f) for f in SRC_FOLDER]
+SRC_FOLDER = [f for f in SRC_FOLDER if os.path.isdir(f)]
+SRC_FOLDER = SRC_FOLDER[0]
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -17,13 +25,15 @@ def getArgs():
     # Move all recent screenshots to current directory:
     # sshot -r | xargs mv -t .
     parser.add_argument('-r', '--list_recent', action="store_true", default=False)
+
+    parser.add_argument('-c', '--copy_last_to_curr_dir', action="store_true", default=False, help='Copies the last screenshot taken to the current directory.')
     args = parser.parse_args()
     return args
     
 IS_SSHOT = ['vlcsnap', 'Selection', 'scrot']
 
 def screenshotsFilenameByModDate():
-    loc = os.path.expanduser('~/Pictures')
+    loc = SRC_FOLDER
     sshots = os.listdir(loc)
     sshots = [os.path.abspath(os.path.join(loc, f)) for f in sshots]
 
@@ -37,6 +47,17 @@ def screenshotsFilenameByModDate():
     # Get last modified file that matched pattern.
     sshots.sort(key=lambda x: os.path.getmtime(x))
     return sshots
+
+def takeScreenshot():
+    if platform.system() in ["macosx", "Darwin"]:
+        raise Exception("On mac, just use alt+shift+4.")
+
+    cmd = "scrot -e 'mv $f %s'" % SRC_FOLDER
+    print(cmd)
+    r = os.system(cmd)
+    if r != 0:
+        raise Exception('sshot failed.')
+    os.system('notify-send --icon=gtk-info sshot "Screenshot taken: %s."' % screenshotsFilenameByModDate()[-1])
 
 if __name__ == '__main__':
     
@@ -68,10 +89,8 @@ if __name__ == '__main__':
         os.system(cmd)
         sys.exit(0)
 
-    cmd = "scrot -e 'mv $f ~/Pictures'"
-    print(cmd)
-    r = os.system(cmd)
-    if r != 0:
-        raise Exception('sshot failed.')
-    os.system('notify-send --icon=gtk-info sshot "Screenshot taken: %s."' % screenshotsFilenameByModDate()[-1])
+    if args.copy_last_to_curr_dir:
+        raise Exception('not coded')
+
+    takeScreenshot()
 

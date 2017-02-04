@@ -1,3 +1,8 @@
+"""
+Meta is handled as <key><separator><value>. 
+
+Metadata is assumed to reduce to a set of (key, value) 2-tuple.
+"""
 
 import re
 
