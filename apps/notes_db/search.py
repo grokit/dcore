@@ -22,6 +22,26 @@ ns --list-tags
     List all tags and popularity.
     --uuid list of uuids
 
+
+~~
+
+t <t number>: create / open task folder
+ns -> sn `search notes`
+ns -l 10: list last 10 folders in `low`. Also: task?
+instead of uuid:::now, use tag:::now and allow > 1 with selection
+tag:::wait
+complete task button: move from task to low, with tag `completed task` and add date if not there
+low: don't search beyond 3 months, older it is, lower score it gets
+had tag:::important: + ranking
+movenow: move to folder that has now. Can do that with any search folder (think how to consolidate).
+
+do bills (received tax, etc)
+
+notes:
+    refactor such that can know every score comes from which rule (class-like with name)
+    only lookback 3 months for low
+    kvp list, tag list <-- all in same meta package
+
 """
 
 import os
