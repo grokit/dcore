@@ -6,6 +6,7 @@ import time
 import argparse
 import sys
 import platform
+import shutil
 
 _meta_shell_command = 'sshot'
 
@@ -54,10 +55,14 @@ def takeScreenshot():
 
     cmd = "scrot -e 'mv $f %s'" % SRC_FOLDER
     print(cmd)
+    bef = time.time()
     r = os.system(cmd)
     if r != 0:
         raise Exception('sshot failed.')
-    os.system('notify-send --icon=gtk-info sshot "Screenshot taken: %s."' % screenshotsFilenameByModDate()[-1])
+
+    file_written = screenshotsFilenameByModDate()[-1]
+    assert bef < os.path.getmtime(file_written)
+    os.system('notify-send --icon=gtk-info sshot "Screenshot taken: %s."' % file_written)
 
 if __name__ == '__main__':
     
@@ -90,7 +95,10 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if args.copy_last_to_curr_dir:
-        raise Exception('not coded')
+        last_ss = screenshotsFilenameByModDate()[-1]
+        print('Copying %s to current directory.' % last_ss)
+        shutil.copy(last_ss, '.')
+        sys.exit(0)
 
     takeScreenshot()
 
