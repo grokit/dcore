@@ -6,7 +6,7 @@ Metadata is assumed to reduce to a set of (key, value) 2-tuple.
 
 import re
 
-import options
+import dcore.apps.notes_db.options as options
 
 class Meta:
 

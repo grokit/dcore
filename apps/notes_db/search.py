@@ -1,12 +1,4 @@
 """
-Provide search and search + quick-action.
-
-# TODO
-
-## As
-## Bs
-
-Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 """
 
 import os
@@ -14,20 +6,8 @@ import argparse
 import re
 import math
 
-import data
-import meta
-
-# ns: Note Search
-_meta_shell_command = 'ns'
-
-def getArgs():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('search_query', nargs='+')
-    parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 3)
-    parser.add_argument('-t', '--search_titles_only', action='store_true')
-    parser.add_argument('-o', '--open_matching_file', action='store_true')
-    parser.add_argument('-O', '--open_first_matching_file', action='store_true')
-    return parser.parse_args()
+import dcore.apps.notes_db.data as data
+import dcore.apps.notes_db.meta as meta
 
 def walkGatherALlFiles(rootdir = '.'):
     F = []
@@ -86,7 +66,7 @@ def score(matches, search_query):
             # Bonus if mentionned a lot in file.
             nmention = 0
             for l in lines:
-                match = re.search(query, l, re.IGNORECASE)
+                match = re.search(search_query, l, re.IGNORECASE)
                 if match is not None:
                     nmention += 1
 
@@ -97,7 +77,7 @@ def score(matches, search_query):
 
             # Bonus if in title, even better if towards beginning of file.
             for l in lines:
-                match = re.search(query, l, re.IGNORECASE)
+                match = re.search(search_query, l, re.IGNORECASE)
 
                 multiplier = 1 - (i / len(lines))
 
@@ -113,7 +93,7 @@ def score(matches, search_query):
                     assert uuid is None
                     uuid = metad.value
 
-            if uuid is not None and re.search(query, uuid, re.IGNORECASE):
+            if uuid is not None and re.search(search_query, uuid, re.IGNORECASE):
                 m.score += 8
 
         # Some folder have special score.
@@ -130,10 +110,10 @@ def score(matches, search_query):
         folderName = os.path.split(m.filename)[0]
         if '/' in folderName:
             folderName = folderName.split('/')[-1]
-            if re.search(query, folderName, re.IGNORECASE):
+            if re.search(search_query, folderName, re.IGNORECASE):
                 m.score += 10
 
-def searchInFiles(files):
+def searchInFiles(files, query, context_range):
     matches = []
     for f in files:
         with open(f) as fh:
@@ -146,7 +126,7 @@ def searchInFiles(files):
                     match = Match(f, l) 
 
                     ctx = []
-                    cr = G_ARGS.context_range 
+                    cr = context_range 
                     if cr % 2 == 1:
                         # Since -3//2 = 2 and not 1.
                         cr -= 1
@@ -189,39 +169,4 @@ def getAllFiles():
     files = walkGatherALlFiles(root)
     files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
     return files
-
-if __name__ == '__main__':
-    G_ARGS = getArgs()
-    query = " ".join(G_ARGS.search_query)
-
-    files = getAllFiles()
-    
-    matches = searchInFiles(files)
-    if G_ARGS.search_titles_only:
-        matches = [m for m in matches if isLineTitle(m.line)]
-    score(matches, G_ARGS.search_query)
-
-    matches = sortMatchesByScore(matches)
-    for m in matches:
-        print(m)
-
-    if G_ARGS.open_matching_file or G_ARGS.open_first_matching_file:
-        dedup = {}
-        for m in matches:
-            dedup[m.filename] = m
-
-        dedup_matches = []
-        for k in dedup:
-            dedup_matches.append(dedup[k])
-        matches = dedup_matches
-        matches = sortMatchesByScore(matches)
-
-        if len(matches) == 0:
-            print('Not opening since no file matched.')
-            exit(0)
-
-        selected = matches[0]
-        if not G_ARGS.open_first_matching_file and len(matches) > 1:
-            selected = manualSelect(matches)
-        os.system("vim '%s'" % selected.filename)
 
