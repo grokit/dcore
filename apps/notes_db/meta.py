@@ -1,17 +1,19 @@
 
 import re
 
+import options
+
 class Meta:
 
     def __init__(self, metaType, value):
         """
         Example:
 
-        tag::tag1
+        tag:::tag1
         metaType: tag
         value: tag1
 
-        tag::tag1, tag2
+        tag:::tag1, tag2
 
         This gets broken into TWO Meta objects.
         """
@@ -35,8 +37,8 @@ def extract(content):
     lines = content.splitlines()
 
     for line in lines:
-        if re.search('\w::\w', line) is not None:
-            LR = line.split('::')
+        if re.search('\w%s\w' % options.MSEP, line) is not None:
+            LR = line.split(options.MSEP)
             if len(LR) == 0:
                 continue
             if len(LR) > 2:
@@ -74,13 +76,13 @@ def metaToDict(metaList):
 
 def unitTest():
     testDoc = """
-    \ntag::tag4
+    \ntag:::tag4
 
-    something prior. tag::tag1, tag2
+    something prior. tag:::tag1, tag2
 
-    tag::tag3 not_tag is not a tag since it is not comma separated
+    tag:::tag3 not_tag is not a tag since it is not comma separated
 
-    pre::post
+    pre:::post
     """
 
     meta = extract(testDoc)

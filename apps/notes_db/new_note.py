@@ -38,6 +38,8 @@ import shutil
 import data
 import util
 
+import options
+
 def dateForFile():
     return datetime.datetime.now().strftime("%Y-%m-%d")
     
@@ -57,8 +59,8 @@ def annotateDateIfNotAlreadyDoneg(file, force = False):
     with open(file, 'r') as fh:
         fileContent = fh.read()
 
-    if force or 'time::' not in fileContent:
-        annotation = 'time::' + dateForAnnotation() + '\n'
+    if force or 'time%s' % options.MSEP not in fileContent:
+        annotation = 'time%s' % options.MSEP + dateForAnnotation() + '\n'
 
         with open(file, 'w') as fh:
             fh.write(annotation + '\n' + fileContent)

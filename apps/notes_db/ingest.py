@@ -17,6 +17,8 @@ import data
 import util
 import meta
 
+import options
+
 _meta_shell_command = 'ingest'
 
 TITLE_SAFE_CHARSET = set('abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
@@ -87,7 +89,7 @@ class Note:
         # User did not use automatic tool for unixTime, insert unixTime of ingestion.
         if unixTime is None:
             unixTime = time.time() 
-            tag = '\n\ntime::' + unixTimeAsSafeStr(unixTime)
+            tag = ('\n\ntime%s' % options.MSEP) + unixTimeAsSafeStr(unixTime)
             noteMd = noteMd + tag
 
         note.title = title
