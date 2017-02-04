@@ -4,42 +4,9 @@ Provide search and search + quick-action.
 # TODO
 
 ## As
-
-Score depends on:
-    Folder. Article = bonus.
-    More points if mentioned more than once in filename
-    name in top level folder 
-    being inside node.md, and not some other file
-
-List of:
-    Order (not score): time (newer better) for when score is ==.
-
 ## Bs
 
 Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
-
-ns --list-tags
-    List all tags and popularity.
-    --uuid list of uuids
-
-
-~~
-
-t <t number>: create / open task folder
-ns -> sn `search notes`
-ns -l 10: list last 10 folders in `low`. Also: task?
-instead of uuid:::now, use tag:::now and allow > 1 with selection
-tag:::wait
-complete task button: move from task to low, with tag `completed task` and add date if not there
-low: don't search beyond 3 months, older it is, lower score it gets
-had tag:::important: + ranking
-movenow: move to folder that has now. Can do that with any search folder (think how to consolidate).
-
-notes:
-    refactor such that can know every score comes from which rule (class-like with name)
-    only lookback 3 months for low
-    kvp list, tag list <-- all in same meta package
-
 """
 
 import os

@@ -1,12 +1,38 @@
 
 # TODO
 
-- See other TODOs in individual python files.
+## As
+
+- generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
+
+## Bs
+
+- See other TODOs in individual python files as well.
 
 tags
     tag[SEP]now --> $ now either opens only one or list 
     could make generic with topen <tag>
     tag lost
+
+ns --list-tags
+    List all tags and popularity.
+    --uuid list of uuids
+
+t <t number>: create / open task folder
+ns -> sn `search notes`
+ns -l 10: list last 10 folders in `low`. Also: task?
+instead of uuid:::now, use tag:::now and allow > 1 with selection (/w default open most recently modified)
+tag:::wait
+complete task button: move from task to low, with tag `completed task` and add date if not there
+low: don't search beyond 3 months, older it is, lower score it gets
+had tag:::important: + ranking
+movenow: move to folder that has now. Can do that with any search folder (think how to consolidate).
+file <folder>: move to low, preprend date if not already exist
+
+notes:
+    refactor such that can know every score comes from which rule (class-like with name)
+    only lookback 3 months for low
+    kvp list, tag list <-- all in same meta package
 
 # Overview
 
