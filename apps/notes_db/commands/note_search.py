@@ -62,6 +62,6 @@ if __name__ == '__main__':
 
         selected = matches[0]
         if not G_ARGS.open_first_matching_file and len(matches) > 1:
-            selected = manualSelect(matches)
+            selected = search.manualSelect(matches)
         os.system("vim '%s'" % selected.filename)
 
