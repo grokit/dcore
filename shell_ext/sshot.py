@@ -12,10 +12,13 @@ _meta_shell_command = 'sshot'
 
 # Where system put screenshot. OK of some don't exist on some system, 
 # will just get skipped. For write operation, uses FIRST valid folder.
-SRC_FOLDER = ['~/Pictures', '~/Desktop/screenshots']
+SRC_FOLDER = ['~/Desktop/screenshots', '~/Pictures']
 SRC_FOLDER = [os.path.expanduser(f) for f in SRC_FOLDER]
 SRC_FOLDER = [f for f in SRC_FOLDER if os.path.isdir(f)]
 SRC_FOLDER = SRC_FOLDER[0]
+
+# Patterns that decide a file is a screenshot.
+IS_SSHOT = ['vlcsnap', 'Selection', 'scrot', 'Screen']
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -31,8 +34,6 @@ def getArgs():
     args = parser.parse_args()
     return args
     
-IS_SSHOT = ['vlcsnap', 'Selection', 'scrot']
-
 def screenshotsFilenameByModDate():
     loc = SRC_FOLDER
     sshots = os.listdir(loc)
@@ -51,7 +52,7 @@ def screenshotsFilenameByModDate():
 
 def takeScreenshot():
     if platform.system() in ["macosx", "Darwin"]:
-        raise Exception("On mac, just use alt+shift+4.")
+        raise Exception("On macos, just use command+shift+4.")
 
     cmd = "scrot -e 'mv $f %s'" % SRC_FOLDER
     print(cmd)
