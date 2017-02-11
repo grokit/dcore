@@ -35,7 +35,12 @@ if __name__ == '__main__':
 
     files = extractFilesFuzzy(rd.splitlines())
 
-    cmd = 'vim -p %s' % " ".join(files)
+    # Do not do:
+    # cmd = 'vim -p %s' % " ".join(files)
+    # You will get the following: `Vim: Warning: Input is not from a terminal os.command`
+    # See http://unix.stackexchange.com/questions/44426/xargs-and-vi-input-is-not-from-a-terminal
+    # On macosx maybe just -o
+    cmd = "xargs bash -c '</dev/tty vim -p %s'" % " ".join(files)
     print(cmd)
     os.system(cmd)
 
