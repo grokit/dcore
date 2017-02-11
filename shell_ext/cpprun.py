@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     rv = 0;
     for file in filesc:
-        cmd = 'g++ -Wl,--no-as-needed -std=c++11 -pthread %s -o %s.bin' % (file, file)
+        cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.bin' % (file, file)
 
         #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
