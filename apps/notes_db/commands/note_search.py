@@ -6,7 +6,22 @@ Provide search and search + quick-action.
 ## As
 ## Bs
 
+recent: 10 last written to note files
+file_task: append time if not there, 
+vim: open at specific line
+https://www.cyberciti.biz/faq/linux-unix-command-open-file-linenumber-function/
+maybe instead of vimt, just have my pipe program that filters to valid filenames
+break down spaces when searching in uuid, if ANY part of request in uuid => more points
+when search in uuid, conside whole word match > regex. ex: one --> ::one-on-one, ::done
+anything in a meh folder is disregarded
+
+
 Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
+
+## a more meaningful search
+
+could break whole notes in set of words, then if I search two words not consecutively but in same note I can get a match
+
 """
 
 import os

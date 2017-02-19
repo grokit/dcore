@@ -1,4 +1,8 @@
+"""
+Alternative:
 
+    pwgen -s -1 64
+"""
 _meta_shell_command = 'random'
 
 import sys
