@@ -58,7 +58,6 @@ def titleLevel(line):
 def score(matches, search_query):
     for m in matches:
 
-        print(m.filename)
         with open(m.filename) as fh:
             i = 0
             lines = fh.readlines()
