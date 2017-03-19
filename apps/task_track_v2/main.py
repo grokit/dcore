@@ -1,11 +1,23 @@
 """
 # TODO
 
-OK  unit tests in their directories
-OK:  separate serialization from class
-- better html plot!!!! !!not-ascii!!!!not-ascii!!!!not-ascii!!- without this it!!not-ascii!!!!not-ascii!!!!not-ascii!!s pointless
-- time in seattle time
-- stats mode with UT in command line (look back past X days, concatenate on days)
+## As
+
+- Should be optional to have a unit (since sometimes just report mood or whatever).
+- Should be able to specify units, e.g.:
+    - 1 -> 1 hour (default interpretation)
+    - 1m -> 1 minute
+    - 1km -> 1 kilometer
+    - 89h -> 89 on h scale
+    --> basically letter qualifier after is saved
+        interpretation is done. for things like hour min seconds, could input in any format but just keep in universal (seconds as float).
+
+## Bs
+
+## Cs
+
+- Mayyyybbbeee migrate to web project where can view and enter online under federated login. 
+
 """
 
 import argparse
