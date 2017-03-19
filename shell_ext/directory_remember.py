@@ -178,6 +178,7 @@ def do():
             os.system('np ' + cacheFile)
         else:
             os.system('vim ' + cacheFile)
+        rememberDirs()
         exit(0)      
     
     if args.remember:

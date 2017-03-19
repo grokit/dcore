@@ -25,6 +25,27 @@ Create a note document (or append to if already exists) in the note_db folder an
 
 - nn -l --last: open last modified note.md
 - nn --recent: last 10 by modified time, option to open any of them
+    | tocb -> toclipboard
+    --> put all output in clipboard, have a mode to select line by line (0....n): just input the line want to copy in cliipboard.
+    !!!! ns -f <whatever>  <-- just output the file instead of opening in vim. Use to open within vim.
+dcore: hsearch: regex search bash history
+dcore: clipboard manipulator (0-10: pick line to put in clipboard)
+    ^^ extract files and folders
+
+tag:-:now support
+
+    in doc:
+want to be able to enter in gdoc or any mode of entry where my system is not available (mail, etc).
+pragmatic programmer: use text as format, make changing possible 
+    ns -F
+    ^^ same as -O but just output the single file so that it can be used in vim:
+    !e ns -F vim
+    score: take into account when file last modified
+    take into account modified frequency (can infer from git)
+    should have an option to order result chronologically. or at least boost by chronology
+    ingest --task <file.md> -> file as task
+    ingest --task_complete <folder>
+
 """
 
 _meta_shell_command = 'nn'
