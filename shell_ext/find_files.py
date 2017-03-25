@@ -1,4 +1,8 @@
 """
+# Find Files
+
+Index all files under dir and fast find.
+
 # TODO
 
 - Have an 'exact string' mode as an option.
@@ -18,7 +22,7 @@ import platform
 
 import dcore.data as data
 
-_meta_shell_command = 'ff'
+_meta_shell_command = 'fif'
 
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")

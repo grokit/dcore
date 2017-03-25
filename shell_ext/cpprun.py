@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
         #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
-        cmd = 'clang++ -stdlib=libstdc++ -std=c++1z %s -o %s.bin' % (file, file)
+        cmd = 'clang++ -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
 
         print(cmd)
         rv |= os.system(cmd)
@@ -36,10 +36,10 @@ if __name__ == '__main__':
     args.run = True
     if args.run == True:
         if rv == 0:
-            cmd = './' + filesc[0] + '.bin > ' + filesc[0] + '.out'
+            cmd = './' + filesc[0] + '.tmpbin > ' + filesc[0] + '.tmpout'
             print(cmd)
             os.system(cmd)
-            cmd = 'cat ./' + filesc[0] + '.out'
+            cmd = 'cat ./' + filesc[0] + '.tmpout'
             os.system(cmd)
     else:
         print('Run skipped, see command-line arguments if want to auto-run output.')
