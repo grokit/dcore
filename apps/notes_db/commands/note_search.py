@@ -15,6 +15,9 @@ break down spaces when searching in uuid, if ANY part of request in uuid => more
 when search in uuid, conside whole word match > regex. ex: one --> ::one-on-one, ::done
 anything in a meh folder is disregarded
 
+ns -> nt: new task. user inputs -> tasks/DATE_title with tag:;:task
+
+
 
 Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 
