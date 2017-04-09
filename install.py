@@ -2,6 +2,9 @@
 
 """
 One-run install of `dcore`.
+
+# TODO
+- If new bashrc, have a list of my stuff I want on every new computer and write from here.
 """
 
 import sys
@@ -31,12 +34,22 @@ export PATH=$PATH:%s
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
     fname = os.path.expanduser('~/.profile')
-    file = open(fname, 'r').read()
-    if not tag in file:
-        file = bash_rc + '\n\n' + file
-        open(fname, 'w').write(file)
-    else:
-        print('Warning: skipping writing new `%s` since it looks like tag is already present.' % fname)
+    if not os.path isfile(fname):
+        print('Could not find %s, trying .bashrc.' % fname)
+        fname = os.path.expanduser('~/.bashrc')
+
+    if not os.path.isfile(fname):
+        print('Could not find %s, creating.' % fname)
+        with open(fname, 'w') as fh:
+            fh.write('\n')
+
+    with open(fname, 'r') as fh:
+        file = fh.read()
+        if not tag in file:
+            file = bash_rc + '\n\n' + file
+            open(fname, 'w').write(file)
+        else:
+            print('Warning: skipping writing new `%s` since it looks like tag is already present.' % fname)
 
     cmd = 'source %s' % fname
     print(cmd)

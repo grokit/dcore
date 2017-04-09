@@ -52,7 +52,7 @@ def getUrlsFiles(html, regex):
     imgs = re.findall(regex, html, re.MULTILINE)
     return imgs
 
-ALLOWEDCHARS = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+ALLOWEDCHARS = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.')
 def substIllegalCharsInFilename(filename):
     lstOutChars = []
     for char in filename:
@@ -61,6 +61,7 @@ def substIllegalCharsInFilename(filename):
         else:
             lstOutChars.append('_')
     str = "".join(lstOutChars)
+    str = str.replace('_jpg', '.jpg')
     return str
 
 

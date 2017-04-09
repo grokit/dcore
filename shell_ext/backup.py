@@ -1,5 +1,9 @@
 """
 Simple backup script using 7z and default with password encryption.
+
+# BUG(S)
+
+- I think it does not pick up the hidden files (linux) from current directory.
 """
 
 import os

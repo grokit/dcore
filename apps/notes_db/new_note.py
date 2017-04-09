@@ -3,6 +3,10 @@
 
 Create a note document (or append to if already exists) in the note_db folder and inserts metadata.
 
+## Important Characteristics
+
+- Scatter and merge: be able to take one-off notes of little importance, but late when a lot of small things are scattered at different places, make it obvious (thourgh search-and-match) and easy to merge.
+
 ## Insert file as journal entry (directly in text file)
     
     $ nn < file

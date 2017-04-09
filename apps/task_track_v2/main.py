@@ -4,15 +4,19 @@
 ## As
 
 - Should be optional to have a unit (since sometimes just report mood or whatever).
-- Should be able to specify units, e.g.:
-    - 1 -> 1 hour (default interpretation)
-    - 1m -> 1 minute
-    - 1km -> 1 kilometer
-    - 89h -> 89 on h scale
-    --> basically letter qualifier after is saved
-        interpretation is done. for things like hour min seconds, could input in any format but just keep in universal (seconds as float).
+    - last letter is digit -> number (float or int)
+    - Should be able to specify units, e.g.:
+        - 1 -> 1 hour (default interpretation)
+        - 1m -> 1 minute
+        - 1km -> 1 kilometer
+        - 89h -> 89 on h scale
+        --> basically letter qualifier after is saved
+            interpretation is done. for things like hour min seconds, could input in any format but just keep in universal (seconds as float).
 
 ## Bs
+
+- More generic plotting abilities. (react?). don't want to build all charts myself like I did with d3.
+
 
 ## Cs
 

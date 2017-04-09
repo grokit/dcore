@@ -72,11 +72,14 @@ def crashplan():
     print(command)
     osExec(command)
 
+def loww():
+    osExec('xbacklight -set 5') # At very low values my screen does a weird nose.
+
 def low():
     osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
 
 def med():
-    osExec('xbacklight -set 75')
+    osExec('xbacklight -set 50')
 
 def high():
     osExec('xbacklight -set 100')

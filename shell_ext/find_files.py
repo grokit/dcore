@@ -5,11 +5,22 @@ Index all files under dir and fast find.
 
 # TODO
 
+## As
+
+- This is very good, especially if: -o -> open file, if > 1 offer open a list.
+    BUT: non standard matching is counter intuitive. Just replace with regex.
+
+## Bs
+
 - Have an 'exact string' mode as an option.
 
 # BUGS
 
 - It does not intex and list files that begin with .period.
+
+- I should retire this for much simpler:
+    - Store all fullpaths.
+    - Search with regex.
 """
 
 print('pre-Starting ff')
