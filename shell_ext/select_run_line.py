@@ -17,6 +17,7 @@ _meta_shell_command = 'lrun'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--run_number', default=None, type=int)
+    parser.add_argument('-p', '--prefix', default="", type=str)
     args = parser.parse_args()
     return args
 
@@ -40,5 +41,6 @@ if __name__ == '__main__':
     if args.run_number is not None:
         n = int(args.run_number)
         le = lines[len(lines) - n - 1]
+        le = args.prefix + " " + le
         print('Executing `%s`.' % le)
         os.system(le)
