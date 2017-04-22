@@ -10,6 +10,7 @@ _meta_shell_command = 'hs'
 
 def getArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--cut_len', default=20, type=int)
     args = parser.parse_args()
     return args
 
@@ -20,7 +21,15 @@ if __name__ == '__main__':
     with open(os.path.expanduser('~/.bash_history'), 'r') as fh:
         lines = fh.readlines()
 
-    lines = lines[-20:]
+    # Remove multiple same commands in a row.
+    L = []
+    for i, l in enumerate(lines):
+        if i == 0: continue
+        if lines[i] != lines[i-1]:
+            L.append(lines[i])
+    lines = L
+
+    lines = lines[-args.cut_len:]
     for l in lines:
         l = l.strip()
         print(l)
