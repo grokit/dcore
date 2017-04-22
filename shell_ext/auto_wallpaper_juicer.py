@@ -10,7 +10,7 @@ import re
 import random
 import argparse
 
-_meta_shell_command = 'getpics'
+_meta_shell_command = 'wallpapers'
 
 outputFolder = os.path.join(data.dcoreTempData(), 'wallpapers') 
 if not os.path.exists(outputFolder):
