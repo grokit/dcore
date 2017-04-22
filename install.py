@@ -34,7 +34,7 @@ export PATH=$PATH:%s
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
     fname = os.path.expanduser('~/.profile')
-    if not os.path isfile(fname):
+    if not os.path.isfile(fname):
         print('Could not find %s, trying .bashrc.' % fname)
         fname = os.path.expanduser('~/.bashrc')
 
@@ -81,6 +81,67 @@ def tryImports():
     except ImportError as e:
         return False
 
+def updateFileContentBetweenMarks(filename, begin, end, content):
+    """
+    Use this script to update part of files between mark.
+    For example:
+
+    MyFile.txt:
+
+        Something.
+
+        BEGIN
+        theBird=12
+        END
+
+        Something else.
+
+    update('MyFile.txt', 'BEGIN', 'END', 'theBird=14')
+    Would update everything between the begin and end marker with the string provided as the last parameter.
+    """
+    with open(filename, 'r') as fh:
+        lines = fh.readlines()
+
+    iBegin = -1
+    iEnd = -1
+    for i, l in enumerate(lines):
+        if begin == l.strip():
+            assert iBegin == -1
+            iBegin = i
+        if end == l.strip():
+            assert iBegin != -1
+            assert iEnd == -1
+            iEnd = i
+
+    if iBegin != -1 and iEnd > iBegin:
+        lines = lines[0:iBegin] + lines[iEnd+1:]
+    lines = [begin, '\n', content, end, '\n'] + lines
+
+    with open(filename, 'w') as fh:
+        for l in lines:
+            fh.write(l)
+
+def setupBashRc():
+    CONTENT = """# Alias
+alias cclip='xclip -selection clipboard'
+alias clipp='xclip -selection clipboard -o'
+alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 '
+
+## Tmux Saves History Properly
+
+# append history entries..
+shopt -s histappend
+# After each command, save and reload history
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+# Infinite history
+HISTSIZE=-1 HISTFILESIZE=-1
+"""
+    updateFileContentBetweenMarks(
+            os.path.expanduser('~/.bashrc'), 
+            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
+            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
+            CONTENT)
+
 if __name__ == '__main__':
 
     if not tryImports():
@@ -89,7 +150,8 @@ if __name__ == '__main__':
         setupShortcutsBootstrap()
         exit(0)
 
-    data.createAllDirsIfNotExist()
-    delOld()
-    setupShortcuts()
+    #data.createAllDirsIfNotExist()
+    #delOld()
+    #setupShortcuts()
+    setupBashRc()
 
