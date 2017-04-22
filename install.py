@@ -150,8 +150,8 @@ if __name__ == '__main__':
         setupShortcutsBootstrap()
         exit(0)
 
-    #data.createAllDirsIfNotExist()
-    #delOld()
-    #setupShortcuts()
+    data.createAllDirsIfNotExist()
+    delOld()
+    setupShortcuts()
     setupBashRc()
 
