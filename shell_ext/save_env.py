@@ -18,9 +18,10 @@ _meta_shell_command = 'save_env'
 SAVE_ME = [
     '~/.vim',
     '~/.vimrc',
-    '~/.jmux',
+    '~/.tmux',
     '~/.profile', # macos
     '~/.bashrc',
+    '~/.gnomerc',
 ]
 
 SAVE_ME_MEH = [

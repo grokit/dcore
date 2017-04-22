@@ -15,12 +15,20 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
 
+- Instead of sorting, just keep things in order added.
+    1 list of tagged, one for just number `. cd0` should always go to last folder
+
 - Auto-tag:
     - dr -r <tag>: remember current dir.
+    dr -r NAME --> should set name shortcut auto
 
 - Also be able to remember files:
     - dr [filename] <tag>: remember file. After this, dr -e [file or tag] staight-up open in vim.
     ^^ then retire the `fopen` utility.
+
+don't delete, write to 'deleted' file.
+    dr -d --> open deleted file
+
 
 # BUGS
 """

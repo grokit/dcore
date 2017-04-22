@@ -24,6 +24,7 @@ if __name__ == '__main__':
         files = os.listdir('.')
         filesc = [file for file in files if isCppFile(file)]
 
+    assert len(filesc) == 1
     rv = 0;
     for file in filesc:
         #cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.bin' % (file, file)
@@ -58,5 +59,10 @@ if __name__ == '__main__':
                 cmd = 'gprof %s gmon.out > gmon.txt' % (filesc[0] + '.tmpbin')
                 print(cmd)
                 os.system(cmd)
+            if args.debug:
+                cmd = 'gdb -tui %s' % (filesc[0] + '.tmpbin')
+                print(cmd)
+                os.system(cmd)
+
     else:
         print('Run skipped, see command-line arguments if want to auto-run output.')
