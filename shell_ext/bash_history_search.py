@@ -30,6 +30,7 @@ if __name__ == '__main__':
     lines = L
 
     lines = lines[-args.cut_len:]
+    lines = [l for l in L if len(l) > 0 and l[0] != '#']
     for l in lines:
         l = l.strip()
         print(l)
