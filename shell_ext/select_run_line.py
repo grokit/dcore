@@ -10,11 +10,13 @@ Given a set of lines, offer to run one of the last 10.
 import sys
 import os 
 import re
+import argparse
 
 _meta_shell_command = 'lrun'
 
 def getArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--run_number', default=None, type=int)
     args = parser.parse_args()
     return args
 
@@ -24,12 +26,19 @@ def fromStdInIfData():
     return None
 
 if __name__ == '__main__':
+
+    args = getArgs()
+
     data = fromStdInIfData()
     if data is None: exit(0)
     lines = data.splitlines()
     lines = lines[0:20]
 
-    for l in lines:
-        f = extractFileFuzzy(l)
-        if f is not None:
-            print(f)
+    for i, l in enumerate(lines):
+        print('%.2d: %s' % (len(lines) - i - 1, l))
+
+    if args.run_number is not None:
+        n = int(args.run_number)
+        le = lines[len(lines) - n - 1]
+        print('Executing `%s`.' % le)
+        os.system(le)

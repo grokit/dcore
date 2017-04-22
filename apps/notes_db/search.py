@@ -150,13 +150,28 @@ def isLineTitle(line):
 
 def manualSelect(matches):
 
-    print('Select an item by entering its corresponding number.')
+    print('Select an item by entering its corresponding number. Enter cancels.')
     i = 0
     for x in matches:
         print('%.1d (%.2f): %s' % (i, x.score, x.filename))
         i += 1
 
     s = input()
+    if len(s) == 0: return None
+    s = int(s)
+
+    return matches[s]
+
+def manualSelectSimple(matches):
+
+    print('Select an item by entering its corresponding number. Enter cancels.')
+    i = 0
+    for x in matches:
+        print('%.1d: %s' % (i, x))
+        i += 1
+
+    s = input()
+    if len(s) == 0: return None
     s = int(s)
 
     return matches[s]
