@@ -18,6 +18,7 @@ def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--run_number', default=None, type=int)
     parser.add_argument('-p', '--prefix', default="", type=str)
+    parser.add_argument('-s', '--suffix', default="", type=str)
     args = parser.parse_args()
     return args
 
@@ -41,6 +42,11 @@ if __name__ == '__main__':
     if args.run_number is not None:
         n = int(args.run_number)
         le = lines[len(lines) - n - 1]
-        le = args.prefix + " " + le
+
+        if len(args.prefix) != 0:
+            le = args.prefix + " " + le
+        if len(args.suffix) != 0:
+            le = le + " " + args.suffix
+
         print('Executing `%s`.' % le)
         os.system(le)
