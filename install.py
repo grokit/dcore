@@ -5,6 +5,14 @@ One-run install of `dcore`.
 
 # TODO
 - If new bashrc, have a list of my stuff I want on every new computer and write from here.
+
+ADD TMUX.conf
+
+    set -g mode-mouse on
+    set -g mouse-resize-pane on
+    set -g mouse-select-pane on
+    set -g mouse-select-window on
+    ^^ does not work in Ubuntu :/
 """
 
 import sys
@@ -125,7 +133,7 @@ def setupBashRc():
     CONTENT = """# Alias
 alias cclip='xclip -selection clipboard'
 alias clipp='xclip -selection clipboard -o'
-alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 '
+alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" '
 
 ## Tmux Saves History Properly
 
@@ -135,6 +143,13 @@ shopt -s histappend
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 # Infinite history
 HISTSIZE=-1 HISTFILESIZE=-1
+
+## Misc
+
+# vim edit mode in bash. -> put in .inputrc if want available in other GNU tools.
+# set editing-mode vi
+# Following one is for .bashrc
+set -o vi
 """
     updateFileContentBetweenMarks(
             os.path.expanduser('~/.bashrc'), 
@@ -154,4 +169,6 @@ if __name__ == '__main__':
     delOld()
     setupShortcuts()
     setupBashRc()
+
+
 

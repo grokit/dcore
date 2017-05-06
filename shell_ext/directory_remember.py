@@ -59,7 +59,12 @@ def rememberDirs():
     dirs += getFileContent()
 
     bad = [d for d in dirs if not os.path.isdir(d) and not (len(d.split(',')) == 2 and os.path.isdir(d.split(',')[1]))]
-    print('Removing non-existent directories: %s.' % bad)
+
+    if len(bad) > 0:
+        print('Removing non-existent directories: %s.' % bad)
+        with open(cacheFilePerimated, 'a') as fh:
+            fh.write("\n".join(bad))
+
     dirs = [d for d in dirs if d not in bad]
     
     setFileContent( dirs )
@@ -145,22 +150,12 @@ def printStoredDirs():
         print("%02d: %s" % (i, file))
         i += 1
     
-def clearDirs():
-    fh = open(cacheFilePerimated, 'a')
-    for file in getFileContent():
-        fh.write( file )
-        fh.write( "\n" )
-    fh.close()
-    
-    os.remove(cacheFile) 
-    
 def do():
     
     parser = argparse.ArgumentParser()
     
     parser.add_argument('-r', '--remember', action="store_true")
     parser.add_argument('-p', '--print', action="store_true")
-    parser.add_argument('-c', '--clear', action="store_true")
     parser.add_argument('-e', '--edit', action="store_true")
     parser.add_argument('-g', '--goto_clip', type=int)
     
@@ -175,10 +170,6 @@ def do():
     
     if args.print:
         printStoredDirs()
-        exit(0) 
-    
-    if args.clear:
-        clearDirs()
         exit(0) 
     
     if args.edit:

@@ -4,6 +4,12 @@ Provide search and search + quick-action.
 # TODO
 
 ## As
+
+task -n <name>: create
+task -l: list
+task <name> match and open
+task -r <tack>: retires the task
+
 ## Bs
 
 recent: 10 last written to note files
