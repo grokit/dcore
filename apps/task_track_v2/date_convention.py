@@ -1,5 +1,6 @@
 
 import datetime
+import time
 
 # Seattle FTW
 timeZone = datetime.timezone(datetime.timedelta(hours=-7))
@@ -26,3 +27,14 @@ def dateTimeToStr(dt):
     #dt = dt.replace(tzinfo=datetime.timezone.utc).astimezone(timeZone=tz)
     dt = dt.isoformat()
     return dt
+
+def dateTimeToUnixTimeSecs(dt):
+    return float(dt.strftime("%s"))
+
+if __name__ == '__main__':
+
+    l = dateTimeToUnixTimeSecs(dateStrToDateTime(dateNowStr()))
+    r = time.time()
+    assert l-r < 1.0
+    print(l,r)
+

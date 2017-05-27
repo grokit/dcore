@@ -2,6 +2,7 @@
 # Find Files
 
 Index all files under dir and fast find.
+Thought about deleting this as I'm using less and less, but direct fif -o <file> is awesome for quick open of books and such.
 
 # TODO
 
@@ -37,7 +38,7 @@ _meta_shell_command = 'fif'
 
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 21*24*60*60 # Before automatically force regenerating.
+cacheExpiryInSeconds = 14*24*60*60 # Before automatically force regenerating.
 
 def getArgs():
     parser = argparse.ArgumentParser()
