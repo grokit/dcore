@@ -4,6 +4,9 @@ import json
 import datetime
 import bisect
 import statistics
+import os
+
+import dcore.data as data
 
 def interpolateWithDamp(X, Y):
     rangeX = [min(X), max(X)]
@@ -88,7 +91,8 @@ def plot(X, Y):
     plt.show()
 
 if __name__ == '__main__':
-    jd = open('work_tracking_db.json').read()
+    folder = data.dcoreData()
+    jd = open(os.path.join(folder, 'work_tracking_db.json')).read()
     jd = json.loads(jd)
 
     X = []
