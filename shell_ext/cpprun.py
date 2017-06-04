@@ -17,6 +17,9 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--gmon', action="store_true")
     args = parser.parse_args()
 
+    for i in range(200):
+        print('')
+
     filec = []
     if args.file != None:
         filesc = [args.file]

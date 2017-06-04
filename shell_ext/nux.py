@@ -114,6 +114,9 @@ def startapps():
     # Security hazard...
     #osExec('nohup diodon > /dev/null&')
 
+def size():
+    osExec('du -hs * | sort -h')
+
 def trackpad_on():
     osExec('xinput list')
     cmd ='xinput set-prop 13 "Device Enabled" 1' 

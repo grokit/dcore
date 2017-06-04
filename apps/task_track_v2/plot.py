@@ -8,6 +8,8 @@ import os
 
 import dcore.data as data
 
+_meta_shell_command = 'plot_weight'
+
 def interpolateWithDamp(X, Y):
     rangeX = [min(X), max(X)]
     step  = 3600 * 24 * 1
@@ -46,7 +48,7 @@ def dateStrToDateTime(d):
     return dt
 
 def dateTimeToUnixTimeSecs(dt):
-        return float(dt.strftime("%s"))
+    return float(dt.strftime("%s"))
 
 def unixTimeToDisplay(unixtime):
     d = datetime.datetime.fromtimestamp(unixtime)
@@ -87,6 +89,8 @@ def plot(X, Y):
         Xlabels.append(l)
 
     plt.xticks(lX, Xlabels)
+
+    plt.grid(True)
 
     plt.show()
 

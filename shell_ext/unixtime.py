@@ -1,4 +1,6 @@
 """
+Also see: date -d @ <time>
+
 # TODO
 
 - Would be great if it were bi-directional.        

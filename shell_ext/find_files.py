@@ -24,8 +24,6 @@ Thought about deleting this as I'm using less and less, but direct fif -o <file>
     - Search with regex.
 """
 
-print('pre-Starting ff')
-
 import os
 import argparse
 import pickle

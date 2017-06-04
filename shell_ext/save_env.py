@@ -21,6 +21,7 @@ SAVE_ME = [
     '~/.tmux.conf',
     '~/.profile', # macos
     '~/.bashrc',
+    '~/.irssi',
     '~/.inputrc'
     '~/.gnomerc',
 ]
