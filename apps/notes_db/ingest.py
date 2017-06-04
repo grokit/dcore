@@ -1,6 +1,10 @@
 """
 Transform a flat note file to directories.
 
+# TODO
+
+Auto do it from any folder.
+
 # BUGS
 
 :::::BIG BUG: folder created with bad time:2016-08-16_22:32_Notes-DB-Dev-Notes
