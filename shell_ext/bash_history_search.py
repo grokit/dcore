@@ -10,9 +10,16 @@ _meta_shell_command = 'hs'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--cut_len', default=20, type=int)
+    parser.add_argument('-c', '--cut_len', default=60, type=int)
+    parser.add_argument('filter', default = [], nargs='*')
     args = parser.parse_args()
     return args
+
+def filterLine(l):
+    if len(l) == 0: return True
+    if len(l.strip()) == 0: return True
+    if l[0] == '#': return True
+    return False
 
 if __name__ == '__main__':
 
@@ -20,6 +27,8 @@ if __name__ == '__main__':
 
     with open(os.path.expanduser('~/.bash_history'), 'r') as fh:
         lines = fh.readlines()
+
+    lines = [l.strip() for l in lines if not filterLine(l)]
 
     # Remove multiple same commands in a row.
     L = []
@@ -29,9 +38,11 @@ if __name__ == '__main__':
             L.append(lines[i])
     lines = L
 
+    lfilter = " ".join(args.filter)
+    print('Applying regex filter `%s`.' % lfilter)
+    lines = [l for l in lines if re.search(lfilter, l) is not None]
+
     lines = lines[-args.cut_len:]
-    lines = [l for l in L if len(l) > 0 and l[0] != '#']
     for l in lines:
-        l = l.strip()
         print(l)
 
