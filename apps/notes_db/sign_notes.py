@@ -1,4 +1,15 @@
 #!/usr/bin/python3
+"""
+# Overview
+
+
+
+https://en.wikipedia.org/wiki/Trusted_timestamping
+
+# Example Output
+
+"""
+
 _meta_shell_command = 'sign_notes'
 
 import os
@@ -35,12 +46,14 @@ def _hash(bytesToSign):
 
     Use once Python 3.6 is mainstream:
     BLAKE2 is a cryptographic hash function defined in RFC-7693.
-    h = hashlib.blake2b(key=b'3z/TuQo>zdAMu9SfNd9fcd!HVURJ"FdbdBFOtmY-OnmVO<GGxJO(IhoXA17XPIkY', digest_size=64)
+    h = hashlib.blake2b(key=key, digest_size=64)
     h.update(bytesToSign)
     """
     assert type(bytesToSign) == bytes
 
-    h = hashlib.pbkdf2_hmac('sha256', b'3z/TuQo>zdAMu9SfNd9fcd!HVURJ"FdbdBFOtmY-', b'OnmVO<GGxJO(IhoXA17XPIkY', 100000)
+    key = b'3z/TuQo>zdAMu9SfNd9fcd!HVURJ"FdbdBFOtmY-OnmVO<GGxJO(IhoXA17XPIkY'
+
+    h = hashlib.pbkdf2_hmac('sha256', key, bytesToSign, 100000)
     return binascii.hexlify(h).decode()
 
 def sign(root):
