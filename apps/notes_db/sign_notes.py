@@ -2,7 +2,11 @@
 """
 # Overview
 
-https://en.wikipedia.org/wiki/Trusted_timestamping
+Prove that a note was taken at or before time_x, without having to pre-emptively share all the content of all notes.
+
+# Links
+
+- https://en.wikipedia.org/wiki/Trusted_timestamping
 
 # Example Output
 
