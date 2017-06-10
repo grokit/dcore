@@ -78,6 +78,6 @@ def sign(root):
     return signData
 
 if __name__ == '__main__':
-    signData = sign('./test_sign')
+    signData = sign('.')
     print(signData.toJSONComplete())
 
