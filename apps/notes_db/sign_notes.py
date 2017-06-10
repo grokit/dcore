@@ -2,12 +2,18 @@
 """
 # Overview
 
-
-
 https://en.wikipedia.org/wiki/Trusted_timestamping
 
 # Example Output
 
+{
+    "proof": "0b0ce9103fcf63647285fb45ced452504cf06783956b80c9bedc8306edc44417",
+    "hashes": [
+        "1c4349fcf429b5653d090fcb05c49d025073ea936a3f4552ddc0b961a0a616a0",
+        "8ad5e4be525e23d7237c485530c5af7efd9e5383aabece8f421476d85d078e90"
+    ],
+    "unixTimeMS": 1497126891443
+}
 """
 
 _meta_shell_command = 'sign_notes'
