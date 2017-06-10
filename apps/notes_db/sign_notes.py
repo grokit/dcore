@@ -62,7 +62,7 @@ def _hash(bytesToSign):
     assert type(bytesToSign) == bytes
 
     key = b'3z/TuQo>zdAMu9SfNd9fcd!HVURJ"FdbdBFOtmY-OnmVO<GGxJO(IhoXA17XPIkY'
-    h = hashlib.pbkdf2_hmac('sha256', key, bytesToSign, 100000)
+    h = hashlib.pbkdf2_hmac('sha256', key, bytesToSign, 10000)
     return binascii.hexlify(h).decode()
 
 def sign(root):
