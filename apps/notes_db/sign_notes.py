@@ -66,11 +66,9 @@ def _hash(bytesToSign):
     return binascii.hexlify(h).decode()
 
 def sign(root):
-    F = getAllFiles(root)
-
     unixTimeMS = int(time.time()*1000)
     signData = SignData()
-    for f in F:
+    for f in getAllFiles(root):
         with open(f, 'rb') as fh:
             data = fh.read()
         signData.hashes.append(_hash(str(unixTimeMS).encode() + b'_' + data))
