@@ -10,6 +10,8 @@ Prove that a note was taken at or before time_x, without having to pre-emptively
 
 # Example Output
 
+For a small folder with two text files.
+
 {
     "proof": "0b0ce9103fcf63647285fb45ced452504cf06783956b80c9bedc8306edc44417",
     "hashes": [
