@@ -70,10 +70,13 @@ def _hash(bytesToSign):
 def sign(root):
     unixTimeMS = int(time.time()*1000)
     signData = SignData()
+
     for f in getAllFiles(root):
         with open(f, 'rb') as fh:
             data = fh.read()
         signData.hashes.append(_hash(str(unixTimeMS).encode() + b'_' + data))
+    signData.hashes.sort()
+
     signData.unixTimeMS = unixTimeMS
     allHashs = "".join(signData.hashes).encode()
     signData.proof = _hash(allHashs)
