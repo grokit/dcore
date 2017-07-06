@@ -5,6 +5,12 @@
 
 - generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
 
+ls | dclip -s
+--> select by line
+ 
+if tag:::important --> HIGHER SCORE
+stable sort
+
 ## Bs
 
 - See other TODOs in individual python files as well.

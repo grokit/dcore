@@ -18,8 +18,8 @@ _meta_shell_command = 'rename_files'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', nargs='?', default='remove_spaces')
-    #parser.add_argument('mode', nargs='?', default='remove_aggressive')
+    #parser.add_argument('mode', nargs='?', default='remove_spaces')
+    parser.add_argument('mode', nargs='?', default='remove_aggressive')
     #parser.add_argument('mode', nargs='?', default='remove_non_az')
     parser.add_argument('rest', nargs='?')
     args = parser.parse_args()

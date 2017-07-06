@@ -48,8 +48,10 @@ def keyben():
 def youtubedl_upgrade():
     osExec('sudo pip3 install --upgrade youtube_dl')
 
+"""
 def pdf():
     osExec('wine ~/.wine/drive_c/pdf/PDF\ Viewer/PDFXCview.exe&')
+"""
 
 def mempigs():
     osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
@@ -63,6 +65,10 @@ def mac():
 def lock():
     osExec('gnome-screensaver-command -l')
     #osExec('i3lock') # Big ugly white, and both screensavers sometimes overlap.
+
+def urltopdf():
+    # would need to fwd args
+    osExec('wkhtmltopdf')
 
 def battery():
     osExec('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')

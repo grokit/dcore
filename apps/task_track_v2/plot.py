@@ -106,7 +106,8 @@ if __name__ == '__main__':
             date = v['date']
             unix = dateTimeToUnixTimeSecs(dateStrToDateTime(date))
             if unix < 1485275901: 
-                continue
+                pass
+                #continue
 
             weight = v['length']
             m = ''

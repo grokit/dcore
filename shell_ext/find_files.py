@@ -36,7 +36,7 @@ _meta_shell_command = 'fif'
 
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 14*24*60*60 # Before automatically force regenerating.
+cacheExpiryInSeconds = 90*24*60*60 # Before automatically force regenerating.
 
 def getArgs():
     parser = argparse.ArgumentParser()
