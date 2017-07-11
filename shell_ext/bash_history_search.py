@@ -29,7 +29,7 @@ if __name__ == '__main__':
     with open(os.path.expanduser('~/.bash_history'), 'r') as fh:
         lines = fh.readlines()
 
-    lines = [l.strip() for l in lines if not filterLine(l)]
+    lines = [l.strip().lower() for l in lines if not filterLine(l)]
 
     lfilter = " ".join(args.filter)
     print('Applying regex filter `%s`.' % lfilter)
