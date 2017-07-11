@@ -11,7 +11,7 @@ _meta_shell_command = 'hs'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--cut_len', default=60, type=int)
-    parser.add_argument('-e', '--edit', action='store_true')
+    parser.add_argument('-e', '--execute', action='store_true')
     parser.add_argument('filter', default = [], nargs='*')
     args = parser.parse_args()
     return args
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     lines = lines[-args.cut_len:]
 
-    if args.edit:
+    if args.execute:
         for i, l in enumerate(lines):
             i = args.cut_len - i
             print('%.2i: %s' % (i,l))
