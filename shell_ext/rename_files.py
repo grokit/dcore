@@ -46,7 +46,7 @@ def removeSpace(filename, args):
     return to
 
 def removeAggressive(filename, args):
-    v = set('abcdefghijklmnopqrstuvwxyz.-_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]()')
+    v = set('abcdefghijklmnopqrstuvwxyz.-_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]') # ()
 
     fout = []
     for l in filename:

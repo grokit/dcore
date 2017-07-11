@@ -9,6 +9,10 @@ Usage:
 
 - Replace with `editw`: edit the file that `which` points to.
 which python3 | xargs vim -> editw python3
+
+- OR replace with dcore where you can do many things
+    dcore -l : list all apps
+    dcore -e <app>: edit app
 """
 
 import dcore.search_files as fsearch
@@ -50,7 +54,7 @@ def findExecutableScripts():
 if __name__ == '__main__':
     args = getArgs()
 
-    editor = 'vim'
+    editor = 'vi'
 
     efiles = findExecutableScripts()
 

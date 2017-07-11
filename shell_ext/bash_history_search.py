@@ -11,6 +11,7 @@ _meta_shell_command = 'hs'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--cut_len', default=60, type=int)
+    parser.add_argument('-e', '--edit', action='store_true')
     parser.add_argument('filter', default = [], nargs='*')
     args = parser.parse_args()
     return args
@@ -30,6 +31,10 @@ if __name__ == '__main__':
 
     lines = [l.strip() for l in lines if not filterLine(l)]
 
+    lfilter = " ".join(args.filter)
+    print('Applying regex filter `%s`.' % lfilter)
+    lines = [l for l in lines if re.search(lfilter, l) is not None]
+
     # Remove multiple same commands in a row.
     L = []
     for i, l in enumerate(lines):
@@ -38,11 +43,20 @@ if __name__ == '__main__':
             L.append(lines[i])
     lines = L
 
-    lfilter = " ".join(args.filter)
-    print('Applying regex filter `%s`.' % lfilter)
-    lines = [l for l in lines if re.search(lfilter, l) is not None]
-
     lines = lines[-args.cut_len:]
-    for l in lines:
-        print(l)
+
+    if args.edit:
+        for i, l in enumerate(lines):
+            i = args.cut_len - i
+            print('%.2i: %s' % (i,l))
+        s = input('\nEnter number of execute.\n')
+        if s == '':
+            exit(0)
+        s = args.cut_len - int(s)
+        cmd = lines[s]
+        print('Executing `%s`.'%cmd)
+        os.system(cmd)
+    else:
+        for l in lines:
+            print(l)
 
