@@ -43,16 +43,19 @@ if __name__ == '__main__':
             L.append(lines[i])
     lines = L
 
-    lines = lines[-args.cut_len:]
+    cut = len(lines)
+    if args.cut_len < len(lines):
+        cut = args.cut_len
+        lines = lines[-cut:]
 
     if args.execute:
         for i, l in enumerate(lines):
-            i = args.cut_len - i
+            i = cut - i
             print('%.2i: %s' % (i,l))
         s = input('\nEnter number of execute.\n')
         if s == '':
             exit(0)
-        s = args.cut_len - int(s)
+        s = cut - int(s)
         cmd = lines[s]
         print('Executing `%s`.'%cmd)
         os.system(cmd)
