@@ -29,11 +29,11 @@ if __name__ == '__main__':
     with open(os.path.expanduser('~/.bash_history'), 'r') as fh:
         lines = fh.readlines()
 
-    lines = [l.strip().lower() for l in lines if not filterLine(l)]
+    lines = [l.strip() for l in lines if not filterLine(l)]
 
     lfilter = " ".join(args.filter)
     print('Applying regex filter `%s`.' % lfilter)
-    lines = [l for l in lines if re.search(lfilter, l) is not None]
+    lines = [l for l in lines if re.search(lfilter, l.lower()) is not None]
 
     # Remove multiple same commands in a row.
     L = []
