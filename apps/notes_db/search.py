@@ -97,14 +97,17 @@ def score(matches, search_query):
                 m.score += 8
 
         # Some folder have special score.
+        # /folder since /folder/ happens for last folder.
         if isLineTitle(m.line):
             m.score += 4
-        if '/articles/' in os.path.split(m.filename)[0]:
+        if '/articles' in os.path.split(m.filename)[0]:
             m.score += 10
-        if '/quality-b/' in os.path.split(m.filename)[0]:
+        if '/quality-b' in os.path.split(m.filename)[0]:
             m.score -= 5
-        if '/low/' in os.path.split(m.filename)[0]:
+        if '/low' in os.path.split(m.filename)[0]:
             m.score -= 10
+        if '/done' in os.path.split(m.filename)[0]:
+            m.score -= 15
 
         # Bonus if query matches anything in top level folder.
         folderName = os.path.split(m.filename)[0]
@@ -183,5 +186,6 @@ def getAllFiles():
     root = data.notesRoot()
     files = walkGatherALlFiles(root)
     files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
+    files = [f for f in files if not '/archived' in os.path.split(f)[0]]
     return files
 

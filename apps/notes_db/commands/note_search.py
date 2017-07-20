@@ -4,13 +4,13 @@ Provide search and search + quick-action.
 # TODO
 
 ## As
+## Bs
+## Cs
 
 task -n <name>: create
 task -l: list
 task <name> match and open
 task -r <tack>: retires the task
-
-## Bs
 
 recent: 10 last written to note files
 file_task: append time if not there, 
@@ -23,14 +23,11 @@ anything in a meh folder is disregarded
 
 ns -> nt: new task. user inputs -> tasks/DATE_title with tag:;:task
 
-
-
 Color in results. http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
 
 ## a more meaningful search
 
 could break whole notes in set of words, then if I search two words not consecutively but in same note I can get a match
-
 """
 
 import os
