@@ -50,8 +50,8 @@ if __name__ == '__main__':
 
     if args.execute:
         for i, l in enumerate(lines):
-            i = cut - i
-            print('%.2i: %s' % (i,l))
+            i = cut - i - 1
+            print('%.2i: %s' % (i, l))
         s = input('\nEnter number of execute.\n')
         if s == '':
             exit(0)
