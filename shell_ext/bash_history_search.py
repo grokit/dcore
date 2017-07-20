@@ -1,4 +1,7 @@
 """
+# TODO
+
+- ns -e <num>: auto-exe num
 """
 
 import sys
