@@ -7,6 +7,7 @@ Rename files / folders with nice, commonly used patterns.
 
 - Prepend ISO date: 2014-01-01_<filename>
 - Prepend common prefix: rename_files toto: a.jpg -> toto_a.jpg
+- Pick folder name from photos folder: assuming lots of dates in files, just pick the most common one and rename folder with it.
 """
 
 import re

@@ -142,7 +142,7 @@ shopt -s histappend
 # After each command, save and reload history
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 # Infinite history
-HISTSIZE=-1 HISTFILESIZE=-1
+HISTSIZE=100000000 HISTFILESIZE=100000000
 
 ## Misc
 

@@ -24,6 +24,7 @@ SAVE_ME = [
     '~/.irssi',
     '~/.inputrc'
     '~/.gnomerc',
+    '~/.bash_history',
 ]
 
 SAVE_ME_MEH = [

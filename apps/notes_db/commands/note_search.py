@@ -4,6 +4,10 @@ Provide search and search + quick-action.
 # TODO
 
 ## As
+
+ns: if folder contains query: score UP.
+ns: tag:::important should UP priority
+
 ## Bs
 ## Cs
 

@@ -1,7 +1,13 @@
 """
 # TODO
 
+## As
+
 - ns -e <num>: auto-exe num
+
+## Bs
+
+openf <name>: fuzzy match with all files which are in .bash_history (expand ~). Especially after vi. Be able to list chronologically (openf <nothing>)
 """
 
 import sys
@@ -34,7 +40,7 @@ if __name__ == '__main__':
 
     lines = [l.strip() for l in lines if not filterLine(l)]
 
-    lfilter = " ".join(args.filter)
+    lfilter = " ".join(args.filter).lower()
     print('Applying regex filter `%s`.' % lfilter)
     lines = [l for l in lines if re.search(lfilter, l.lower()) is not None]
 

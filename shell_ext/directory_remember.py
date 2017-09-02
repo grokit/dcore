@@ -29,6 +29,9 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 don't delete, write to 'deleted' file.
     dr -d --> open deleted file
 
+# Misc
+
+Other Silimar Project: http://linuxgazette.net/109/marinov.html
 
 # BUGS
 """
@@ -64,6 +67,7 @@ def rememberDirs():
         print('Removing non-existent directories: %s.' % bad)
         with open(cacheFilePerimated, 'a') as fh:
             fh.write("\n".join(bad))
+            fh.write("\n")
 
     dirs = [d for d in dirs if d not in bad]
     

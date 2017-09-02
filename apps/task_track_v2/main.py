@@ -41,8 +41,8 @@ _meta_shell_command = 'tt'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--regen_html', action='store_true')
-    parser.add_argument('-o', '--open_browser', action='store_true')
-    parser.add_argument('-v', '--edit_db', action='store_true', help='Open database file with text editor.')
+    parser.add_argument('-b', '--open_browser', action='store_true')
+    parser.add_argument('-o', '--edit_db', action='store_true', help='Open database file with text editor.')
     args = parser.parse_args()
     return args
 

@@ -14,6 +14,8 @@ Thought about deleting this as I'm using less and less, but direct fif -o <file>
 ## Bs
 
 - Have an 'exact string' mode as an option.
+- fif -o : open file for all indexed recursive(dirs), ask from list if > 1 match.
+
 
 # BUGS
 

@@ -14,9 +14,6 @@ bring a selector if more than one
 ns:
 use a stable sort (2nd criteria: lexico)
 
-!!!! dcore: save at the END of .bashrc
-HISTSIZE=100000000 HISTFILESIZE=100000000
-
 install:
     Magic dcore tag: 0jb02xhs83hayd9fugb7wu2as3q419ki_BEGIN
     ^^ move this to same as bashrc changes
@@ -57,5 +54,15 @@ add cls
 
 Ns:
     !!!! all folder in: AS TAG!
+
+
+# tool idea: nice rename
+
+build: nice rename:
+
+rename textual without any regex or shell happening (raw)
+can do more complicated back-substitution
+by default takes all files, but can filter
+rename files as well if they match
 
 
