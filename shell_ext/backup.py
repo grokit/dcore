@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # -mx=3: compression level 3 (0:lowest, 9:highest)
     encrypt = True
     if encrypt:
-        cmd = '%s -t7z -mx2 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
+        cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
     else:
         raise Expcetion("Not coded.")
 

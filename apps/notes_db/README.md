@@ -11,6 +11,14 @@ ls | dclip -s
 if tag:::important --> HIGHER SCORE
 stable sort
 
+ns: BUILD THE DASHBOARD. TODO:::A should be unbreak-now (in red)
+ns: biggest issue right now is non-stable sort
+ns <x> -c0 : just display match line with nothing else
+ns -o: don't print, just show choices
+python install: bashrc / profile: at one place not the same, just generalize
+find . | grep tata | save
+save: configurable, by default goes in a folder, picking a new name
+
 ## Bs
 
 - See other TODOs in individual python files as well.
