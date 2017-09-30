@@ -49,7 +49,7 @@ _meta_shell_command = 'ns'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='+')
-    parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 3)
+    parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 1)
     parser.add_argument('-t', '--search_titles_only', action='store_true')
     parser.add_argument('-o', '--open_matching_file', action='store_true')
     parser.add_argument('-O', '--open_first_matching_file', action='store_true')
@@ -67,8 +67,14 @@ if __name__ == '__main__':
     search.score(matches, query)
 
     matches = search.sortMatchesByScore(matches)
-    for m in matches:
-        print(m)
+
+    # Don't print in `o-mode`.
+    if not (G_ARGS.open_matching_file or G_ARGS.open_first_matching_file):
+        for m in matches:
+            if G_ARGS.context_range == 0:
+                print(m.strAlone())
+            else:
+                print(m)
 
     if G_ARGS.open_matching_file or G_ARGS.open_first_matching_file:
         dedup = {}

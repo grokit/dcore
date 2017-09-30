@@ -17,6 +17,7 @@ def walkGatherALlFiles(rootdir = '.'):
     return F
 
 class Match:
+    "TODO: move to ./classes"
 
     def __init__(self, filename, lineContent):
         self.filename = filename
@@ -26,13 +27,19 @@ class Match:
         # Lines around the match (optional).
         self.context = None
 
-    def __str__(self):
+    def strWithLine(self):
         content = self.line
         if self.context is not None:
             content = self.context
 
         s = "%s (%s):\n%s" % (self.filename, self.score, content)
         return s
+
+    def strAlone(self):
+        return self.line.strip()
+
+    def __str__(self):
+        return self.strWithLine()
 
 def titleLevel(line):
     """

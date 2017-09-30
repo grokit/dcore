@@ -131,18 +131,25 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
 
 def setupBashRc():
     CONTENT = """# Alias
+
+# pipe data to clipboard, e.g. cat <file> | cclip
 alias cclip='xclip -selection clipboard'
 alias clipp='xclip -selection clipboard -o'
+
 alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" '
 
 ## Tmux Saves History Properly
 
 # append history entries..
 shopt -s histappend
+
 # After each command, save and reload history
+# https://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
 # Infinite history
-HISTSIZE=100000000 HISTFILESIZE=100000000
+HISTSIZE=100000000 
+HISTFILESIZE=100000000
 
 ## Misc
 

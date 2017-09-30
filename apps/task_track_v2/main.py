@@ -3,8 +3,8 @@
 
 ## As
 
--- tt -l <type>:
-    list as kvp key: value, note[0:10]...
+-- tt -f <type>:
+    filter to that type, output all values
 
 - Should be optional to have a unit (since sometimes just report mood or whatever).
     - last letter is digit -> number (float or int)
