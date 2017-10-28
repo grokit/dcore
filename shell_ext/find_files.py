@@ -122,6 +122,7 @@ def do():
             print(f)
         
         if args.open is True:
+            assert len(F) == 1
             for f in F:
                 cmd = 'gnome-open %s' % f
                 os.system(cmd)
