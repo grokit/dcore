@@ -3,7 +3,13 @@
 
 ## As
 
+DCORE_SECTION_BEGIN should be at END of .bashrc
+
+ns: penalize if /meh is in path
+++ consider path in search
+
 - generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
+-> nowa, nowb, nowc, now
 
 ls | dclip -s
 --> select by line
