@@ -9,7 +9,7 @@ import math
 import dcore.apps.notes_db.data as data
 import dcore.apps.notes_db.meta as meta
 
-def walkGatherALlFiles(rootdir = '.'):
+def walkGatherAllFiles(rootdir = '.'):
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
@@ -191,7 +191,7 @@ def sortMatchesByScore(matches):
 
 def getAllFiles():
     root = data.notesRoot()
-    files = walkGatherALlFiles(root)
+    files = walkGatherAllFiles(root)
     files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
     files = [f for f in files if not '/archived' in os.path.split(f)[0]]
     return files
