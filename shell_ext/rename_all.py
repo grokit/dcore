@@ -75,11 +75,17 @@ if __name__ == '__main__':
 
     if not args.nocontent:
         for f in getFiles():
-            renameFileContent(f, args.f, args.t)
+            try:
+                renameFileContent(f, args.f, args.t)
+            except:
+                print('Failed ', f)
 
     if not args.nofilename:
         for f in getFiles():
-            renameFilename(f, args.f, args.t)
+            try:
+                renameFilename(f, args.f, args.t)
+            except:
+                print('Failed ', f)
 
 
 
