@@ -6,6 +6,7 @@
 DCORE_SECTION_BEGIN should be at END of .bashrc
 
 ns: penalize if /meh is in path
+    if `meh` in filename of folder, penalize
 ++ consider path in search
 
 - generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
@@ -24,6 +25,7 @@ ns -o: don't print, just show choices
 python install: bashrc / profile: at one place not the same, just generalize
 find . | grep tata | save
 save: configurable, by default goes in a folder, picking a new name
+
 
 ## Bs
 
