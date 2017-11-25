@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
         #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
-        cmd = 'clang++ -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
-        #cmd = 'clang++ -stdlib=libc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
+        cmd = 'clang++-4.0 -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
+        #cmd = 'clang++-4.0 -stdlib=libc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
         if args.debug:
             print('Making debug build.')
             cmd += ' -g'

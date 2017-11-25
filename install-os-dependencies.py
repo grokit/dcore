@@ -37,7 +37,7 @@ atop
 pdftk
 silversearcher-ag
 python3-matplotlib
-clang-3.8
+clang-4.0
 """
 
 # cmus: command-line music player
