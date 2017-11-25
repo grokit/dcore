@@ -17,6 +17,7 @@ _meta_shell_command = 'save_env'
 # Files or folders
 SAVE_ME = [
     '~/.vim',
+    '~/.i3',
     '~/.vimrc',
     '~/.tmux.conf',
     '~/.profile', # macos

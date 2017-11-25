@@ -57,5 +57,3 @@ def createAllDirsIfNotExist():
     for dData in getDirs():
         createDirIfNotExist(dData)
 
-if __name__ == '__main__':
-    createAllDirs()

@@ -49,16 +49,13 @@ if __name__ == '__main__':
     args = getArgs()
     pw, keyTag = getPW()
 
-    pathToBackup = os.path.expanduser(args.folder_in)
+    pathToBackup = os.path.abspath(os.path.expanduser(args.folder_in))
     archive_name = files.getUniqueDateFile(args.archive_name, '.%s.7z' % keyTag)
-    archive_name = os.path.join(args.folder_out, archive_name)
+    archive_name = os.path.abspath(os.path.join(args.folder_out, archive_name))
 
+    print('Backup `%s` to `%s`.' % (pathToBackup, archive_name))
     # -mhe: encrypt file names
     # -mx=3: compression level 3 (0:lowest, 9:highest)
-    encrypt = True
-    if encrypt:
-        cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
-    else:
-        raise Expcetion("Not coded.")
+    cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
 
     os.system(cmd)

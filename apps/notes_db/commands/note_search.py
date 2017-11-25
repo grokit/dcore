@@ -7,6 +7,7 @@ Provide search and search + quick-action.
 
 ns: if folder contains query: score UP.
 ns: tag:::important should UP priority
+- ns <x> should list if <x> is in filename or folder name (and not in file itself).
 
 ## Bs
 ## Cs
