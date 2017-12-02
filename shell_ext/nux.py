@@ -79,16 +79,20 @@ def crashplan():
     osExec(command)
 
 def loww():
-    osExec('xbacklight -set 5') # At very low values my screen does a weird nose.
+    #osExec('xbacklight -set 5') # At very low values my screen does a weird nose.
+    osExec('xrandr --output eDP-1 --brightness 0.4')
 
 def low():
-    osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
+    #osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
+    osExec('xrandr --output eDP-1 --brightness 0.5')
 
 def med():
-    osExec('xbacklight -set 50')
+    #osExec('xbacklight -set 50')
+    osExec('xrandr --output eDP-1 --brightness 0.7')
 
 def high():
-    osExec('xbacklight -set 100')
+    #osExec('xbacklight -set 100')
+    osExec('xrandr --output eDP-1 --brightness 1.0')
 
 def wifi():
     #  wicd-curses does not seem to work...

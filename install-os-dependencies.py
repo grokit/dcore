@@ -72,6 +72,7 @@ blender
 wkhtmltopdf
 mit-scheme
 clang-format
+vlc
 """
 # pip3 install rsa?, https://stuvel.eu/rsa
 
