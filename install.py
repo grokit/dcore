@@ -130,13 +130,21 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
             fh.write(l)
 
 def setupBashRc():
-    CONTENT = """# Alias
+    CONTENT = """
+## Run on terminal open
+
+. cdd
+tmux
+    
+## Alias
 
 # pipe data to clipboard, e.g. cat <file> | cclip
 alias cclip='xclip -selection clipboard'
 alias clipp='xclip -selection clipboard -o'
 
 alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" '
+
+alias gg='gnome-open'
 
 ## Tmux Saves History Properly
 

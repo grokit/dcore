@@ -73,6 +73,7 @@ wkhtmltopdf
 mit-scheme
 clang-format
 vlc
+pinta
 """
 # pip3 install rsa?, https://stuvel.eu/rsa
 

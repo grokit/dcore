@@ -1,6 +1,16 @@
 
 # TODO
 
+## As
+## Bs
+## Cs
+
+ns / dcore: FIRST: stable sort!!!!
+tag:::now for anote.md in root folder does not work
+
+hs -o <name>
+--> look for any file in history which starts with vi or vim then filename that exist, prompt if more than one and open in vi
+
 - gen-scripts : does not detect if duplicate.
 - merge data and options, options -> also root directory to use
 
@@ -56,7 +66,7 @@ Ns:
     !!!! all folder in: AS TAG!
 
 
-# tool idea: nice rename
+## tool idea: nice rename
 
 build: nice rename:
 
