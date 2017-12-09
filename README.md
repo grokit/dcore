@@ -2,6 +2,9 @@
 # TODO
 
 ## As
+
+- python script to WIPE all lines which have `:::` in it. option to do until next ';'. 
+
 ## Bs
 ## Cs
 

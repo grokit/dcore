@@ -74,6 +74,7 @@ mit-scheme
 clang-format
 vlc
 pinta
+youtube-dl
 """
 # pip3 install rsa?, https://stuvel.eu/rsa
 
