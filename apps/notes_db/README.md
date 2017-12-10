@@ -26,6 +26,16 @@ python install: bashrc / profile: at one place not the same, just generalize
 find . | grep tata | save
 save: configurable, by default goes in a folder, picking a new name
 
+Reorgnize new structure:
+    - parse.py
+        - article -> content, titles, tags, uuid
+    - search.py
+        - return (rank, note-path)
+    - cmdline/ 
+        - all commands and shortcuts
+    - mutate.py
+        - append, fix metadata, move, ...
+
 
 ## Bs
 
