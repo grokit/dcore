@@ -8,6 +8,9 @@
 ## Bs
 ## Cs
 
+insert time when filing, not as typing (since nothing stays in ingest for too long)
+insert it after the first pound OR at complete beginning
+
 ns / dcore: FIRST: stable sort!!!!
 tag:::now for anote.md in root folder does not work
 

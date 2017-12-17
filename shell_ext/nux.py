@@ -56,6 +56,9 @@ def pdf():
 def mempigs():
     osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
 
+def screenshot():
+    osExec('sleep 5 && gnome-screenshot -a -c')
+
 def mac():
     # Randomize MAC address. You may need to disconnect, reconnect.
     osExec('sudo ifconfig wlp1s0 down')
