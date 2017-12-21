@@ -75,6 +75,7 @@ clang-format
 vlc
 pinta
 youtube-dl
+inkscape
 """
 # pip3 install rsa?, https://stuvel.eu/rsa
 

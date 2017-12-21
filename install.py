@@ -19,6 +19,9 @@ import sys
 import os
 import platform
 
+BASH_SETUP_FILE = '~/.bash_profile'
+BASH_STARTUP = '~/.bashrc'
+
 def setupShortcutsBootstrap():
     """
     We put all shortcuts in dcore-owned directory and add it to executable PATH loaded by shell.
@@ -43,8 +46,8 @@ export PATH=$PATH:%s
 
     fname = os.path.expanduser('~/.profile')
     if not os.path.isfile(fname):
-        print('Could not find %s, trying .bashrc.' % fname)
-        fname = os.path.expanduser('~/.bashrc')
+        print('Could not find %s, trying %s.' % (fname, BASH_SETUP_FILE))
+        fname = os.path.expanduser(BASH_SETUP_FILE)
 
     if not os.path.isfile(fname):
         print('Could not find %s, creating.' % fname)
@@ -107,6 +110,11 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
     update('MyFile.txt', 'BEGIN', 'END', 'theBird=14')
     Would update everything between the begin and end marker with the string provided as the last parameter.
     """
+    if not os.path.isfile(filename):
+        print('Could not find %s, creating.' % filename)
+        with open(filename, 'w') as fh:
+            fh.write('\n')
+
     with open(filename, 'r') as fh:
         lines = fh.readlines()
 
@@ -131,10 +139,6 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
 
 def setupBashRc():
     CONTENT = """
-## Run on terminal open
-
-. cdd
-tmux
     
 ## Alias
 
@@ -178,10 +182,21 @@ shopt -s histappend
 shopt -s checkwinsize
 """
     updateFileContentBetweenMarks(
-            os.path.expanduser('~/.bashrc'), 
+            os.path.expanduser(BASH_SETUP_FILE), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
             CONTENT)
+
+    STARTUP = """
+. cdd
+tmux
+"""
+
+    updateFileContentBetweenMarks(
+            os.path.expanduser(BASH_STARTUP),
+            '# DCORE_SECTION_BEGIN_lq71d2111iiiyyoeuq2xtild2428zxh7', 
+            '# DCORE_SECTION_END_lq71d2111iiiyyoeuq2xtild2428zxh7', 
+            STARTUP)
 
 if __name__ == '__main__':
 
@@ -195,6 +210,4 @@ if __name__ == '__main__':
     delOld()
     setupShortcuts()
     setupBashRc()
-
-
 
