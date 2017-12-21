@@ -19,8 +19,24 @@ import sys
 import os
 import platform
 
-BASH_SETUP_FILE = '~/.bash_profile'
-BASH_STARTUP = '~/.bashrc'
+BASH_SETUP_FILE = ['~/.bash_profile']
+BASH_STARTUP = ['~/.bashrc', '~/.profile']
+
+def selectFirstExistingOrCreate(fname):
+    if type(fname) is not type([]):
+        raise Exception('Bad type: %s.' % type(fname))
+
+    for f in fname:
+        f = os.path.expanduser('~/.profile')
+        if os.path.isfile(f):
+            return f 
+
+    # No file match, create the first in the list.
+    f = os.path.expanduser(fname[0])
+    with open(f, 'w') as fh:
+        fh.write('\n')
+
+    return f 
 
 def setupShortcutsBootstrap():
     """
@@ -44,15 +60,7 @@ export PATH=$PATH:%s
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
-    fname = os.path.expanduser('~/.profile')
-    if not os.path.isfile(fname):
-        print('Could not find %s, trying %s.' % (fname, BASH_SETUP_FILE))
-        fname = os.path.expanduser(BASH_SETUP_FILE)
-
-    if not os.path.isfile(fname):
-        print('Could not find %s, creating.' % fname)
-        with open(fname, 'w') as fh:
-            fh.write('\n')
+    fname = selectFirstExistingOrCreate(BASH_STARTUP)
 
     with open(fname, 'r') as fh:
         file = fh.read()
@@ -181,8 +189,9 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 """
+    fname = selectFirstExistingOrCreate(BASH_SETUP_FILE)
     updateFileContentBetweenMarks(
-            os.path.expanduser(BASH_SETUP_FILE), 
+            os.path.expanduser(fname), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
             CONTENT)
@@ -192,8 +201,9 @@ shopt -s checkwinsize
 tmux
 """
 
+    fname = selectFirstExistingOrCreate(BASH_STARTUP)
     updateFileContentBetweenMarks(
-            os.path.expanduser(BASH_STARTUP),
+            os.path.expanduser(fname),
             '# DCORE_SECTION_BEGIN_lq71d2111iiiyyoeuq2xtild2428zxh7', 
             '# DCORE_SECTION_END_lq71d2111iiiyyoeuq2xtild2428zxh7', 
             STARTUP)
