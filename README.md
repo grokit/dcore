@@ -22,10 +22,8 @@ hs -o <name>
 
 respect :::important flag in ordering
 
-!!!
 ff -o broken-path --> open in vim
 bring a selector if more than one
-!!!!!
 
 ns:
 use a stable sort (2nd criteria: lexico)
