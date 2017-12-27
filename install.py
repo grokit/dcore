@@ -27,7 +27,7 @@ def selectFirstExistingOrCreate(fname):
         raise Exception('Bad type: %s.' % type(fname))
 
     for f in fname:
-        f = os.path.expanduser('~/.profile')
+        f = os.path.expanduser(f)
         if os.path.isfile(f):
             return f 
 
