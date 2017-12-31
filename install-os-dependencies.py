@@ -59,11 +59,9 @@ gparted
 gimp
 eclipse-platform
 i3
-shutter
 python-pip
 calibre
 mplayer2
-vlc-nox
 keepass2
 gitk
 okular
@@ -76,17 +74,20 @@ vlc
 pinta
 youtube-dl
 inkscape
+nmap
 """
-# pip3 install rsa?, https://stuvel.eu/rsa
 
 apt_get_packages += apt_get_packages_extended
 
+# pip3 install rsa?, https://stuvel.eu/rsa
 apt_get_packages_removed = """
+vlc-nox
 diodon
 monodevelop
 mono-devel
 guake
 virtualbox-qt
+shutter
 """
 
 ssh_public_key = """ssh-rsa REMOVED

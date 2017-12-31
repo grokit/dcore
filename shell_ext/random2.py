@@ -9,16 +9,9 @@ import sys
 import argparse
 import os
 
-vocab = 'abcdefghijklmnopqrstuvwxyz1234567890'
+vocab = 'abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-if __name__ == '__main__':
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument('n', type=int, default = 32, nargs='?')
-    args = parser.parse_args()
-    
-    n = args.n
-    
+def gen(n):
     R = []
     while(len(R) < n):
 	# os.urandom(n): Return a string of n random bytes suitable for cryptographic use.
@@ -27,5 +20,23 @@ if __name__ == '__main__':
         if b < len(vocab):
             R.append(vocab[b])
     
-    print("".join(R))
+    return "".join(R)
+
+def table():
+    for i in range(0, 1024):
+        p = gen(8)
+        s = gen(128)
+        print('%.4i: %s: %s' % (i, p, s))
+
+
+if __name__ == '__main__':
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('n', type=int, default = 32, nargs='?')
+    args = parser.parse_args()
+    
+    n = args.n
+    print(gen(n))
+    #table()
+    
     

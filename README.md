@@ -80,3 +80,20 @@ by default takes all files, but can filter
 rename files as well if they match
 
 
+# Future Projects Idea
+
+## Web Store
+
+
+project: webapi swallow (chomp?)
+
+saves to json with type and time
+has option to send email copy
+has sync program so that all nodes find each other and sync
+can list from most recent to oldest
+can apply transform (plot, etc) defined as custom .js programs
+confirm wrote (and number of copies), or send exception
+every data has author (anonymous included, optional sign with pri/pub keys)
+
+==> make it so flexible it can be used as a chat platform
+
