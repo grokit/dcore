@@ -57,6 +57,9 @@ def shouldResize(meta):
     if meta["Width"] > 2048 or meta["Height"] > 2048:
         return True
 
+    if meta["Quality:"] > 80:
+        return True
+
     return False
 
 def getAllFiles(rootdir = '.'):
