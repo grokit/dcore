@@ -20,7 +20,7 @@ def getArgs():
     return args
 
 def getPictureMetadata(f):
-    cmd = 'identify -verbose %s' % f
+    cmd = "identify -verbose '%s'" % f
     stdoutdata = subprocess.getoutput(cmd)
 
     # Do not use: "exif:ExifImageLength:", "exif:ExifImageWidth:",
@@ -64,6 +64,7 @@ def getAllFiles(rootdir = '.'):
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
             F.append(os.path.normpath(os.path.join(dirpath, f)))
+    #F = [os.path.abspath(f) for f in F]
     return F
 
 if __name__ == '__main__':
@@ -78,12 +79,13 @@ if __name__ == '__main__':
     for file in files:
         meta = getPictureMetadata(file)
         if shouldResize(meta):
-            cmd = 'mogrify -resize "2048x2048>" -quality 80 %s' % file
+            cmd = "mogrify -resize \"2048x2048>\" -quality 80 '%s'" % file
             if args.apply:
+                print(meta)
                 print(cmd)
                 os.system(cmd)
             else:
-                print('Not applied: ', cmd)
+                print('Not applied: ', meta)
         else:
             print("Skipping: %s." % (meta))
     
