@@ -14,7 +14,6 @@ import subprocess
 _meta_shell_command = 'pictures_resize'
 
 def getArgs():
-    
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--apply', action='store_true', default=False, help='Do the resize instead of just listing intentions.')
     args = parser.parse_args()
@@ -49,30 +48,36 @@ def getPictureMetadata(f):
         if m not in M:
             raise Exception("Cannot get meta: %s for image: %s." % (m, f))
 
-    print(M)
     return M
 
-
-def shouldResize(f):
+def shouldResize(meta):
     # Old way: just look at file size:
     # return (os.path.getsize(file) / (1024**2)) > 0.800
 
-    M = getPictureMetadata(f)
-    if M["Width"] > 2048 or M["Height"] > 2048:
+    if meta["Width"] > 2048 or meta["Height"] > 2048:
         return True
 
     return False
+
+def getAllFiles(rootdir = '.'):
+    F = []
+    for dirpath, dirnames, filenames in os.walk(rootdir):
+        for f in filenames:
+            F.append(os.path.normpath(os.path.join(dirpath, f)))
+    return F
 
 if __name__ == '__main__':
 
     args = getArgs()
     
     reg = re.compile(fnmatch.translate('*.jpg'), re.IGNORECASE)
-    files_all = os.listdir('.')
+    #files_all = os.listdir('.')
+    files_all = getAllFiles()
     files = [file for file in files_all if reg.match(file) is not None]
     
     for file in files:
-        if shouldResize(file):
+        meta = getPictureMetadata(file)
+        if shouldResize(meta):
             cmd = 'mogrify -resize "2048x2048>" -quality 80 %s' % file
             if args.apply:
                 print(cmd)
@@ -80,5 +85,5 @@ if __name__ == '__main__':
             else:
                 print('Not applied: ', cmd)
         else:
-            print("Skipping: %s." %file)
+            print("Skipping: %s." % (meta))
     
