@@ -9,6 +9,7 @@ import os
 import re
 import fnmatch
 import argparse
+import subprocess
 
 _meta_shell_command = 'pictures_resize'
 
@@ -16,14 +17,6 @@ def getArgs():
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--apply', action='store_true', default=False, help='Do the resize instead of just listing intentions.')
-    
-    """
-    parser.add_argument('subject', default = ['NONE'], nargs='*')
-    parser.add_argument('-t', '--to', default= private_data.primary_email)
-    parser.add_argument('-f', '--attachment_filename')
-    parser.add_argument('-w', '--work_email', action='store_true', default=False, help='Send to work e-mail instead of default one.')
-    """
-    
     args = parser.parse_args()
     return args
 
@@ -31,20 +24,32 @@ def getPictureMetadata(f):
     cmd = 'identify -verbose %s' % f
     stdoutdata = subprocess.getoutput(cmd)
 
-    metas = ["exif:ExifImageLength:", "exif:ExifImageWidth:", "Quality:"]
+    # Do not use: "exif:ExifImageLength:", "exif:ExifImageWidth:",
+    # ... since it does not get updated after resize.
+    metas = [ "Quality:", "Geometry:"]
 
     M = {}
+    M['filename'] = f
 
     for l in stdoutdata.splitlines():
         for meta in metas: 
             if meta in l:
+                assert meta not in M
                 m = l.split(meta)[1].strip()
-                M[meta] = int(m) 
+                M[meta] = m
+                if meta == "Quality:":
+                    M[meta] = int(M[meta])
+
+
+    g = M["Geometry:"]
+    M["Width"] = int(g.split('x')[0])
+    M["Height"] = int(g.split('x')[1].split('+')[0])
 
     for m in metas:
         if m not in M:
             raise Exception("Cannot get meta: %s for image: %s." % (m, f))
 
+    print(M)
     return M
 
 
@@ -53,7 +58,7 @@ def shouldResize(f):
     # return (os.path.getsize(file) / (1024**2)) > 0.800
 
     M = getPictureMetadata(f)
-    if M["exif:ExifImageLength:"] > 2048 || M["exif:ExifImageWidth:"] > 2048:
+    if M["Width"] > 2048 or M["Height"] > 2048:
         return True
 
     return False
@@ -67,7 +72,7 @@ if __name__ == '__main__':
     files = [file for file in files_all if reg.match(file) is not None]
     
     for file in files:
-        if shouldResize(f):
+        if shouldResize(file):
             cmd = 'mogrify -resize "2048x2048>" -quality 80 %s' % file
             if args.apply:
                 print(cmd)
