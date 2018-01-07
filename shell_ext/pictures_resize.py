@@ -74,9 +74,9 @@ if __name__ == '__main__':
 
     args = getArgs()
     
-    reg = re.compile(fnmatch.translate('*.jpg'), re.IGNORECASE)
     #files_all = os.listdir('.')
     files_all = getAllFiles()
+    reg = re.compile(fnmatch.translate('*.jpg'), re.IGNORECASE)
     files = [file for file in files_all if reg.match(file) is not None]
     
     for file in files:

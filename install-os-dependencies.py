@@ -75,6 +75,7 @@ pinta
 youtube-dl
 inkscape
 nmap
+texlive-full
 """
 
 apt_get_packages += apt_get_packages_extended

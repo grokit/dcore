@@ -3,28 +3,23 @@
 
 ## As
 
-DCORE_SECTION_BEGIN should be at END of .bashrc
+stable sort
+ns: biggest issue right now is non-stable sort
 
 ns: penalize if /meh is in path
     if `meh` in filename of folder, penalize
 ++ consider path in search
 
-- generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
--> nowa, nowb, nowc, now
-
-ls | dclip -s
---> select by line
- 
 if tag:::important --> HIGHER SCORE
-stable sort
 
 ns: BUILD THE DASHBOARD. TODO:::A should be unbreak-now (in red)
-ns: biggest issue right now is non-stable sort
 ns <x> -c0 : just display match line with nothing else
 ns -o: don't print, just show choices
 python install: bashrc / profile: at one place not the same, just generalize
 find . | grep tata | save
 save: configurable, by default goes in a folder, picking a new name
+
+## Bs
 
 Reorgnize new structure:
     - parse.py
@@ -36,8 +31,8 @@ Reorgnize new structure:
     - mutate.py
         - append, fix metadata, move, ...
 
-
-## Bs
+- generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
+-> nowa, nowb, nowc, now
 
 - See other TODOs in individual python files as well.
 
