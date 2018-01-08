@@ -76,6 +76,10 @@ youtube-dl
 inkscape
 nmap
 texlive-full
+texmaker
+duplicity
+borgbackup
+nethogs
 """
 
 apt_get_packages += apt_get_packages_extended

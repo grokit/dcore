@@ -80,15 +80,18 @@ if __name__ == '__main__':
     files = [file for file in files_all if reg.match(file) is not None]
     
     for file in files:
-        meta = getPictureMetadata(file)
-        if shouldResize(meta):
-            cmd = "mogrify -resize \"2048x2048>\" -quality 80 '%s'" % file
-            if args.apply:
-                print(meta)
-                print(cmd)
-                os.system(cmd)
+        try:
+            meta = getPictureMetadata(file)
+            if shouldResize(meta):
+                cmd = "mogrify -resize \"2048x2048>\" -quality 80 '%s'" % file
+                if args.apply:
+                    print(meta)
+                    print(cmd)
+                    os.system(cmd)
+                else:
+                    print('Not applied: ', meta)
             else:
-                print('Not applied: ', meta)
-        else:
-            print("Skipping: %s." % (meta))
+                print("Skipping: %s." % (meta))
+        except Exception as e:
+            print('Exception: %s. Not processing %s.' % (e, file))
     
