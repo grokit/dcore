@@ -80,6 +80,7 @@ texmaker
 duplicity
 borgbackup
 nethogs
+ncdu
 """
 
 apt_get_packages += apt_get_packages_extended

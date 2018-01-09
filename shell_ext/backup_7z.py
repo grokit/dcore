@@ -15,7 +15,7 @@ import getpass
 import dcore.files as files
 import dcore.private_data as private_data
 
-_meta_shell_command = 'backup'
+_meta_shell_command = 'backup_7z'
 
 bin7Zip = r'7z'
 
