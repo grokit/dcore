@@ -78,6 +78,7 @@ nmap
 texlive-full
 texmaker
 duplicity
+duply
 borgbackup
 nethogs
 ncdu

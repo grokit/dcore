@@ -55,6 +55,6 @@ if __name__ == '__main__':
     args = getArgs()
     pw, url = getBackupPWAndUrl()
 
-    backup(url, os.path.abspath(os.path.expanduser('~/sync/dev/coding_practice')), pw)
+    #backup(url, os.path.abspath(os.path.expanduser('~/sync')), pw)
     listFiles(url)
 
