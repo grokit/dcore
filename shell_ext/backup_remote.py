@@ -37,11 +37,30 @@ def listFiles(url):
     stdoutdata = subprocess.getoutput(cmd)
     print(stdoutdata)
 
+def init(pw, url):
+    # THIS DIDN'T WORK, but worked when I ran from console.
+    os.environ['BORG_PASSPHRASE'] = pw
+    cmd = 'borg init %s' % (url)
+    os.environ['BORG_PASSPHRASE'] = 'none'
+    for l in executeCmd(cmd):
+        print(l)
+    print('done')
+
+def backup(pw, url, pathToBackup):
+    os.environ['BORG_PASSPHRASE'] = pw
+    pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
+    cmd = "borg create %s::Test-%s %s" % (url, int(1000*time.time()), pathToBackup)
+    for l in executeCmd(cmd):
+        print(l.strip())
+    os.environ['BORG_PASSPHRASE'] = 'none'
+    print('done')
 
 if __name__ == '__main__':
     args = getArgs()
     pw, url = getBackupPWAndUrl()
 
     #backup(url, os.path.abspath(os.path.expanduser('~/sync')), pw)
-    listFiles(url)
+    #listFiles(url)
+    init(pw, url)
+    #backup(pw, url, '~/Documents')
 
