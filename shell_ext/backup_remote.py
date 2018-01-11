@@ -32,35 +32,53 @@ def executeCmd(cmd):
     p.stdout.close()
     return p.wait()
 
-def listFiles(url):
-    cmd = 'ls'
-    stdoutdata = subprocess.getoutput(cmd)
-    print(stdoutdata)
-
-def init(pw, url):
-    # THIS DIDN'T WORK, but worked when I ran from console.
+def listSnapshots(url):
     os.environ['BORG_PASSPHRASE'] = pw
-    cmd = 'borg init %s' % (url)
-    os.environ['BORG_PASSPHRASE'] = 'none'
+    cmd = 'borg list %s --short' % (url)
     for l in executeCmd(cmd):
         print(l)
-    print('done')
+    os.environ['BORG_PASSPHRASE'] = 'none'
+
+def getLastSnapshot(url):
+    os.environ['BORG_PASSPHRASE'] = pw
+    cmd = 'borg list %s --short' % (url)
+    last = None
+    for l in executeCmd(cmd):
+        last = l.strip()
+    os.environ['BORG_PASSPHRASE'] = 'none'
+
+    if last is None:
+        raise Exception()
+    return last
+
+def listFiles(url, snapshot):
+    os.environ['BORG_PASSPHRASE'] = pw
+    cmd = 'borg list %s::%s' % (url, snapshot)
+    for l in executeCmd(cmd):
+        print(l.strip())
+    os.environ['BORG_PASSPHRASE'] = 'none'
+
+def init(pw, url):
+    os.environ['BORG_PASSPHRASE'] = pw
+    cmd = 'borg init %s' % (url)
+    for l in executeCmd(cmd):
+        print(l.strip())
+    os.environ['BORG_PASSPHRASE'] = 'none'
 
 def backup(pw, url, pathToBackup):
     os.environ['BORG_PASSPHRASE'] = pw
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
-    cmd = "borg create %s::Test-%s %s" % (url, int(1000*time.time()), pathToBackup)
+    cmd = "borg create %s::Test-%s %s --stats --progress" % (url, int(1000*time.time()), pathToBackup)
     for l in executeCmd(cmd):
         print(l.strip())
     os.environ['BORG_PASSPHRASE'] = 'none'
-    print('done')
 
 if __name__ == '__main__':
     args = getArgs()
     pw, url = getBackupPWAndUrl()
 
-    #backup(url, os.path.abspath(os.path.expanduser('~/sync')), pw)
-    #listFiles(url)
-    init(pw, url)
-    #backup(pw, url, '~/Documents')
+    #init(pw, url)
+    backup(pw, url, '~/sync/dev/coding_practice')
+    snapshot = getLastSnapshot(url)
+    listFiles(url, snapshot)
 
