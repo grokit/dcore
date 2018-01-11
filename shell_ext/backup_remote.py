@@ -18,6 +18,7 @@ _meta_shell_command = 'backup_remote'
 
 def getArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--init', action="store_true")
     parser.add_argument('-l', '--ls', action="store_true")
     parser.add_argument('-m', '--mount', action="store_true")
     parser.add_argument('-u', '--umount', action="store_true")
@@ -68,7 +69,8 @@ def mount(pw, url):
         print(l.strip())
 
 def umount(pw, url):
-    cmd = 'borg umount %s /media/borg' % (url)
+    #cmd = 'borg umount %s /media/borg' % (url)
+    cmd = 'borg umount %s' % (url)
     for l in executeCmd(cmd):
         print(l.strip())
 
@@ -80,7 +82,7 @@ def backup(pw, url, pathToBackup):
 
 def default():
     pw, url = getBackupPWAndUrl()
-    backup(pw, url, '~/sync/dev/2dgame')
+    backup(pw, url, '~/sync')
 
 if __name__ == '__main__':
     args = getArgs()
@@ -91,6 +93,8 @@ if __name__ == '__main__':
         if args.ls:
             snapshot = getLastSnapshot(url)
             listFiles(url, snapshot)
+        elif args.init:
+            init(pw, url)
         elif args.mount:
             mount(pw, url)
         elif args.umount:
