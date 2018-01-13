@@ -94,7 +94,7 @@ def backup(pw, url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to print files as we process
-    cmd = "borg create --list --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
+    cmd = "borg create --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
     return executePrintAndReturn(cmd)
 
 def sendMail(content):
