@@ -36,6 +36,13 @@ def dateForAnnotation():
     #return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
     return datetime.datetime.now().isoformat()
 
+def executePrintAndReturn(cmd):
+    L = []
+    for l in executeCmd(cmd):
+        L.append(l)
+        print(l.strip())
+    return "".join(L)
+
 def executeCmd(cmd):
     print('Executing: %s.' % cmd)
 
@@ -63,8 +70,7 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list %s::%s' % (url, snapshot)
-    for l in executeCmd(cmd):
-        print(l.strip())
+    executePrintAndReturn(cmd)
 
 def init(pw, url):
     cmd = 'borg init %s' % (url)
@@ -78,17 +84,9 @@ def mount(pw, url):
         print(l.strip())
 
 def umount(pw, url):
-    #cmd = 'borg umount %s /media/borg' % (url)
-    cmd = 'borg umount %s' % (url)
+    cmd = 'borg umount /media/borg'
     for l in executeCmd(cmd):
         print(l.strip())
-
-def executePrintAndReturn(cmd):
-    L = []
-    for l in executeCmd(cmd):
-        L.append(l)
-        print(l.strip())
-    return "".join(L)
 
 def backup(pw, url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
@@ -111,6 +109,7 @@ def report(content):
     
 def default():
     pw, url = getBackupPWAndUrl()
+    # With server version, this does not return anything.
     backup(pw, url, '~/sync')
     stdout = listSnapshots(url)
     report(stdout)
