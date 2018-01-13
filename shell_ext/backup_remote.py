@@ -39,7 +39,7 @@ def dateForAnnotation():
 def executeCmd(cmd):
     print('Executing: %s.' % cmd)
 
-    if False:
+    if True:
         cmd = cmd.split(' ')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
         for l in p.stdout:
@@ -89,6 +89,7 @@ def backup(pw, url, pathToBackup):
     cmd = "borg create %s::AutoBackup-%s %s --stats --progress" % (url, dateForAnnotation(), pathToBackup)
     L = []
     for l in executeCmd(cmd):
+        # This does not seem to be getting anything.
         print(l.strip())
         L.append(l)
     return "\n".join(L)
