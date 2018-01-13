@@ -49,8 +49,7 @@ def executeCmd(cmd):
 
 def listSnapshots(url):
     cmd = 'borg list %s --short' % (url)
-    for l in executeCmd(cmd):
-        print(l.strip())
+    return executePrintAndReturn(cmd)
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --short' % (url)
@@ -84,26 +83,39 @@ def umount(pw, url):
     for l in executeCmd(cmd):
         print(l.strip())
 
-def backup(pw, url, pathToBackup):
-    pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
-    cmd = "borg create %s::AutoBackup-%s %s --stats --progress" % (url, dateForAnnotation(), pathToBackup)
+def executePrintAndReturn(cmd):
     L = []
     for l in executeCmd(cmd):
-        # This does not seem to be getting anything.
-        print(l.strip())
         L.append(l)
-    return "\n".join(L)
+        print(l.strip())
+    return "".join(L)
+
+def backup(pw, url, pathToBackup):
+    pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
+    # https://borgbackup.readthedocs.io/en/stable/usage/create.html
+    # --list to print files as we process
+    cmd = "borg create --list --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
+    return executePrintAndReturn(cmd)
 
 def sendMail(content):
     args = getArgs()
-    gmail.sendEmail(private_data.primary_email, "Backup Report m3pzBxlKu", content)
+    title = "Backup Report m3pzBxlKu %s" % dateForAnnotation()
+    gmail.sendEmail(private_data.primary_email, title, content)
+
+def report(content):
+    if True:
+        try:
+            sendMail(content)
+        except Exception as e:
+            print(e)
     
 def default():
     pw, url = getBackupPWAndUrl()
-    stdout = backup(pw, url, '~/sync')
-    sendMail(stdout)
+    backup(pw, url, '~/sync')
+    stdout = listSnapshots(url)
+    report(stdout)
 
-if __name__ == '__main__':
+def do():
     args = getArgs()
     pw, url = getBackupPWAndUrl()
 
@@ -113,7 +125,8 @@ if __name__ == '__main__':
             snapshot = getLastSnapshot(url)
             listFiles(url, snapshot)
         elif args.snapshots_list:
-            listSnapshots(url)
+            for l in listSnapshots(url):
+                print(l)
         elif args.init:
             init(pw, url)
         elif args.mount:
@@ -127,5 +140,15 @@ if __name__ == '__main__':
         print(e)
     os.environ['BORG_PASSPHRASE'] = 'none'
 
+def test():
+    pw, url = getBackupPWAndUrl()
+    os.environ['BORG_PASSPHRASE'] = pw
+    cmd = 'borg list %s --short' % (url)
+    stdout = executePrintAndReturn(cmd)
+    print('---')
+    print(stdout)
+    report(stdout)
 
-
+if __name__ == '__main__':
+    do()
+    #test()
