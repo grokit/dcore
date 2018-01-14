@@ -124,8 +124,7 @@ def do():
             snapshot = getLastSnapshot(url)
             listFiles(url, snapshot)
         elif args.snapshots_list:
-            for l in listSnapshots(url):
-                print(l)
+            listSnapshots(url)
         elif args.init:
             init(pw, url)
         elif args.mount:
@@ -140,14 +139,11 @@ def do():
     os.environ['BORG_PASSPHRASE'] = 'none'
 
 def test():
-    pw, url = getBackupPWAndUrl()
-    os.environ['BORG_PASSPHRASE'] = pw
-    cmd = 'borg list %s --short' % (url)
-    stdout = executePrintAndReturn(cmd)
-    print('---')
-    print(stdout)
-    report(stdout)
+    print('test')
+    with open(os.path.expanduser('~/canary'), 'a') as fh:
+        fh.write(dateForAnnotation())
+        fh.write('\n')
 
 if __name__ == '__main__':
-    do()
-    #test()
+    #do()
+    test()
