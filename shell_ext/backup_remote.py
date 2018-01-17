@@ -11,11 +11,13 @@ import argparse
 import getpass
 import subprocess
 import datetime
+import logging
 
 import dcore.files as files
 import dcore.private_data as private_data
-import dcore.apps.gmail.gmail as gmail
+#import dcore.apps.gmail.gmail as gmail
 import dcore.do_every as do_every # tag:::RESUME
+import dcore.dlogging as dlogging
 
 _meta_shell_command = 'backup_remote'
 
@@ -45,7 +47,7 @@ def executePrintAndReturn(cmd):
     return "".join(L)
 
 def executeCmd(cmd):
-    print('Executing: %s.' % cmd)
+    logging.debug('Executing: %s.' % cmd)
 
     if True:
         cmd = cmd.split(' ')
@@ -81,47 +83,36 @@ def listFiles(url, snapshot):
 def init(pw, url):
     cmd = 'borg init %s' % (url)
     for l in executeCmd(cmd):
-        print(l.strip())
+        logging.debug(l.strip())
 
 def mount(pw, url):
     snapshot = getLastSnapshot(url)
     cmd = 'borg mount %s::%s /media/borg' % (url, snapshot)
     for l in executeCmd(cmd):
-        print(l.strip())
+        logging.debug(l.strip())
 
 def umount(pw, url):
     cmd = 'borg umount /media/borg'
     for l in executeCmd(cmd):
-        print(l.strip())
+        logging.debug(l.strip())
 
 def backup(pw, url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
-    # --list to print files as we process
+    # --list to logging.debug files as we process
     cmd = "borg create --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
     return executePrintAndReturn(cmd)
 
-def sendMail(content):
-    args = getArgs()
-    title = "Backup Report m3pzBxlKu %s" % dateForAnnotation()
-    gmail.sendEmail(private_data.primary_email, title, content)
-
-def report(content):
-    if True:
-        try:
-            sendMail(content)
-        except Exception as e:
-            print(e)
-    
 def default():
     pw, url = getBackupPWAndUrl()
     # With server version, this does not return anything.
     backup(pw, url, '~/sync')
     stdout = listSnapshots(url)
     stdout += "\n" + info(url)
-    report(stdout)
+    logging.info(stdout)
 
 def do():
+    dlogging.setup()
     args = getArgs()
     pw, url = getBackupPWAndUrl()
 
@@ -142,8 +133,7 @@ def do():
             default()
     except Exception as e:
         os.environ['BORG_PASSPHRASE'] = 'none'
-        print(e)
-        report(e)
+        logging.debug(e)
     os.environ['BORG_PASSPHRASE'] = 'none'
 
 if __name__ == '__main__':
