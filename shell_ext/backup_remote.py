@@ -15,6 +15,7 @@ import datetime
 import dcore.files as files
 import dcore.private_data as private_data
 import dcore.apps.gmail.gmail as gmail
+import dcore.do_every as do_every # tag:::RESUME
 
 _meta_shell_command = 'backup_remote'
 
@@ -56,6 +57,11 @@ def executeCmd(cmd):
 
 def listSnapshots(url):
     cmd = 'borg list %s --short' % (url)
+    return executePrintAndReturn(cmd)
+
+def info(url):
+    snapshot = getLastSnapshot(url)
+    cmd = 'borg info %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
 def getLastSnapshot(url):
@@ -112,6 +118,7 @@ def default():
     # With server version, this does not return anything.
     backup(pw, url, '~/sync')
     stdout = listSnapshots(url)
+    stdout += "\n" + info(url)
     report(stdout)
 
 def do():
@@ -136,14 +143,8 @@ def do():
     except Exception as e:
         os.environ['BORG_PASSPHRASE'] = 'none'
         print(e)
+        report(e)
     os.environ['BORG_PASSPHRASE'] = 'none'
 
-def test():
-    print('test')
-    with open(os.path.expanduser('~/canary'), 'a') as fh:
-        fh.write(dateForAnnotation())
-        fh.write('\n')
-
 if __name__ == '__main__':
-    #do()
-    test()
+    do()

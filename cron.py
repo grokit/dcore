@@ -3,11 +3,12 @@ import stat
 import getpass
 import datetime
 
+import dcore.do_every as do_every
+
 def install():
-    fname = '/etc/cron.hourly/dcore_hourly.sh'
+    fname = '/etc/cron.hourly/dcore_hourly'
     user = os.environ['SUDO_USER']
-    #cmd = 'su __user__ -c "python3 __file__ | tee ~/dcore_hourly.log"'
-    cmd = "#!/bin/sh\nsu - arch -c '. ~/.bashrc && python3 __file__ |& tee ~/dcore_hourly.log'"
+    cmd = "#!/bin/sh\nsu - __user__ -c '. ~/.bashrc && python3 __file__ |& tee -a ~/log_dcore_hourly.log'\n"
     cmd = cmd.replace('__file__', os.path.abspath(__file__))
 
     # If run under sudo, would get root
@@ -23,8 +24,11 @@ def install():
     os.chmod(fname, st.st_mode | stat.S_IEXEC | stat.S_IXOTH)
 
 def backup():
-    import dcore.shell_ext.backup_remote as backup_remote
-    backup_remote.do()
+    if True:
+        import dcore.shell_ext.backup_remote as backup_remote
+        backup_remote.do()
+    else:
+        print('Skipping backup')
 
 def mailTag():
     return "%s %s" % (datetime.datetime.now().isoformat(), 'm3pzBxlKu')
@@ -36,16 +40,16 @@ if __name__ == '__main__':
         # Keep this here since root needs to install and won't be able to import.
         import dcore.apps.gmail.gmail as gmail
         import dcore.private_data as private_data
-        print('Cron starting (stdout)')
+        print('Cron starting (stdout) ', mailTag())
         gmail.sendEmail(private_data.primary_email, "Cron starting " + mailTag(), "...")
 
         # List stuff to run.
         runme = [backup]
-
         for r in runme:
             try:
                 r()
             except Exception as e:
-                print('cron failed %s: %s.' % (r, e))
+                print('cron job failed: %s (%s).' % (r, e))
 
         gmail.sendEmail(private_data.primary_email, "Cron done " + mailTag(), "...")
+

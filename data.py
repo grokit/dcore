@@ -1,7 +1,7 @@
 """
 Define where data is.
 
-Make sure that are folders exist, create a hook for applications to know where to fetch data from.
+Makes sure that are folders exist, create a hook for applications to know where to fetch data from.
 Also a good place to document hierarchy.
 
 BE CAREFUL WITH dcore IMPORTS IN THAT FILE. It is used during install, anything that depends
@@ -22,7 +22,6 @@ def dcoreRoot():
     return os.path.abspath(os.path.split(__file__)[0])
 
 def dcoreTempData():
-    "TODO: this and next two should just be in a map"
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
 
 def dcoreData():

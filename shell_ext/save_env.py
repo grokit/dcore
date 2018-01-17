@@ -32,6 +32,7 @@ SAVE_ME_MEH = [
     '~/.viminfo', # not that useful, can likely contain private information.
 ]
 
+# TODO:::b, THIS SHOULD BE INSIDE DCOREDATA, not some random place.
 BACKUP_IN = '~/sync/archive/backups/auto/script-backup-env'
 
 def saveDir(f, dst):
