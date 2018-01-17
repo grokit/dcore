@@ -107,7 +107,8 @@ def default():
     pw, url = getBackupPWAndUrl()
     # With server version, this does not return anything.
     backup(pw, url, '~/sync')
-    stdout = listSnapshots(url)
+    stdout = "Backup Report:\n"
+    stdout += listSnapshots(url)
     stdout += "\n" + info(url)
     logging.info(stdout)
 
