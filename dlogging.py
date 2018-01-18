@@ -21,7 +21,7 @@ class GMailHandler(logging.Handler):
 
 def setup():
     logging.basicConfig(level=logging.DEBUG)
-    folder = data.dcoreData() + '/logs'
+    folder = data.dcoreTempData() + '/logs'
     data.createDirIfNotExist(folder)
     print(folder)
     logFilename = os.path.join(folder, 'dcore.log')

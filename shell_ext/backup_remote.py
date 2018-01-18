@@ -15,7 +15,6 @@ import logging
 
 import dcore.files as files
 import dcore.private_data as private_data
-#import dcore.apps.gmail.gmail as gmail
 import dcore.do_every as do_every # tag:::RESUME
 import dcore.dlogging as dlogging
 
