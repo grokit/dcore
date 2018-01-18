@@ -2,14 +2,54 @@
 import os
 import json
 import time
+import hashlib
 
 import dcore.data as data
 
-def markDone(key):
-    pass
+def hash(filename):
+    with open(filename, 'rb') as fh:
+        m = hashlib.md5()
+        while True:
+            data = fh.read(8192)
+            if not data:
+                break
+            m.update(data)
+        return m.hexdigest()
+
+def isFileModifiedSinceLastTouch(filename):
+    cache = os.path.join(data.dcoreTempData(), 'file_hash_cache.json')
+
+    # If no information on file, has never been touched.
+    if not os.path.isfile(cache):
+        return True
+
+    fhash = hash(filename)
+    with open(cache, 'r') as fh:
+        hashMap = json.loads(fh.read())
+        if filename in hashMap:
+            if hashMap[filename] == fhash:
+                return False
+
+    return True
+
+def markFileAsCurrent(filename):
+    cache = os.path.join(data.dcoreTempData(), 'file_hash_cache.json')
+
+    hashMap = {}
+    if os.path.isfile(cache):
+        with open(cache, 'r') as fh:
+            hashMap = json.loads(fh.read())
+
+    filename = os.path.abspath(filename)
+    hashMap[filename] = hash(filename) 
+
+    with open(cache, 'w') as fh:
+        fh.write(json.dumps(hashMap))
+
+    assert not isFileModifiedSinceLastTouch(filename)
 
 def isDoneInLastXHours(key, nhours):
-    filename = os.path.join(data.dcoreData(), 'do_every.json')
+    filename = os.path.join(data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
         return False
@@ -28,8 +68,14 @@ def isDoneInLastXHours(key, nhours):
 def markDone(key):
     filename = os.path.join(data.dcoreData(), 'do_every.json')
 
-    with open(filename, 'r') as fh:
-        keys = json.loads(fh.read())
+    if not os.path.isfile(filename):
+        with open(filename, 'w') as fh:
+            fh.write(json.dumps({}))
+
+    keys = {}
+    if os.path.isfile:
+        with open(filename, 'r') as fh:
+            keys = json.loads(fh.read())
 
     # unixtime
     keys[key] = int(time.time())
@@ -51,7 +97,4 @@ if __name__ == '__main__':
     time.sleep(5)
 
     assert isDoneInLastXHours(key, 0.0013889) is False
-
-
-    
 

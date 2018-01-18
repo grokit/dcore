@@ -2,8 +2,9 @@ import os
 import stat
 import getpass
 import datetime
+import logging
 
-import dcore.do_every as do_every
+import dcore.dlogging as dlogging
 
 def install():
     fname = '/etc/cron.hourly/dcore_hourly'
@@ -15,7 +16,7 @@ def install():
     # user = getpass.getuser()
     cmd = cmd.replace('__user__', user)
 
-    print(cmd)
+    logging.debug(cmd)
     with open(fname, 'w') as fh:
         fh.write(cmd)
 
@@ -28,28 +29,23 @@ def backup():
         import dcore.shell_ext.backup_remote as backup_remote
         backup_remote.do()
     else:
-        print('Skipping backup')
-
-def mailTag():
-    return "%s %s" % (datetime.datetime.now().isoformat(), 'm3pzBxlKu')
+        logging.debug('Skipping backup')
 
 if __name__ == '__main__':
+    dlogging.setup()
+
     if False:
         install()
     else:
-        # Keep this here since root needs to install and won't be able to import.
-        import dcore.apps.gmail.gmail as gmail
-        import dcore.private_data as private_data
-        print('Cron starting (stdout) ', mailTag())
-        gmail.sendEmail(private_data.primary_email, "Cron starting " + mailTag(), "...")
+        logging.debug('Cron start')
 
         # List stuff to run.
-        runme = [backup]
+        runme = [backup, dlogging.mirrorLogsToGMail]
         for r in runme:
             try:
                 r()
             except Exception as e:
-                print('cron job failed: %s (%s).' % (r, e))
+                logging.debug('cron job failed: %s (%s).' % (r, e))
 
-        gmail.sendEmail(private_data.primary_email, "Cron done " + mailTag(), "...")
+        logging.debug('Cron end')
 

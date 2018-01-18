@@ -8,9 +8,25 @@ from logging.handlers import TimedRotatingFileHandler
 import dcore.data as data
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
+import dcore.do_every as do_every
 
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
+
+def mirrorLogsToGMail():
+    folder = data.logsdir()
+
+    for f in os.listdir(folder):
+        f = os.path.join(folder, f)
+        if do_every.isFileModifiedSinceLastTouch(f):
+            print('Mirroring: %s' % f)
+            title = "GMail Logs File Mirror m3pzBxlKu %s %s" % (dateForAnnotation(), f)
+            with open(f, 'r') as fh:
+                # What if file cannot be converted as str?
+                gmail.sendEmail(private_data.primary_email, title, fh.read())
+            do_every.markFileAsCurrent(f)
+        else:
+            print('Current: %s' % f)
 
 class GMailHandler(logging.Handler):
 
@@ -21,17 +37,17 @@ class GMailHandler(logging.Handler):
 
 def setup():
     logging.basicConfig(level=logging.DEBUG)
-    folder = data.dcoreTempData() + '/logs'
+    folder = data.logsdir()
     data.createDirIfNotExist(folder)
-    print(folder)
     logFilename = os.path.join(folder, 'dcore.log')
-    rFileHandler = TimedRotatingFileHandler(logFilename, when='S')
+    rFileHandler = TimedRotatingFileHandler(logFilename, when='M')
     rootLogger = logging.getLogger('')
     rootLogger.addHandler(rFileHandler)
-    rootLogger.addHandler(GMailHandler())
+    if False:
+        rootLogger.addHandler(GMailHandler())
 
 if __name__ == '__main__':
-    # TODO: setup gmail as additional handler: setupAddGmail()
     setup()
-    logging.info('hello')
+    mirrorLogsToGMail()
+    logging.info('test-append')
 

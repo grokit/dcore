@@ -24,6 +24,9 @@ def dcoreRoot():
 def dcoreTempData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
 
+def logsdir():
+    return dcoreTempData() + '/logs'
+
 def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
 
