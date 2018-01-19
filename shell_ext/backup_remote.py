@@ -12,6 +12,7 @@ import getpass
 import subprocess
 import datetime
 import logging
+import difflib
 
 import dcore.files as files
 import dcore.private_data as private_data
@@ -34,8 +35,6 @@ def getBackupPWAndUrl():
     return private_data.k_remote_backup_backblaze_v1, private_data.backblaze_b2_url
 
 def dateForAnnotation():
-    #int(1000*time.time())
-    #return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
     return datetime.datetime.now().isoformat()
 
 def executePrintAndReturn(cmd):
@@ -77,7 +76,7 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list %s::%s' % (url, snapshot)
-    executePrintAndReturn(cmd)
+    return executePrintAndReturn(cmd)
 
 def init(pw, url):
     cmd = 'borg init %s' % (url)
@@ -104,11 +103,26 @@ def backup(pw, url, pathToBackup):
 
 def default():
     pw, url = getBackupPWAndUrl()
+
+    snapshot = getLastSnapshot(url)
+    fileLstA = listFiles(url, snapshot)
+
     # With server version, this does not return anything.
     backup(pw, url, '~/sync')
+
+    # Hmmmm but this will return even backup didn't run successfully.
     stdout = "Backup Report:\n"
-    stdout += listSnapshots(url)
+    # stdout += listSnapshots(url)
     stdout += "\n" + info(url)
+
+    snapshot = getLastSnapshot(url)
+    fileLstB = listFiles(url, snapshot)
+
+    #d = difflib.Differ()
+    #r = d.compare(fileLstA.splitlines(),fileLstB.splitlines())
+    r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
+    stdout += "\nDiff:\n\n" + "\n".join(list(r))
+
     logging.info(stdout)
 
 def do():
