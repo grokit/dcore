@@ -75,7 +75,8 @@ def getLastSnapshot(url):
     return last
 
 def listFiles(url, snapshot):
-    cmd = 'borg list --short %s::%s' % (url, snapshot)
+    #cmd = 'borg list --short %s::%s' % (url, snapshot)
+    cmd = 'borg list %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
 def init(pw, url):
@@ -118,6 +119,7 @@ def default():
     snapshot = getLastSnapshot(url)
     fileLstB = listFiles(url, snapshot)
 
+    # could use borg diff instead
     #d = difflib.Differ()
     #r = d.compare(fileLstA.splitlines(),fileLstB.splitlines())
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
