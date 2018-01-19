@@ -75,7 +75,7 @@ def getLastSnapshot(url):
     return last
 
 def listFiles(url, snapshot):
-    cmd = 'borg list %s::%s' % (url, snapshot)
+    cmd = 'borg list --short %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
 def init(pw, url):
