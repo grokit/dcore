@@ -29,6 +29,7 @@ def getArgs():
     parser.add_argument('-l', '--ls', action="store_true")
     parser.add_argument('-m', '--mount', action="store_true")
     parser.add_argument('-u', '--umount', action="store_true")
+    parser.add_argument('-r', '--raw_command', help='Just run the command with password as environment variable. `URL` will be replaced by url.')
     args = parser.parse_args()
     return args
 
@@ -56,6 +57,13 @@ def executeCmd(cmd):
         p.stdout.close()
         return p.wait()
 
+def rawCommand(url, cmd):
+    """
+    :::EXPERIMENTAL
+    """
+    cmd = cmd.replace('URL', url)
+    return executePrintAndReturn(cmd)
+
 def diff(url):
     """
     This doesn't work with current version.
@@ -66,7 +74,6 @@ def diff(url):
         return
     cmd = 'borg diff %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
     return executePrintAndReturn(cmd)
-
 
 def listSnapshots(url):
     cmd = 'borg list %s --short' % (url)
@@ -164,6 +171,8 @@ def do():
             mount(pw, url)
         elif args.umount:
             umount(pw, url)
+        elif args.raw_command:
+            rawCommand(pw, url)
         else:
             default()
     except Exception as e:
