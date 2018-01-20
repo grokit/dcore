@@ -113,16 +113,14 @@ def notifyGMail(head, content):
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def backup(pw, url, pathToBackup):
-    notifyGMail('Backup Starting', '')
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    r = executePrintAndReturn(cmd)
-    notifyGMail('Backup Done', r)
-    return r
+    return executePrintAndReturn(cmd)
 
 def default():
+    notifyGMail('Backup Starting', '')
     pw, url = getBackupPWAndUrl()
 
     snapshot = getLastSnapshot(url)
@@ -146,6 +144,7 @@ def default():
     stdout += "\nDiff:\n\n" + "\n".join(list(r))
 
     logging.info(stdout)
+    notifyGMail('Backup Done', stdout)
 
 def do():
     dlogging.setup()

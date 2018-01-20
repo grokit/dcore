@@ -29,7 +29,6 @@ def backup():
     # TODO: generalize "do every x hours"
     key = 'backup_remote'
     freq = 6
-    stats = object()
     if not do_every.isDoneInLastXHours(key, freq):
         import dcore.shell_ext.backup_remote as backup_remote
         backup_remote.do()
@@ -40,9 +39,8 @@ def backup():
 if __name__ == '__main__':
     dlogging.setup()
 
-    if True:
-        backup()
-        #install()
+    if False:
+        install()
     else:
         logging.debug('Cron start')
 
