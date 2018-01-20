@@ -16,8 +16,9 @@ import difflib
 
 import dcore.files as files
 import dcore.private_data as private_data
-import dcore.do_every as do_every # tag:::RESUME
+import dcore.do_every as do_every 
 import dcore.dlogging as dlogging
+import dcore.apps.gmail.gmail as gmail
 
 _meta_shell_command = 'backup_remote'
 
@@ -107,12 +108,19 @@ def umount(pw, url):
     for l in executeCmd(cmd):
         logging.debug(l.strip())
 
+def notifyGMail(head, content):
+    title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s' % head
+    gmail.sendEmail(private_data.primary_email, title, content)
+
 def backup(pw, url, pathToBackup):
+    notifyGMail('Backup Starting', '')
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return executePrintAndReturn(cmd)
+    r = executePrintAndReturn(cmd)
+    notifyGMail('Backup Done', r)
+    return r
 
 def default():
     pw, url = getBackupPWAndUrl()
