@@ -27,9 +27,10 @@ def getArgs():
     parser.add_argument('-i', '--init', action="store_true")
     parser.add_argument('-s', '--snapshots_list', action="store_true")
     parser.add_argument('-l', '--ls', action="store_true")
+    parser.add_argument('-d', '--diff', action="store_true")
+    parser.add_argument('-r', '--raw_command', help='Just run the command with password as environment variable. `URL` will be replaced by url.')
     parser.add_argument('-m', '--mount', action="store_true")
     parser.add_argument('-u', '--umount', action="store_true")
-    parser.add_argument('-r', '--raw_command', help='Just run the command with password as environment variable. `URL` will be replaced by url.')
     args = parser.parse_args()
     return args
 
@@ -72,20 +73,20 @@ def diff(url):
     if len(snapshotsList) < 2:
         logging.warning('Not enough backups to diff.')
         return
-    cmd = 'borg diff %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
+    cmd = 'borg diff --remote-path=borg1 %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
     return executePrintAndReturn(cmd)
 
 def listSnapshots(url):
-    cmd = 'borg list %s --short' % (url)
+    cmd = 'borg list %s --remote-path=borg1 --short' % (url)
     return executePrintAndReturn(cmd)
 
 def info(url):
     snapshot = getLastSnapshot(url)
-    cmd = 'borg info %s::%s' % (url, snapshot)
+    cmd = 'borg info --remote-path=borg1 %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
 def getLastSnapshot(url):
-    cmd = 'borg list %s --short' % (url)
+    cmd = 'borg list %s --remote-path=borg1 --short' % (url)
     last = None
     for l in executeCmd(cmd):
         last = l.strip()
@@ -96,22 +97,22 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     #cmd = 'borg list --short %s::%s' % (url, snapshot)
-    cmd = 'borg list %s::%s' % (url, snapshot)
+    cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
-def init(pw, url):
-    cmd = 'borg init %s' % (url)
+def init(url):
+    cmd = 'borg init --remote-path=borg1 %s' % (url)
     for l in executeCmd(cmd):
         logging.debug(l.strip())
 
-def mount(pw, url):
+def mount(url):
     snapshot = getLastSnapshot(url)
-    cmd = 'borg mount %s::%s /media/borg' % (url, snapshot)
+    cmd = 'borg mount --remote-path=borg1 %s::%s /media/borg' % (url, snapshot)
     for l in executeCmd(cmd):
         logging.debug(l.strip())
 
-def umount(pw, url):
-    cmd = 'borg umount /media/borg'
+def umount(url):
+    cmd = 'borg umount --remote-path=borg1 /media/borg'
     for l in executeCmd(cmd):
         logging.debug(l.strip())
 
@@ -119,11 +120,11 @@ def notifyGMail(head, content):
     title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s' % head
     gmail.sendEmail(private_data.primary_email, title, content)
 
-def backup(pw, url, pathToBackup):
+def backup(url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
-    cmd = "borg create --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
+    cmd = "borg create --remote-path=borg1 --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
     return executePrintAndReturn(cmd)
 
 def default():
@@ -134,7 +135,7 @@ def default():
     fileLstA = listFiles(url, snapshot)
 
     # With server version, this does not return anything.
-    backup(pw, url, '~/sync')
+    backup(url, '~/sync')
 
     # Hmmmm but this will return even backup didn't run successfully.
     stdout = "Backup Report:\n"
@@ -148,7 +149,11 @@ def default():
     #d = difflib.Differ()
     #r = d.compare(fileLstA.splitlines(),fileLstB.splitlines())
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
-    stdout += "\nDiff:\n\n" + "\n".join(list(r))
+
+    r = list(r)
+    f = [x for x in r if '.git' not in x]
+
+    stdout += "\nDiff:\n\n" + "\n".join(r)
 
     logging.info(stdout)
     notifyGMail('Backup Done', stdout)
@@ -166,13 +171,15 @@ def do():
         elif args.snapshots_list:
             listSnapshots(url)
         elif args.init:
-            init(pw, url)
+            init(url)
+        elif args.diff:
+            diff(url)
         elif args.mount:
-            mount(pw, url)
+            mount(url)
         elif args.umount:
-            umount(pw, url)
+            umount(url)
         elif args.raw_command:
-            rawCommand(pw, url)
+            rawCommand(url)
         else:
             default()
     except Exception as e:
