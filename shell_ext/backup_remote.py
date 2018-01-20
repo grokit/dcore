@@ -55,6 +55,18 @@ def executeCmd(cmd):
         p.stdout.close()
         return p.wait()
 
+def diff(url):
+    """
+    This doesn't work with current version.
+    """
+    snapshotsList = listSnapshots(url)
+    if len(snapshotsList) < 2:
+        logging.warning('Not enough backups to diff.')
+        return
+    cmd = 'borg diff %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
+    return executePrintAndReturn(cmd)
+
+
 def listSnapshots(url):
     cmd = 'borg list %s --short' % (url)
     return executePrintAndReturn(cmd)
@@ -119,7 +131,7 @@ def default():
     snapshot = getLastSnapshot(url)
     fileLstB = listFiles(url, snapshot)
 
-    # could use borg diff instead
+    # Borg diff doesn't work with current version.
     #d = difflib.Differ()
     #r = d.compare(fileLstA.splitlines(),fileLstB.splitlines())
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())

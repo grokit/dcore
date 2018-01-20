@@ -47,11 +47,11 @@ def markFileAsCurrent(filename):
 
     assert not isFileModifiedSinceLastTouch(filename)
 
-def isDoneInLastXHours(key, nhours):
+def lastTimeDone(key):
     filename = os.path.join(data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
-        return False
+        return 1e9
 
     with open(filename, 'r') as fh:
         keys = json.loads(fh.read())
@@ -62,7 +62,11 @@ def isDoneInLastXHours(key, nhours):
         now = int(time.time())
 
         nHoursAgo = (now - utime) / (60*60)
-        return nHoursAgo <= nhours
+        return nHoursAgo
+
+def isDoneInLastXHours(key, nhours):
+    last = lastTimeDone(key)
+    return last <= nhours
 
 def markDone(key):
     filename = os.path.join(data.dcoreTempData(), 'do_every.json')

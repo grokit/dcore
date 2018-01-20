@@ -5,6 +5,7 @@ import datetime
 import logging
 
 import dcore.dlogging as dlogging
+import dcore.do_every as do_every 
 
 def install():
     fname = '/etc/cron.hourly/dcore_hourly'
@@ -25,17 +26,23 @@ def install():
     os.chmod(fname, st.st_mode | stat.S_IEXEC | stat.S_IXOTH)
 
 def backup():
-    if True:
+    # TODO: generalize "do every x hours"
+    key = 'backup_remote'
+    freq = 6
+    stats = object()
+    if not do_every.isDoneInLastXHours(key, freq):
         import dcore.shell_ext.backup_remote as backup_remote
         backup_remote.do()
+        do_every.markDone(key)
     else:
-        logging.debug('Skipping backup')
+        logging.debug('Skipping backup, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', do_every.lastTimeDone(key), freq)
 
 if __name__ == '__main__':
     dlogging.setup()
 
-    if False:
-        install()
+    if True:
+        backup()
+        #install()
     else:
         logging.debug('Cron start')
 
