@@ -107,6 +107,7 @@ def init(url):
 
 def mount(url):
     snapshot = getLastSnapshot(url)
+    #snapshot = 'AutoBackup-2018-01-15T22:17:02.676038'
     cmd = 'borg mount --remote-path=borg1 %s::%s /media/borg' % (url, snapshot)
     for l in executeCmd(cmd):
         logging.debug(l.strip())
@@ -117,7 +118,7 @@ def umount(url):
         logging.debug(l.strip())
 
 def notifyGMail(head, content):
-    title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s' % head
+    title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s (%s)' % (head, dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def backup(url, pathToBackup):
@@ -151,7 +152,8 @@ def default():
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
 
     r = list(r)
-    f = [x for x in r if '.git' not in x]
+    r = [x for x in r if '.git' not in x]
+    r = [x for x in r if '_h_' not in x]
 
     stdout += "\nDiff:\n\n" + "\n".join(r)
 
