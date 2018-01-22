@@ -6,7 +6,7 @@ Backups to a remote location.
 # Troubleshooting
 
 ('Remote Exception (see remote log for the traceback)', 'LockTimeout')
-    --> borg break-lock --remote-path=borg1 URL
+    --> borg break-lock --remote-path=borg1 URL 
 """
 
 import os
@@ -28,7 +28,6 @@ import dcore.apps.gmail.gmail as gmail
 _meta_shell_command = 'backup_remote'
 
 BACKUP_ROOT = '~/sync'
-#BACKUP_ROOT = '~/sync/scripts/dcore'
 
 def getArgs():
     parser = argparse.ArgumentParser()
