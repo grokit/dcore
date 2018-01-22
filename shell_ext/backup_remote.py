@@ -50,36 +50,42 @@ def getBackupPWAndUrl():
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
-def executeLogAndReturnStdout(cmd):
+def executeCmd(cmd, doPrint=False):
+    cmd = cmd.split(' ')
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    stdout = []
+    stderr = []
+    for l in p.stdout:
+        stdout.append(l)
+        if doPrint:
+            print(l.strip())
+    for l in p.stderr:
+        stderr.append(l)
+        if doPrint:
+            print(l.strip())
+    p.stdout.close()
+    p.stderr.close()
+    rv = p.wait()
+    if rv != 0:
+        raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
+    return rv, "".join(stdout), "".join(stderr)
+
+def executePrintAndReturnStdout(cmd, doLog=True):
     logging.debug('Executing: %s.' % cmd)
     L = []
-    for l in executeCmd(cmd):
-        L.append(l)
-    return "".join(L)
-
-def executeCmd(cmd):
-    if True:
-        cmd = cmd.split(' ')
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        for l in p.stdout:
-            logging.info(l.strip())
-            yield l
-        for l in p.stderr:
-            logging.warning(l.strip())
-            # do NOT yield (not part of returned data)
-        p.stdout.close()
-        p.stderr.close()
-        rv = p.wait()
-        if rv != 0:
-            raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
-        return rv
+    rv, stdout, stderr = executeCmd(cmd, doPrint=True)
+    if doLog:
+        logging.info(stdout)
+        logging.warning(stderr)
+    return stdout
 
 def rawCommand(url, cmd):
     """
     :::EXPERIMENTAL
     """
     cmd = cmd.replace('URL', url)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def diff(url):
     """
@@ -90,20 +96,20 @@ def diff(url):
         logging.warning('Not enough backups to diff.')
         return
     cmd = 'borg diff --remote-path=borg1 %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def listSnapshots(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def info(url):
     snapshot = getLastSnapshot(url)
     cmd = 'borg info --remote-path=borg1 %s::%s' % (url, snapshot)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    stdout = executeLogAndReturnStdout(cmd)
+    stdout = executePrintAndReturnStdout(cmd)
     snapshots = stdout.splitlines()
     snapshots = [s.strip() for s in snapshots]
     if len(snapshots) < 1:
@@ -112,23 +118,21 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def init(url):
     cmd = 'borg init --remote-path=borg1 --encryption=repokey %s' % (url)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def mount(url):
     snapshot = getLastSnapshot(url)
     #snapshot = 'AutoBackup-2018-01-15T22:17:02.676038'
     cmd = 'borg mount --remote-path=borg1 %s::%s /media/borg' % (url, snapshot)
-    for l in executeCmd(cmd):
-        logging.debug(l.strip())
+    executePrintAndReturnStdout(cmd)
 
 def umount(url):
     cmd = 'borg umount --remote-path=borg1 /media/borg'
-    for l in executeCmd(cmd):
-        logging.debug(l.strip())
+    executePrintAndReturnStdout(cmd)
 
 def notifyGMail(head, content):
     title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s (%s)' % (head, dateForAnnotation())
@@ -139,7 +143,7 @@ def backup(url, pathToBackup):
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create --remote-path=borg1 --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def default():
     notifyGMail('Backup Starting', '')
@@ -159,13 +163,6 @@ def default():
     snapshotB = getLastSnapshot(url)
     fileLstB = listFiles(url, snapshotB)
 
-    """
-    with open('/tmp/fa', 'w') as fh:
-        fh.write(fileLstA)
-    with open('/tmp/fb', 'w') as fh:
-        fh.write(fileLstB)
-    """
-
     stdout += 'SnapshotA: %s, SnapshotB: %s.\n' % (snapshotA, snapshotB)
 
     # Borg diff doesn't work with current version.
@@ -177,6 +174,7 @@ def default():
     stdout += 'diff size before filter: %s\n' % len(r)
     r = [x for x in r if '.git' not in x]
     r = [x for x in r if '_h_' not in x]
+    r = [x for x in r if len(x) > 0 and (x[0] == '+' or x[0] == '-')]
     stdout += 'diff size after filter: %s\n' % len(r)
 
     stdout += "\nDiff:\n\n" + "\n".join(r)
@@ -186,7 +184,7 @@ def default():
 
 def testCommand(url):
     cmd = 'borg list --remote-path=borg1 %s' % (url)
-    return executeLogAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd)
 
 def do():
     dlogging.setup()
@@ -222,6 +220,7 @@ def do():
     except Exception as e:
         os.environ['BORG_PASSPHRASE'] = 'none'
         logging.error('Exception: %s.' % e)
+        raise e
     os.environ['BORG_PASSPHRASE'] = 'none'
 
 if __name__ == '__main__':

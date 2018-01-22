@@ -13,6 +13,14 @@ import dcore.do_every as do_every
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
+def filterLog(logAsStr):
+    """
+    Nice to have in reverse order in mail client.
+    """
+    l = logAsStr.splitlines()
+    l.reverse()
+    return "\n".join(l)
+
 def mirrorLogsToGMail():
     folder = data.logsdir()
 
@@ -23,7 +31,8 @@ def mirrorLogsToGMail():
             title = "GMail Logs File Mirror m3pzBxlKu %s %s" % (dateForAnnotation(), f)
             with open(f, 'r') as fh:
                 # What if file cannot be converted as str?
-                gmail.sendEmail(private_data.primary_email, title, fh.read())
+                content = filterLog(fh.read())
+                gmail.sendEmail(private_data.primary_email, title, content)
             do_every.markFileAsCurrent(f)
         else:
             print('Current: %s' % f)
@@ -54,6 +63,6 @@ def setup():
 
 if __name__ == '__main__':
     setup()
-    #mirrorLogsToGMail()
-    logging.info('test-append')
+    mirrorLogsToGMail()
+    #logging.info('test-append')
 
