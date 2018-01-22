@@ -71,10 +71,10 @@ def executeCmd(cmd, doPrint=False):
         raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
     return rv, "".join(stdout), "".join(stderr)
 
-def executePrintAndReturnStdout(cmd, doLog=True):
+def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
     logging.debug('Executing: %s.' % cmd)
     L = []
-    rv, stdout, stderr = executeCmd(cmd, doPrint=True)
+    rv, stdout, stderr = executeCmd(cmd, doPrint)
     if doLog:
         logging.info(stdout)
         logging.warning(stderr)
@@ -100,7 +100,7 @@ def diff(url):
 
 def listSnapshots(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    return executePrintAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd, doLog=False, doPrint=True)
 
 def info(url):
     snapshot = getLastSnapshot(url)
@@ -109,7 +109,7 @@ def info(url):
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    stdout = executePrintAndReturnStdout(cmd)
+    stdout = executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
     snapshots = stdout.splitlines()
     snapshots = [s.strip() for s in snapshots]
     if len(snapshots) < 1:
@@ -118,7 +118,7 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
-    return executePrintAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
 
 def init(url):
     cmd = 'borg init --remote-path=borg1 --encryption=repokey %s' % (url)
@@ -143,7 +143,7 @@ def backup(url, pathToBackup):
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create --remote-path=borg1 --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return executePrintAndReturnStdout(cmd)
+    return executePrintAndReturnStdout(cmd, doLog=False)
 
 def default():
     notifyGMail('Backup Starting', '')
