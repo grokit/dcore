@@ -176,10 +176,10 @@ def do():
 
     os.environ['BORG_PASSPHRASE'] = pw
     try:
-        if args.ls:
+        if args.list_files:
             snapshot = getLastSnapshot(url)
             listFiles(url, snapshot)
-        elif args.snapshots_list:
+        elif args.list_snapshots:
             listSnapshots(url)
         elif args.init:
             init(url)
