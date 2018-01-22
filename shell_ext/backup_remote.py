@@ -22,8 +22,12 @@ import dcore.apps.gmail.gmail as gmail
 
 _meta_shell_command = 'backup_remote'
 
+BACKUP_ROOT = '~/sync'
+
 def getArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--test', action="store_true", help='For debugging.')
+    parser.add_argument('-b', '--backup', action="store_true")
     parser.add_argument('-i', '--init', action="store_true")
     parser.add_argument('-s', '--list_snapshots', action="store_true")
     parser.add_argument('-l', '--list_files', action="store_true")
@@ -41,6 +45,7 @@ def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
 def executePrintAndReturn(cmd):
+    logging.debug('Executing: %s.' % cmd)
     L = []
     for l in executeCmd(cmd):
         L.append(l)
@@ -48,15 +53,16 @@ def executePrintAndReturn(cmd):
     return "".join(L)
 
 def executeCmd(cmd):
-    logging.debug('Executing: %s.' % cmd)
-
     if True:
         cmd = cmd.split(' ')
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         for l in p.stdout:
             yield l
         p.stdout.close()
-        return p.wait()
+        rv = p.wait()
+        if rv != 0:
+            raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
+        return rv
 
 def rawCommand(url, cmd):
     """
@@ -87,23 +93,19 @@ def info(url):
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    last = None
-    for l in executeCmd(cmd):
-        last = l.strip()
-
-    if last is None:
-        raise Exception()
-    return last
+    stdout = executePrintAndReturn(cmd)
+    snapshots = stdout.splitlines()
+    if len(snapshots) < 1:
+        raise Exception('Cannot get last snapshot from output: %s.' % snapshots)
+    return snapshots[-1]
 
 def listFiles(url, snapshot):
-    #cmd = 'borg list --short %s::%s' % (url, snapshot)
     cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
     return executePrintAndReturn(cmd)
 
 def init(url):
-    cmd = 'borg init --remote-path=borg1 %s' % (url)
-    for l in executeCmd(cmd):
-        logging.debug(l.strip())
+    cmd = 'borg init --remote-path=borg1 --encryption=repokey-blake2 %s' % (url)
+    return executePrintAndReturn(cmd)
 
 def mount(url):
     snapshot = getLastSnapshot(url)
@@ -136,7 +138,7 @@ def default():
     fileLstA = listFiles(url, snapshotA)
 
     # With server version, this does not return anything.
-    backup(url, '~/sync')
+    backup(url, BACKUP_ROOT)
 
     # Hmmmm but this will return even backup didn't run successfully.
     stdout = "Backup Report:\n"
@@ -169,6 +171,10 @@ def default():
     logging.info(stdout)
     notifyGMail('Backup Done', stdout)
 
+def testCommand(url):
+    cmd = 'borg list --remote-path=borg1 %s' % (url)
+    return executePrintAndReturn(cmd)
+
 def do():
     dlogging.setup()
     args = getArgs()
@@ -191,11 +197,15 @@ def do():
             umount(url)
         elif args.raw_command:
             rawCommand(url)
+        elif args.backup:
+            backup(url, BACKUP_ROOT)
+        elif args.test:
+            testCommand(url)
         else:
             default()
     except Exception as e:
         os.environ['BORG_PASSPHRASE'] = 'none'
-        logging.debug(e)
+        logging.error('Exception: %s.' % e)
     os.environ['BORG_PASSPHRASE'] = 'none'
 
 if __name__ == '__main__':
