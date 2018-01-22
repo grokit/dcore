@@ -25,8 +25,8 @@ _meta_shell_command = 'backup_remote'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--init', action="store_true")
-    parser.add_argument('-s', '--snapshots_list', action="store_true")
-    parser.add_argument('-l', '--ls', action="store_true")
+    parser.add_argument('-s', '--list_snapshots', action="store_true")
+    parser.add_argument('-l', '--list_files', action="store_true")
     parser.add_argument('-d', '--diff', action="store_true")
     parser.add_argument('-r', '--raw_command', help='Just run the command with password as environment variable. `URL` will be replaced by url.')
     parser.add_argument('-m', '--mount', action="store_true")
@@ -132,8 +132,8 @@ def default():
     notifyGMail('Backup Starting', '')
     pw, url = getBackupPWAndUrl()
 
-    snapshot = getLastSnapshot(url)
-    fileLstA = listFiles(url, snapshot)
+    snapshotA = getLastSnapshot(url)
+    fileLstA = listFiles(url, snapshotA)
 
     # With server version, this does not return anything.
     backup(url, '~/sync')
@@ -143,8 +143,15 @@ def default():
     # stdout += listSnapshots(url)
     stdout += "\n" + info(url)
 
-    snapshot = getLastSnapshot(url)
-    fileLstB = listFiles(url, snapshot)
+    snapshotB = getLastSnapshot(url)
+    fileLstB = listFiles(url, snapshotB)
+
+    with open('/tmp/fa', 'w') as fh:
+        fh.write(fileLstA)
+    with open('/tmp/fb', 'w') as fh:
+        fh.write(fileLstB)
+
+    stdout += 'SnapshotA: %s, SnapshotB: %s.\n' % (snapshotA, snapshotB)
 
     # Borg diff doesn't work with current version.
     #d = difflib.Differ()
@@ -152,8 +159,10 @@ def default():
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
 
     r = list(r)
+    stdout += 'diff size before filter: %s\n' % len(r)
     r = [x for x in r if '.git' not in x]
     r = [x for x in r if '_h_' not in x]
+    stdout += 'diff size after filter: %s\n' % len(r)
 
     stdout += "\nDiff:\n\n" + "\n".join(r)
 

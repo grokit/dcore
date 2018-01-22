@@ -40,7 +40,13 @@ def setup():
     folder = data.logsdir()
     data.createDirIfNotExist(folder)
     logFilename = os.path.join(folder, 'dcore.log')
-    rFileHandler = TimedRotatingFileHandler(logFilename, when='M')
+    rFileHandler = TimedRotatingFileHandler(logFilename, when='D')
+
+    # Format
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    rFileHandler.setFormatter(formatter)
+    #logging.getLogger('').setFormatter(formatter)
+
     rootLogger = logging.getLogger('')
     rootLogger.addHandler(rFileHandler)
     if False:
@@ -48,6 +54,6 @@ def setup():
 
 if __name__ == '__main__':
     setup()
-    mirrorLogsToGMail()
+    #mirrorLogsToGMail()
     logging.info('test-append')
 
