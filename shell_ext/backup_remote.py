@@ -45,12 +45,12 @@ def getBackupPWAndUrl():
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
-def executePrintAndReturn(cmd):
+def executeLogAndReturn(cmd):
     logging.debug('Executing: %s.' % cmd)
     L = []
     for l in executeCmd(cmd):
         L.append(l)
-        print(l.strip())
+        logging.info(l.strip())
     return "".join(L)
 
 def executeCmd(cmd):
@@ -59,7 +59,10 @@ def executeCmd(cmd):
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         for l in p.stdout:
             yield l
+        for l in p.stderr:
+            yield l
         p.stdout.close()
+        p.stderr.close()
         rv = p.wait()
         if rv != 0:
             raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
@@ -70,7 +73,7 @@ def rawCommand(url, cmd):
     :::EXPERIMENTAL
     """
     cmd = cmd.replace('URL', url)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def diff(url):
     """
@@ -81,20 +84,20 @@ def diff(url):
         logging.warning('Not enough backups to diff.')
         return
     cmd = 'borg diff --remote-path=borg1 %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def listSnapshots(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def info(url):
     snapshot = getLastSnapshot(url)
     cmd = 'borg info --remote-path=borg1 %s::%s' % (url, snapshot)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
-    stdout = executePrintAndReturn(cmd)
+    stdout = executeLogAndReturn(cmd)
     snapshots = stdout.splitlines()
     snapshots = [s.strip() for s in snapshots]
     if len(snapshots) < 1:
@@ -103,11 +106,11 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def init(url):
-    cmd = 'borg init --remote-path=borg1 --encryption=repokey-blake2 %s' % (url)
-    return executePrintAndReturn(cmd)
+    cmd = 'borg init --remote-path=borg1 --encryption=repokey %s' % (url)
+    return executeLogAndReturn(cmd)
 
 def mount(url):
     snapshot = getLastSnapshot(url)
@@ -130,7 +133,7 @@ def backup(url, pathToBackup):
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create --remote-path=borg1 --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def default():
     notifyGMail('Backup Starting', '')
@@ -177,7 +180,7 @@ def default():
 
 def testCommand(url):
     cmd = 'borg list --remote-path=borg1 %s' % (url)
-    return executePrintAndReturn(cmd)
+    return executeLogAndReturn(cmd)
 
 def do():
     dlogging.setup()
