@@ -22,7 +22,8 @@ import dcore.apps.gmail.gmail as gmail
 
 _meta_shell_command = 'backup_remote'
 
-BACKUP_ROOT = '~/sync'
+#BACKUP_ROOT = '~/sync'
+BACKUP_ROOT = '~/sync/scripts/dcore'
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -95,6 +96,7 @@ def getLastSnapshot(url):
     cmd = 'borg list %s --remote-path=borg1 --short' % (url)
     stdout = executePrintAndReturn(cmd)
     snapshots = stdout.splitlines()
+    snapshots = [s.strip() for s in snapshots]
     if len(snapshots) < 1:
         raise Exception('Cannot get last snapshot from output: %s.' % snapshots)
     return snapshots[-1]
@@ -148,10 +150,12 @@ def default():
     snapshotB = getLastSnapshot(url)
     fileLstB = listFiles(url, snapshotB)
 
+    """
     with open('/tmp/fa', 'w') as fh:
         fh.write(fileLstA)
     with open('/tmp/fb', 'w') as fh:
         fh.write(fileLstB)
+    """
 
     stdout += 'SnapshotA: %s, SnapshotB: %s.\n' % (snapshotA, snapshotB)
 
