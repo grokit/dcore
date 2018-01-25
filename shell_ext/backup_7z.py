@@ -56,6 +56,7 @@ if __name__ == '__main__':
     print('Backup `%s` to `%s`.' % (pathToBackup, archive_name))
     # -mhe: encrypt file names
     # -mx=3: compression level 3 (0:lowest, 9:highest)
-    cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
+    # -v10g: split in 10 gigabytes files
+    cmd = '%s -t7z -v10g -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
 
     os.system(cmd)

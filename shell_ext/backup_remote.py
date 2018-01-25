@@ -142,15 +142,19 @@ def backup(url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
-    cmd = "borg create --remote-path=borg1 --stats --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
+    cmd = "borg create --remote-path=borg1 -v --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
     return executePrintAndReturnStdout(cmd, doLog=False)
 
 def default():
     notifyGMail('Backup Starting', '')
     pw, url = getBackupPWAndUrl()
 
-    snapshotA = getLastSnapshot(url)
-    fileLstA = listFiles(url, snapshotA)
+    try:
+        snapshotA = getLastSnapshot(url)
+        fileLstA = listFiles(url, snapshotA)
+    except Exception as e:
+        logging.warning(e)
+        fileLstA = ''
 
     # With server version, this does not return anything.
     backup(url, BACKUP_ROOT)

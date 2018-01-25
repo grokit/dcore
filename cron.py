@@ -10,7 +10,7 @@ import dcore.do_every as do_every
 def install():
     fname = '/etc/cron.hourly/dcore_hourly'
     user = os.environ['SUDO_USER']
-    cmd = "#!/bin/sh\nsu - __user__ -c '. ~/.bashrc && python3 __file__ |& tee -a ~/log_dcore_hourly.log'\n"
+    cmd = "#!/bin/sh\nsu - __user__ -c '. ~/.bashrc && python3 __file__'\n"
     cmd = cmd.replace('__file__', os.path.abspath(__file__))
 
     # If run under sudo, would get root
@@ -38,6 +38,8 @@ def backup():
 
 if __name__ == '__main__':
     dlogging.setup()
+    logging.debug('Cron disabled')
+    exit(0)
 
     if False:
         install()
