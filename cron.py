@@ -28,7 +28,7 @@ def install():
 def backup():
     # TODO: generalize "do every x hours"
     key = 'backup_remote'
-    freq = 6
+    freq = 18
     if not do_every.isDoneInLastXHours(key, freq):
         import dcore.shell_ext.backup_remote as backup_remote
         backup_remote.do()
@@ -38,8 +38,11 @@ def backup():
 
 if __name__ == '__main__':
     dlogging.setup()
-    logging.debug('Cron disabled')
-    exit(0)
+
+    runme = []
+    runme.append(backup)
+    # Keep this last
+    runme.append(dlogging.mirrorLogsToGMail)
 
     if False:
         install()
@@ -47,7 +50,6 @@ if __name__ == '__main__':
         logging.debug('Cron start')
 
         # List stuff to run.
-        runme = [backup, dlogging.mirrorLogsToGMail]
         for r in runme:
             try:
                 r()

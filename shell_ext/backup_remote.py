@@ -6,7 +6,7 @@ Backups to a remote location.
 # Troubleshooting
 
 ('Remote Exception (see remote log for the traceback)', 'LockTimeout')
-    --> borg break-lock --remote-path=borg1 URL 
+    --> borg break-lock URL 
 """
 
 import os
@@ -28,6 +28,7 @@ import dcore.apps.gmail.gmail as gmail
 _meta_shell_command = 'backup_remote'
 
 BACKUP_ROOT = '~/sync'
+#BACKUP_ROOT = '~/sync/dev/coding_practice'
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -46,6 +47,7 @@ def getArgs():
 
 def getBackupPWAndUrl():
     return private_data.k_remote_backup_backblaze_v1, private_data.backblaze_b2_url
+    #return private_data.k_remote_backup_backblaze_v1, '/home/arch/tmp-borg'
 
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
@@ -80,13 +82,6 @@ def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
         logging.warning(stderr)
     return stdout
 
-def rawCommand(url, cmd):
-    """
-    :::EXPERIMENTAL
-    """
-    cmd = cmd.replace('URL', url)
-    return executePrintAndReturnStdout(cmd)
-
 def diff(url):
     """
     This doesn't work with current version.
@@ -95,20 +90,20 @@ def diff(url):
     if len(snapshotsList) < 2:
         logging.warning('Not enough backups to diff.')
         return
-    cmd = 'borg diff --remote-path=borg1 %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
+    cmd = 'borg diff %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
     return executePrintAndReturnStdout(cmd)
 
 def listSnapshots(url):
-    cmd = 'borg list %s --remote-path=borg1 --short' % (url)
+    cmd = 'borg list %s --short' % (url)
     return executePrintAndReturnStdout(cmd, doLog=False, doPrint=True)
 
 def info(url):
     snapshot = getLastSnapshot(url)
-    cmd = 'borg info --remote-path=borg1 %s::%s' % (url, snapshot)
+    cmd = 'borg info %s::%s' % (url, snapshot)
     return executePrintAndReturnStdout(cmd)
 
 def getLastSnapshot(url):
-    cmd = 'borg list %s --remote-path=borg1 --short' % (url)
+    cmd = 'borg list %s --short' % (url)
     stdout = executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
     snapshots = stdout.splitlines()
     snapshots = [s.strip() for s in snapshots]
@@ -117,21 +112,21 @@ def getLastSnapshot(url):
     return snapshots[-1]
 
 def listFiles(url, snapshot):
-    cmd = 'borg list --remote-path=borg1 %s::%s' % (url, snapshot)
+    cmd = 'borg list %s::%s' % (url, snapshot)
     return executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
 
 def init(url):
-    cmd = 'borg init --remote-path=borg1 --encryption=repokey %s' % (url)
+    cmd = 'borg init --encryption=repokey %s' % (url)
     return executePrintAndReturnStdout(cmd)
 
 def mount(url):
     snapshot = getLastSnapshot(url)
     #snapshot = 'AutoBackup-2018-01-15T22:17:02.676038'
-    cmd = 'borg mount --remote-path=borg1 %s::%s /media/borg' % (url, snapshot)
+    cmd = 'borg mount %s::%s /media/borg' % (url, snapshot)
     executePrintAndReturnStdout(cmd)
 
 def umount(url):
-    cmd = 'borg umount --remote-path=borg1 /media/borg'
+    cmd = 'borg umount /media/borg'
     executePrintAndReturnStdout(cmd)
 
 def notifyGMail(head, content):
@@ -142,7 +137,7 @@ def backup(url, pathToBackup):
     pathToBackup = os.path.abspath(os.path.expanduser(pathToBackup))
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
-    cmd = "borg create --remote-path=borg1 -v --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
+    cmd = "borg create -v --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
     return executePrintAndReturnStdout(cmd, doLog=False)
 
 def default():
@@ -187,7 +182,7 @@ def default():
     notifyGMail('Backup Done', stdout)
 
 def testCommand(url):
-    cmd = 'borg list --remote-path=borg1 %s' % (url)
+    cmd = 'borg list %s' % (url)
     return executePrintAndReturnStdout(cmd)
 
 def do():
@@ -196,6 +191,7 @@ def do():
     pw, url = getBackupPWAndUrl()
 
     os.environ['BORG_PASSPHRASE'] = pw
+    os.environ['BORG_REMOTE_PATH'] = 'borg1'
     try:
         if args.list_files:
             snapshot = getLastSnapshot(url)
@@ -223,9 +219,11 @@ def do():
             default()
     except Exception as e:
         os.environ['BORG_PASSPHRASE'] = 'none'
+        os.environ['BORG_REMOTE_PATH'] = 'none'
         logging.error('Exception: %s.' % e)
         raise e
     os.environ['BORG_PASSPHRASE'] = 'none'
+    os.environ['BORG_REMOTE_PATH'] = 'none'
 
 if __name__ == '__main__':
     do()

@@ -82,6 +82,7 @@ duply
 borgbackup
 nethogs
 ncdu
+octave
 """
 
 apt_get_packages += apt_get_packages_extended
