@@ -25,7 +25,10 @@ def install():
     # https://docs.python.org/3/library/stat.html
     os.chmod(fname, st.st_mode | stat.S_IEXEC | stat.S_IXOTH)
 
-def backup():
+def task_sshots():
+    pass
+
+def task_backup():
     # TODO: generalize "do every x hours"
     key = 'backup_remote'
     freq = 18
@@ -34,13 +37,13 @@ def backup():
         backup_remote.do()
         do_every.markDone(key)
     else:
-        logging.debug('Skipping backup, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', do_every.lastTimeDone(key), freq)
+        logging.debug('Skipping task_backup, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', do_every.lastTimeDone(key), freq)
 
 if __name__ == '__main__':
     dlogging.setup()
 
     runme = []
-    runme.append(backup)
+    # runme.append(task_backup)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)
 
@@ -52,9 +55,10 @@ if __name__ == '__main__':
         # List stuff to run.
         for r in runme:
             try:
+                logging.debug('cron job starting: %s.' % (r))
                 r()
             except Exception as e:
-                logging.debug('cron job failed: %s (%s).' % (r, e))
+                logging.error('cron job failed: %s (%s).' % (r, e))
 
         logging.debug('Cron end')
 

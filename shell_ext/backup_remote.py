@@ -46,8 +46,8 @@ def getArgs():
     return args
 
 def getBackupPWAndUrl():
-    return private_data.k_remote_backup_backblaze_v1, private_data.backblaze_b2_url
-    #return private_data.k_remote_backup_backblaze_v1, '/home/arch/tmp-borg'
+    return private_data.k_remote_backup_rsyncnet_v1, private_data.rsyncnet_url
+    #return private_data.k_remote_backup_rsyncnet_v1, '/home/arch/tmp-borg'
 
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()

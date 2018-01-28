@@ -49,7 +49,7 @@ def setup():
     folder = data.logsdir()
     data.createDirIfNotExist(folder)
     logFilename = os.path.join(folder, 'dcore.log')
-    rFileHandler = TimedRotatingFileHandler(logFilename, when='D')
+    rFileHandler = TimedRotatingFileHandler(logFilename, when='D', interval=1)
 
     # Format
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
