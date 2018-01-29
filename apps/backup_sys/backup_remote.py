@@ -53,36 +53,6 @@ def getBackupPWAndUrl():
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
-def executeCmd(cmd, doPrint=False):
-    cmd = cmd.split(' ')
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
-    stdout = []
-    stderr = []
-    for l in p.stdout:
-        stdout.append(l)
-        if doPrint:
-            print(l.strip())
-    for l in p.stderr:
-        stderr.append(l)
-        if doPrint:
-            print(l.strip())
-    p.stdout.close()
-    p.stderr.close()
-    rv = p.wait()
-    if rv != 0:
-        raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
-    return rv, "".join(stdout), "".join(stderr)
-
-def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
-    logging.debug('Executing: %s.' % cmd)
-    L = []
-    rv, stdout, stderr = executeCmd(cmd, doPrint)
-    if doLog:
-        logging.info(stdout)
-        logging.warning(stderr)
-    return stdout
-
 def diff(url):
     """
     This doesn't work with current version.
@@ -92,20 +62,20 @@ def diff(url):
         logging.warning('Not enough backups to diff.')
         return
     cmd = 'borg diff %s::%s %s' % (url, snapshotsList[-2], snapshotsList[-1])
-    return executePrintAndReturnStdout(cmd)
+    return osrun.executePrintAndReturnStdout(cmd)
 
 def listSnapshots(url):
     cmd = 'borg list %s --short' % (url)
-    return executePrintAndReturnStdout(cmd, doLog=False, doPrint=True)
+    return osrun.executePrintAndReturnStdout(cmd, doLog=False, doPrint=True)
 
 def info(url):
     snapshot = getLastSnapshot(url)
     cmd = 'borg info %s::%s' % (url, snapshot)
-    return executePrintAndReturnStdout(cmd)
+    return osrun.executePrintAndReturnStdout(cmd)
 
 def getLastSnapshot(url):
     cmd = 'borg list %s --short' % (url)
-    stdout = executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
+    stdout = osrun.executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
     snapshots = stdout.splitlines()
     snapshots = [s.strip() for s in snapshots]
     if len(snapshots) < 1:
@@ -114,21 +84,21 @@ def getLastSnapshot(url):
 
 def listFiles(url, snapshot):
     cmd = 'borg list %s::%s' % (url, snapshot)
-    return executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
+    return osrun.executePrintAndReturnStdout(cmd, doLog=False, doPrint=False)
 
 def init(url):
     cmd = 'borg init --encryption=repokey %s' % (url)
-    return executePrintAndReturnStdout(cmd)
+    return osrun.executePrintAndReturnStdout(cmd)
 
 def mount(url):
     snapshot = getLastSnapshot(url)
     #snapshot = 'AutoBackup-2018-01-15T22:17:02.676038'
     cmd = 'borg mount %s::%s /media/borg' % (url, snapshot)
-    executePrintAndReturnStdout(cmd)
+    osrun.executePrintAndReturnStdout(cmd)
 
 def umount(url):
     cmd = 'borg umount /media/borg'
-    executePrintAndReturnStdout(cmd)
+    osrun.executePrintAndReturnStdout(cmd)
 
 def notifyGMail(head, content):
     title = 'Backup Remote rZ5FTTdKiHHf2Z8t - %s (%s)' % (head, dateForAnnotation())
@@ -139,7 +109,7 @@ def backup(url, pathToBackup):
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create -v --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return executePrintAndReturnStdout(cmd, doLog=False)
+    return osrun.executePrintAndReturnStdout(cmd, doLog=False)
 
 def default():
     notifyGMail('Backup Starting', '')
@@ -184,7 +154,7 @@ def default():
 
 def testCommand(url):
     cmd = 'borg list %s' % (url)
-    return executePrintAndReturnStdout(cmd)
+    return osrun.executePrintAndReturnStdout(cmd)
 
 def do():
     dlogging.setup()
