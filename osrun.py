@@ -11,7 +11,7 @@ import subprocess
 
 def executeCmd(cmd, doPrint=False):
     cmd = cmd.split(' ')
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, close_fds=True)
 
     stdout = []
     stderr = []
@@ -19,12 +19,12 @@ def executeCmd(cmd, doPrint=False):
         stdout.append(l)
         if doPrint:
             print(l.strip())
+    #p.stdout.close()
     for l in p.stderr:
         stderr.append(l)
         if doPrint:
             print(l.strip())
-    p.stdout.close()
-    p.stderr.close()
+    #p.stderr.close()
     rv = p.wait()
     if rv != 0:
         raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
@@ -38,4 +38,7 @@ def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
         logging.info(stdout)
         logging.warning(stderr)
     return stdout
+
+if __name__ == '__main__':
+    pass
 
