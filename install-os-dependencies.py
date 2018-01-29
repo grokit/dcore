@@ -83,8 +83,11 @@ borgbackup
 nethogs
 ncdu
 octave
+python3-pandas
+ipython3
 """
 
+# macchanger <-- pops up UI in install, do manually if want it
 apt_get_packages += apt_get_packages_extended
 
 # pip3 install rsa?, https://stuvel.eu/rsa
