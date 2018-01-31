@@ -33,7 +33,7 @@ def task_backup():
     key = 'backup_remote'
     freq = 18
     if not do_every.isDoneInLastXHours(key, freq):
-        import dcore.shell_ext.backup_remote as backup_remote
+        import dcore.apps.backup_remote.backup_remote as backup_remote
         backup_remote.do()
         do_every.markDone(key)
     else:
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     dlogging.setup()
 
     runme = []
-    # runme.append(task_backup)
+    runme.append(task_backup)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)
 
