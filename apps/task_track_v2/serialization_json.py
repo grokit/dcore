@@ -32,7 +32,7 @@ def toFile(filename, workDoneSet):
 	workDoneSetWrite = list(map( dateToStr, workDoneSet ))
 
 	#encoded = Encoder().encode(workDoneSetWrite)
-	encoded = json.dumps(workDoneSetWrite, cls=Encoder, indent=4)
+	encoded = json.dumps(workDoneSetWrite, cls=Encoder, indent=4, sort_keys=True)
 	open(filename, 'w').write(encoded)
 
 def fromFile(filename):

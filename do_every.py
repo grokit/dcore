@@ -43,7 +43,7 @@ def markFileAsCurrent(filename):
     hashMap[filename] = hash(filename) 
 
     with open(cache, 'w') as fh:
-        fh.write(json.dumps(hashMap))
+        fh.write(json.dumps(hashMap, sort_keys=True, indent=4))
 
     assert not isFileModifiedSinceLastTouch(filename)
 
@@ -56,7 +56,7 @@ def lastTimeDone(key):
     with open(filename, 'r') as fh:
         keys = json.loads(fh.read())
         if not key in keys:
-            return False
+            return 1e9
         utime = keys[key]
 
         now = int(time.time())
@@ -84,7 +84,7 @@ def markDone(key):
     keys[key] = int(time.time())
 
     with open(filename, 'w') as fh:
-        fh.write(json.dumps(keys))
+        fh.write(json.dumps(keys, sort_keys=True, indent=4))
 
     assert isDoneInLastXHours(key, 0.01)
 
