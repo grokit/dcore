@@ -10,6 +10,8 @@ import logging
 import subprocess
 
 def executeCmd(cmd, doPrint=False):
+    # NCurse deadlock:
+    # https://stackoverflow.com/questions/33886406/how-to-avoid-the-deadlock-in-a-subprocess-without-using-communicate
     cmd = cmd.split(' ')
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, close_fds=True)
 

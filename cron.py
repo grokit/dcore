@@ -28,6 +28,19 @@ def install():
 def task_sshots():
     pass
 
+def task_keyfile():
+    key = 'backup_keyfile'
+    freq = 18
+    if not do_every.isDoneInLastXHours(key, freq):
+        import dcore.private_data as private_data
+        import dcore.apps.gmail.gmail as gmail
+        keyfile = private_data.filename_keyfile
+        keyfile = os.path.abspath(os.path.expanduser(keyfile))
+        gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK", "See file.", filenameAttach=keyfile)
+        do_every.markDone(key)
+    else:
+        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
+
 def task_backup():
     # TODO: generalize "do every x hours"
     key = 'backup_remote'
@@ -37,13 +50,14 @@ def task_backup():
         backup_remote.do()
         do_every.markDone(key)
     else:
-        logging.debug('Skipping task_backup, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', do_every.lastTimeDone(key), freq)
+        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
 
 if __name__ == '__main__':
     dlogging.setup()
 
     runme = []
     runme.append(task_backup)
+    runme.append(task_keyfile)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)
 

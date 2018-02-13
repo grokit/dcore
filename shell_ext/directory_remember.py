@@ -15,6 +15,11 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
 
+- Also support remembering and opening files:
+    . cd<folder-tag>
+    . op<file-tag>
+    ^^ or maybe better to have a separate utility since the `. x` syntax is not necessary to open files.
+
 - Instead of sorting, just keep things in order added.
     1 list of tagged, one for just number `. cd0` should always go to last folder
 

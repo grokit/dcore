@@ -109,7 +109,15 @@ def backup(url, pathToBackup):
     # https://borgbackup.readthedocs.io/en/stable/usage/create.html
     # --list to logging.debug files as we process
     cmd = "borg create -v --progress %s::AutoBackup-%s %s" % (url, dateForAnnotation(), pathToBackup)
-    return osrun.executePrintAndReturnStdout(cmd, doLog=False)
+    #return osrun.executePrintAndReturnStdout(cmd, doLog=False)
+
+    # This:
+    # osrun.executePrintAndReturnStdout(cmd, doLog=False)
+    # ... gets stuck for some reason (only on borg create). 
+    # May be because of NCurse being used to update count.
+    # ... could try disabling progress too...
+    os.system(cmd)
+    return "osrun disabled for main backup command"
 
 def default():
     notifyGMail('Backup Starting', '')
