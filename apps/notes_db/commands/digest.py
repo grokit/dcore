@@ -37,6 +37,8 @@ def do():
         T.append('~'*80 + '\n')
         T.append(m.strWithLine())
     t = "".join(T)
+    if len(matches) == 0:
+        t += "No pending items, good job!"
     
     title = "Digest R9uO6Eje %s" % (dateForAnnotation())
     content = t
