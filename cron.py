@@ -1,4 +1,5 @@
 import os
+import time
 import stat
 import getpass
 import datetime
@@ -36,7 +37,7 @@ def task_keyfile():
         import dcore.apps.gmail.gmail as gmail
         keyfile = private_data.filename_keyfile
         keyfile = os.path.abspath(os.path.expanduser(keyfile))
-        gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK", "See file.", filenameAttach=keyfile)
+        gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK %s" % time.time(), "See file.", filenameAttach=keyfile)
         do_every.markDone(key)
     else:
         logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
