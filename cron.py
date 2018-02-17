@@ -29,6 +29,16 @@ def install():
 def task_sshots():
     pass
 
+def task_digest():
+    key = 'digest'
+    freq = 4
+    if not do_every.isDoneInLastXHours(key, freq):
+        import dcore.apps.notes_db.commands.digest as note_db_digest
+        note_db_digest.do()
+        do_every.markDone(key)
+    else:
+        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
+
 def task_keyfile():
     key = 'backup_keyfile'
     freq = 18
@@ -57,8 +67,9 @@ if __name__ == '__main__':
     dlogging.setup()
 
     runme = []
-    runme.append(task_backup)
     runme.append(task_keyfile)
+    runme.append(task_backup)
+    runme.append(task_digest)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)
 

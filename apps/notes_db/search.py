@@ -1,4 +1,8 @@
 """
+# TODO
+
+This parses notes, and create Match based on query.
+A more complete abstraction would be to parse a Note class, against which it is possible to filter by query and rank.
 """
 
 import os
@@ -8,13 +12,6 @@ import math
 
 import dcore.apps.notes_db.data as data
 import dcore.apps.notes_db.meta as meta
-
-def walkGatherAllFiles(rootdir = '.'):
-    F = []
-    for dirpath, dirnames, filenames in os.walk(rootdir):
-        for f in filenames:
-            F.append( os.path.join(dirpath, f) )
-    return F
 
 class Match:
     "TODO: move to ./classes"
@@ -172,22 +169,15 @@ def manualSelect(matches):
 
     return matches[s]
 
-def manualSelectSimple(matches):
-
-    print('Select an item by entering its corresponding number. Enter cancels.')
-    i = 0
-    for x in matches:
-        print('%.1d: %s' % (i, x))
-        i += 1
-
-    s = input()
-    if len(s) == 0: return None
-    s = int(s)
-
-    return matches[s]
-
 def sortMatchesByScore(matches):
     return sorted(matches, key=lambda x: x.score, reverse=True)
+
+def walkGatherAllFiles(rootdir = '.'):
+    F = []
+    for dirpath, dirnames, filenames in os.walk(rootdir):
+        for f in filenames:
+            F.append( os.path.join(dirpath, f) )
+    return F
 
 def getAllFiles():
     root = data.notesRoot()
