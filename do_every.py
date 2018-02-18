@@ -89,7 +89,7 @@ def _markDone(key):
 def _isDoneInLastXHours(key, nHours):
     return _lastTimeDone(key) <= nHours
 
-def doEvery(key, nHours, fn, log=True):
+def rateLimitPerHour(key, nHours, fn, log=True):
     if not _isDoneInLastXHours(key, nHours):
         fn()
         _markDone(key)
