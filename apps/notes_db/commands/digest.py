@@ -21,10 +21,7 @@ def getArgs():
     parser = argparse.ArgumentParser()
     return parser.parse_args()
 
-def do():
-    args = getArgs()
-    query = "todo%sa" % (':'*3)
-
+def render(query):
     files = search.getAllFiles()
     
     context_range = 7
@@ -39,9 +36,19 @@ def do():
     t = "".join(T)
     if len(matches) == 0:
         t += "No pending items, good job!"
+    return t
+
+def do():
+    args = getArgs()
+
+    content = ""
+    content += render("todo%sa" % (':'*3))
+    content += '='*80
+    content += 'B'*80
+    content += '='*80
+    content += render("todo%sb" % (':'*3))
     
     title = "Digest R9uO6Eje %s" % (dateForAnnotation())
-    content = t
     gmail.sendEmail(private_data.primary_email, title, content)
 
 
