@@ -31,7 +31,7 @@ def task_digest():
         import dcore.apps.notes_db.commands.digest as note_db_digest
         note_db_digest.do()
 
-    do_every.rateLimitPerHour('digest', 4, fn)
+    do_every.rateLimitPerHour('digest', 19, fn)
 
 def task_keyfile():
     def fn():
@@ -41,7 +41,7 @@ def task_keyfile():
         keyfile = os.path.abspath(os.path.expanduser(keyfile))
         gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK %s" % time.time(), "See file.", filenameAttach=keyfile)
 
-    do_every.rateLimitPerHour('backup_keyfile', 18, fn)
+    do_every.rateLimitPerHour('backup_keyfile', 16, fn)
 
 def task_backup():
     def fn():
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     runme = []
     runme.append(task_keyfile)
-    #runme.append(task_backup)
+    runme.append(task_backup)
     runme.append(task_digest)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)
