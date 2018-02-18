@@ -1,11 +1,13 @@
+
 import os
 import json
 import time
 import hashlib
 
 import dcore.data as data
+import dcore.dlogging as dlogging
 
-def hash(filename):
+def _hash(filename):
     with open(filename, 'rb') as fh:
         m = hashlib.md5()
         while True:
@@ -22,7 +24,7 @@ def isFileModifiedSinceLastTouch(filename):
     if not os.path.isfile(cache):
         return True
 
-    fhash = hash(filename)
+    fhash = _hash(filename)
     with open(cache, 'r') as fh:
         hashMap = json.loads(fh.read())
         if filename in hashMap:
@@ -40,14 +42,14 @@ def markFileAsCurrent(filename):
             hashMap = json.loads(fh.read())
 
     filename = os.path.abspath(filename)
-    hashMap[filename] = hash(filename) 
+    hashMap[filename] = _hash(filename) 
 
     with open(cache, 'w') as fh:
         fh.write(json.dumps(hashMap, sort_keys=True, indent=4))
 
     assert not isFileModifiedSinceLastTouch(filename)
 
-def lastTimeDone(key):
+def _lastTimeDone(key):
     filename = os.path.join(data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
@@ -64,11 +66,7 @@ def lastTimeDone(key):
         nHoursAgo = (now - utime) / (60*60)
         return nHoursAgo
 
-def isDoneInLastXHours(key, nhours):
-    last = lastTimeDone(key)
-    return last <= nhours
-
-def markDone(key):
+def _markDone(key):
     filename = os.path.join(data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
@@ -86,19 +84,30 @@ def markDone(key):
     with open(filename, 'w') as fh:
         fh.write(json.dumps(keys, sort_keys=True, indent=4))
 
-    assert isDoneInLastXHours(key, 0.01)
+    assert _isDoneInLastXHours(key, 0.01)
+
+def _isDoneInLastXHours(key, nHours):
+    return _lastTimeDone(key) <= nHours
+
+def doEvery(key, nHours, fn, log=True):
+    if not _isDoneInLastXHours(key, nHours):
+        fn()
+        _markDone(key)
+    else:
+        if log:
+            dlogging.logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, _lastTimeDone(key), nHours)
 
 if __name__ == '__main__':
     key = 'test-key_%s' % int(time.time())
-    assert isDoneInLastXHours(key, 1) is False
-    markDone(key)
-    assert isDoneInLastXHours(key, 1) is True
-    assert isDoneInLastXHours(key, 0.5) is True
-    assert isDoneInLastXHours(key, 0.1) is True
-    assert isDoneInLastXHours(key, 0.0013889) is True
+    assert _isDoneInLastXHours(key, 1) is False
+    _markDone(key)
+    assert _isDoneInLastXHours(key, 1) is True
+    assert _isDoneInLastXHours(key, 0.5) is True
+    assert _isDoneInLastXHours(key, 0.1) is True
+    assert _isDoneInLastXHours(key, 0.0013889) is True
 
     time.sleep(6)
 
-    assert isDoneInLastXHours(key, 0.0013889) is False
+    assert _isDoneInLastXHours(key, 0.0013889) is False
 
 

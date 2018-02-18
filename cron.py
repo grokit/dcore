@@ -26,49 +26,36 @@ def install():
     # https://docs.python.org/3/library/stat.html
     os.chmod(fname, st.st_mode | stat.S_IEXEC | stat.S_IXOTH)
 
-def task_sshots():
-    pass
-
 def task_digest():
-    key = 'digest'
-    freq = 4
-    if not do_every.isDoneInLastXHours(key, freq):
+    def fn():
         import dcore.apps.notes_db.commands.digest as note_db_digest
         note_db_digest.do()
-        do_every.markDone(key)
-    else:
-        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
+
+    do_every.doEvery('digest', 4, fn)
 
 def task_keyfile():
-    key = 'backup_keyfile'
-    freq = 18
-    if not do_every.isDoneInLastXHours(key, freq):
+    def fn():
         import dcore.private_data as private_data
         import dcore.apps.gmail.gmail as gmail
         keyfile = private_data.filename_keyfile
         keyfile = os.path.abspath(os.path.expanduser(keyfile))
         gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK %s" % time.time(), "See file.", filenameAttach=keyfile)
-        do_every.markDone(key)
-    else:
-        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
+
+    do_every.doEvery('backup_keyfile', 18, fn)
 
 def task_backup():
-    # TODO: generalize "do every x hours"
-    key = 'backup_remote'
-    freq = 18
-    if not do_every.isDoneInLastXHours(key, freq):
+    def fn():
         import dcore.apps.backup_remote.backup_remote as backup_remote
         backup_remote.do()
-        do_every.markDone(key)
-    else:
-        logging.debug('Skipping %s, it was done %.2f hour(s) ago (doing every %.2f hour(s)).', key, do_every.lastTimeDone(key), freq)
+
+    do_every.doEvery('backup_remote', 18, fn)
 
 if __name__ == '__main__':
     dlogging.setup()
 
     runme = []
     runme.append(task_keyfile)
-    runme.append(task_backup)
+    #runme.append(task_backup)
     runme.append(task_digest)
     # Keep this last
     runme.append(dlogging.mirrorLogsToGMail)

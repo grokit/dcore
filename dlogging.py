@@ -8,7 +8,6 @@ from logging.handlers import TimedRotatingFileHandler
 import dcore.data as data
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
-import dcore.do_every as do_every
 
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
@@ -22,6 +21,7 @@ def filterLog(logAsStr):
     return "\n".join(l)
 
 def mirrorLogsToGMail():
+    import dcore.do_every as do_every
     folder = data.logsdir()
 
     for f in os.listdir(folder):
