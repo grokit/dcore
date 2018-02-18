@@ -34,19 +34,21 @@ def render(query):
         T.append('~'*80 + '\n')
         T.append(m.strWithLine())
     t = "".join(T)
-    if len(matches) == 0:
-        t += "No pending items, good job!"
     return t
 
 def do():
     args = getArgs()
 
+    cA = render("todo%sa" % (':'*3))
+    cB = render("todo%sb" % (':'*3))
+
     content = ""
-    content += render("todo%sa" % (':'*3))
-    content += '='*80
-    content += 'B'*80
-    content += '='*80
-    content += render("todo%sb" % (':'*3))
+    if len(cA+cB) != 0:
+        content += cA
+        content += '='*50 + '\n'
+        content += cB
+    else:
+        content += "No pending items, good job!\n"
     
     title = "Digest R9uO6Eje %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
