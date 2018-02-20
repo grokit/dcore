@@ -1,5 +1,9 @@
 """
 Get a daily digest of important, unclosed topics.
+
+# TODO
+
+- If A, B, C, D: Show A, B. If no A, show B, C. Etc (hide lower priorities).
 """
 
 _meta_shell_command = 'n_digest'

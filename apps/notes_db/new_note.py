@@ -17,6 +17,26 @@ Create a note document (or append to if already exists) in the note_db folder an
 
 # TODO
 
+ez to code:
+    build dashboard with all todo:::a, b
+    send my mail if not empty
+    SUPER QUICK HACK: do it immediately!
+
+
+ns super useful idea:
+    restrict search to tag
+    ns 'nethogs' --> ns -t linux nethogs
+    ns -t now project
+
+    support vi open a set of uuids:
+
+    ns -b something
+    bucket:::luid1, luid2, ...
+
+nn: ingest should ingest WO having to be in proper folder. should do git before and after automatically.
+
+nn: insert date after first pound
+
 - More search points if:
     - Search is in title
     - Has UUID

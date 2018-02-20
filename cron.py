@@ -34,14 +34,17 @@ def task_digest():
     do_every.rateLimitPerHour('digest', 19, fn)
 
 def task_keyfile():
-    def fn():
-        import dcore.private_data as private_data
-        import dcore.apps.gmail.gmail as gmail
-        keyfile = private_data.filename_keyfile
-        keyfile = os.path.abspath(os.path.expanduser(keyfile))
-        gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK %s" % time.time(), "See file.", filenameAttach=keyfile)
+    import dcore.private_data as private_data
+    import dcore.apps.gmail.gmail as gmail
+    keyfile = private_data.filename_keyfile
+    keyfile = os.path.abspath(os.path.expanduser(keyfile))
 
-    do_every.rateLimitPerHour('backup_keyfile', 16, fn)
+    if do_every.isFileModifiedSinceLastTouch(keyfile):
+        gmail.sendEmail(private_data.primary_email, "KeyFile UAOfzxsK %s" % time.time(), "See file.", filenameAttach=keyfile)
+        do_every.markFileAsCurrent(keyfile)
+        logging.debug('Keyfile updated.')
+    else:
+        logging.debug('Skipping keyfile, did not change.')
 
 def task_backup():
     def fn():

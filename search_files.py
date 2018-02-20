@@ -1,4 +1,10 @@
 
+"""
+# TODO
+- all files: glob.iglob <-- just use this instead of my own thing
+- merge with files.py
+
+"""
 import os
 import fnmatch
 
