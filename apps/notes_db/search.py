@@ -155,10 +155,15 @@ def isLineTitle(line):
         return True
     return False
 
-def manualSelect(matches):
+def manualSelect(matches, nCut = 30):
 
     print('Select an item by entering its corresponding number. Enter cancels.')
     i = 0
+
+    if len(matches) > nCut:
+        matches = matches[0:nCut]
+        print('Too many matches, cutting down to %s.' % len(matches))
+
     for x in matches:
         print('%.1d (%.2f): %s' % (i, x.score, x.filename))
         i += 1

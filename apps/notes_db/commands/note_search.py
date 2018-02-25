@@ -52,6 +52,7 @@ def getArgs():
     parser.add_argument('search_query', nargs='+')
     parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 1)
     parser.add_argument('-t', '--search_titles_only', action='store_true')
+    parser.add_argument('-m', '--match_infinite', action='store_true', help='If set, do not limit number of search results.')
     parser.add_argument('-o', '--open_matching_file', action='store_true')
     parser.add_argument('-O', '--open_first_matching_file', action='store_true')
     return parser.parse_args()
@@ -94,6 +95,9 @@ if __name__ == '__main__':
 
         selected = matches[0]
         if not G_ARGS.open_first_matching_file and len(matches) > 1:
-            selected = search.manualSelect(matches)
+            nCut = 30
+            if G_ARGS.match_infinite:
+                nCut = 1e9
+            selected = search.manualSelect(matches, nCut)
         os.system("vi '%s'" % selected.filename)
 
