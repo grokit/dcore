@@ -33,6 +33,13 @@ def task_digest():
 
     do_every.rateLimitPerHour('digest', 19, fn)
 
+def task_digest_goals():
+    def fn():
+        import dcore.apps.notes_db.commands.digest_goals as goals_db_digest
+        goals_db_digest.do()
+
+    do_every.rateLimitPerHour('digest_goals', 24*4, fn)
+
 def task_keyfile():
     import dcore.private_data as private_data
     import dcore.apps.gmail.gmail as gmail
@@ -60,8 +67,7 @@ if __name__ == '__main__':
     runme.append(task_keyfile)
     runme.append(task_backup)
     runme.append(task_digest)
-    # Keep this last
-    runme.append(dlogging.mirrorLogsToGMail)
+    runme.append(task_digest_goals)
 
     if False:
         install()
