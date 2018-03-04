@@ -29,7 +29,6 @@ import dcore.osrun as osrun
 _meta_shell_command = 'backup_remote'
 
 BACKUP_ROOT = '~/sync'
-#BACKUP_ROOT = '~/sync/dev/coding_practice'
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -144,8 +143,6 @@ def default():
     stdout += 'SnapshotA: %s, SnapshotB: %s.\n' % (snapshotA, snapshotB)
 
     # Borg diff doesn't work with current version.
-    #d = difflib.Differ()
-    #r = d.compare(fileLstA.splitlines(),fileLstB.splitlines())
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
 
     r = list(r)
@@ -155,9 +152,9 @@ def default():
     r = [x for x in r if len(x) > 0 and (x[0] == '+' or x[0] == '-')]
     stdout += 'diff size after filter: %s\n' % len(r)
 
-    stdout += "\nDiff:\n\n" + "\n".join(r)
+    stdoutAll = stdout + "\nDiff:\n\n" + "\n".join(r)
 
-    logging.info(stdout)
+    logging.info(stdoutAll)
     notifyGMail('Backup Done', stdout)
 
 def testCommand(url):
