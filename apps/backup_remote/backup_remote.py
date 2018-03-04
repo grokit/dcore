@@ -146,13 +146,16 @@ def default():
     r = difflib.unified_diff(fileLstA.splitlines(),fileLstB.splitlines())
 
     r = list(r)
-    stdout += 'diff size before filter: %s\n' % len(r)
-    r = [x for x in r if '.git' not in x]
-    r = [x for x in r if '_h_' not in x]
-    r = [x for x in r if len(x) > 0 and (x[0] == '+' or x[0] == '-')]
-    stdout += 'diff size after filter: %s\n' % len(r)
+    if False:
+        stdout += 'Diff size before filter: %s.\n' % len(r)
+        r = [x for x in r if '.git' not in x]
+        r = [x for x in r if '_h_' not in x]
+        r = [x for x in r if len(x) > 0 and (x[0] == '+' or x[0] == '-')]
+        stdout += 'Diff size after filter: %s.\n' % len(r)
+    else:
+        stdout += '\nDiff size: %s.\n\n' % len(r)
 
-    stdoutAll = stdout + "\nDiff:\n\n" + "\n".join(r)
+    stdoutAll = stdout + "Diff:\n\n" + "\n".join(r)
 
     logging.info(stdoutAll)
     notifyGMail('Backup Done', stdout)
