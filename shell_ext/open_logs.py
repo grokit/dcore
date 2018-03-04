@@ -19,6 +19,7 @@ if __name__ == '__main__':
     print('Using folder: %s.' % folder)
 
     files = os.listdir(folder)
+    files = [os.path.join(folder,f) for f in files]
     files = [f for f in files if os.path.isfile(f)]
     files.sort(key=lambda x: os.path.getmtime(x))
 
