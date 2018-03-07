@@ -47,14 +47,14 @@ def doNotes():
     else:
         content += "No pending items, good job!\n"
     
-    title = "Digest R9uO6Eje %s" % (dateForAnnotation())
+    title = "Digest TODOs R9uO6Eje %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def doGoals():
     cA = render("uuid%sgoals" % (':'*3), 40)
     content = cA
     
-    title = "Goals R97O6ejiKe %s" % (dateForAnnotation())
+    title = "Digest Goals R97O6ejiKe %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def do():
