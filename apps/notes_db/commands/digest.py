@@ -21,14 +21,9 @@ import dcore.private_data as private_data
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
-def getArgs():
-    parser = argparse.ArgumentParser()
-    return parser.parse_args()
-
-def render(query):
+def render(query, context_range):
     files = search.getAllFiles()
     
-    context_range = 7
     matches = search.searchInFiles(files, query, context_range)
     search.score(matches, query)
 
@@ -40,11 +35,9 @@ def render(query):
     t = "".join(T)
     return t
 
-def do():
-    args = getArgs()
-
-    cA = render("todo%sa" % (':'*3))
-    cB = render("todo%sb" % (':'*3))
+def doNotes():
+    cA = render("todo%sa" % (':'*3), 10)
+    cB = render("todo%sb" % (':'*3), 10)
 
     content = ""
     if len(cA+cB) != 0:
@@ -56,6 +49,17 @@ def do():
     
     title = "Digest R9uO6Eje %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
+
+def doGoals():
+    cA = render("uuid%sgoals" % (':'*3), 40)
+    content = cA
+    
+    title = "Goals R97O6ejiKe %s" % (dateForAnnotation())
+    gmail.sendEmail(private_data.primary_email, title, content)
+
+def do():
+    doNotes()
+    doGoals()
 
 if __name__ == '__main__':
     do()
