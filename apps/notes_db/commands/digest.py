@@ -57,9 +57,17 @@ def doGoals():
     title = "Digest Goals R97O6ejiKe %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
+def doForefront():
+    cA = render("uuid%sforefront" % (':'*3), 75)
+    content = cA
+    
+    title = "Digest Forefront Oei8Jae %s" % (dateForAnnotation())
+    gmail.sendEmail(private_data.primary_email, title, content)
+
 def do():
     doNotes()
     doGoals()
+    doForefront()
 
 if __name__ == '__main__':
     do()
