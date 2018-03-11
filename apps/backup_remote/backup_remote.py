@@ -90,8 +90,9 @@ def init(url):
     return osrun.executePrintAndReturnStdout(cmd)
 
 def mount(url):
-    snapshot = getLastSnapshot(url)
+    #snapshot = getLastSnapshot(url)
     #snapshot = 'AutoBackup-2018-01-15T22:17:02.676038'
+    snapshot = 'AutoBackup-2018-01-25T09:12:44.078155'
     cmd = 'borg mount %s::%s /media/borg' % (url, snapshot)
     osrun.executePrintAndReturnStdout(cmd)
 

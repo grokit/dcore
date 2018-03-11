@@ -51,7 +51,7 @@ def doNotes():
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def doGoals():
-    cA = render("uuid%sgoals" % (':'*3), 40)
+    cA = render("uuid%sgoals" % (':'*3), 75)
     content = cA
     
     title = "Digest Goals R97O6ejiKe %s" % (dateForAnnotation())
