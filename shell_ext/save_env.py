@@ -34,6 +34,7 @@ SAVE_ME_MEH = [
 
 # TODO:::b, THIS SHOULD BE INSIDE DCOREDATA, not some random place.
 BACKUP_IN = '~/sync/archive/backups/auto/script-backup-env'
+raise Exception('fix location')
 
 def saveDir(f, dst):
     dstName = os.path.split(f)[1] 

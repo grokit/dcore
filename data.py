@@ -31,7 +31,7 @@ def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
 
 def dcoreBackupsSysSettings():
-    return os.path.abspath(os.path.expanduser('~/sync/archive/backups'))
+    return os.path.abspath(os.path.expanduser('~/sync/archive/permanent/backups'))
 
 def pathExt():
     """
