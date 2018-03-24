@@ -31,7 +31,7 @@ def task_digest():
         import dcore.apps.notes_db.commands.digest as note_db_digest
         note_db_digest.do()
 
-    do_every.rateLimitPerHour('digest', 19, fn)
+    do_every.rateLimitPerHour('digest', 50, fn)
 
 def task_keyfile():
     import dcore.private_data as private_data
@@ -46,6 +46,13 @@ def task_keyfile():
     else:
         logging.debug('Skipping keyfile, did not change.')
 
+def task_files_index():
+    def fn():
+        # TODO: fix by making file index a proper app
+        os.system('fif')
+
+    do_every.rateLimitPerHour('digest', 12, fn)
+
 def task_backup():
     def fn():
         import dcore.apps.backup_remote.backup_remote as backup_remote
@@ -59,6 +66,7 @@ if __name__ == '__main__':
     runme = []
     runme.append(task_keyfile)
     runme.append(task_backup)
+    runme.append(task_files_index)
     runme.append(task_digest)
 
     if False:
