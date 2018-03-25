@@ -3,7 +3,9 @@ Get a daily digest of important, unclosed topics.
 
 # TODO
 
+- FIND a way to send on different schedule (FOREFRONT less often that TODO, etc)
 - If A, B, C, D: Show A, B. If no A, show B, C. Etc (hide lower priorities).
+
 """
 
 _meta_shell_command = 'n_digest'
@@ -35,12 +37,15 @@ def render(query, context_range):
     t = "".join(T)
     return t
 
-def doNotes():
+def doTODOsScatteredAndList():
+    c0 = render("uuid%stodo" % (':'*3), 40)
     cA = render("todo%sa" % (':'*3), 10)
     cB = render("todo%sb" % (':'*3), 10)
 
     content = ""
-    if len(cA+cB) != 0:
+    if len(c0 + cA+cB) != 0:
+        content += c0
+        content += '-'*50 + '\n'
         content += cA
         content += '='*50 + '\n'
         content += cB
@@ -65,7 +70,7 @@ def doForefront():
     gmail.sendEmail(private_data.primary_email, title, content)
 
 def do():
-    doNotes()
+    doTODOsScatteredAndList()
     doGoals()
     doForefront()
 
