@@ -8,8 +8,6 @@ import os
 
 import dcore.data as data
 
-_meta_shell_command = 'plot_weight'
-
 def interpolateWithDamp(X, Y):
     rangeX = [min(X), max(X)]
     step  = 3600 * 24 * 1
@@ -93,29 +91,3 @@ def plot(X, Y):
     plt.grid(True)
 
     plt.show()
-
-if __name__ == '__main__':
-    folder = data.dcoreData()
-    jd = open(os.path.join(folder, 'work_tracking_db.json')).read()
-    jd = json.loads(jd)
-
-    X = []
-    Y = []
-    for v in jd:
-        if v['type'] == 'weight':
-            date = v['date']
-            unix = dateTimeToUnixTimeSecs(dateStrToDateTime(date))
-            if unix < 1485275901: 
-                pass
-                #continue
-
-            weight = v['length']
-            m = ''
-            if weight <= 188: 
-                s = math.floor(10*(188-weight))
-                m = '<' + '-' * s 
-            print(date, weight, m)
-            X.append(unix)
-            Y.append(weight)
-    plot(X, Y)
-
