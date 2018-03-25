@@ -87,7 +87,5 @@ def plot(X, Y):
         Xlabels.append(l)
 
     plt.xticks(lX, Xlabels)
-
     plt.grid(True)
-
     plt.show()

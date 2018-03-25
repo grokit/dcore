@@ -12,7 +12,6 @@ import plot_utils
 
 _meta_shell_command = 'plot_weight'
 
-
 if __name__ == '__main__':
     folder = data.dcoreData()
     jd = open(os.path.join(folder, 'work_tracking_db.json')).read()
