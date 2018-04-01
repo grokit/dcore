@@ -27,18 +27,31 @@ def isOK(file):
             return False
     return True
 
+def getRoots():
+    return [data.dcoreRoot(), data.dcoreExtRoot()]
+
 def findPyFiles():
-    pyPublic = data.dcoreRoot()
+    scriptFolders = getRoots()
 
-    #print('Getting files from: ' + pyPublic)
+    P = []
+    for scriptFolder in scriptFolders:
+        pyfiles = fsearch.getAllFilesRecursively('*.py', scriptFolder)
+        P += [pyfile for pyfile in pyfiles if isOK(pyfile)]
 
-    pyfiles = fsearch.getAllFilesRecursively('*.py', pyPublic)
-    pyfiles = [pyfile for pyfile in pyfiles if isOK(pyfile)]
-
-    return pyfiles
+    return P
 
 def delCurrentShortcuts():
-    raise Exception("Not implemented")
+    "Delete all files that have special marker inside output directory."
+    scriptsOutputFolder = data.pathExt()
+
+    tag = data.tagShortcutsForDeletion()
+    for f in os.listdir(scriptsOutputFolder):
+        f = os.path.join(scriptsOutputFolder, f)
+        with open(f, 'r') as fh:
+            fdata = fh.read()
+        if tag in fdata:
+            print('Deleting script shortcut: %s.' % f)
+            os.remove(f)
 
 def getAutogenFileTemplate():
 
@@ -59,7 +72,6 @@ def getMetadataFromPyFiles(pyfiles):
     
     meta = []
     for file in pyfiles:
-        #print('Processing file: %s.' % file)
         fh = open(file, 'r')
         lines = fh.readlines()
         fh.close()
@@ -81,7 +93,7 @@ def getMetadataFromPyFiles(pyfiles):
 def createShortcuts(lMeta):
     
     file_template = getAutogenFileTemplate()
-    placeForScriptsThatOSHasPATHSetTo = data.pathExt()
+    scriptsOutputFolder = data.pathExt()
     
     for meta in lMeta:
         fileContent = file_template
@@ -90,7 +102,7 @@ def createShortcuts(lMeta):
 
         fileContent = fileContent.replace('__custom__', 'python3 %s $*' % meta[0])
         
-        fileOut = placeForScriptsThatOSHasPATHSetTo + "/" + meta[1] 
+        fileOut = scriptsOutputFolder + "/" + meta[1] 
         fileOut = os.path.normpath(fileOut)
         
         print( (meta, fileOut) )
@@ -102,9 +114,9 @@ def createShortcuts(lMeta):
 
 def do():
     pyFiles = findPyFiles()
-    if len(pyFiles) > 0:
-        meta = getMetadataFromPyFiles(pyFiles)
-        createShortcuts(meta)
+    delCurrentShortcuts()
+    meta = getMetadataFromPyFiles(pyFiles)
+    createShortcuts(meta)
     
 if __name__ == "__main__":
 	do()

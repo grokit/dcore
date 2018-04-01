@@ -21,6 +21,12 @@ def dcoreRoot():
     """
     return os.path.abspath(os.path.split(__file__)[0])
 
+def dcoreExtRoot():
+    """
+    If exist, return extention folder for user's private scripts.
+    """
+    return os.path.join(os.path.split(dcoreRoot())[0], 'dcore_ext')
+
 def dcoreTempData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
 
