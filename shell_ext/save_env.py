@@ -12,6 +12,8 @@ import sys
 import time
 import shutil
 
+import dcore.data as data
+
 _meta_shell_command = 'save_env'
 
 # Files or folders
@@ -23,6 +25,7 @@ SAVE_ME = [
     '~/.profile', # macos
     '~/.bashrc',
     '~/.irssi',
+    '~/.ssh',
     '~/.inputrc'
     '~/.gnomerc',
     '~/.bash_history',
@@ -31,10 +34,6 @@ SAVE_ME = [
 SAVE_ME_MEH = [
     '~/.viminfo', # not that useful, can likely contain private information.
 ]
-
-# TODO:::b, THIS SHOULD BE INSIDE DCOREDATA, not some random place.
-BACKUP_IN = '~/sync/archive/backups/auto/script-backup-env'
-raise Exception('fix location')
 
 def saveDir(f, dst):
     dstName = os.path.split(f)[1] 
@@ -51,6 +50,8 @@ def saveFile(f, dst):
     shutil.copy(src, dst)
 
 if __name__ == '__main__':
+    BACKUP_IN = data.dcoreBackupEnv()
+
     SAVE_ME = [os.path.expanduser(f) for f in SAVE_ME]
     SAVE_ME = [f for f in SAVE_ME if (os.path.isfile(f) or os.path.isdir(f))]
     BACKUP_IN = os.path.expanduser(BACKUP_IN)

@@ -36,8 +36,8 @@ def logsdir():
 def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
 
-def dcoreBackupsSysSettings():
-    return os.path.abspath(os.path.expanduser('~/sync/archive/permanent/backups'))
+def dcoreBackupEnv():
+    return os.path.join(dcoreData(), 'backups/env')
 
 def pathExt():
     """
@@ -54,7 +54,6 @@ def getDirs():
     dirs.append(dcoreData())
     dirs.append(dcoreTempData())
     dirs.append(pathExt())
-    dirs.append(dcoreBackupsSysSettings())
     return dirs
 
 def createAllDirsIfNotExist():

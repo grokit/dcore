@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if len(files) == 0:
         print('No log file found.')
     else:
-        file = os.path.abspath(files[0])
+        file = os.path.abspath(files[-1])
         cmd = 'vi %s' % file
         print(cmd)
         os.system(cmd)
