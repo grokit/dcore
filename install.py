@@ -160,9 +160,6 @@ alias gg='gnome-open'
 
 ## Tmux Saves History Properly
 
-# append history entries..
-shopt -s histappend
-
 # After each command, save and reload history
 # https://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"

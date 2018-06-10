@@ -26,6 +26,8 @@ if __name__ == '__main__':
             if xtime < 1485275901: 
                 continue
 
+            # Obvious issue: need to add all days where there is 0
+            # work done. Bucket and add days with multiple reports.
             nwork = v['length']
             X.append(xtime)
             Y.append(nwork)

@@ -45,7 +45,7 @@ def getArgs():
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     parser.add_argument('-o', '--open', action="store_true", help="Open with OS-configured program.")
-    parser.add_argument('-v', '--vim', action="store_true", help="Open in text editor all files that match.")
+    parser.add_argument('-e', '--vim', action="store_true", help="Open in text editor all files that match.")
     args = parser.parse_args()
     return args
 
