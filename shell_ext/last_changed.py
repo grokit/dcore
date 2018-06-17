@@ -8,7 +8,7 @@ import glob
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-e', '--ext', help="Only allow this extention, e.g. png")
+    parser.add_argument('-e', '--ext', help="Only allow this extension, e.g. png")
     args = parser.parse_args()
 
     filesAndChange = []
