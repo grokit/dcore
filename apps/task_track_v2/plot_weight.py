@@ -23,7 +23,7 @@ if __name__ == '__main__':
         if v['type'] == 'weight':
             date = v['date']
             unix = plot_utils.dateTimeToUnixTimeSecs(plot_utils.dateStrToDateTime(date))
-            if unix < 1485275901 + 10 * 60*60*24*30: 
+            if unix < 1485275901 + 14 * 60*60*24*30: 
                 continue
 
             weight = v['length']

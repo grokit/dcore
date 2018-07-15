@@ -15,6 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--run', action="store_true")
     parser.add_argument('-d', '--debug', action="store_true")
     parser.add_argument('-g', '--gmon', action="store_true")
+    parser.add_argument('-v', '--valgrind', action="store_true")
     args = parser.parse_args()
 
     for i in range(200):
@@ -55,7 +56,12 @@ if __name__ == '__main__':
         if rv == 0:
             cmd = './' + filesc[0] + '.tmpbin > ' + filesc[0] + '.tmpout'
             print(cmd)
+
+            if args.valgrind:
+                cmd = 'valgrind ' + cmd
+
             os.system(cmd)
+
             cmd = 'cat ./' + filesc[0] + '.tmpout'
             os.system(cmd)
             if args.gmon:

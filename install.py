@@ -165,8 +165,8 @@ alias gg='gnome-open'
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Infinite history
-HISTSIZE=100000000 
-HISTFILESIZE=100000000
+HISTSIZE=1000000 
+HISTFILESIZE=1000000
 
 ## Misc
 
