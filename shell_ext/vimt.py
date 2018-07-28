@@ -98,6 +98,10 @@ if __name__ == '__main__':
         print('No files.')
         exit(0)
 
+    if len(files) > 50:
+        print('Too many files, not opening.')
+        exit(0)
+
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmpfile = tmpdirname + '/.vimf'
         open(tmpfile, 'w').write("\n".join(files))
