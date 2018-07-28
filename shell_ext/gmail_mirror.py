@@ -1,7 +1,7 @@
 ﻿"""
 Monitor content of a directory, if any file change and / or not recorded uploaded, upload new version.
 
-JUST COPY OF MAILW for NOW ADAPT TODO:::C
+JUST COPY OF MAILW for NOW ADAPT TODO-C
 
 # TODO
 
