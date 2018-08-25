@@ -40,6 +40,9 @@ if __name__ == '__main__':
         if args.debug:
             print('Making debug build.')
             cmd += ' -g'
+            # needed for clang to properly display some variables
+            # see: https://stackoverflow.com/questions/41745527/cannot-view-stdstring-when-compiled-with-clang
+            cmd += ' -D_GLIBCXX_DEBUG'
             # then use:
             # gdp -tui <bin>
             # https://sourceware.org/gdb/onlinedocs/gdb/Backtrace.html
