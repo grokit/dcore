@@ -53,6 +53,7 @@ def getArgs():
     parser.add_argument('search_query', nargs='+')
     parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 5)
     parser.add_argument('-t', '--search_titles_only', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-m', '--match_infinite', action='store_true', help='If set, do not limit number of search results.')
     parser.add_argument('-s', '--search_only', action='store_true')
     parser.add_argument('-O', '--open_first_matching_file', action='store_true')
@@ -70,7 +71,8 @@ if __name__ == '__main__':
     matches = search.searchInFiles(files, query, G_ARGS.context_range)
     if G_ARGS.search_titles_only:
         matches = [m for m in matches if isLineTitle(m.line)]
-    search.score(matches, query)
+
+    search.score(matches, query, G_ARGS.verbose)
 
     matches = search.sortMatchesByScore(matches)
 

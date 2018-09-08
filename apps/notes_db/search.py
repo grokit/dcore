@@ -9,6 +9,7 @@ import os
 import argparse
 import re
 import math
+import inspect
 
 import dcore.apps.notes_db.data as data
 import dcore.apps.notes_db.meta as meta
@@ -59,25 +60,53 @@ def titleLevel(line):
 
     return level
 
-def score(matches, search_query):
+class ScorerLinesMentions:
+
+    def __init__(self):
+        self.total_score = 0
+
+    def score(self, search_query, lines, fn_debug = False):
+        bonus = 0
+
+        # Bonus if mentionned a lot in file.
+        nmention = 0
+        for l in lines:
+            match = re.search(search_query, l, re.IGNORECASE)
+            if match is not None:
+                nmention += 1
+
+        if nmention > 0:
+            if nmention > 10:
+                nmention = 10
+            bonus = 5 * (nmention / 20)
+
+        if fn_debug:
+            fn = inspect.stack()[0][3]
+            print('%s: %s' % (fn, bonus))
+
+        self.total_score += bonus
+
+    def getScore(self):
+        return self.total_score
+
+def score(matches, search_query, fn_debug = False):
     for m in matches:
+
+        if fn_debug:
+            print('scoring file: ', m.filename)
+
+        scorers = []
+        scorers.append(ScorerLinesMentions())
 
         with open(m.filename) as fh:
             i = 0
             lines = fh.readlines()
             metadata = meta.extract("\n".join(lines))
 
-            # Bonus if mentionned a lot in file.
-            nmention = 0
-            for l in lines:
-                match = re.search(search_query, l, re.IGNORECASE)
-                if match is not None:
-                    nmention += 1
-
-            if nmention > 0:
-                if nmention > 20:
-                    nmention = 20
-                m.score += 5 * (nmention / 20)
+            # The flaw here is that this adds up infinitely with the number of lines.
+            #score_linesMentions(search_query, lines, scores, fn_debug)
+            for scorer in scorers:
+                scorer.score(search_query, lines, fn_debug)
 
             # Bonus if in title, even better if towards beginning of file.
             for l in lines:
@@ -99,6 +128,9 @@ def score(matches, search_query):
 
             if uuid is not None and re.search(search_query, uuid, re.IGNORECASE):
                 m.score += 8
+
+        for scorer in scorers:
+            m.score += scorer.getScore()
 
         # Some folder have special score.
         # /folder since /folder/ happens for last folder.
