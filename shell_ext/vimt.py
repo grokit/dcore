@@ -41,6 +41,7 @@ def fromStdInIfData():
     return None
 
 def extractFilesFuzzy(lines):
+    # todo:::b, use central library that fextract (fuzzy-extract) shares
     F = []
     for l in lines:
         l = l.strip()
@@ -53,8 +54,8 @@ def extractFilesFuzzy(lines):
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--str_match', default=False, help='Open all files which has str_match in.')
-    args = parser.parse_args()
-    return args
+    parser.add_argument('-c', '--colon_open', action="store_true")
+    return parser.parse_args()
 
 def listFilesContainingString(s):
     """
@@ -72,33 +73,41 @@ def listFilesContainingString(s):
             print('Skipping: %s.' % filename)
     return files
 
+def colonOpen(s):
+    return listFilesContainingString(':'*3)
+
+def openFilesFromStdin():
+    rd = fromStdInIfData()
+    if rd is None:
+        raise Exception("Not implemented: maybe some cool shortcut to open files in vim")
+
+    files = extractFilesFuzzy(rd.splitlines())
+
+    # For some odd reason, this does not work with writing file.
+    # Have to use alternate opening strategy which is limited to some OS.
+    cmd = "xargs bash -c '</dev/tty vim -p %s'" % " ".join(files)
+    print(cmd)
+    os.system(cmd)
+
 if __name__ == '__main__':
 
     args = getArgs()
 
     files = []
-    if args.str_match:
+    if args.colon_open:
+        files = colonOpen(args.str_match)
+    elif args.str_match:
         files = listFilesContainingString(args.str_match)
     else:
-        rd = fromStdInIfData()
-        if rd is None:
-            raise Exception("Not implemented: maybe some cool shortcut to open files in vim")
-
-        files = extractFilesFuzzy(rd.splitlines())
-
-        # For some odd reason, this does not work with writing file.
-        # Have to use alternate opening strategy which is limited to some OS.
-        cmd = "xargs bash -c '</dev/tty vim -p %s'" % " ".join(files)
-        print(cmd)
-        os.system(cmd)
+        print('Reading from stdin...')
+        openFilesFromStdin()
         exit(0)
 
     print('Using files: %s.' % files)
     if len(files) == 0:
         print('No files.')
         exit(0)
-
-    if len(files) > 50:
+    elif len(files) > 50:
         print('Too many files, not opening.')
         exit(0)
 
