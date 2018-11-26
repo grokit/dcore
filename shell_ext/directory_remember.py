@@ -1,4 +1,8 @@
 """
+# BUGS
+
+- Same key can be there multiple times ... forbid at entry.
+
 # Documentation
 
 `dr -r` will permanently remember current directory.

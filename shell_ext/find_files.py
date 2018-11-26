@@ -124,7 +124,7 @@ def do():
         if args.open is True:
             assert len(F) == 1
             for f in F:
-                cmd = 'gnome-open %s' % f
+                cmd = 'xdg-open %s' % f
                 print(cmd)
                 os.system(cmd)
 

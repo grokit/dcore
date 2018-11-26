@@ -1,4 +1,14 @@
 ﻿"""
+# TODOs
+
+## Cs
+
+sshot -n
+
+move screenshot to last opened note, prepend-with date and text after then n
+then print where it's moved
+
+if -o then open it
 """
 
 import os
@@ -88,9 +98,11 @@ if __name__ == '__main__':
 
     if args.open_last or args.edit_last:
         sshots = screenshotsFilenameByModDate()
-        cmd = "eog '%s'" % sshots[-1]
+        cmd = "__gfx_editor__ '%s'" % sshots[-1]
         if args.edit_last:
-            cmd = "shotwell '%s'" % sshots[-1]
+            pass # default now?
+        # eog works for just see fast stuff
+        cmd = cmd.replace('__gfx_editor__', 'gimp')
         print(cmd)
         os.system(cmd)
         sys.exit(0)

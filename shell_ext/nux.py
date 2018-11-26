@@ -57,7 +57,16 @@ def mempigs():
     osExec('ps -e -o pid,vsz,comm= | sort -n -k 2')
 
 def screenshot():
-    osExec('sleep 5 && gnome-screenshot -a -c')
+    # -c: clipboard
+    #osExec('sleep 5 && gnome-screenshot -a -c')
+    #osExec('gnome-screenshot -a -c')
+
+    # saves directly to file
+    #osExec('scrot -s')
+    osExec('scrot -s -e \'xclip -selection clipboard -t "image/png" < $f\' /tmp/scrot.png')
+
+def ss():
+    screenshot()
 
 def mac():
     # Randomize MAC address. You may need to disconnect, reconnect.

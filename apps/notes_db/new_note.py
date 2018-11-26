@@ -17,6 +17,9 @@ Create a note document (or append to if already exists) in the note_db folder an
 
 # TODO
 
+nn:: take whole dire and make a note out of it
+    nn --dir . <title>
+
 ez to code:
     build dashboard with all todo:::a, b
     send my mail if not empty

@@ -31,11 +31,11 @@ if __name__ == '__main__':
     assert len(filesc) == 1
     rv = 0;
     for file in filesc:
-        #cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.bin' % (file, file)
+        cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
 
         #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
-        cmd = 'clang++-4.0 -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
+        #cmd = 'clang++-4.0 -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
         #cmd = 'clang++-4.0 -stdlib=libc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
         if args.debug:
             print('Making debug build.')

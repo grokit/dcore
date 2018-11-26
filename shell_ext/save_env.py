@@ -26,7 +26,8 @@ SAVE_ME = [
     '~/.bashrc',
     '~/.irssi',
     '~/.ssh',
-    '~/.inputrc'
+    '~/.inputrc',
+    '~/.config', # i3
     '~/.gnomerc',
     '~/.bash_history',
 ]

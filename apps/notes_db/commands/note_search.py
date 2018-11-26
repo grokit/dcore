@@ -9,7 +9,17 @@ ns: if folder contains query: score UP.
 ns: tag:::important should UP priority
 - ns <x> should list if <x> is in filename or folder name (and not in file itself).
 
+score: if it has has now tag: ++
+
+. cdlast
+directory of last note opened
+. cdlast00 <-- last X
+
 ## Bs
+
+nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)
+    -> better ns creates shortcut to last file matched
+
 ## Cs
 
 task -n <name>: create

@@ -41,14 +41,13 @@ def fromStdInIfData():
     return None
 
 def extractFilesFuzzy(lines):
-    # todo:::b, use central library that fextract (fuzzy-extract) shares
-    F = []
+    F = set()
     for l in lines:
         l = l.strip()
         if ':' in l:
             l = l.split(':')[0]
         if os.path.isfile(l):
-            F.append(l)
+            F.add(l)
     return F
 
 def getArgs():
