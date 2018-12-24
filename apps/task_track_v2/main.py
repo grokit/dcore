@@ -72,7 +72,7 @@ if __name__ == '__main__':
     args = getArgs()
 
     if args.edit_db is True:
-        cmd = 'vim %s' % options.dbFile
+        cmd = 'vi %s' % options.dbFile
         print(cmd)
         os.system(cmd)
         exit(0)

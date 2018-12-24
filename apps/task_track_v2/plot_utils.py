@@ -1,3 +1,6 @@
+"""
+todo:::a : move in dcore -- it's used as an util lib outside of apps
+"""
 
 import math
 import json
@@ -8,24 +11,52 @@ import os
 
 import dcore.data as data
 
-def interpolateWithDamp(X, Y):
-    rangeX = [min(X), max(X)]
+def bucket(vx, vy, blen):
+    """
+    Buckets (vx, by) by bucket-length blen.
+
+    Assumes vx, vy already sorted.
+    """
+    assert len(vx) == len(vy)
+    if len(vx) == 0: return vx, vy
+
+    lowvx = vx[0]
+    highvx = vx[len(vx)-1]
+
+    nvx =[lowvx]
+    nvy =[0]
+    j = 0
+    x = lowvx + blen
+    while j < len(vy):
+        if vx[j] < x:
+            nvy[len(nvy)-1] += vy[j]
+            j += 1
+        else:
+            nvx.append(x)
+            nvy.append(0)
+            x += blen 
+
+    return nvx, nvy
+
+
+def interpolateWithDamp(vx, vy):
+    rangevx = [min(vx), max(vx)]
     step  = 3600 * 24 * 1
     width = 3600 * 24 * 30
 
-    X_ = []
-    Y_ = []
-    x = rangeX[0]
-    while x <= rangeX[1]:
-        i0 = bisect.bisect(X, x-width)
-        i1 = bisect.bisect(X, x+width)
+    vx_ = []
+    vy_ = []
+    x = rangevx[0]
+    while x <= rangevx[1]:
+        i0 = bisect.bisect(vx, x-width)
+        i1 = bisect.bisect(vx, x+width)
 
         store = []
         damps = []
         for i in range(i0, i1):
-            dist = abs(X[i]-x)
+            dist = abs(vx[i]-x)
             damp = math.e**(-3*dist/width)
-            store.append(Y[i]*damp)
+            store.append(vy[i]*damp)
             damps.append(damp)
 
         a = len(damps) / sum(damps)
@@ -33,11 +64,11 @@ def interpolateWithDamp(X, Y):
 
         if len(store) > 0:
             y = statistics.mean(store) 
-            X_.append(x)
-            Y_.append(y)
+            vx_.append(x)
+            vy_.append(y)
 
         x += step
-    return X_, Y_
+    return vx_, vy_
 
 def dateStrToDateTime(d):
     assert d[-3] == ':'
@@ -67,25 +98,25 @@ def mapToNValues(A, n):
     assert mx == A_[len(A_)-1]
     return A_
 
-def plot(X, Y):
+def plot(vx, vy):
     import numpy as np
     import matplotlib.pyplot as plt
 
-    plt.plot(X, Y, 'ro', color = '#00b300')
+    plt.plot(vx, vy, 'ro', color = '#00b300')
 
-    X_, Y_ = interpolateWithDamp(X, Y)
-    plt.plot(X_, Y_, 'k--', color = '#f609ff')
+    vx_, vy_ = interpolateWithDamp(vx, vy)
+    plt.plot(vx_, vy_, 'k--', color = '#f609ff')
 
-    Xlabels = [unixTimeToDisplay(x) for x in X]
+    vxlabels = [unixTimeToDisplay(x) for x in vx]
 
-    lX = mapToNValues(X, 6)
-    Xlabels = []
-    for i in range(len(lX)):
-        j = bisect.bisect(X, lX[i]) 
-        if j == len(X): j -= 1
-        l = unixTimeToDisplay(X[j])
-        Xlabels.append(l)
+    lvx = mapToNValues(vx, 6)
+    vxlabels = []
+    for i in range(len(lvx)):
+        j = bisect.bisect(vx, lvx[i]) 
+        if j == len(vx): j -= 1
+        l = unixTimeToDisplay(vx[j])
+        vxlabels.append(l)
 
-    plt.xticks(lX, Xlabels)
+    plt.xticks(lvx, vxlabels)
     plt.grid(True)
     plt.show()

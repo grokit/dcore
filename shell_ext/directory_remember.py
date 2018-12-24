@@ -19,6 +19,9 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
 
+- dr: should keep remembered dirs in s small stack instead of alphabetical
+    . cdl1, cdl2: goes to two remembered dir ago, even if not named --> makes dr -r more useful as a stack
+
 - Also support remembering and opening files:
     . cd<folder-tag>
     . op<file-tag>

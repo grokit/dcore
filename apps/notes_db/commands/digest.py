@@ -69,10 +69,17 @@ def doForefront():
     title = "Digest Forefront Oei8Jae %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
-def do():
+def doDigestScattered():
     doTODOsScatteredAndList()
+
+def do():
     doGoals()
     doForefront()
 
+def test():
+    cA = render("todo%sa" % (':'*3), 10)
+    print(cA)
+
 if __name__ == '__main__':
     do()
+    #test()

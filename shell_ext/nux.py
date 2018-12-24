@@ -74,6 +74,13 @@ def mac():
     osExec('sudo macchanger -r wlp1s0')
     osExec('sudo ifconfig wlp1s0 up')
 
+def nupdate():
+    # check number of update available
+    osExec('/usr/lib/update-notifier/apt-check')
+
+def update():
+    osExec('sudo apt update --yes')
+
 def lock():
     osExec('gnome-screensaver-command -l')
     #osExec('i3lock') # Big ugly white, and both screensavers sometimes overlap.
@@ -85,26 +92,29 @@ def urltopdf():
 def battery():
     osExec('upower -i /org/freedesktop/UPower/devices/battery_BAT0| grep -E "state|to\ full|percentage"')
 
-def crashplan():
-    command = '/usr/local/crashplan/bin/CrashPlanDesktop'
-    print(command)
-    osExec(command)
+# - - - - - - - - - -  SCREEN
 
-def loww():
+# screen-low
+def sloww():
     #osExec('xbacklight -set 5') # At very low values my screen does a weird nose.
     osExec('xrandr --output eDP-1 --brightness 0.4')
 
-def low():
+def slow():
     #osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
     osExec('xrandr --output eDP-1 --brightness 0.5')
 
-def med():
+def smed():
     #osExec('xbacklight -set 50')
     osExec('xrandr --output eDP-1 --brightness 0.7')
 
-def high():
+def shigh():
     #osExec('xbacklight -set 100')
     osExec('xrandr --output eDP-1 --brightness 1.0')
+
+def shighh():
+    osExec('xrandr --output eDP-1 --brightness 1.5')
+
+# - - - - - - - - - -  SCREEN END
 
 def wifi():
     #  wicd-curses does not seem to work...

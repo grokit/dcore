@@ -197,7 +197,7 @@ def manualSelect(matches, nCut = 30):
         print('Too many matches, cutting down to %s.' % len(matches))
 
     for x in matches:
-        print('%.1d (%.2f): %s' % (i, x.score, x.filename))
+        print('%.2d (%.2f): %s' % (i, x.score, x.filename))
         i += 1
 
     s = input()
