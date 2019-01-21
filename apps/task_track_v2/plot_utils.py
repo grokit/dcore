@@ -11,7 +11,7 @@ import os
 
 import dcore.data as data
 
-def bucket(vx, vy, blen):
+def bucket(vx, vy, blen, px0 = None):
     """
     Buckets (vx, by) by bucket-length blen.
 
@@ -21,6 +21,8 @@ def bucket(vx, vy, blen):
     if len(vx) == 0: return vx, vy
 
     lowvx = vx[0]
+    if px0 is not None:
+        lowvx = px0
     highvx = vx[len(vx)-1]
 
     nvx =[lowvx]

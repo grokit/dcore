@@ -31,8 +31,8 @@ def getArgs():
     return args
 
 def findExecutableScripts():
-    pyPublic = data.dcoreRoot()
-    pyfiles = fsearch.getAllFilesRecursively('*.py', pyPublic)
+    pyfiles = fsearch.getAllFilesRecursively('*.py', data.dcoreRoot())
+    pyfiles += fsearch.getAllFilesRecursively('*.py', data.dcoreExtRoot())
 
     tag = scripts_info.shell_meta_search
 
@@ -63,7 +63,10 @@ if __name__ == '__main__':
         if tag == args.shortcut_to_edit:
             filename.append(f)
 
-    assert len(filename) == 1
+    if len(filename) != 1:
+        print(filename)
+        assert len(filename) == 1
+
     filename = filename[0]
     cmd = 'vim %s' % filename
     print(cmd)

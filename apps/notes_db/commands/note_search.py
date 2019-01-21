@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     selected = matches[0]
     if not G_ARGS.open_first_matching_file and len(matches) > 1:
-        nCut = 30
+        nCut = 15
         if G_ARGS.match_infinite:
             nCut = 1e9
         selected = search.manualSelect(matches, nCut)

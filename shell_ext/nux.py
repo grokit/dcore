@@ -95,12 +95,14 @@ def battery():
 # - - - - - - - - - -  SCREEN
 
 # screen-low
+def slowww():
+    #osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
+    osExec('xrandr --output eDP-1 --brightness 0.2')
+
 def sloww():
-    #osExec('xbacklight -set 5') # At very low values my screen does a weird nose.
     osExec('xrandr --output eDP-1 --brightness 0.4')
 
 def slow():
-    #osExec('xbacklight -set 20') # At very low values my screen does a weird nose.
     osExec('xrandr --output eDP-1 --brightness 0.5')
 
 def smed():

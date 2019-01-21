@@ -48,7 +48,7 @@ def toFolderName(title, unixTime):
     for l in title:
         if l not in TITLE_SAFE_CHARSET:
             l = '-'
-        buf.append(l)
+        buf.append(l.lower())
     safeTitle = "".join(buf)
     return unixTimeAsSafeFolderStr(unixTime) + '_' + safeTitle
 
