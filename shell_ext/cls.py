@@ -10,4 +10,5 @@ if __name__ == '__main__':
         print('')
 
     # So that can search-up in TMUX to find separation.
-    print('=-'*25 + '=' * 3)
+    #print('=-'*25 + '=' * 3)
+    print('~-'*25 + '=' * 3)

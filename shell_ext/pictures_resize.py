@@ -84,9 +84,9 @@ if __name__ == '__main__':
             meta = getPictureMetadata(file)
             if shouldResize(meta):
                 cmd = "mogrify -resize \"2048x2048>\" -quality 80 '%s'" % file
+                print(cmd)
                 if args.apply:
                     print(meta)
-                    print(cmd)
                     os.system(cmd)
                 else:
                     print('Not applied: ', meta)

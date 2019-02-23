@@ -15,6 +15,12 @@ score: if it has has now tag: ++
 directory of last note opened
 . cdlast00 <-- last X
 
+BUG: only first # should count as a lot,
+    # abc
+    ...
+    # def
+    ... def should not get same points as abc.
+
 ## Bs
 
 nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)

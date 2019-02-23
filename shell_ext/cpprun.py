@@ -33,6 +33,10 @@ if __name__ == '__main__':
     for file in filesc:
         cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
 
+        # Extra warnings
+        if True:
+            cmd = 'g++ -Wall -Wextra -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
+
         #using clang, experimental
         #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
         #cmd = 'clang++-4.0 -stdlib=libstdc++ -std=c++1z %s -o %s.tmpbin' % (file, file)
@@ -57,7 +61,7 @@ if __name__ == '__main__':
     args.run = True
     if args.run == True:
         if rv == 0:
-            cmd = './' + filesc[0] + '.tmpbin > ' + filesc[0] + '.tmpout'
+            cmd = './' + filesc[0] + '.tmpbin | tee ' + filesc[0] + '.tmpout'
             print(cmd)
 
             if args.valgrind:
@@ -65,8 +69,9 @@ if __name__ == '__main__':
 
             os.system(cmd)
 
-            cmd = 'cat ./' + filesc[0] + '.tmpout'
-            os.system(cmd)
+            if False:
+                cmd = 'cat ./' + filesc[0] + '.tmpout'
+                os.system(cmd)
             if args.gmon:
                 "gprof sol01-simple-recursion-TLE.cpp.tmpbin gmon.out > gmon.txt"
                 cmd = 'gprof %s gmon.out > gmon.txt' % (filesc[0] + '.tmpbin')

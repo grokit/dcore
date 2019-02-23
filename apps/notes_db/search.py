@@ -152,6 +152,13 @@ def score(matches, search_query, fn_debug = False):
             if re.search(search_query, folderName, re.IGNORECASE):
                 m.score += 10
 
+        # enforce stable sort by inserting consistent but very small
+        # score based on name
+        t = 1
+        for c in m.filename:
+            t = (t * 7 + ord(c)) % 2**30 + 0.0001
+        m.score += 1/t
+
 def searchInFiles(files, query, context_range):
     matches = []
     for f in files:
