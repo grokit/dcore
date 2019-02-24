@@ -9,11 +9,12 @@ ns: if folder contains query: score UP.
 ns: tag:::important should UP priority
 - ns <x> should list if <x> is in filename or folder name (and not in file itself).
 
-score: if it has has now tag: ++
-
 . cdlast
 directory of last note opened
 . cdlast00 <-- last X
+
+nhist -> list of opened or modified files inorder
+    -> all opens go through some .py file which tracks metadata + fires up vi
 
 BUG: only first # should count as a lot,
     # abc
@@ -83,14 +84,16 @@ if __name__ == '__main__':
     query = " ".join(G_ARGS.search_query)
 
     files = search.getAllFiles()
+
+    # Use this to debug since files.
+    if False:
+        files0 = [f for f in files if 'folder/file1.md' in f]
+        files1 = [f for f in files if 'folder/file2.md' in f]
+        files = files0+files1
     
-    matches = search.searchInFiles(files, query, G_ARGS.context_range)
+    matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
     if G_ARGS.search_titles_only:
         matches = [m for m in matches if isLineTitle(m.line)]
-
-    search.score(matches, query, G_ARGS.verbose)
-
-    matches = search.sortMatchesByScore(matches)
 
     if G_ARGS.search_only:
         for m in matches:
@@ -108,6 +111,12 @@ if __name__ == '__main__':
     for k in dedup:
         dedup_matches.append(dedup[k])
     matches = dedup_matches
+
+    # Not a big fan of this: > 1 match per file. 
+    # ... and scores are stored inside the matches... would be better if
+    # this function was stateless.
+    search.score(matches, query, G_ARGS.verbose)
+
     matches = search.sortMatchesByScore(matches)
 
     if len(matches) == 0:

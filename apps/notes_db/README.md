@@ -3,9 +3,6 @@
 
 ## As
 
-stable sort
-ns: biggest issue right now is non-stable sort
-
 ns: penalize if /meh is in path
     if `meh` in filename of folder, penalize
 ++ consider path in search
@@ -18,6 +15,8 @@ ns -o: don't print, just show choices
 python install: bashrc / profile: at one place not the same, just generalize
 find . | grep tata | save
 save: configurable, by default goes in a folder, picking a new name
+
+if search term anywhere in UUID, it's a big deal
 
 ## Bs
 

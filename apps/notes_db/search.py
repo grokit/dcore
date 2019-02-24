@@ -116,22 +116,29 @@ def score(matches, search_query, fn_debug = False):
 
                 if match is not None:
                     level = titleLevel(l)
+
                     if level != 0:
                         m.score += multiplier * (2 + 5 * (4-titleLevel(l)) / 4.0)
 
-            # BIG bonus if query matches UUID.
-            uuid = None
+            # Bonus if match any tag, LARGE bonus if match uuid.
+            uuidVerifyUnique = None
             for metad in metadata:
-                if metad.metaType == 'uuid':
-                    assert uuid is None
-                    uuid = metad.value
+                if re.search(search_query, metad.value, re.IGNORECASE):
+                    bonus = 5
+                    if metad.metaType == 'uuid':
+                        # Just sanity, uuid is meant to be unique per document.
+                        assert uuidVerifyUnique is None
+                        uuidVerifyUnique = metad.value
+                        bonus *= 5
 
-            if uuid is not None and re.search(search_query, uuid, re.IGNORECASE):
-                m.score += 8
+                    m.score += bonus
 
         for scorer in scorers:
             m.score += scorer.getScore()
 
+        # MOVE to scorers! Why two patterns?
+        # just pass lines
+        #
         # Some folder have special score.
         # /folder since /folder/ happens for last folder.
         if isLineTitle(m.line):
@@ -159,17 +166,20 @@ def score(matches, search_query, fn_debug = False):
             t = (t * 7 + ord(c)) % 2**30 + 0.0001
         m.score += 1/t
 
-def searchInFiles(files, query, context_range):
+def extractMatchSetsFromFiles(files, query, context_range):
+    """
+    Note: this returns a SET of matches, can be > 1 per file.
+    """
     matches = []
-    for f in files:
-        with open(f) as fh:
+    for filename in files:
+        with open(filename) as fh:
             lines = fh.readlines()
             i = 0
             for l in lines:
                 m = re.search(query, l, re.IGNORECASE)
                 if m is not None:
                     g = m.group(0)
-                    match = Match(f, l) 
+                    match = Match(filename, l) 
 
                     ctx = []
                     cr = context_range 

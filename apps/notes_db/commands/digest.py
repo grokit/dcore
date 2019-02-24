@@ -26,7 +26,7 @@ def dateForAnnotation():
 def render(query, context_range):
     files = search.getAllFiles()
     
-    matches = search.searchInFiles(files, query, context_range)
+    matches = search.extractMatchSetsFromFiles(files, query, context_range)
     search.score(matches, query)
 
     matches = search.sortMatchesByScore(matches)
