@@ -90,6 +90,10 @@ class ScorerLinesMentions:
         return self.total_score
 
 def score(matches, search_query, fn_debug = False):
+    """
+    # TODO
+    - Move to score.py
+    """
     for m in matches:
 
         if fn_debug:
@@ -109,6 +113,8 @@ def score(matches, search_query, fn_debug = False):
                 scorer.score(search_query, lines, fn_debug)
 
             # Bonus if in title, even better if towards beginning of file.
+            lineMatchBonus = 0
+            titleMatchBonus = 0
             for l in lines:
                 match = re.search(search_query, l, re.IGNORECASE)
 
@@ -117,8 +123,12 @@ def score(matches, search_query, fn_debug = False):
                 if match is not None:
                     level = titleLevel(l)
 
-                    if level != 0:
-                        m.score += multiplier * (2 + 5 * (4-titleLevel(l)) / 4.0)
+                    if level == 0:
+                        lineMatchBonus += 1
+                    else:
+                        titleMatchBonus += multiplier * (2 + 5 * (4-titleLevel(l)) / 4.0)
+
+            m.score += min(5, lineMatchBonus) + min(10, titleMatchBonus)
 
             # Bonus if match any tag, LARGE bonus if match uuid.
             uuidVerifyUnique = None
