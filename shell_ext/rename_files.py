@@ -47,7 +47,7 @@ def removeSpace(filename, args):
     return to
 
 def removeAggressive(filename, args):
-    v = set('abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]') # ()
+    v = set('abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') # ()[]
 
     toLower = True
 
@@ -65,6 +65,17 @@ def prefix(f, arg):
     if arg is None:
         raise Exception('No country for None arg.')
     return "%s_%s" % (arg, f)
+
+def suffix(f, arg):
+    if arg is None:
+        raise Exception('No country for None arg.')
+
+    ext = ''
+    if '.' in f:
+        ext = f[f.rfind('.'):]
+        f = f[:f.rfind('.')]
+
+    return "%s_%s%s" % (f, arg, ext)
 
 def date(f, arg):
     t=time.strftime('%Y-%m-%d')
@@ -85,6 +96,7 @@ if __name__ == '__main__':
             'remove_aggressive': removeAggressive,
             'change_ext': changeExt,
             'prefix': prefix,
+            'suffix': suffix,
             'date': date,
             'custom': custom
             }

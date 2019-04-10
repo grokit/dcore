@@ -64,7 +64,9 @@ def takeScreenshot():
     if platform.system() in ["macosx", "Darwin"]:
         raise Exception("On macos, just use command+shift+4.")
 
-    cmd = "scrot -e 'mv $f %s'" % SRC_FOLDER
+    # osExec('scrot -s -e \'xclip -selection clipboard -t "image/png" < $f\' /tmp/scrot_latest.png')
+    # -s: select rectangle
+    cmd = "scrot -s -e 'xclip -selection clipboard -t \"image/png\" < $f && mv $f %s'" % SRC_FOLDER
     print(cmd)
     bef = time.time()
     r = os.system(cmd)

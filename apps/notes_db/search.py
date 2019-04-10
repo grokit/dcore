@@ -105,6 +105,8 @@ def score(matches, search_query, fn_debug = False):
         with open(m.filename) as fh:
             i = 0
             lines = fh.readlines()
+
+            # ::: do this automatically when process m, don't re-pass all lines
             metadata = meta.extract("\n".join(lines))
 
             # The flaw here is that this adds up infinitely with the number of lines.

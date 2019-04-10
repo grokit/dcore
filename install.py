@@ -19,6 +19,8 @@ import sys
 import os
 import platform
 
+# This (.bash_profile) might only be useful for OSX. Try it out.
+# https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
 BASH_SETUP_FILE = ['~/.bash_profile']
 BASH_STARTUP = ['~/.bashrc', '~/.profile']
 
@@ -160,6 +162,9 @@ alias gg='gnome-open'
 
 ## Tmux Saves History Properly
 
+# append to the history file, don't overwrite it
+shopt -s histappend
+
 # After each command, save and reload history
 # https://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
@@ -178,9 +183,6 @@ set -o vi
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
-
-# append to the history file, don't overwrite it
-shopt -s histappend
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

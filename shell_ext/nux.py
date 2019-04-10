@@ -21,6 +21,7 @@ import sys
 import inspect
 import argparse
 import os
+import datetime
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -63,7 +64,17 @@ def screenshot():
 
     # saves directly to file
     #osExec('scrot -s')
-    osExec('scrot -s -e \'xclip -selection clipboard -t "image/png" < $f\' /tmp/scrot.png')
+    if False:
+        osExec('scrot -s -e \'xclip -selection clipboard -t "image/png" < $f\' /tmp/scrot_latest.png')
+
+        # 2019-04-09T22:15:16.666163
+        filename = datetime.datetime.now().isoformat()
+        filename = filename.replace('.', '_')
+        filename = filename.replace(':', '-')
+        filename = filename = filename+"_screenshot.png"
+        osExec('cp /tmp/scrot_latest.png /tmp/%s' % filename)
+    else:
+        osExec('sshot')
 
 def ss():
     screenshot()
@@ -203,6 +214,10 @@ def update():
     osExec('sudo apt-get update')        # Fetches the list of available updates
     osExec('sudo apt-get upgrade')       # Strictly upgrades the current packages
     osExec('sudo apt-get dist-upgrade')  # Installs updates (new ones)
+
+def hosts():
+    #osExec('sudo vi /etc/hosts && sudo ifconfig eth0 down && sudo ifconfig eth0 up')
+    osExec('sudo vi /etc/hosts && sudo ifconfig wlp1s0 down && sudo ifconfig wlp1s0 up')
 
 if __name__ == '__main__':
     args = getArgs()

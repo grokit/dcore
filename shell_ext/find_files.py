@@ -38,13 +38,13 @@ _meta_shell_command = 'fif'
 
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 0.5*24*60*60 # Before automatically force regenerating.
+cacheExpiryInSeconds = 3*24*60*60 # Before automatically force regenerating.
 
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
-    parser.add_argument('-o', '--open', action="store_true", help="Open with OS-configured program.")
+    parser.add_argument('-O', '--open', action="store_true", help="Open with OS-configured program.")
     parser.add_argument('-e', '--vim', action="store_true", help="Open in text editor all files that match.")
     args = parser.parse_args()
     return args

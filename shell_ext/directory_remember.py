@@ -46,6 +46,9 @@ don't delete, write to 'deleted' file.
 Other Silimar Project: http://linuxgazette.net/109/marinov.html
 
 # BUGS
+
+- Old shortcuts not deleted.
+
 """
 
 _meta_shell_command = 'dr'

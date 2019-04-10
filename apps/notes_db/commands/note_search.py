@@ -69,7 +69,7 @@ def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='+')
     parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 5)
-    parser.add_argument('-t', '--search_titles_only', action='store_true')
+    parser.add_argument('-t', '--search_tags', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-m', '--match_infinite', action='store_true', help='If set, do not limit number of search results.')
     parser.add_argument('-s', '--search_only', action='store_true')
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         files = files0+files1
     
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
-    if G_ARGS.search_titles_only:
+    if G_ARGS.search_tags:
         matches = [m for m in matches if isLineTitle(m.line)]
 
     if G_ARGS.search_only:
