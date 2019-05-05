@@ -19,26 +19,14 @@ import sys
 import os
 import platform
 
-# This (.bash_profile) might only be useful for OSX. Try it out.
-# https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
-BASH_SETUP_FILE = ['~/.bash_profile']
-BASH_STARTUP = ['~/.bashrc', '~/.profile']
-
-def selectFirstExistingOrCreate(fname):
-    if type(fname) is not type([]):
-        raise Exception('Bad type: %s.' % type(fname))
-
-    for f in fname:
-        f = os.path.expanduser(f)
-        if os.path.isfile(f):
-            return f 
-
-    # No file match, create the first in the list.
-    f = os.path.expanduser(fname[0])
-    with open(f, 'w') as fh:
-        fh.write('\n')
-
-    return f 
+def getBashrcOrEquivalent():
+    """
+    https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
+    """
+    if platform.system() in ["macosx", "Darwin"]:
+        return os.path.expanduser('~/.bash_profile')
+    else:
+        return os.path.expanduser('~/.bashrc')
 
 def setupShortcutsBootstrap():
     """
@@ -62,7 +50,7 @@ export PATH=$PATH:%s
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
-    fname = selectFirstExistingOrCreate(BASH_STARTUP)
+    fname = getBashrcOrEquivalent()
 
     with open(fname, 'r') as fh:
         file = fh.read()
@@ -170,8 +158,8 @@ shopt -s histappend
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Infinite history
-HISTSIZE=1000000 
-HISTFILESIZE=1000000
+HISTSIZE=""
+HISTFILESIZE=""
 
 ## Misc
 
@@ -188,7 +176,7 @@ HISTCONTROL=ignoreboth
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 """
-    fname = selectFirstExistingOrCreate(BASH_SETUP_FILE)
+    fname = getBashrcOrEquivalent()
     updateFileContentBetweenMarks(
             os.path.expanduser(fname), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
@@ -200,12 +188,68 @@ shopt -s checkwinsize
 tmux
 """
 
-    fname = selectFirstExistingOrCreate(BASH_STARTUP)
+    fname = getBashrcOrEquivalent()
     updateFileContentBetweenMarks(
             os.path.expanduser(fname),
             '# DCORE_SECTION_BEGIN_lq71d2111iiiyyoeuq2xtild2428zxh7', 
             '# DCORE_SECTION_END_lq71d2111iiiyyoeuq2xtild2428zxh7', 
             STARTUP)
+
+def setupI3():
+    # :::b todo: finish setup
+    filename = '~/.config/i3/config'
+    configAdd = """
+# me ======
+bindsym $mod+p exec i3lock -c 000000
+exec --no-startup-id xss-lock -- i3lock -c 000000
+exec xautolock -time 1
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# # Sreen brightness controls
+bindsym XF86MonBrightnessUp exec nux high
+bindsym XF86MonBrightnessDown exec nux low
+
+# me (end) ======
+"""
+
+def setupVi():
+    # :::b todo: finish setup
+    filename = '~/.vimrc'
+    configAdd = """
+syntax on
+filetype indent plugin on
+" show existing tab with 4 spaces width
+set tabstop=4
+" " when indenting with '>', use 4 spaces width
+set shiftwidth=4
+" " On pressing tab, insert 4 spaces
+set expandtab
+
+" F2: compile and run current file.
+autocmd FileType python nnoremap <F2> :w!<cr>:exec '!python3' shellescape(@%, 1)<cr>
+autocmd FileType go nnoremap <F2> :w!<cr>:!go run %<cr>
+autocmd FileType java nnoremap <F2> :w!<cr>:!javarun %<cr>
+autocmd FileType cpp nnoremap <F2> :w!<cr>:!cpprun %<cr>
+
+" F3: format current file.
+autocmd FileType go nnoremap <F3> :w!<cr>:!go fmt %<cr>:e<cr>
+autocmd FileType java nnoremap <F3> :w!<cr>:!astyle % --indent=spaces<cr>:e<cr>
+autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive --aggressive %<cr>:e<cr>
+
+" F4: git commit.
+nnoremap <F4> :!gitpp<cr>
+
+" some extension added other command that starts with E.
+" make it explicit here what I intend by E
+command! E Explore
+
+":set spell spelllang=en_us
+":set nospell
+"""
 
 if __name__ == '__main__':
 
@@ -219,4 +263,6 @@ if __name__ == '__main__':
     delOld()
     setupShortcuts()
     setupBashRc()
+    setupI3()
+    setupVi()
 

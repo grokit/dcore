@@ -3,14 +3,12 @@ Transform a flat note file to directories.
 
 # TODO
 
-Auto do it from any folder.
+- Auto do it from any folder.
+- Before and after: commit to git
 
 # BUGS
-
-:::::BIG BUG: folder created with bad time:2016-08-16_22:32_Notes-DB-Dev-Notes
 """
 
-import data
 import os
 import hashlib
 import time
@@ -193,17 +191,40 @@ def ingest(folderOut, contentLines):
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('file', default = 'ingest.md')
+    # nargs = ? -> optional, if not will throw error when user does
+    # not provide default.
+    # parser.add_argument('file', default = 'ingest.md', nargs = '?')
     return parser.parse_args()
+
+
+def gitCommit(folder, message):
+    os.chdir(folder)
+    os.system('git add -A')
+    message = message.replace('"', '_')
+    message = message.replace("'", '_')
+    os.system("git commit -m '%s'" % message)
+
+def preChangeHook():
+    folderOut = data.notesRoot()
+    gitCommit(folderOut, "%s_preChangeHook" % __file__)
+
+def postChangeHook():
+    folderOut = data.notesRoot()
+    gitCommit(folderOut, "%s_postChangeHook" % __file__)
 
 if __name__ == '__main__':
     args = getArgs()
 
+    preChangeHook()
+
     folderOut = data.notesRoot()
-    filename = args.file
+    filename = data.ingestFilename(folderOut)
+
     contentLines = open(filename).readlines()
 
     backupFileToBeIngested(filename, os.path.join(folderOut, 'backups'), contentLines)
     ingest(os.path.join(folderOut, 'notes/low'), contentLines)
     os.remove(filename)
+
+    postChangeHook()
 

@@ -17,6 +17,7 @@ import argparse
 import sys
 import platform
 import shutil
+import datetime
 
 _meta_shell_command = 'sshot'
 
@@ -35,6 +36,8 @@ def getArgs():
     parser.add_argument('-o', '--open_last', action="store_true", default=False)
     parser.add_argument('-e', '--edit_last', action="store_true", default=False)
     parser.add_argument('-l', '--list', action="store_true", default=False)
+    parser.add_argument('-d', '--date', action="store_true", default=False)
+    parser.add_argument('-n', '--name')
 
     # Move all recent screenshots to current directory:
     # sshot -r | xargs mv -t .
@@ -101,6 +104,7 @@ if __name__ == '__main__':
     if args.open_last or args.edit_last:
         sshots = screenshotsFilenameByModDate()
         cmd = "__gfx_editor__ '%s'" % sshots[-1]
+
         if args.edit_last:
             pass # default now?
         # eog works for just see fast stuff
@@ -111,8 +115,16 @@ if __name__ == '__main__':
 
     if args.copy_last_to_curr_dir:
         last_ss = screenshotsFilenameByModDate()[-1]
-        print('Copying %s to current directory.' % last_ss)
-        shutil.copy(last_ss, '.')
+        overrideName = '.'
+        if args.name:
+            overrideDate = ''
+            if args.date:
+                overrideDate = datetime.datetime.now().strftime("%Y-%m-%d_")
+            overrideName += '/%s%s' % (overrideDate, args.name)
+            if len(overrideName) < 4 or overrideName[-4:] != '.png':
+                overrideName += '.png'
+        shutil.copy(last_ss, '%s' % overrideName)
+        print('Copying %s to current directory.' % overrideName)
         sys.exit(0)
 
     takeScreenshot()
