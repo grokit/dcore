@@ -43,7 +43,7 @@ don't delete, write to 'deleted' file.
 
 # Misc
 
-Other Silimar Project: http://linuxgazette.net/109/marinov.html
+Other silimar Project: http://linuxgazette.net/109/marinov.html
 
 # BUGS
 
@@ -58,11 +58,6 @@ import sys
 import os
 import argparse
 import platform
-
-try:
-    from tkinter import Tk
-except:
-    pass
 
 import dcore.data as data
     
@@ -205,9 +200,17 @@ def do():
         exit(0)        
     
     if args.goto_clip != None:
+        """
+        BUG: this does not work (anymore?).
+        """
         filec = getFileContent()
         dir = filec[args.goto_clip]
         
+        try:
+            from tkinter import Tk
+        except:
+            pass
+
         if Tk is not None:
             r = Tk()
             r.withdraw()

@@ -158,6 +158,7 @@ shopt -s histappend
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Infinite history
+# https://stackoverflow.com/questions/9457233/unlimited-bash-history
 HISTSIZE=""
 HISTFILESIZE=""
 
