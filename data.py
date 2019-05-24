@@ -62,5 +62,6 @@ def createAllDirsIfNotExist():
     """
 
     for dData in getDirs():
+        print('Creating %s if not exist.' % dData)
         createDirIfNotExist(dData)
 

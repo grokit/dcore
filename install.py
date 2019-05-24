@@ -54,7 +54,7 @@ export PATH=$PATH:%s
         else:
             print('Warning: skipping writing new `%s` since it looks like tag is already present.' % fname)
 
-    cmd = 'source %s' % fname
+    cmd = '. %s' % fname
     print(cmd)
     os.system(cmd)
 
@@ -106,8 +106,8 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
     """
 
     # If path to filename does not exist, create.
-    folder = os.path.splitext(filename)
-    is not os.path.exist(folder):
+    folder = os.path.split(filename)[0]
+    if not os.path.exists(folder):
         os.makedirs(folder)
 
     if not os.path.isfile(filename):
@@ -187,7 +187,7 @@ shopt -s checkwinsize
             CONTENT)
 
 def setupI3():
-    configAdd = """
+    CONTENT = """
 # me ======
 bindsym $mod+Control+q exec i3lock -c 000000 # like macosx
 #bindsym $mod+p exec i3lock -c 000000
@@ -212,7 +212,7 @@ bindsym XF86MonBrightnessDown exec nux low
             CONTENT)
 
 def setupVi():
-    configAdd = """
+    CONTENT = """
 syntax on
 filetype indent plugin on
 " show existing tab with 4 spaces width
@@ -245,12 +245,12 @@ command! E Explore
 """
     updateFileContentBetweenMarks(
             os.path.expanduser('~/.vimrc'), 
-            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
-            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
+            '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
+            '" DCORE_SECTION_END_8ygmfmsu926z06ym', 
             CONTENT)
 
 def setupTmux():
-    configAdd = """
+    CONTENT = """
 # set -g mode-mouse on
 set -g mouse on
 set -g status-bg colour17
