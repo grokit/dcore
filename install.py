@@ -6,13 +6,7 @@ One-run install of `dcore`.
 # TODO
 - If new bashrc, have a list of my stuff I want on every new computer and write from here.
 
-ADD TMUX.conf
 
-    set -g mode-mouse on
-    set -g mouse-resize-pane on
-    set -g mouse-select-pane on
-    set -g mouse-select-window on
-    ^^ does not work in Ubuntu :/
 """
 
 import sys
@@ -93,6 +87,8 @@ def tryImports():
 def updateFileContentBetweenMarks(filename, begin, end, content):
     """
     Use this script to update part of files between mark.
+    Goes to the end of file if already exist and no mark already.
+
     For example:
 
     MyFile.txt:
@@ -108,6 +104,12 @@ def updateFileContentBetweenMarks(filename, begin, end, content):
     update('MyFile.txt', 'BEGIN', 'END', 'theBird=14')
     Would update everything between the begin and end marker with the string provided as the last parameter.
     """
+
+    # If path to filename does not exist, create.
+    folder = os.path.splitext(filename)
+    is not os.path.exist(folder):
+        os.makedirs(folder)
+
     if not os.path.isfile(filename):
         print('Could not find %s, creating.' % filename)
         with open(filename, 'w') as fh:
@@ -184,24 +186,11 @@ shopt -s checkwinsize
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
             CONTENT)
 
-    STARTUP = """
-. cdd
-tmux
-"""
-
-    fname = getBashrcOrEquivalent()
-    updateFileContentBetweenMarks(
-            os.path.expanduser(fname),
-            '# DCORE_SECTION_BEGIN_lq71d2111iiiyyoeuq2xtild2428zxh7', 
-            '# DCORE_SECTION_END_lq71d2111iiiyyoeuq2xtild2428zxh7', 
-            STARTUP)
-
 def setupI3():
-    # :::b todo: finish setup
-    filename = '~/.config/i3/config'
     configAdd = """
 # me ======
-bindsym $mod+p exec i3lock -c 000000
+bindsym $mod+Control+q exec i3lock -c 000000 # like macosx
+#bindsym $mod+p exec i3lock -c 000000
 exec --no-startup-id xss-lock -- i3lock -c 000000
 exec xautolock -time 1
 
@@ -216,10 +205,13 @@ bindsym XF86MonBrightnessDown exec nux low
 
 # me (end) ======
 """
+    updateFileContentBetweenMarks(
+            os.path.expanduser('~/.config/i3/config'), 
+            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
+            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
+            CONTENT)
 
 def setupVi():
-    # :::b todo: finish setup
-    filename = '~/.vimrc'
     configAdd = """
 syntax on
 filetype indent plugin on
@@ -251,6 +243,25 @@ command! E Explore
 ":set spell spelllang=en_us
 ":set nospell
 """
+    updateFileContentBetweenMarks(
+            os.path.expanduser('~/.vimrc'), 
+            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
+            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
+            CONTENT)
+
+def setupTmux():
+    configAdd = """
+# set -g mode-mouse on
+set -g mouse on
+set -g status-bg colour17
+set -g status-fg colour38
+set-window-option -g mode-keys vi
+"""
+    updateFileContentBetweenMarks(
+            os.path.expanduser('~/.tmux.conf'), 
+            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
+            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
+            CONTENT)
 
 if __name__ == '__main__':
 
@@ -266,4 +277,5 @@ if __name__ == '__main__':
     setupBashRc()
     setupI3()
     setupVi()
+    setupTmux()
 

@@ -22,6 +22,8 @@ BUG: only first # should count as a lot,
     # def
     ... def should not get same points as abc.
 
+- sort by modified, indicate by star in ns, option to open last mod
+
 ## Bs
 
 nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)

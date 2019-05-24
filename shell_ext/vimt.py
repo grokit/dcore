@@ -32,6 +32,7 @@ import sys
 import glob
 import argparse
 import tempfile
+import platform
 
 _meta_shell_command = 'vimt'
 
@@ -84,7 +85,10 @@ def openFilesFromStdin():
 
     # For some odd reason, this does not work with writing file.
     # Have to use alternate opening strategy which is limited to some OS.
-    cmd = "xargs bash -c '</dev/tty vim -p %s'" % " ".join(files)
+    if platform.system().lower() == 'linux':
+        cmd = "xargs bash -c '</dev/tty vim -p %s'" % " ".join(files)
+    else:
+        cmd = 'echo %s | xargs -o vi -p' % " ".join(files)
     print(cmd)
     os.system(cmd)
 

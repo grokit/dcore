@@ -32,15 +32,15 @@ def getPW():
     pw = None
     try:
         # If private data is set, use default password.
-        pw = private_data.k_lsk_scripts_plaintext_03
-        keyTag = 'k_lsk-03'
+        keyTag = 'k_lsk-05'
+        pw = private_data.k_lsk_scripts_plaintext_05
     except Exception as e:
         pass
 
     if pw is None or args.ask_for_password:
+        keyTag = 'k_custom'
         pw = getpass.getpass('Enter password. input.strip() is applied.\n')
         pw = pw.strip()
-        keyTag = 'k_custom'
 
     return pw, keyTag
 

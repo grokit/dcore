@@ -219,6 +219,9 @@ def hosts():
     #osExec('sudo vi /etc/hosts && sudo ifconfig eth0 down && sudo ifconfig eth0 up')
     osExec('sudo vi /etc/hosts && sudo ifconfig wlp1s0 down && sudo ifconfig wlp1s0 up')
 
+def i3_reload():
+    osExec('i3-msg reload && i3-msg restart')
+
 if __name__ == '__main__':
     args = getArgs()
     fnHash = {fnName: fn for fnName, fn in inspect.getmembers(sys.modules[__name__]) if inspect.isfunction(fn) and fnName != 'getArgs'}
