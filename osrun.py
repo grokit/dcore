@@ -12,8 +12,7 @@ import subprocess
 def executeCmd(cmd, doPrint=False):
     # NCurse deadlock:
     # https://stackoverflow.com/questions/33886406/how-to-avoid-the-deadlock-in-a-subprocess-without-using-communicate
-    cmd = cmd.split(' ')
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, close_fds=True)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, close_fds=True, shell=True)
 
     stdout = []
     stderr = []
@@ -45,12 +44,12 @@ def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
 
 def run_os(cmd):
     "Shortcut for above functions -- generally does the right thing."
-    if type(cmd) == []:
+    if type(cmd) == type([]):
         for lcmd in cmd:
-            osrun.executePrintAndReturnStdout(lcmd)
+            executePrintAndReturnStdout(lcmd)
     else:
-	assert type(cmd) == type("")
-        osrun.executePrintAndReturnStdout(cmd)
+        assert type(cmd) == type("")
+        executePrintAndReturnStdout(cmd)
 
 if __name__ == '__main__':
     pass
