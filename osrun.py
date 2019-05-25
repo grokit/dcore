@@ -33,6 +33,8 @@ def executeCmd(cmd, doPrint=False):
     return rv, "".join(stdout), "".join(stderr)
 
 def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
+    assert type(cmd) == type('')
+
     logging.debug('Executing: %s.' % cmd)
     L = []
     rv, stdout, stderr = executeCmd(cmd, doPrint)
@@ -40,6 +42,15 @@ def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
         logging.info(stdout)
         logging.warning(stderr)
     return stdout
+
+def run_os(cmd):
+    "Shortcut for above functions -- generally does the right thing."
+    if type(cmd) == []:
+        for lcmd in cmd:
+            osrun.executePrintAndReturnStdout(lcmd)
+    else:
+	assert type(cmd) == type("")
+        osrun.executePrintAndReturnStdout(cmd)
 
 if __name__ == '__main__':
     pass

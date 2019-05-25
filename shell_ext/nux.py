@@ -222,6 +222,9 @@ def hosts():
 def i3_reload():
     osExec('i3-msg reload && i3-msg restart')
 
+def nmap_list_ssh():
+    osExec('nmap -p 22 --open -sV 192.168.1.0/24')
+
 if __name__ == '__main__':
     args = getArgs()
     fnHash = {fnName: fn for fnName, fn in inspect.getmembers(sys.modules[__name__]) if inspect.isfunction(fn) and fnName != 'getArgs'}

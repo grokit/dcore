@@ -4,23 +4,15 @@
 One-run install of `dcore`.
 
 # TODO
+
 - If new bashrc, have a list of my stuff I want on every new computer and write from here.
-
-
 """
 
 import sys
 import os
 import platform
 
-def getBashrcOrEquivalent():
-    """
-    https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
-    """
-    if platform.system() in ["macosx", "Darwin"]:
-        return os.path.expanduser('~/.bash_profile')
-    else:
-        return os.path.expanduser('~/.bashrc')
+import dcore.env_setup as env_setup
 
 def setupShortcutsBootstrap():
     """
@@ -44,7 +36,7 @@ export PATH=$PATH:%s
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
-    fname = getBashrcOrEquivalent()
+    fname = env_setup.getBashrcOrEquivalent()
 
     with open(fname, 'r') as fh:
         file = fh.read()
@@ -83,59 +75,6 @@ def tryImports():
         return True
     except ImportError as e:
         return False
-
-def updateFileContentBetweenMarks(filename, begin, end, content):
-    """
-    Use this script to update part of files between mark.
-    Goes to the end of file if already exist and no mark already.
-
-    For example:
-
-    MyFile.txt:
-
-        Something.
-
-        BEGIN
-        theBird=12
-        END
-
-        Something else.
-
-    update('MyFile.txt', 'BEGIN', 'END', 'theBird=14')
-    Would update everything between the begin and end marker with the string provided as the last parameter.
-    """
-
-    # If path to filename does not exist, create.
-    folder = os.path.split(filename)[0]
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-
-    if not os.path.isfile(filename):
-        print('Could not find %s, creating.' % filename)
-        with open(filename, 'w') as fh:
-            fh.write('\n')
-
-    with open(filename, 'r') as fh:
-        lines = fh.readlines()
-
-    iBegin = -1
-    iEnd = -1
-    for i, l in enumerate(lines):
-        if begin == l.strip():
-            assert iBegin == -1
-            iBegin = i
-        if end == l.strip():
-            assert iBegin != -1
-            assert iEnd == -1
-            iEnd = i
-
-    if iBegin != -1 and iEnd > iBegin:
-        lines = lines[0:iBegin] + lines[iEnd+1:]
-    lines = lines + ['\n', begin, '\n', content, end, '\n']
-
-    with open(filename, 'w') as fh:
-        for l in lines:
-            fh.write(l)
 
 def setupBashRc():
     CONTENT = """
@@ -179,8 +118,8 @@ HISTCONTROL=ignoreboth
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 """
-    fname = getBashrcOrEquivalent()
-    updateFileContentBetweenMarks(
+    fname = env_setup.getBashrcOrEquivalent()
+    env_setup.updateFileContentBetweenMarks(
             os.path.expanduser(fname), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
@@ -205,7 +144,7 @@ bindsym XF86MonBrightnessDown exec nux low
 
 # me (end) ======
 """
-    updateFileContentBetweenMarks(
+    env_setup.updateFileContentBetweenMarks(
             os.path.expanduser('~/.config/i3/config'), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
@@ -213,6 +152,10 @@ bindsym XF86MonBrightnessDown exec nux low
 
 def setupVi():
     CONTENT = """
+" use global dir for swap files
+" if does not exist, will use current dir
+set directory^=$HOME/.vim/swapfiles//
+
 syntax on
 filetype indent plugin on
 " show existing tab with 4 spaces width
@@ -243,7 +186,7 @@ command! E Explore
 ":set spell spelllang=en_us
 ":set nospell
 """
-    updateFileContentBetweenMarks(
+    env_setup.updateFileContentBetweenMarks(
             os.path.expanduser('~/.vimrc'), 
             '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '" DCORE_SECTION_END_8ygmfmsu926z06ym', 
@@ -257,7 +200,7 @@ set -g status-bg colour17
 set -g status-fg colour38
 set-window-option -g mode-keys vi
 """
-    updateFileContentBetweenMarks(
+    env_setup.updateFileContentBetweenMarks(
             os.path.expanduser('~/.tmux.conf'), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
