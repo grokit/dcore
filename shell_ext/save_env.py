@@ -27,9 +27,10 @@ SAVE_ME = [
     '~/.irssi',
     '~/.ssh',
     '~/.inputrc',
-    '~/.config', # i3
+    '~/.config/i3', # i3
     '~/.gnomerc',
     '~/.bash_history',
+    '~/.config/liferea',
 ]
 
 SAVE_ME_MEH = [

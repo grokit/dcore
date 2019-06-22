@@ -5,6 +5,10 @@ Provide search and search + quick-action.
 
 ## As
 
+- ns open with vi at CORRECT LINE
+
+- notes/articles/reading_notes/a_book -> folders {articles, reading_notes} should apply as tag. "non-root or leaf folders are tags"
+
 ns: if folder contains query: score UP.
 ns: tag:::important should UP priority
 - ns <x> should list if <x> is in filename or folder name (and not in file itself).
@@ -70,7 +74,7 @@ _meta_shell_command = 'ns'
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='+')
-    parser.add_argument('-c', '--context_range', nargs = '?', type=int, default = 5)
+    parser.add_argument('-C', '--context_range', nargs = '?', type=int, default = 5)
     parser.add_argument('-t', '--search_tags', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-m', '--match_infinite', action='store_true', help='If set, do not limit number of search results.')

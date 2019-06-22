@@ -19,6 +19,8 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
 
+- . drl <-- go to latest remembered ... same as .cd0?
+
 - dr: should keep remembered dirs in s small stack instead of alphabetical
     . cdl1, cdl2: goes to two remembered dir ago, even if not named --> makes dr -r more useful as a stack
 

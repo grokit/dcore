@@ -79,6 +79,10 @@ def tryImports():
 def setupBashRc():
     CONTENT = """
     
+## Plugins
+
+### https://vimawesome.com/plugin/ctrlp-vim + vimplug
+
 ## Alias
 
 # pipe data to clipboard, e.g. cat <file> | cclip
@@ -130,8 +134,9 @@ def setupI3():
 # me ======
 bindsym $mod+Control+q exec i3lock -c 000000 # like macosx
 #bindsym $mod+p exec i3lock -c 000000
-exec --no-startup-id xss-lock -- i3lock -c 000000
-exec xautolock -time 1
+#exec --no-startup-id xss-lock -- i3lock -c 000000
+#exec xautolock -time 1
+exec --no-startup-id xautolock -time 5 -locker 'i3lock -d -c 000000'
 
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
