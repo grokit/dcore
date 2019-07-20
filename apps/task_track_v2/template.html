@@ -158,7 +158,7 @@ function genChart(data, timePeriodInDays, activityFilter){
 	d3.select("body").append("p").text("You have worked " + Math.floor(10*totalWorked)/10 + " hour(s) in " + timePeriodInDays + " days, or " + hoursPerDay + " hour(s) per day.")
 }
 
-genChart(data, 360, "w")
+//genChart(data, 360, "w")
 //genChart(data, 30, "muda")
 //genChart(data, 30, "medi")
 genChart(data, 7, "work")

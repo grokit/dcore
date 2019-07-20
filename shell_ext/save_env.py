@@ -31,6 +31,7 @@ SAVE_ME = [
     '~/.gnomerc',
     '~/.bash_history',
     '~/.config/liferea',
+    '~/.local/share/Anki2',
 ]
 
 SAVE_ME_MEH = [

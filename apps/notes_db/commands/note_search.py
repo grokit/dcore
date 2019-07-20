@@ -30,6 +30,8 @@ BUG: only first # should count as a lot,
 
 ## Bs
 
+- list and offer open by last disk write time
+
 nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)
     -> better ns creates shortcut to last file matched
 

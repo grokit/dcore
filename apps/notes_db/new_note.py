@@ -17,6 +17,9 @@ Create a note document (or append to if already exists) in the note_db folder an
 
 # TODO
 
+nn allow to list and filter by tags
+AND list by modified time WITH non-trivial tags
+
 nn:: take whole dire and make a note out of it
     nn --dir . <title>
 

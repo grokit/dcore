@@ -38,16 +38,18 @@ def render(query, context_range):
     return t
 
 def doTODOsScatteredAndList():
-    c0 = render("uuid%stodo" % (':'*3), 40)
+    c0 = render("uuid%stodo" % (':'*3), 80)
     cA = render("todo%sa" % (':'*3), 10)
     cB = render("todo%sb" % (':'*3), 10)
 
     content = ""
     if len(c0 + cA+cB) != 0:
         content += c0
+        content += "Scattered todos (As):\n"
         content += '-'*50 + '\n'
         content += cA
         content += '='*50 + '\n'
+        content += "Scattered todos (Bs):\n"
         content += cB
     else:
         content += "No pending items, good job!\n"
@@ -69,12 +71,10 @@ def doForefront():
     title = "Digest Forefront Oei8Jae %s" % (dateForAnnotation())
     gmail.sendEmail(private_data.primary_email, title, content)
 
-def doDigestScattered():
-    doTODOsScatteredAndList()
-
 def do():
     doGoals()
     doForefront()
+    doTODOsScatteredAndList()
 
 def test():
     cA = render("todo%sa" % (':'*3), 10)

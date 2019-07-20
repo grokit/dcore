@@ -16,6 +16,12 @@ Thought about deleting this as I'm using less and less, but direct fif -o <file>
 - Have an 'exact string' mode as an option.
 - fif -o : open file for all indexed recursive(dirs), ask from list if > 1 match.
 
+- implement fif --fuid
+        to me
+        uid-abc
+        uid-abc_tata
+        marks file qith unique id
+        warn on console if > 1 with same id on disk
 
 # BUGS
 

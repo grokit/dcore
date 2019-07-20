@@ -9,6 +9,8 @@ move screenshot to last opened note, prepend-with date and text after then n
 then print where it's moved
 
 if -o then open it
+
+sshot be able to list all sshots in last hour and move all at once
 """
 
 import os
