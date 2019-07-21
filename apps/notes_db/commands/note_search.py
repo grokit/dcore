@@ -5,6 +5,8 @@ Provide search and search + quick-action.
 
 ## As
 
+- keep track of how often open some files -- take into consideration in pick algorithm?
+
 - ns open with vi at CORRECT LINE
 
 - notes/articles/reading_notes/a_book -> folders {articles, reading_notes} should apply as tag. "non-root or leaf folders are tags"

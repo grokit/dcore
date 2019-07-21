@@ -1,3 +1,13 @@
+"""
+
+Finds video files, convert to mp3 in a flattened structure.
+
+# Misc
+
+Convert all files to single: 
+    - Don't use mp3wrap, will not play correctly. 
+    - ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy out.mp3
+"""
 
 import sys
 import os
@@ -10,11 +20,10 @@ def getArgs():
     parser = argparse.ArgumentParser()
     return parser.parse_args()
 
-if __name__ == '__main__':
-    args = getArgs()
-    files = list(glob.iglob('.' + '/**/*.**', recursive=True))
+def select():
+    return [f for f in files if f[-4:] == '.mp4']
 
-    files = [f for f in files if f[-4:] == '.mp4']
+def convert_to(files):
     for fi in files:
         print(fi)
         frm = fi
@@ -22,4 +31,47 @@ if __name__ == '__main__':
         cmd = 'ffmpeg -i %s %s' % (frm, to)
         print(cmd)
         os.system(cmd)
+
+def join(files):
+    """
+    joined_name -> files
+    """
+
+    nums = set('0123456789')
+
+    joined_files = {}
+    for ff in files:
+        n = None
+        for c in ff:
+            print(c)
+            if c not in nums and n is not None:
+                break
+            if c in nums:
+                if n is None:
+                    n = int(c)
+                else:
+                    n = n*10 + int(c)
+        assert n is not None
+        n = str(n)
+        if n not in joined_files: joined_files[n] = set()
+        joined_files[n].add(ff)
+    return joined_files
+
+
+def apply_join(joined_files):
+    # E.g. 'ffmpeg -i "concat:file1.mp3|file2.mp3" -acodec copy out.mp3'
+    for k, v in joined_files.items():
+        cmd = 'ffmpeg -i "concat:%s" -acodec copy out_%s.mp3'
+        cmd = cmd % ("|".join(v), k)
+        print(cmd)
+        os.system(cmd)
+
+if __name__ == '__main__':
+    args = getArgs()
+    files = list(glob.iglob('.' + '/**/*.**', recursive=True))
+    joined_files = join(files)
+    #print(joined_files)
+    apply_join(joined_files)
+
+
 
