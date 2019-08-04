@@ -3,6 +3,8 @@ Transform a flat note file to directories.
 
 # TODO
 
+- !! should still be able to ingest specific file -> if just file, create a default folder with file and filename as title with appropriate tag
+
 - Auto do it from any folder.
 - Before and after: commit to git
 
