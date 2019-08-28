@@ -89,9 +89,6 @@ def nupdate():
     # check number of update available
     osExec('/usr/lib/update-notifier/apt-check')
 
-def update():
-    osExec('sudo apt update --yes')
-
 def lock():
     osExec('gnome-screensaver-command -l')
     #osExec('i3lock') # Big ugly white, and both screensavers sometimes overlap.
@@ -208,12 +205,18 @@ def mute():
     osExec('amixer set PCM mute') 
 
 def update():
+    osExec('sudo apt update --yes')
+
+    """
+    ?? I think this does the same, just with more commands ??
+
     # This does not upgrade the distribution, it justs updates
     # all packages on system.
     # http://askubuntu.com/questions/196768/how-to-install-updates-via-command-line
     osExec('sudo apt-get update')        # Fetches the list of available updates
     osExec('sudo apt-get upgrade')       # Strictly upgrades the current packages
     osExec('sudo apt-get dist-upgrade')  # Installs updates (new ones)
+    """
 
 def hosts():
     #osExec('sudo vi /etc/hosts && sudo ifconfig eth0 down && sudo ifconfig eth0 up')

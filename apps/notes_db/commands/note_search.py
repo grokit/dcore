@@ -30,6 +30,10 @@ BUG: only first # should count as a lot,
 
 - sort by modified, indicate by star in ns, option to open last mod
 
+NOTE-db: list files by created + filesystem metadata
+
+be able to see all documents authored and modified this week
+
 ## Bs
 
 - list and offer open by last disk write time

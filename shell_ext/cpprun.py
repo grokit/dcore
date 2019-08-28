@@ -12,7 +12,7 @@ def isCppFile(filename):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str, nargs='?', default = None)
-    parser.add_argument('-r', '--run', action="store_true")
+    parser.add_argument('-r', '--run', default=True, action="store_true")
     parser.add_argument('-d', '--debug', action="store_true")
     parser.add_argument('-g', '--gmon', action="store_true")
     parser.add_argument('-v', '--valgrind', action="store_true")
@@ -58,7 +58,6 @@ if __name__ == '__main__':
         print(cmd)
         rv |= os.system(cmd)
 
-    args.run = True
     if args.run == True:
         if rv == 0:
             cmd = './' + filesc[0] + '.tmpbin | tee ' + filesc[0] + '.tmpout'
