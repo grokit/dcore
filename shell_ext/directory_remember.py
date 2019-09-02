@@ -69,9 +69,10 @@ cacheFilePerimated = cacheFile + ".deleted"
 tempBatch = cacheFile + '.temp.bat'
 
 def rememberDirs():
-    dirs = [os.getcwd()]
     
-    dirs += getFileContent()
+    dirs = getFileContent()
+    # append at END to have stable numbering
+    dirs += [os.getcwd()]
 
     bad = [d for d in dirs if not os.path.isdir(d) and not (len(d.split(',')) == 2 and os.path.isdir(d.split(',')[1]))]
 
@@ -146,10 +147,26 @@ def getFileContent():
     
     return data
     
+def eliminateDup(lst: list):
+    
+    # Reverse so that eliminates EARLIER entry.
+    # This does not preserve numbering (bad), but
+    # it does make sure new dir gets back on top of
+    # stack.
+    lst.reverse()
+
+    st = set()
+    out = []
+    for l in lst:
+        if l not in st:
+            out.append(l)
+        st.add(l)
+
+    out.reverse()
+    return out
+
 def setFileContent(fileList):
-    # Eliminate duplicates.
-    fileList = list(set(fileList))
-    fileList.sort()
+    fileList = eliminateDup(fileList)
     
     fh = open(cacheFile, 'w')
     
