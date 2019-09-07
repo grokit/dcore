@@ -61,13 +61,14 @@ def interpolateWithDamp(vx, vy):
             store.append(vy[i]*damp)
             damps.append(damp)
 
-        a = len(damps) / sum(damps)
-        store = [v*a for v in store]
+        if len(damps) > 0:
+            a = len(damps) / sum(damps)
+            store = [v*a for v in store]
 
-        if len(store) > 0:
-            y = statistics.mean(store) 
-            vx_.append(x)
-            vy_.append(y)
+            if len(store) > 0:
+                y = statistics.mean(store) 
+                vx_.append(x)
+                vy_.append(y)
 
         x += step
     return vx_, vy_
