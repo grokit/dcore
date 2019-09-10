@@ -43,8 +43,8 @@ def bucket(vx, vy, blen, px0 = None):
 
 def interpolateWithDamp(vx, vy):
     rangevx = [min(vx), max(vx)]
-    step  = 3600 * 24 * 1
-    width = 3600 * 24 * 30
+    step  = 3600 * 24 * 5
+    width = 3600 * 24 * 120
 
     vx_ = []
     vy_ = []
@@ -57,7 +57,7 @@ def interpolateWithDamp(vx, vy):
         damps = []
         for i in range(i0, i1):
             dist = abs(vx[i]-x)
-            damp = math.e**(-3*dist/width)
+            damp = math.e**(-2.5*dist/width)
             store.append(vy[i]*damp)
             damps.append(damp)
 
