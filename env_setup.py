@@ -57,9 +57,11 @@ def updateFileContentBetweenMarks(filename, begin, end, content, createOnMissing
             assert iEnd == -1
             iEnd = i
 
+    insert = [begin, '\n', content, '\n' + end, '\n']
     if iBegin != -1 and iEnd > iBegin:
-        lines = lines[0:iBegin] + lines[iEnd+1:]
-    lines = lines + ['\n', begin, '\n', content, '\n'+end, '\n']
+        lines = lines[0:iBegin] + insert + lines[iEnd+1:]
+    else:
+        lines = lines + insert
 
     with open(filename, 'w') as fh:
         for l in lines:

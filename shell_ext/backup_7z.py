@@ -28,26 +28,24 @@ def getArgs():
     args = parser.parse_args()
     return args
 
-def getPW():
-    pw = None
-    try:
-        # If private data is set, use default password.
-        keyTag = 'k_lsk-05'
-        pw = private_data.k_lsk_scripts_plaintext_05
-    except Exception as e:
-        pass
+def getPW(args):
 
-    if pw is None or args.ask_for_password:
+    pw = None
+    if args.ask_for_password:
         keyTag = 'k_custom'
         pw = getpass.getpass('Enter password. input.strip() is applied.\n')
         pw = pw.strip()
+    else:
+        # Default is to use default pw.
+        keyTag = 'k_lsk-05'
+        pw = private_data.k_lsk_scripts_plaintext_05
 
     return pw, keyTag
 
 if __name__ == '__main__':
 
     args = getArgs()
-    pw, keyTag = getPW()
+    pw, keyTag = getPW(args)
 
     pathToBackup = os.path.abspath(os.path.expanduser(args.folder_in))
     archive_name = files.getUniqueDateFile(args.archive_name, '.%s.7z' % keyTag)
@@ -59,4 +57,6 @@ if __name__ == '__main__':
     # -v10g: split in 10 gigabytes files
     cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
 
-    os.system(cmd)
+    rv = os.system(cmd)
+    assert rv == 0
+

@@ -9,7 +9,7 @@ import fnmatch
 import argparse
 import subprocess
 
-_meta_shell_command = 'pictures_convert_heic'
+_meta_shell_command = 'media_pictures_convert_heic'
 
 def getArgs():
     parser = argparse.ArgumentParser()

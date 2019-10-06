@@ -73,6 +73,10 @@ if __name__ == '__main__':
     print(args)
     DEBUG = args.debug
 
+    if False:
+        args.f = 'throw Error'
+        args.t = 'throw new Error'
+
     if not args.nocontent:
         for f in getFiles():
             try:

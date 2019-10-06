@@ -23,6 +23,7 @@ def getArgs():
     parser.add_argument('mode', nargs='?', default='remove_aggressive')
     #parser.add_argument('mode', nargs='?', default='remove_non_az')
     parser.add_argument('rest', nargs='?')
+    parser.add_argument('-a', '--apply', action='store_true', default=False, help='Apply.')
     args = parser.parse_args()
     return args
 
@@ -47,7 +48,7 @@ def removeSpace(filename, args):
     return to
 
 def removeAggressive(filename, args):
-    v = set('abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') # ()[]
+    v = set('abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]') # ()
 
     toLower = True
 
@@ -84,6 +85,13 @@ def date(f, arg):
 def custom(f, arg):
     return f.replace('__', '_')
 
+def order_by(f, arg):
+    if '#' in f:
+        n = int(f.split('#')[1].split('-')[0])
+    else:
+        n = 99
+    return "%.2i_%s" % (n, f)
+
 def changeExt(f, arg):
     return os.path.splitext(f)[0] + '.markdown'
     
@@ -98,7 +106,8 @@ if __name__ == '__main__':
             'prefix': prefix,
             'suffix': suffix,
             'date': date,
-            'custom': custom
+            'custom': custom,
+            'order_by': order_by,
             }
 
     args = getArgs()
@@ -112,5 +121,9 @@ if __name__ == '__main__':
 
     for f in files:
         to = fn(f, args.rest)
-        print('%s -> %s' % (f, to))
-        os.rename(f, to)
+        if f != to:
+            print('%s -> %s' % (f, to))
+            if args.apply:
+                os.rename(f, to)
+            else:
+                print('Skipped since apply switch off.')

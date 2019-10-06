@@ -11,7 +11,7 @@ import fnmatch
 import argparse
 import subprocess
 
-_meta_shell_command = 'pictures_resize'
+_meta_shell_command = 'media_pictures_resize'
 
 def getArgs():
     parser = argparse.ArgumentParser()

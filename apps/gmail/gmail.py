@@ -101,9 +101,10 @@ def getLastNMails(N):
             rawEMails.append(data[0][1])
 
         mail.close()
+        
     except Exception as e:
         print("Exception: %s." % e)
-        return
+        return None
 
     M = []
     for m in rawEMails:

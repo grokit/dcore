@@ -1,11 +1,11 @@
 """
-Define where data is.
+Define folder locations and small pieces of data.
 
 Makes sure that are folders exist, create a hook for applications to know where to fetch data from.
 Also a good place to document hierarchy.
 
 BE CAREFUL WITH dcore IMPORTS IN THAT FILE. It is used during install, anything that depends
-on path being set properly will fail the install.
+on path being set properly (in this file) will fail the install.
 """
 
 import sys

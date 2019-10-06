@@ -5,6 +5,8 @@ Provide search and search + quick-action.
 
 ## As
 
+- ns -O :xtop --> open the most recent one if more than one match exactly
+
 - keep track of how often open some files -- take into consideration in pick algorithm?
 
 - ns open with vi at CORRECT LINE
@@ -40,6 +42,8 @@ be able to see all documents authored and modified this week
 
 nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)
     -> better ns creates shortcut to last file matched
+
+- ns: be able to create rules, such as all articles tagged x should be moved under folder Y
 
 ## Cs
 

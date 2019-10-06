@@ -161,7 +161,16 @@ def setupVi():
 " if does not exist, will use current dir
 set directory^=$HOME/.vim/swapfiles//
 
+execute pathogen#infect()
+
 syntax on
+
+" set background=dark
+" colorscheme solarized
+
+" set background=light
+" colorscheme solarized
+
 filetype indent plugin on
 " show existing tab with 4 spaces width
 set tabstop=4
@@ -169,6 +178,9 @@ set tabstop=4
 set shiftwidth=4
 " " On pressing tab, insert 4 spaces
 set expandtab
+
+" Shortcuts
+nnoremap <C-t> :tabedit %<cr>
 
 " F2: compile and run current file.
 autocmd FileType python nnoremap <F2> :w!<cr>:exec '!python3' shellescape(@%, 1)<cr>
@@ -190,6 +202,9 @@ command! E Explore
 
 ":set spell spelllang=en_us
 ":set nospell
+
+" vi / Markdown
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 """
     env_setup.updateFileContentBetweenMarks(
             os.path.expanduser('~/.vimrc'), 

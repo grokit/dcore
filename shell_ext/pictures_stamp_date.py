@@ -2,7 +2,7 @@
 Stamp pictures date using imagemagick based on picture's exif metadata.
 """
 
-_meta_shell_command = 'pictures_stamp_date'
+_meta_shell_command = 'media_pictures_stamp_date'
 
 import os
 import subprocess

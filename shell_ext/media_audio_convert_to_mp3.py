@@ -14,7 +14,7 @@ import os
 import argparse
 import glob 
 
-_meta_shell_command = 'convert_to_mp3'
+_meta_shell_command = 'media_audio_convert_to_mp3'
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -64,17 +64,29 @@ def apply_join(joined_files, args):
     for k, v in joined_files.items():
         cmd = 'ffmpeg -i "concat:%s" -acodec copy out_%s.mp3'
         cmd = cmd % ("|".join(v), k)
-        #print(cmd)
+        print(cmd)
+        if args.apply:
+            os.system(cmd)
+
+def apply(files, args):
+    for tfile in files:
+        cmd = f'ffmpeg -i "{tfile}" "{tfile}.mp3"'
+        print(cmd)
         if args.apply:
             os.system(cmd)
 
 if __name__ == '__main__':
     args = getArgs()
+    print(args)
     files = list(glob.iglob('.' + '/**/*.**', recursive=True))
-    files = [f for f in files if f[-4:] == '.mp4']
-    joined_files = join(files)
-    #print(joined_files)
-    apply_join(joined_files, args)
+    target_exts = set(['.mp4', '.mkv'])
+    files = [f for f in files if f[-4:] in target_exts]
+
+    if True:
+        apply(files, args)
+    else:
+        joined_files = join(files)
+        apply_join(joined_files, args)
 
 
 

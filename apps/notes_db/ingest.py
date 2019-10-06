@@ -28,7 +28,10 @@ _meta_shell_command = 'ingest'
 TITLE_SAFE_CHARSET = set('abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 TIME_FORMAT = '%Y-%m-%d_%H:%M'
-TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
+
+# Putting back minutes so that notes of the day are ordered.
+#TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
+TIME_FORMAT_FOLDER_NAME = TIME_FORMAT.replace(":", "-")
 
 def timeStrToUnixTime(timeStr):
     dateObj = datetime.datetime.strptime(timeStr, TIME_FORMAT)

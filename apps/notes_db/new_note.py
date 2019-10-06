@@ -76,6 +76,8 @@ pragmatic programmer: use text as format, make changing possible
     ingest --task <file.md> -> file as task
     ingest --task_complete <folder>
 
+    ingest here: create in current directory instead of "low"
+
 """
 
 _meta_shell_command = 'nn'

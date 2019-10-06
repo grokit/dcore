@@ -1,5 +1,5 @@
 """
-@@TODO: 
+# TODO 
 
 - merge with files_list_compare
 
@@ -20,6 +20,7 @@ import sys
 import fnmatch
 import time
 import random
+import argparse
 
 def getAllFilesRecursively_DUPLICATE(in_allowedExtensionsGlobList, in_RootDir = '.'):
   """
@@ -78,17 +79,23 @@ def filterFile(file, nos):
             return False
     return True
     
+def getArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', type=str)
+    parser.add_argument('-o', '--output', type=str)
+    return parser.parse_args()
+
 if __name__ == '__main__':
     
     assert sys.version_info.major >= 3
+    args = getArgs()
     
     input_dir = '.'
+    if args.input:
+        input_dir = args.input
     output_dir = '.'
-    
-    #input_dir = '/home/david/Desktop/Dropbox'
-    #input_dir = '/media/75a94e19-dccf-477a-bd80-251f0231a0b1'
-    #output_dir = '/home/david/Desktop/sync/misc/files_list'
-    #output_dir = '/home/david/Desktop'
+    if args.output:
+        output_dir = args.output
     
     files = getAllFilesRecursively_DUPLICATE(['*'], input_dir)
     
@@ -138,5 +145,4 @@ if __name__ == '__main__':
     for item in fHash:
         fh.write(json.dumps(item, sort_keys=True) + "\n")
     fh.close()
-    
     
