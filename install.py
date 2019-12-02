@@ -226,6 +226,11 @@ set-window-option -g mode-keys vi
             '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
             CONTENT)
 
+def setupGit():
+    cmd = 'git config --global core.editor "vim"'
+    print(cmd)
+    assert os.system(cmd) == 0
+
 if __name__ == '__main__':
 
     if not tryImports():
@@ -241,4 +246,5 @@ if __name__ == '__main__':
     setupI3()
     setupVi()
     setupTmux()
+    setupGit()
 
