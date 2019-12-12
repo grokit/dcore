@@ -37,8 +37,8 @@ def getPW(args):
         pw = pw.strip()
     else:
         # Default is to use default pw.
-        keyTag = 'k_lsk-05'
-        pw = private_data.k_lsk_scripts_plaintext_05
+        keyTag = 'k_lsk_scripts_plaintext_07'
+        pw = private_data.k_lsk_scripts_plaintext_07
 
     return pw, keyTag
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # -mhe: encrypt file names
     # -mx=3: compression level 3 (0:lowest, 9:highest)
     # -v10g: split in 10 gigabytes files
-    cmd = '%s -t7z -mx1 -mhe -p%s a %s "%s"' % (bin7Zip, pw, archive_name, pathToBackup)
+    cmd = f'{bin7Zip} -t7z -mx1 -mhe -p{pw} a {archive_name} "{pathToBackup}"'
 
     rv = os.system(cmd)
     assert rv == 0

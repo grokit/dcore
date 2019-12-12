@@ -63,6 +63,6 @@ def setup():
 
 if __name__ == '__main__':
     setup()
-    mirrorLogsToGMail()
+    #mirrorLogsToGMail()
     #logging.info('test-append')
 

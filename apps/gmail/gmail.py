@@ -1,8 +1,7 @@
 """
 Send e-mail from GMail address using username and password stored in a local file.
 
-Tip: don't use an e-mail address you care about, use a non-important e-mail address to send to your real e-mail
-     and assume that any data sent can be read by a 3rd party.
+Suggestion: don't use an e-mail address you care about, use a non-important e-mail address to send to your real e-mail and assume that any data sent can be read by a 3rd party.
 """
 
 import time

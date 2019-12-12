@@ -71,13 +71,13 @@ def getStyle():
     cnt = fh.read()
     return cnt
 
-def getHtmlDebugInfo(httpHanlder):
+def getHtmlDebugInfo(httpHandler):
     
     lHeaders = []
-    for k, v in httpHanlder.headers.items():
+    for k, v in httpHandler.headers.items():
         lHeaders.append("%s: %s<br>" % (k, v))
     
-    debug_mid = "<br><br><br><br><p><b>Debug Information</b><br>%s<br>%s<br>%s<br></p>" % (httpHanlder.command, httpHanlder.path, "".join(lHeaders))
+    debug_mid = "<br><br><br><br><p><b>Debug Information</b><br>%s<br>%s<br>%s<br></p>" % (httpHandler.command, httpHandler.path, "".join(lHeaders))
     
     return '<div class="debug_info">%s</div>' % debug_mid    
 
@@ -201,33 +201,33 @@ def handleUploadSink(httpHandler):
     
     httpHandler.wfile.write(html.encode())
 
-def handleSetToken(httpHanlder):
+def handleSetToken(httpHandler):
     
-    tokenV = httpHanlder.path.split("/")[-1]
+    tokenV = httpHandler.path.split("/")[-1]
     
     if tokenV[0] == '?':
         tokenV = tokenV.split('?accessToken=')[1]
     tokenV = urllib.parse.unquote(tokenV)
 
-    httpHanlder.send_response(200)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.send_header('Set-Cookie', 'accessToken=%s;Path=/; HttpOnly' % tokenV)
-    httpHanlder.end_headers()
+    httpHandler.send_response(200)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Set-Cookie', 'accessToken=%s;Path=/; HttpOnly' % tokenV)
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '<meta http-equiv="refresh" content="3;url=/" />')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<p><b>Token set to: %s.</b></p>You will be redirected automatically.' % tokenV)
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 
-def handleUrlListFiles(httpHanlder):
+def handleUrlListFiles(httpHandler):
     
-    queryPath = httpHanlder.server.data['authorized_folder']
+    queryPath = httpHandler.server.data['authorized_folder']
     
-    if "query=" in httpHanlder.path:
-        queryPath = httpHanlder.path.split("query=")[1]
+    if "query=" in httpHandler.path:
+        queryPath = httpHandler.path.split("query=")[1]
         
         if type(queryPath) != type(b''):
             queryPath = queryPath.encode()        
@@ -239,30 +239,30 @@ def handleUrlListFiles(httpHanlder):
         
         log.debug("queryPath: %s" % queryPath)
     
-    if not isPathAuthorized(httpHanlder.server.data['authorized_folder'], queryPath):
-        handleNotAuthorizedFolder(httpHanlder, queryPath)
+    if not isPathAuthorized(httpHandler.server.data['authorized_folder'], queryPath):
+        handleNotAuthorizedFolder(httpHandler, queryPath)
         return
     
     if os.path.isdir(queryPath):
-        httpHanlder.send_response(200)
-        httpHanlder.send_header('Content-type','text/html')
-        httpHanlder.end_headers()
+        httpHandler.send_response(200)
+        httpHandler.send_header('Content-type','text/html')
+        httpHandler.end_headers()
         
         html = htmlt.html_template
         html = html.replace('__head__', '')
         html = html.replace('__style__', getStyle())
         html = html.replace('__body__', getHtmlDir(queryPath))
-        html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+        html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
         
-        httpHanlder.wfile.write(html.encode())
+        httpHandler.wfile.write(html.encode())
         
     elif os.path.isfile(queryPath):
         
         filename = os.path.split(queryPath)[1]
         
-        httpHanlder.send_response(200)
-        httpHanlder.send_header('Content-disposition','attachment; filename=%s' % filename)
-        httpHanlder.end_headers()
+        httpHandler.send_response(200)
+        httpHandler.send_header('Content-disposition','attachment; filename=%s' % filename)
+        httpHandler.end_headers()
 
         fh = open(queryPath, 'rb')
         chunkSize = int(2**20)
@@ -271,31 +271,31 @@ def handleUrlListFiles(httpHanlder):
             fileBytes = fh.read(chunkSize)
             if len(fileBytes) == 0:
                 break
-            httpHanlder.wfile.write(fileBytes)
+            httpHandler.wfile.write(fileBytes)
         fh.close()
 
     else:
-        handleNotFound(httpHanlder)
+        handleNotFound(httpHandler)
 
-def handleMain(httpHanlder):
+def handleMain(httpHandler):
     
-    httpHanlder.send_response(200)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(200)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.main_html)
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
        
-def handleLog(httpHanlder):
+def handleLog(httpHandler):
     
-    httpHanlder.send_response(200)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(200)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     fh = open(logfilename, 'r')
     logCt = fh.read()
@@ -305,81 +305,81 @@ def handleLog(httpHanlder):
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.main_log.format( logCt ))
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 
-def handleCustomError(httpHanlder, errMsg):
+def handleCustomError(httpHandler, errMsg):
     
     errNo = 400
     
-    httpHanlder.send_response(errNo)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(errNo)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<h2>%s Bad Request, %s</h2>' % (errNo, errMsg))
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 
     
-def handleNotFound(httpHanlder):
+def handleNotFound(httpHandler):
     
-    httpHanlder.send_response(404)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(404)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<h2>404 Not Found :(</h2>')
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 
-def handleNotAuthorizedFolder(httpHanlder, resource):
+def handleNotAuthorizedFolder(httpHandler, resource):
     
-    httpHanlder.send_response(401)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(401)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.not_auth_folder_body)
     html = html.replace('__resource__', os.path.realpath( resource ) )    
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())    
+    httpHandler.wfile.write(html.encode())    
 
-def handleNotAuthorized(httpHanlder):
+def handleNotAuthorized(httpHandler):
     
-    httpHanlder.send_response(401)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(401)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.not_auth_body)
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())    
+    httpHandler.wfile.write(html.encode())    
     
-def handleUpload(httpHanlder):
+def handleUpload(httpHandler):
     
-    httpHanlder.send_response(200)
-    httpHanlder.send_header('Content-type','text/html')
-    httpHanlder.end_headers()
+    httpHandler.send_response(200)
+    httpHandler.send_header('Content-type','text/html')
+    httpHandler.end_headers()
     
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.upload_body)
-    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHanlder))
+    html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
     
-    httpHanlder.wfile.write(html.encode())
+    httpHandler.wfile.write(html.encode())
 

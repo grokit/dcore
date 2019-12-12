@@ -14,7 +14,7 @@ import shutil
 
 import dcore.data as data
 
-_meta_shell_command = 'save_env'
+_meta_shell_command = 'backup_env'
 
 # Files or folders
 SAVE_ME = [

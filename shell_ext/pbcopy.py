@@ -50,14 +50,20 @@ if __name__ == '__main__':
     # TemporaryFile is better, but f.name attribute not 
     # available.
     # See https://docs.python.org/3/library/tempfile.html
-    with tempfile.NamedTemporaryFile('w') as fh:
-        if True:
+    data = fromStdInIfData().strip()
+    if True:
+        with tempfile.NamedTemporaryFile('w') as fh:
             # Works fine, but a bit hacky
-            fh.write(fromStdInIfData())
+            pos = fh.write(data)
             fh.flush() # if you don't flush, file might be empty
             clipFilenameContent(fh.name)
-        else:
-            # Does not work on all systems.
-            clip(fromStdInIfData())
+
+            # Be super safe, wipe data before close file.
+            fh.seek(0)
+            fh.write('0' * 2 * pos)
+
+    else:
+        # Does not work on all systems.
+        clip(data)
 
     

@@ -16,7 +16,9 @@ import argparse
 import platform
 import shutil
 
+import dcore.apps.notes_db.options as options
 import dcore.apps.notes_db.search as search
+import dcore.apps.notes_db.score as score 
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
 
@@ -27,20 +29,25 @@ def render(query, context_range):
     files = search.getAllFiles()
     
     matches = search.extractMatchSetsFromFiles(files, query, context_range)
-    search.score(matches, query)
+    scores = []
+    for match in matches:
+        mscore = score.score(match, query)
+        scores.append(mscore)
 
-    matches = search.sortMatchesByScore(matches)
+    matches, scores = search.sortMatchesByScore(matches, scores)
+
     T = []
     for m in matches:
         T.append('~'*80 + '\n')
         T.append(m.strWithLine())
     t = "".join(T)
+
     return t
 
 def doTODOsScatteredAndList():
-    c0 = render("uuid%stodo" % (':'*3), 80)
-    cA = render("todo%sa" % (':'*3), 10)
-    cB = render("todo%sb" % (':'*3), 10)
+    c0 = render("uuid%stodo" % options.MSEP, 80)
+    cA = render("todo%sa" % options.MSEP, 10)
+    cB = render("todo%sb" % options.MSEP, 10)
 
     content = ""
     if len(c0 + cA+cB) != 0:
@@ -76,10 +83,5 @@ def do():
     doForefront()
     doTODOsScatteredAndList()
 
-def test():
-    cA = render("todo%sa" % (':'*3), 10)
-    print(cA)
-
 if __name__ == '__main__':
     do()
-    #test()

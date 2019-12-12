@@ -18,7 +18,7 @@ if __name__ == '__main__':
     args = getArgs()
 
     if args.spiral:
-        emoji = [':goat:', ':turtle:']
+        emoji = [':goat:', ':turtle:', ':last_quarter_moon_with_face:']
         symbol = '??'
         ln = [[symbol for i in range(16)] for i in range(16)]
 
@@ -26,10 +26,11 @@ if __name__ == '__main__':
         x0 = int(len(ln[0])/2)
         pos = [y0, x0] 
         npr = 100
+        spd = 6
 
         for i in range(npr):
-            pos[1] = int(y0 + math.sin(3*math.pi*(i/npr)) * x0 * (i/npr))
-            pos[0] = int(x0 + math.cos(3*math.pi*(i/npr)) * y0 * (i/npr))
+            pos[1] = int(y0 + math.sin(spd*math.pi*(i/npr)) * x0 * (i/npr))
+            pos[0] = int(x0 + math.cos(spd*math.pi*(i/npr)) * y0 * (i/npr))
             ln[pos[0]][pos[1]] = emoji[i % len(emoji)]
 
         for line in ln:

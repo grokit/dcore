@@ -51,7 +51,7 @@ def getArgs():
     parser.add_argument('grep', type=str, nargs='*', default = None)
     parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
     parser.add_argument('-O', '--open', action="store_true", help="Open with OS-configured program.")
-    parser.add_argument('-e', '--vim', action="store_true", help="Open in text editor all files that match.")
+    parser.add_argument('-e', '--vi', action="store_true", help="Open all files that match in (the BEST) text editor.")
     args = parser.parse_args()
     return args
 
@@ -130,13 +130,13 @@ def do():
         if args.open is True:
             assert len(F) == 1
             for f in F:
-                cmd = 'xdg-open %s' % f
+                cmd = 'xdg-open %s& >/dev/null 2>&1' % f
                 print(cmd)
                 os.system(cmd)
 
-        if args.vim is True:
+        if args.vi is True:
             for f in F:
-                cmd = 'vim %s' % f
+                cmd = 'vi %s' % f
                 os.system(cmd)
 
 if __name__ == '__main__':

@@ -2,15 +2,6 @@
 import os
 import platform
 
-def getBashrcOrEquivalent():
-    """
-    https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
-    """
-    if platform.system() in ["macosx", "Darwin"]:
-        return os.path.expanduser('~/.bash_profile')
-    else:
-        return os.path.expanduser('~/.bashrc')
-
 def updateFileContentBetweenMarks(filename, begin, end, content, createOnMissing=True):
     """
     Use this script to update part of files between mark.

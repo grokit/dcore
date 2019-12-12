@@ -30,7 +30,7 @@ if __name__ == '__main__':
     fout = file.replace('.docx', '.md')
     cmd = 'pandoc -s %s -t markdown -s -o %s --extract-media .' % (file, fout)
     print(cmd)
-    os.system(cmd)
+    assert os.system(cmd) == 0
 
     # Markdown converter does not handle utf8 well.
     fileReplace(fout, fout, {'“': '"', '”': '"', "’":"'"})
@@ -49,5 +49,5 @@ if __name__ == '__main__':
 
     cmd = 'markdown %s > %s' % (fout, fout.replace('.md', '.html'))
     print(cmd)
-    os.system(cmd)
+    assert os.system(cmd) == 0
 

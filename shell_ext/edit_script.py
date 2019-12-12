@@ -8,7 +8,7 @@ Usage:
 # TODO
 
 - Replace with `editw`: edit the file that `which` points to.
-which python3 | xargs vim -> editw python3
+which python3 | xargs vi -> editw python3
 
 - OR replace with dcore where you can do many things
     dcore -l : list all apps
@@ -68,7 +68,7 @@ if __name__ == '__main__':
         assert len(filename) == 1
 
     filename = filename[0]
-    cmd = 'vim %s' % filename
+    cmd = 'vi %s' % filename
     print(cmd)
     os.system(cmd)
 

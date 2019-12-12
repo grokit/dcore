@@ -12,6 +12,16 @@ import sys
 import os
 import platform
 
+def getBashrcOrEquivalent():
+    """
+    https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
+    """
+    if platform.system() in ["macosx", "Darwin"]:
+        return os.path.expanduser('~/.bash_profile')
+    else:
+        return os.path.expanduser('~/.bashrc')
+
+
 def tagShortcutsForDeletion():
     return "0jb02xhs83hayd9fugb7wu2as3q419ki"
 
@@ -37,6 +47,10 @@ def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
 
 def dcoreBackupEnv():
+    """
+    Consider just putting in `backups/rolling/env` and zip + encrypt since
+    could contain pws if typed by mistake in shell.
+    """
     return os.path.join(dcoreData(), 'backups/env')
 
 def pathExt():

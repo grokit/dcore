@@ -228,6 +228,9 @@ def i3_reload():
 def nmap_list_ssh():
     osExec('nmap -p 22 --open -sV 192.168.1.0/24')
 
+def ubuntu_version():
+    osExec('lsb_release -a')
+
 if __name__ == '__main__':
     args = getArgs()
     fnHash = {fnName: fn for fnName, fn in inspect.getmembers(sys.modules[__name__]) if inspect.isfunction(fn) and fnName != 'getArgs'}

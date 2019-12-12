@@ -12,7 +12,7 @@ import sys
 import os
 import platform
 
-import dcore.env_setup as env_setup
+# Do NOT import dcore from here ... first run it will not be available.
 
 def setupShortcutsBootstrap():
     """
@@ -36,7 +36,7 @@ export PATH=$PATH:%s
 
     bash_rc = bash_rc.replace('__home__', os.path.expanduser('~'))
 
-    fname = env_setup.getBashrcOrEquivalent()
+    fname = data.getBashrcOrEquivalent()
 
     with open(fname, 'r') as fh:
         file = fh.read()
@@ -69,8 +69,10 @@ def delOld():
 def tryImports():
     try:
         import dcore.data as data
+        import dcore.env_setup as env_setup
         import dcore.create_python_scripts_shortcuts as create_python_scripts_shortcuts
         global data
+        global env_setup
         global create_python_scripts_shortcuts
         return True
     except ImportError as e:
@@ -122,7 +124,7 @@ HISTCONTROL=ignoreboth
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 """
-    fname = env_setup.getBashrcOrEquivalent()
+    fname = data.getBashrcOrEquivalent()
     env_setup.updateFileContentBetweenMarks(
             os.path.expanduser(fname), 
             '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 

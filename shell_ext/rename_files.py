@@ -59,7 +59,10 @@ def removeAggressive(filename, args):
                 l = l.lower()
             fout.append(l)
         else:
-            fout.append('_')
+            if l == 'ä':
+                fout.append('a')
+            else:
+                fout.append('_')
     return "".join(fout)
 
 def prefix(f, arg):
