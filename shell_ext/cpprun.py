@@ -1,17 +1,18 @@
-
 _meta_shell_command = 'cpprun'
 
 import os
 import argparse
+
 
 def isCppFile(filename):
     if os.path.splitext(filename)[1] in ['.cpp', '.hpp', '.cc']:
         return True
     return False
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('file', type=str, nargs='?', default = None)
+    parser.add_argument('file', type=str, nargs='?', default=None)
     parser.add_argument('-r', '--run', default=True, action="store_true")
     parser.add_argument('-d', '--debug', action="store_true")
     parser.add_argument('-g', '--gmon', action="store_true")
@@ -33,11 +34,13 @@ if __name__ == '__main__':
     assert len(filesc) == 1
     rv = -1
     file = os.path.abspath(filesc[0])
-    cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
+    cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file,
+                                                                          file)
 
     # Extra warnings
-    if True:
-        cmd = 'g++ -Wall -Wextra -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
+    if False:
+        cmd = 'g++ -Wall -Wextra -std=c++14 -pthread %s -o %s.tmpbin' % (file,
+                                                                         file)
 
     #using clang, experimental
     #cmd = 'clang -std=c++11 %s -o %s.bin' % (file, file)
@@ -85,4 +88,6 @@ if __name__ == '__main__':
             os.system(cmd)
 
     else:
-        print('Run skipped, see command-line arguments if want to auto-run output.')
+        print(
+            'Run skipped, see command-line arguments if want to auto-run output.'
+        )

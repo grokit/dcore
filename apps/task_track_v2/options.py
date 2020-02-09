@@ -1,4 +1,3 @@
-
 import os
 
 import dcore.data as data
@@ -8,4 +7,3 @@ htmlFile = os.path.join(data.dcoreTempData(), 'work_tracking.html')
 dataFile = os.path.join(data.dcoreTempData(), 'data.js')
 mainDir = os.path.abspath(os.path.dirname(__file__))
 utFolder = os.path.abspath('./unit_tests_inout')
-

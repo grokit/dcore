@@ -36,10 +36,12 @@ import platform
 
 _meta_shell_command = 'vimt'
 
+
 def fromStdInIfData():
     if not sys.stdin.isatty():
         return sys.stdin.read()
     return None
+
 
 def extractFilesFuzzy(lines):
     F = set()
@@ -51,11 +53,16 @@ def extractFilesFuzzy(lines):
             F.add(l)
     return F
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--str_match', default=False, help='Open all files which has str_match in.')
+    parser.add_argument('-s',
+                        '--str_match',
+                        default=False,
+                        help='Open all files which has str_match in.')
     parser.add_argument('-c', '--colon_open', action="store_true")
     return parser.parse_args()
+
 
 def listFilesContainingString(s):
     """
@@ -73,13 +80,16 @@ def listFilesContainingString(s):
             print('Skipping: %s.' % filename)
     return files
 
+
 def colonOpen(s):
-    return listFilesContainingString(':'*3)
+    return listFilesContainingString(':' * 3)
+
 
 def openFilesFromStdin():
     rd = fromStdInIfData()
     if rd is None:
-        raise Exception("Not implemented: maybe some cool shortcut to open files in vim")
+        raise Exception(
+            "Not implemented: maybe some cool shortcut to open files in vim")
 
     files = extractFilesFuzzy(rd.splitlines())
 
@@ -91,6 +101,7 @@ def openFilesFromStdin():
         cmd = 'echo %s | xargs -o vi -p' % " ".join(files)
     print(cmd)
     os.system(cmd)
+
 
 if __name__ == '__main__':
 
@@ -120,4 +131,3 @@ if __name__ == '__main__':
         cmd = 'vi -p `cat %s`' % tmpfile
         print(cmd)
         os.system(cmd)
-

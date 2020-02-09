@@ -93,22 +93,30 @@ import util
 
 import options
 
+
 def dateForFile():
     return datetime.datetime.now().strftime("%Y-%m-%d")
-    
+
+
 def dateForFolder():
-    return datetime.datetime.now().strftime("%Y-%m-%d")    
-    
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
 def dateForAnnotation():
     #:::bug: use same for all scripts, date.py or globals.py
     return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
-    
+
+
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--force_time_tagging', action='store_true', default=False)
+    parser.add_argument('-t',
+                        '--force_time_tagging',
+                        action='store_true',
+                        default=False)
     return parser.parse_args()
 
-def annotateDateIfNotAlreadyDoneg(file, force = False):
+
+def annotateDateIfNotAlreadyDoneg(file, force=False):
     with open(file, 'r') as fh:
         fileContent = fh.read()
 
@@ -118,6 +126,7 @@ def annotateDateIfNotAlreadyDoneg(file, force = False):
         with open(file, 'w') as fh:
             fh.write(annotation + '\n' + fileContent)
 
+
 def openInEditor(noteFilename):
     if platform.system() == 'Windows':
         c = 'notepad %s' % noteFilename
@@ -125,12 +134,14 @@ def openInEditor(noteFilename):
         c = 'vim %s' % noteFilename
     os.system(c)
 
-def resolveDataLocation(dataLocation = None):
+
+def resolveDataLocation(dataLocation=None):
     if dataLocation == None:
         dataLocation = data.notesRoot()
 
     file = data.ingestFilename(dataLocation)
     return dataLocation, file
+
 
 if __name__ == '__main__':
     args = getArgs()

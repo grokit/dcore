@@ -24,11 +24,13 @@ import os
 
 _meta_shell_command = 'edits'
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('shortcut_to_edit')
     args = parser.parse_args()
     return args
+
 
 def findExecutableScripts():
     pyfiles = fsearch.getAllFilesRecursively('*.py', data.dcoreRoot())
@@ -46,10 +48,11 @@ def findExecutableScripts():
                 if len(stag) > 1: stag = stag.split(' ')[0]
                 stag = stag.strip('"')
                 stag = stag.strip("'")
-                of.append((pfile,stag))
+                of.append((pfile, stag))
                 break
 
-    return of 
+    return of
+
 
 if __name__ == '__main__':
     args = getArgs()
@@ -71,4 +74,3 @@ if __name__ == '__main__':
     cmd = 'vi %s' % filename
     print(cmd)
     os.system(cmd)
-

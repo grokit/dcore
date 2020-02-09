@@ -3,10 +3,9 @@
 import os
 import dcore.apps.notes_db.search as search
 
-
 _meta_shell_command = 'now'
 
 if __name__ == '__main__':
-    # ehm, would be better to just call python 
+    # ehm, would be better to just call python
     cmd = 'ns tag:::now'
     os.system(cmd)

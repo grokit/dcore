@@ -1,4 +1,3 @@
-
 import dcore.data as data
 
 import shutil
@@ -12,19 +11,20 @@ import argparse
 
 _meta_shell_command = 'wallpapers'
 
-outputFolder = os.path.join(data.dcoreTempData(), 'wallpapers') 
+outputFolder = os.path.join(data.dcoreTempData(), 'wallpapers')
 if not os.path.exists(outputFolder):
     os.makedirs(outputFolder)
 
-linux_setpic_cmds = ['gsettings set org.gnome.desktop.background picture-uri file:///%s']
+linux_setpic_cmds = [
+    'gsettings set org.gnome.desktop.background picture-uri file:///%s'
+]
 linux_setpic_cmds.append('feh --bg-scale %s')
 
-class ScriptLogHandler(logging.FileHandler):
 
+class ScriptLogHandler(logging.FileHandler):
     """
     Save to file and output to screen.
     """
-
     def emit(self, record):
         print("{0}: {1}".format(record.levelname, record.getMessage()))
         logging.FileHandler.emit(self, record)
@@ -52,7 +52,11 @@ def getUrlsFiles(html, regex):
     imgs = re.findall(regex, html, re.MULTILINE)
     return imgs
 
-ALLOWEDCHARS = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.')
+
+ALLOWEDCHARS = set(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.')
+
+
 def substIllegalCharsInFilename(filename):
     lstOutChars = []
     for char in filename:
@@ -116,13 +120,17 @@ def movePicsToOld():
         dst = dir + '/' + file
         shutil.move(src, dst)
 
+
 def getArgs():
-        
+
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-m', '--move_old', action = "store_true", default=True)
-    parser.add_argument('-f', '--fetch_new', action = "store_true", default=True)
-    parser.add_argument('-c', '--just_change_background', action = "store_true", default=False)
+    parser.add_argument('-m', '--move_old', action="store_true", default=True)
+    parser.add_argument('-f', '--fetch_new', action="store_true", default=True)
+    parser.add_argument('-c',
+                        '--just_change_background',
+                        action="store_true",
+                        default=False)
 
     args = parser.parse_args()
 
@@ -149,24 +157,24 @@ if __name__ == '__main__':
         movePicsToOld()
 
     if args.fetch_new is True:
-        urls = ['http://www.reddit.com/r/earthporn',
-                'http://www.reddit.com/r/CityPorn',
-                'http://www.reddit.com/r/VillagePorn',
-                'http://www.reddit.com/r/InfrastructurePorn',
-                'http://www.reddit.com/r/WaterPorn']
+        urls = [
+            'http://www.reddit.com/r/earthporn',
+            'http://www.reddit.com/r/CityPorn',
+            'http://www.reddit.com/r/VillagePorn',
+            'http://www.reddit.com/r/InfrastructurePorn',
+            'http://www.reddit.com/r/WaterPorn'
+        ]
 
         regex = r"(http://i.imgur.com/.*?)\""
 
         ripUrls(urls, regex)
 
     pics = [
-        os.path.join(
-            outputFolder,
-            f) for f in os.listdir(outputFolder) if re.search(
-            r'\.jpg$',
-            f) is not None]
+        os.path.join(outputFolder, f) for f in os.listdir(outputFolder)
+        if re.search(r'\.jpg$', f) is not None
+    ]
 
-    rI = random.randint(0, len(pics)-1)
+    rI = random.randint(0, len(pics) - 1)
     pic = pics[rI]
     for linux_setpic_cmd in linux_setpic_cmds:
         cmd = linux_setpic_cmd % pic

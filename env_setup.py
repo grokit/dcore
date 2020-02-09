@@ -1,8 +1,12 @@
-
 import os
 import platform
 
-def updateFileContentBetweenMarks(filename, begin, end, content, createOnMissing=True):
+
+def updateFileContentBetweenMarks(filename,
+                                  begin,
+                                  end,
+                                  content,
+                                  createOnMissing=True):
     """
     Use this script to update part of files between mark.
     Goes to the end of file if already exist and no mark already.
@@ -50,11 +54,10 @@ def updateFileContentBetweenMarks(filename, begin, end, content, createOnMissing
 
     insert = [begin, '\n', content, '\n' + end, '\n']
     if iBegin != -1 and iEnd > iBegin:
-        lines = lines[0:iBegin] + insert + lines[iEnd+1:]
+        lines = lines[0:iBegin] + insert + lines[iEnd + 1:]
     else:
         lines = lines + insert
 
     with open(filename, 'w') as fh:
         for l in lines:
             fh.write(l)
-

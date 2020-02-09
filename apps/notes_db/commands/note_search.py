@@ -49,6 +49,10 @@ nsd: go_to_dir_that_matches (e.g. file what matched in ns, would go to)
 
 - ns: be able to create rules, such as all articles tagged x should be moved under folder Y
 
+- ns: tag:::something -> rule "all tags x should be under folder y"
+        Ruleset:
+        - notify if rules violated
+        - offer to auto-fix (optional)
 
 task -n <name>: create
 task -l: list
@@ -80,30 +84,48 @@ import re
 import math
 
 import dcore.apps.notes_db.data as data
-import dcore.apps.notes_db.meta as meta 
-import dcore.apps.notes_db.score as score 
+import dcore.apps.notes_db.meta as meta
+import dcore.apps.notes_db.score as score
 import dcore.apps.notes_db.search as search
 
 # ns: Note Search
 _meta_shell_command = 'ns'
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='*')
-    parser.add_argument('-C', '--context_range', nargs = '?', type=int, default = 5)
+    parser.add_argument('-C',
+                        '--context_range',
+                        nargs='?',
+                        type=int,
+                        default=5)
     parser.add_argument('-t', '--search_tags', action='store_true')
-    parser.add_argument('-a', '--select_all', action='store_true', help='Select all files in the gather phase (instead of filtering by regex).')
-    parser.add_argument('-m', '--match_infinite', action='store_true', help='If set, do not limit number of search results.')
+    parser.add_argument(
+        '-a',
+        '--select_all',
+        action='store_true',
+        help=
+        'Select all files in the gather phase (instead of filtering by regex).'
+    )
+    parser.add_argument('-m',
+                        '--match_infinite',
+                        action='store_true',
+                        help='If set, do not limit number of search results.')
     parser.add_argument('-s', '--search_only', action='store_true')
-    parser.add_argument('-O', '--open_first_matching_file', action='store_true')
+    parser.add_argument('-O',
+                        '--open_first_matching_file',
+                        action='store_true')
 
     # This is now sefault.
     #parser.add_argument('-o', '--open_matching_file', action='store_true')
     return parser.parse_args()
 
-def _manualSelect(matches, scores, nCut = 30):
 
-    print('Select an item by entering its corresponding number. Enter cancels.')
+def _manualSelect(matches, scores, nCut=30):
+
+    print(
+        'Select an item by entering its corresponding number. Enter cancels.')
     i = 0
 
     if len(matches) > nCut:
@@ -119,6 +141,7 @@ def _manualSelect(matches, scores, nCut = 30):
 
     return matches[s]
 
+
 def _dedupMatches(matches):
     dedup = {}
     for m in matches:
@@ -128,6 +151,7 @@ def _dedupMatches(matches):
     for k in dedup:
         dedup_matches.append(dedup[k])
     return dedup_matches
+
 
 if __name__ == '__main__':
     G_ARGS = getArgs()
@@ -147,9 +171,10 @@ if __name__ == '__main__':
     if False:
         files0 = [f for f in files if 'folder/file1.md' in f]
         files1 = [f for f in files if 'folder/file2.md' in f]
-        files = files0+files1
-    
-    matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
+        files = files0 + files1
+
+    matches = search.extractMatchSetsFromFiles(files, query,
+                                               G_ARGS.context_range)
 
     if G_ARGS.search_tags:
         matches = [m for m in matches if isLineTitle(m.line)]
@@ -182,4 +207,3 @@ if __name__ == '__main__':
             nCut = 1e9
         selected = _manualSelect(matches, scores, nCut)
     os.system("vi '%s'" % selected.filename)
-

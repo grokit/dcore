@@ -1,8 +1,8 @@
-
 import os
 import shutil
 
 _meta_shell_command = 'docxtomd'
+
 
 def fileReplace(fin, fout, rdict):
 
@@ -17,6 +17,7 @@ def fileReplace(fin, fout, rdict):
     fh = open(fout, 'w')
     for l in lout:
         fh.write(l)
+
 
 if __name__ == '__main__':
 
@@ -33,11 +34,14 @@ if __name__ == '__main__':
     assert os.system(cmd) == 0
 
     # Markdown converter does not handle utf8 well.
-    fileReplace(fout, fout, {'“': '"', '”': '"', "’":"'"})
+    fileReplace(fout, fout, {'“': '"', '”': '"', "’": "'"})
 
     # Flatten media to current directory.
     mediaFolder = './media'
-    files = [os.path.abspath(os.path.join(mediaFolder, f)) for f in os.listdir(mediaFolder)]
+    files = [
+        os.path.abspath(os.path.join(mediaFolder, f))
+        for f in os.listdir(mediaFolder)
+    ]
 
     for f in files:
         dst = os.path.split(f)[1]
@@ -50,4 +54,3 @@ if __name__ == '__main__':
     cmd = 'markdown %s > %s' % (fout, fout.replace('.md', '.html'))
     print(cmd)
     assert os.system(cmd) == 0
-

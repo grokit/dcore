@@ -1,14 +1,12 @@
-
 _meta_shell_command = 'gitc'
 
 import os
 import sys
 
-
 if __name__ == '__main__':
 
     assert len(sys.argv) > 1
-    
+
     comment = " ".join(sys.argv[1:])
 
     cmds = []

@@ -1,14 +1,14 @@
-
 _meta_shell_command = 'last_changed'
 
 import os
 import argparse
 import glob
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-e', '--ext', help="Only allow this extension, e.g. png")
+    parser.add_argument('-e',
+                        '--ext',
+                        help="Only allow this extension, e.g. png")
     args = parser.parse_args()
 
     filesAndChange = []
@@ -24,4 +24,3 @@ if __name__ == '__main__':
     filesAndChange = filesAndChange[0:20]
     for gmtime, filename in filesAndChange:
         print(filename)
-

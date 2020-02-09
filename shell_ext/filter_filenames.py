@@ -8,10 +8,11 @@ Extract filenames from fuzzy output, adding some guess along the way and only re
 """
 
 import sys
-import os 
+import os
 import re
 
 _meta_shell_command = 'ff'
+
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -22,10 +23,12 @@ def getArgs():
     args = parser.parse_args()
     return args
 
+
 def fromStdInIfData():
     if not sys.stdin.isatty():
         return sys.stdin.read()
     return None
+
 
 def filterIsFile(f):
     if os.path.isfile(f):
@@ -34,16 +37,18 @@ def filterIsFile(f):
         return f
     return None
 
+
 def gitStatusOutput(f):
     """
     M  a/b/c/file.py
     """
     if ' ' in f:
         p = f.find(' ')
-        if p != len(f)-1:
-            f = f[p+1:]
+        if p != len(f) - 1:
+            f = f[p + 1:]
 
     return filterIsFile(f)
+
 
 def missingHomePath(f):
     """
@@ -51,12 +56,14 @@ def missingHomePath(f):
     """
     return filterIsFile(os.path.join('~/', f))
 
+
 # Applied in order until a match is found, so start by least-fuzzed to most fuzzed.
 FILTERS = [
-        filterIsFile,
-        gitStatusOutput,
-        missingHomePath,
-    ]
+    filterIsFile,
+    gitStatusOutput,
+    missingHomePath,
+]
+
 
 def extractFileFuzzy(f):
     for filt in FILTERS:
@@ -64,6 +71,7 @@ def extractFileFuzzy(f):
         if r is not None:
             return os.path.abspath(os.path.expanduser(r))
     return None
+
 
 if __name__ == '__main__':
     data = fromStdInIfData()

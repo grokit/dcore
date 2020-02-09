@@ -1,4 +1,3 @@
-
 import math
 import json
 import datetime
@@ -22,8 +21,9 @@ if __name__ == '__main__':
     for v in jd:
         if v['type'] == 'work':
             date = v['date']
-            xtime = plot_utils.dateTimeToUnixTimeSecs(plot_utils.dateStrToDateTime(date))
-            if xtime < 1485275901: 
+            xtime = plot_utils.dateTimeToUnixTimeSecs(
+                plot_utils.dateStrToDateTime(date))
+            if xtime < 1485275901:
                 continue
 
             # Obvious issue: need to add all days where there is 0
@@ -32,4 +32,3 @@ if __name__ == '__main__':
             X.append(xtime)
             Y.append(nwork)
     plot_utils.plot(X, Y)
-

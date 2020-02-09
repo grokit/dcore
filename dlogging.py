@@ -1,4 +1,3 @@
-
 import os
 import logging
 import datetime
@@ -9,8 +8,10 @@ import dcore.data as data
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
 
+
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
+
 
 def filterLog(logAsStr):
     """
@@ -20,6 +21,7 @@ def filterLog(logAsStr):
     l.reverse()
     return "\n".join(l)
 
+
 def mirrorLogsToGMail():
     import dcore.do_every as do_every
     folder = data.logsdir()
@@ -28,7 +30,8 @@ def mirrorLogsToGMail():
         f = os.path.join(folder, f)
         if do_every.isFileModifiedSinceLastTouch(f):
             print('Mirroring: %s' % f)
-            title = "GMail Logs File Mirror m3pzBxlKu %s %s" % (dateForAnnotation(), f)
+            title = "GMail Logs File Mirror m3pzBxlKu %s %s" % (
+                dateForAnnotation(), f)
             with open(f, 'r') as fh:
                 # What if file cannot be converted as str?
                 content = filterLog(fh.read())
@@ -37,12 +40,13 @@ def mirrorLogsToGMail():
         else:
             print('Current: %s' % f)
 
-class GMailHandler(logging.Handler):
 
+class GMailHandler(logging.Handler):
     def emit(self, record):
         title = "GMail Handler m3pzBxlKu %s" % dateForAnnotation()
         msg = self.format(record)
         gmail.sendEmail(private_data.primary_email, title, msg)
+
 
 def setup():
     logging.basicConfig(level=logging.DEBUG)
@@ -52,7 +56,8 @@ def setup():
     rFileHandler = TimedRotatingFileHandler(logFilename, when='D', interval=1)
 
     # Format
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     rFileHandler.setFormatter(formatter)
     #logging.getLogger('').setFormatter(formatter)
 
@@ -61,8 +66,8 @@ def setup():
     if False:
         rootLogger.addHandler(GMailHandler())
 
+
 if __name__ == '__main__':
     setup()
     #mirrorLogsToGMail()
     #logging.info('test-append')
-

@@ -1,8 +1,6 @@
-
 _meta_shell_command = 'gitpp'
 
 import os
-
 
 if __name__ == '__main__':
 

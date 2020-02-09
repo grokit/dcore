@@ -1,4 +1,3 @@
-
 import math
 import json
 import datetime
@@ -22,17 +21,17 @@ if __name__ == '__main__':
     for v in jd:
         if v['type'] == 'weight':
             date = v['date']
-            unix = plot_utils.dateTimeToUnixTimeSecs(plot_utils.dateStrToDateTime(date))
-            if False and unix < 1485275901 + 14 * 60*60*24*30: 
+            unix = plot_utils.dateTimeToUnixTimeSecs(
+                plot_utils.dateStrToDateTime(date))
+            if False and unix < 1485275901 + 14 * 60 * 60 * 24 * 30:
                 continue
 
             weight = v['length']
             m = ''
-            if weight <= 188: 
-                s = math.floor(10*(188-weight))
-                m = '<' + '-' * s 
+            if weight <= 188:
+                s = math.floor(10 * (188 - weight))
+                m = '<' + '-' * s
             print(date, weight, m)
             X.append(unix)
             Y.append(weight)
     plot_utils.plot(X, Y)
-

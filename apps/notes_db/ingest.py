@@ -25,7 +25,8 @@ import options
 
 _meta_shell_command = 'ingest'
 
-TITLE_SAFE_CHARSET = set('abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+TITLE_SAFE_CHARSET = set(
+    'abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 TIME_FORMAT = '%Y-%m-%d_%H:%M'
 
@@ -33,18 +34,22 @@ TIME_FORMAT = '%Y-%m-%d_%H:%M'
 #TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
 TIME_FORMAT_FOLDER_NAME = TIME_FORMAT.replace(":", "-")
 
+
 def timeStrToUnixTime(timeStr):
     dateObj = datetime.datetime.strptime(timeStr, TIME_FORMAT)
     return time.mktime(dateObj.timetuple())
+
 
 def unixTimeAsSafeStr(unixTime):
     dt = datetime.datetime.fromtimestamp(unixTime)
     return dt.strftime(TIME_FORMAT)
 
+
 def unixTimeAsSafeFolderStr(unixTime):
     "Use when attaching time to folder names."
     dt = datetime.datetime.fromtimestamp(unixTime)
     return dt.strftime(TIME_FORMAT_FOLDER_NAME)
+
 
 def toFolderName(title, unixTime):
     buf = []
@@ -55,14 +60,15 @@ def toFolderName(title, unixTime):
     safeTitle = "".join(buf)
     return unixTimeAsSafeFolderStr(unixTime) + '_' + safeTitle
 
+
 def detectTitle(line):
     title = None
     if len(line) >= 2 and line[0] == '#' and line[1] != '#':
         title = line[1:].strip()
     return title
 
-class Note:
 
+class Note:
     @staticmethod
     def fromText(noteMd):
         note = Note()
@@ -95,7 +101,7 @@ class Note:
 
         # User did not use automatic tool for unixTime, insert unixTime of ingestion.
         if unixTime is None:
-            unixTime = time.time() 
+            unixTime = time.time()
             tag = ('\n\ntime%s' % options.MSEP) + unixTimeAsSafeStr(unixTime)
             noteMd = noteMd + tag
 
@@ -114,15 +120,18 @@ class Note:
         folderWriteTo = os.path.join(folderOut, topFolderName)
 
         while os.path.exists(folderWriteTo):
-            print('Warning: `%s` already exist, picking next folder.' % folderWriteTo)
+            print('Warning: `%s` already exist, picking next folder.' %
+                  folderWriteTo)
             folderWriteTo = folderWriteTo + '_'
 
         fileWriteTo = os.path.join(folderWriteTo, 'note.md')
         os.makedirs(folderWriteTo)
 
         with open(fileWriteTo, 'w') as fh:
-            print('Wrote note titled `%s` to `%s`.' % (self.title, fileWriteTo))
+            print('Wrote note titled `%s` to `%s`.' %
+                  (self.title, fileWriteTo))
             fh.write(self.content)
+
 
 def splitFlatFileInNoteChunck(lines):
     """
@@ -154,13 +163,14 @@ def splitFlatFileInNoteChunck(lines):
             yield asStr
 
             buf = []
-            potTitle = newTitle 
+            potTitle = newTitle
             newTitle = None
         buf.append(line)
 
     if len(buf) > 0:
         asStr = "".join(buf)
         yield asStr
+
 
 def backupFileToBeIngested(filename, folderOut, contentLines):
     saveFolder = folderOut
@@ -169,14 +179,16 @@ def backupFileToBeIngested(filename, folderOut, contentLines):
     content = "".join(contentLines)
     h = hashlib.new('sha256')
     h.update(content.encode())
-    unixTime = time.time() 
+    unixTime = time.time()
     timeTag = unixTimeAsSafeStr(unixTime)
-    saveFile = os.path.join('ingest.%s.%s.processed' %  (timeTag, h.hexdigest()[-16:]))
+    saveFile = os.path.join('ingest.%s.%s.processed' %
+                            (timeTag, h.hexdigest()[-16:]))
     saveFile = os.path.join(saveFolder, saveFile)
 
     with open(saveFile, 'w') as fh:
         print('Saving ingested data at `%s`.' % saveFile)
         fh.write(content)
+
 
 def ingest(folderOut, contentLines):
 
@@ -194,6 +206,7 @@ def ingest(folderOut, contentLines):
 
     return processedLoc
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     # nargs = ? -> optional, if not will throw error when user does
@@ -209,13 +222,16 @@ def gitCommit(folder, message):
     message = message.replace("'", '_')
     os.system("git commit -m '%s'" % message)
 
+
 def preChangeHook():
     folderOut = data.notesRoot()
     gitCommit(folderOut, "%s_preChangeHook" % __file__)
 
+
 def postChangeHook():
     folderOut = data.notesRoot()
     gitCommit(folderOut, "%s_postChangeHook" % __file__)
+
 
 if __name__ == '__main__':
     args = getArgs()
@@ -227,9 +243,9 @@ if __name__ == '__main__':
 
     contentLines = open(filename).readlines()
 
-    backupFileToBeIngested(filename, os.path.join(folderOut, 'backups'), contentLines)
+    backupFileToBeIngested(filename, os.path.join(folderOut, 'backups'),
+                           contentLines)
     ingest(os.path.join(folderOut, 'notes/low'), contentLines)
     os.remove(filename)
 
     postChangeHook()
-

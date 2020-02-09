@@ -1,4 +1,3 @@
-
 """
 https://hive.apache.org/downloads.html
 https://hadoop.apache.org/releases.html
@@ -15,8 +14,10 @@ import dcore.osrun as osrun
 tag_begin = '# HADOOP_%s_BEGIN' % __file__
 tag_end = '# HADOOP_%s_END' % __file__
 
+
 def install_system_dependencies():
     osrun.run_os('sudo apt install default-jre -y')
+
 
 UNPACK_COMMANDS = """
 mkdir -p ~/apache
@@ -35,6 +36,7 @@ SSH_SETUP_COMMANDS_POST = """
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 """.strip().splitlines()
 
+
 def setup_bashrc():
     content = """
 export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
@@ -44,8 +46,11 @@ export PATH=$PATH:$HADOOP_INSTALL/bin:$HADOOP_INSTALL/sbin
 
     filename = os.path.expanduser('~/.bashrc')
 
-    content = content.replace('__hadoop_root__', os.path.expanduser('~/apache/hadoop'))
-    env_setup.updateFileContentBetweenMarks(filename, tag_begin, tag_end, content, True)
+    content = content.replace('__hadoop_root__',
+                              os.path.expanduser('~/apache/hadoop'))
+    env_setup.updateFileContentBetweenMarks(filename, tag_begin, tag_end,
+                                            content, True)
+
 
 def apply_hadoop_templates():
     """
@@ -62,7 +67,8 @@ def apply_hadoop_templates():
     # ? export JAVA_HOME=usr/lib/jvm/java-8-openjdk-amd64 ?
     content = """
 """
-    env_setup.updateFileContentBetweenMarks(filename, tag_begin, tag_end, content, True)
+    env_setup.updateFileContentBetweenMarks(filename, tag_begin, tag_end,
+                                            content, True)
 
     filename = os.path.expanduser('~/apache/hadoop/etc/hadoop/core-site.xml')
     assert os.path.isfile(filename)
@@ -88,13 +94,16 @@ def apply_hadoop_templates():
 """
     open(filename, 'w').write(content)
 
+
 def apply_hive_templates():
     pass
+
 
 def unpack():
     for cmd in UNPACK_COMMANDS:
         cmd = cmd.replace('~', os.path.expanduser('~'))
         osrun.run_os(cmd)
+
 
 def ssh_config():
     if not os.path.isfile(os.path.expanduser('~/.ssh/id_rsa.pub')):
@@ -104,6 +113,7 @@ def ssh_config():
     for cmd in SSH_SETUP_COMMANDS_POST:
         cmd = cmd.replace('~', os.path.expanduser('~'))
         osrun.run_os(cmd)
+
 
 if __name__ == '__main__':
     # assert "safety" == "make sure you want to run this, then uncomment this line"
@@ -117,4 +127,3 @@ if __name__ == '__main__':
 
     print('Please run `. ~/.bashrc`')
     print('You may also need to run `hadoop namenode -format`')
-

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 Rename files / folders with nice, commonly used patterns.
 
@@ -17,15 +16,21 @@ import time
 
 _meta_shell_command = 'rename_files'
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     #parser.add_argument('mode', nargs='?', default='remove_spaces')
     parser.add_argument('mode', nargs='?', default='remove_aggressive')
     #parser.add_argument('mode', nargs='?', default='remove_non_az')
     parser.add_argument('rest', nargs='?')
-    parser.add_argument('-a', '--apply', action='store_true', default=False, help='Apply.')
+    parser.add_argument('-a',
+                        '--apply',
+                        action='store_true',
+                        default=False,
+                        help='Apply.')
     args = parser.parse_args()
     return args
+
 
 def isNum(s):
     try:
@@ -33,6 +38,7 @@ def isNum(s):
     except:
         return False
     return True
+
 
 def removeSpace(filename, args):
     to = re.sub('[ ()]', '_', filename)
@@ -47,8 +53,11 @@ def removeSpace(filename, args):
     to = ''.join(L)
     return to
 
+
 def removeAggressive(filename, args):
-    v = set('abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]') # ()
+    v = set(
+        'abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]'
+    )  # ()
 
     toLower = True
 
@@ -65,10 +74,12 @@ def removeAggressive(filename, args):
                 fout.append('_')
     return "".join(fout)
 
+
 def prefix(f, arg):
     if arg is None:
         raise Exception('No country for None arg.')
     return "%s_%s" % (arg, f)
+
 
 def suffix(f, arg):
     if arg is None:
@@ -81,12 +92,15 @@ def suffix(f, arg):
 
     return "%s_%s%s" % (f, arg, ext)
 
+
 def date(f, arg):
-    t=time.strftime('%Y-%m-%d')
+    t = time.strftime('%Y-%m-%d')
     return "%s_%s" % (t, f)
+
 
 def custom(f, arg):
     return f.replace('__', '_')
+
 
 def order_by(f, arg):
     if '#' in f:
@@ -95,32 +109,35 @@ def order_by(f, arg):
         n = 99
     return "%.2i_%s" % (n, f)
 
+
 def changeExt(f, arg):
     return os.path.splitext(f)[0] + '.markdown'
-    
+
+
 if __name__ == '__main__':
     files = os.listdir('.')
     #files = [f for f in files if os.path.isfile(f)]
 
     fnMap = {
-            'remove_spaces': removeSpace,
-            'remove_aggressive': removeAggressive,
-            'change_ext': changeExt,
-            'prefix': prefix,
-            'suffix': suffix,
-            'date': date,
-            'custom': custom,
-            'order_by': order_by,
-            }
+        'remove_spaces': removeSpace,
+        'remove_aggressive': removeAggressive,
+        'change_ext': changeExt,
+        'prefix': prefix,
+        'suffix': suffix,
+        'date': date,
+        'custom': custom,
+        'order_by': order_by,
+    }
 
     args = getArgs()
     mode = args.mode
 
     if mode not in fnMap:
-        raise Exception('Error, mode not in map. Mode: %s, map: %s.' % (mode, ", ".join(fnMap.keys())))
+        raise Exception('Error, mode not in map. Mode: %s, map: %s.' %
+                        (mode, ", ".join(fnMap.keys())))
 
     print('Applying %s.' % mode)
-    fn = fnMap[mode] 
+    fn = fnMap[mode]
 
     for f in files:
         to = fn(f, args.rest)

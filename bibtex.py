@@ -22,11 +22,10 @@ import sys
 
 import dcore.data as data
 
-
 # TODO: when done, move references.bib to dcored, just keep in web json export.
 
-class Reference:
 
+class Reference:
     def __init__(self):
         """
         There are lots of fields, we do not populate all of them.
@@ -37,8 +36,10 @@ class Reference:
         url = None
         journal = None
 
+
 def unit_tests():
     pass
+
 
 if __name__ == '__main__':
     unit_tests()

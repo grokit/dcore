@@ -8,8 +8,8 @@ import re
 
 import dcore.apps.notes_db.options as options
 
-class Meta:
 
+class Meta:
     def __init__(self, metaType, value):
         """
         Example:
@@ -34,6 +34,7 @@ class Meta:
     def __repr__(self):
         return self.__str__()
 
+
 def extract(content):
     "content -> T where T is a set of Meta."
     "This is an extremely naive parser, might want to enventually replace when I have more than 5 minutes to code."
@@ -47,7 +48,9 @@ def extract(content):
             if len(LR) == 0:
                 continue
             if len(LR) > 2:
-                raise Exception('Naive parser does not support two tags in one line. Line: %s.' % line)
+                raise Exception(
+                    'Naive parser does not support two tags in one line. Line: %s.'
+                    % line)
             l, r = LR
 
             if ' ' in l:
@@ -70,6 +73,7 @@ def extract(content):
                 M.append(Meta(l, r))
     return M
 
+
 def metaToDict(metaList):
     M = {}
     for m in metaList:
@@ -78,6 +82,7 @@ def metaToDict(metaList):
 
         M[m.metaType].add(m.value)
     return M
+
 
 def unitTest():
     testDoc = """
@@ -105,6 +110,6 @@ def unitTest():
     assert len(metaDict['pre']) == 1
     assert 'post' in metaDict['pre']
 
+
 if __name__ == '__main__':
     unitTest()
-

@@ -8,11 +8,12 @@ Given a set of lines, offer to run one of the last 10.
 """
 
 import sys
-import os 
+import os
 import re
 import argparse
 
 _meta_shell_command = 'lrun'
+
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -22,10 +23,12 @@ def getArgs():
     args = parser.parse_args()
     return args
 
+
 def fromStdInIfData():
     if not sys.stdin.isatty():
         return sys.stdin.read()
     return None
+
 
 if __name__ == '__main__':
 

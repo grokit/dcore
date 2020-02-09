@@ -14,11 +14,11 @@ import dcore.apps.notes_db.meta as meta
 
 DEBUG = False
 
+
 class ScorerLinesMentions:
     """
     One of N scorers.
     """
-
     def __init__(self):
         self.total_score = 0
 
@@ -46,14 +46,17 @@ class ScorerLinesMentions:
     def getScore(self):
         return self.total_score
 
+
 def _lastModified(filename):
     mtime = pathlib.Path(filename).stat().st_mtime
     return mtime
+
 
 def isLineTitle(line):
     if len(line) > 1 and line[0] == '#':
         return True
     return False
+
 
 def _titleLevel(line):
     """
@@ -75,6 +78,7 @@ def _titleLevel(line):
         level += 1
 
     return level
+
 
 def score(match, search_query):
 
@@ -112,7 +116,8 @@ def score(match, search_query):
                 if level == 0:
                     lineMatchBonus += 1
                 else:
-                    titleMatchBonus += multiplier * (2 + 5 * (4-_titleLevel(l)) / 4.0)
+                    titleMatchBonus += multiplier * (
+                        2 + 5 * (4 - _titleLevel(l)) / 4.0)
 
         match_score += min(5, lineMatchBonus) + min(10, titleMatchBonus)
 
@@ -157,7 +162,7 @@ def score(match, search_query):
 
     # Based on time
     lastModified = _lastModified(match.filename)
-    distFromNowDays = (time.time()-lastModified) / (60*60*24)
+    distFromNowDays = (time.time() - lastModified) / (60 * 60 * 24)
     assert distFromNowDays >= 0
 
     # solve for: e^(-x*365) = 0.5 -> -math.log(0.5)/365
@@ -165,7 +170,7 @@ def score(match, search_query):
     correction = max(0.25, math.exp(-0.0018990333713971104 * distFromNowDays))
 
     if match_score < 0 and correction != 0:
-        correction = 1/correction
+        correction = 1 / correction
 
     match_score *= correction
 
@@ -176,7 +181,6 @@ def score(match, search_query):
     t = 1
     for c in match.filename:
         t = (t * 7 + ord(c)) % 2**30 + 0.0001
-    match_score += 1/t
+    match_score += 1 / t
 
     return match_score
-

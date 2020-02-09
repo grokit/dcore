@@ -4,6 +4,7 @@ Where is the data and strcuture.
 
 import os
 
+
 def notesRoot():
     dataLocation = os.path.expanduser('~/notes_db')
     try:
@@ -18,8 +19,8 @@ def notesRoot():
     #dataLocation = os.path.expanduser('~/Downloads/notes_db')
     return dataLocation
 
-def ingestFilename(root = None):
+
+def ingestFilename(root=None):
     if root == None:
         root = notesRoot()
     return os.path.join(root, 'notes/ingest.md')
-

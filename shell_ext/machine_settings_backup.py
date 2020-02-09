@@ -24,11 +24,14 @@ TO_SAVE = [
 # TODO: import from dcore if there.
 ARCHIVE_PASSWORD = 'fslw87d6t74wqabtqtfss2zphidh4m8hyboskf04aom21b73u9ghnzm0ior5xm71'
 
+
 def pathFix(p):
     return os.path.abspath(os.path.expanduser(p))
 
+
 def getTarget():
     return './machine_settings.zip'
+
 
 def foldetToFileSet(rootdir):
     F = []
@@ -36,6 +39,7 @@ def foldetToFileSet(rootdir):
         for f in filenames:
             F.append(os.path.normpath(os.path.join(dirpath, f)))
     return F
+
 
 def expandFileAndFolderSet(ffs):
     ffsO = []
@@ -49,16 +53,19 @@ def expandFileAndFolderSet(ffs):
             raise Exception("Bad file or folder: %s." % f)
     return ffsO
 
+
 def backupTo(archiveTarget, filesAndFolderSet):
     with zipfile.ZipFile(archiveTarget, 'w') as archive:
         #archive.setpassword(PASSWORD)
         for f in expandFileAndFolderSet(filesAndFolderSet):
             archive.write(f)
 
+
 if __name__ == '__main__':
     to_save = TO_SAVE
-    to_save = [pathFix(p) for p in to_save] 
-    to_save_filtered = [p for p in to_save if (os.path.isfile(p) or os.path.isdir(p))] 
+    to_save = [pathFix(p) for p in to_save]
+    to_save_filtered = [
+        p for p in to_save if (os.path.isfile(p) or os.path.isdir(p))
+    ]
 
     backupTo(pathFix('~/backup_settings.zip'), to_save_filtered)
-        

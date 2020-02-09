@@ -38,17 +38,23 @@ import serialization_json
 
 _meta_shell_command = 'tt'
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--regen_html', action='store_true')
     parser.add_argument('-b', '--open_browser', action='store_true')
-    parser.add_argument('-e', '--edit_db', action='store_true', help='Open database file with text editor.')
+    parser.add_argument('-e',
+                        '--edit_db',
+                        action='store_true',
+                        help='Open database file with text editor.')
     args = parser.parse_args()
     return args
+
 
 class Test:
     def __init__(self):
         self.a = 1
+
 
 def commandLineEnterWorkDone(dbFile):
     type = input('What category of work did you do?\n')
@@ -64,6 +70,7 @@ def commandLineEnterWorkDone(dbFile):
 
     W.append(workUnit)
     serialization_json.toFile(dbFile, W)
+
 
 if __name__ == '__main__':
     dbFile = options.dbFile
@@ -86,5 +93,3 @@ if __name__ == '__main__':
 
     wd = serialization_json.fromFile(dbFile)
     render_html.render(wd, htmlFile, options.dataFile)
-
-

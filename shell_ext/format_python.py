@@ -1,4 +1,3 @@
-
 _meta_shell_command = 'format_python'
 
 import os

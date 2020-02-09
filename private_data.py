@@ -11,8 +11,10 @@ import platform
 
 import dcore.data as data
 
+
 def getPrivateDataFilename():
     return os.path.join(data.dcoreData(), "private_file_v2")
+
 
 def __loadPrivateFile():
 
@@ -21,18 +23,21 @@ def __loadPrivateFile():
         jr = fh.read()
         fh.close()
     else:
-        print('Warning: cannot find private file %s.' % getPrivateDataFilename())
+        print('Warning: cannot find private file %s.' %
+              getPrivateDataFilename())
         jr = "{}"
 
     return json.loads(jr)
+
 
 def __expandEnvVars(D):
     r"""
     %userprofile%: c:\users\userid
     $var: an_env_variable_expanded
     """
-    return {k:os.path.expandvars(v) for (k, v) in D.items()}
-    
+    return {k: os.path.expandvars(v) for (k, v) in D.items()}
+
+
 # :::cleanup BAN THIS. This is way to magicky.
 # This will add all the variables declared in the JSON file as local variables.
 # This way, private_data.variable is accessible after importing the module.

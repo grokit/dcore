@@ -1,4 +1,3 @@
-
 _meta_shell_command = 'javarun'
 
 import os
@@ -6,19 +5,21 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
+
     #parser.add_argument('-f', '--file', type=str, default = None)
-    parser.add_argument('file', type=str, default = None)
+    parser.add_argument('file', type=str, default=None)
     args = parser.parse_args()
-    
+
     filec = []
     if args.file != None:
         filesc = [args.file]
     else:
         files = os.listdir('.')
-        filesc = [file for file in files if os.path.splitext(file)[1] == '.java']
+        filesc = [
+            file for file in files if os.path.splitext(file)[1] == '.java'
+        ]
 
-    rv = 0;
+    rv = 0
     for file in filesc:
         cmd = 'javac %s' % file
         print(cmd)
@@ -32,4 +33,3 @@ if __name__ == '__main__':
             print(cmd)
             os.system(cmd)
             os.system('cat %s' % fout)
-

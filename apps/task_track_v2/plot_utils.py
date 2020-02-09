@@ -11,7 +11,8 @@ import os
 
 import dcore.data as data
 
-def bucket(vx, vy, blen, px0 = None):
+
+def bucket(vx, vy, blen, px0=None):
     """
     Buckets (vx, by) by bucket-length blen.
 
@@ -23,55 +24,56 @@ def bucket(vx, vy, blen, px0 = None):
     lowvx = vx[0]
     if px0 is not None:
         lowvx = px0
-    highvx = vx[len(vx)-1]
+    highvx = vx[len(vx) - 1]
 
-    nvx =[lowvx]
-    nvy =[0]
+    nvx = [lowvx]
+    nvy = [0]
     j = 0
     x = lowvx + blen
     while j < len(vy):
         if vx[j] < x:
-            nvy[len(nvy)-1] += vy[j]
+            nvy[len(nvy) - 1] += vy[j]
             j += 1
         else:
             nvx.append(x)
             nvy.append(0)
-            x += blen 
+            x += blen
 
     return nvx, nvy
 
 
 def interpolateWithDamp(vx, vy):
     rangevx = [min(vx), max(vx)]
-    step  = 3600 * 24 * 5
+    step = 3600 * 24 * 5
     width = 3600 * 24 * 120
 
     vx_ = []
     vy_ = []
     x = rangevx[0]
     while x <= rangevx[1]:
-        i0 = bisect.bisect(vx, x-width)
-        i1 = bisect.bisect(vx, x+width)
+        i0 = bisect.bisect(vx, x - width)
+        i1 = bisect.bisect(vx, x + width)
 
         store = []
         damps = []
         for i in range(i0, i1):
-            dist = abs(vx[i]-x)
-            damp = math.e**(-2.5*dist/width)
-            store.append(vy[i]*damp)
+            dist = abs(vx[i] - x)
+            damp = math.e**(-2.5 * dist / width)
+            store.append(vy[i] * damp)
             damps.append(damp)
 
         if len(damps) > 0:
             a = len(damps) / sum(damps)
-            store = [v*a for v in store]
+            store = [v * a for v in store]
 
             if len(store) > 0:
-                y = statistics.mean(store) 
+                y = statistics.mean(store)
                 vx_.append(x)
                 vy_.append(y)
 
         x += step
     return vx_, vy_
+
 
 def dateStrToDateTime(d):
     assert d[-3] == ':'
@@ -79,12 +81,15 @@ def dateStrToDateTime(d):
     dt = datetime.datetime.strptime(d, "%Y-%m-%dT%H:%M:%S.%f%z")
     return dt
 
+
 def dateTimeToUnixTimeSecs(dt):
     return float(dt.strftime("%s"))
+
 
 def unixTimeToDisplay(unixtime):
     d = datetime.datetime.fromtimestamp(unixtime)
     return d.isoformat().split('T')[0]
+
 
 def mapToNValues(A, n):
     """
@@ -93,29 +98,30 @@ def mapToNValues(A, n):
     A_ = []
     mn = min(A)
     mx = max(A)
-    step = (mx-mn)/(n-1)
+    step = (mx - mn) / (n - 1)
 
     for i in range(n):
-        A_.append(mn + step*i)
+        A_.append(mn + step * i)
     assert len(A_) == n
-    assert mx == A_[len(A_)-1]
+    assert mx == A_[len(A_) - 1]
     return A_
+
 
 def plot(vx, vy):
     import numpy as np
     import matplotlib.pyplot as plt
 
-    plt.plot(vx, vy, 'ro', color = '#00b300')
+    plt.plot(vx, vy, 'ro', color='#00b300')
 
     vx_, vy_ = interpolateWithDamp(vx, vy)
-    plt.plot(vx_, vy_, 'k--', color = '#f609ff')
+    plt.plot(vx_, vy_, 'k--', color='#f609ff')
 
     vxlabels = [unixTimeToDisplay(x) for x in vx]
 
     lvx = mapToNValues(vx, 6)
     vxlabels = []
     for i in range(len(lvx)):
-        j = bisect.bisect(vx, lvx[i]) 
+        j = bisect.bisect(vx, lvx[i])
         if j == len(vx): j -= 1
         l = unixTimeToDisplay(vx[j])
         vxlabels.append(l)

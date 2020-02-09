@@ -9,10 +9,16 @@
 import logging
 import subprocess
 
+
 def executeCmd(cmd, doPrint=False):
     # NCurse deadlock:
     # https://stackoverflow.com/questions/33886406/how-to-avoid-the-deadlock-in-a-subprocess-without-using-communicate
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, close_fds=True, shell=True)
+    p = subprocess.Popen(cmd,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE,
+                         universal_newlines=True,
+                         close_fds=True,
+                         shell=True)
 
     stdout = []
     stderr = []
@@ -31,6 +37,7 @@ def executeCmd(cmd, doPrint=False):
         raise Exception('Error value `%s` returned from `%s`.' % (rv, cmd))
     return rv, "".join(stdout), "".join(stderr)
 
+
 def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
     assert type(cmd) == type('')
 
@@ -42,6 +49,7 @@ def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
         logging.warning(stderr)
     return stdout
 
+
 def run_os(cmd):
     "Shortcut for above functions -- generally does the right thing."
     if type(cmd) == type([]):
@@ -51,6 +59,6 @@ def run_os(cmd):
         assert type(cmd) == type("")
         executePrintAndReturnStdout(cmd)
 
+
 if __name__ == '__main__':
     pass
-

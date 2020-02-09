@@ -12,6 +12,7 @@ import sys
 import os
 import platform
 
+
 def getBashrcOrEquivalent():
     """
     https://apple.stackexchange.com/questions/51036/what-is-the-difference-between-bash-profile-and-bashrc
@@ -25,11 +26,13 @@ def getBashrcOrEquivalent():
 def tagShortcutsForDeletion():
     return "0jb02xhs83hayd9fugb7wu2as3q419ki"
 
+
 def dcoreRoot():
     """
     Root of where all scripts are: where this file is.
     """
     return os.path.abspath(os.path.split(__file__)[0])
+
 
 def dcoreExtRoot():
     """
@@ -37,14 +40,18 @@ def dcoreExtRoot():
     """
     return os.path.join(os.path.split(dcoreRoot())[0], 'dcore_ext')
 
+
 def dcoreTempData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
+
 
 def logsdir():
     return dcoreTempData() + '/logs'
 
+
 def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
+
 
 def dcoreBackupEnv():
     """
@@ -53,15 +60,18 @@ def dcoreBackupEnv():
     """
     return os.path.join(dcoreData(), 'backups/env')
 
+
 def pathExt():
     """
     Where we put generated shortcuts that are in path.
     """
     return os.path.normpath(os.path.join(dcoreData(), './path_ext'))
 
+
 def createDirIfNotExist(dData):
     if not os.path.isdir(dData):
         os.makedirs(dData)
+
 
 def getDirs():
     dirs = []
@@ -69,6 +79,7 @@ def getDirs():
     dirs.append(dcoreTempData())
     dirs.append(pathExt())
     return dirs
+
 
 def createAllDirsIfNotExist():
     """
@@ -78,4 +89,3 @@ def createAllDirsIfNotExist():
     for dData in getDirs():
         print('Creating %s if not exist.' % dData)
         createDirIfNotExist(dData)
-

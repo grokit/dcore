@@ -7,12 +7,14 @@ _meta_shell_command = 'media_pictures_stamp_date'
 import os
 import subprocess
 
+
 def isExt(exts, f):
     if '_stamped' in f: return False
     if len(f) < 4: return False
     for ext in exts:
         if f[-4:] == '.' + ext: return True
     return False
+
 
 def getTime(f):
     match = "exif:DateTime:"
@@ -21,10 +23,12 @@ def getTime(f):
 
     for l in stdoutdata.splitlines():
         if match in l:
-            m = l.split(match)[1].strip().split(' ')[0].strip().replace(':', '_')
+            m = l.split(match)[1].strip().split(' ')[0].strip().replace(
+                ':', '_')
             return m
 
     raise Exception("Cannot get picture time: %s." % f)
+
 
 def getFontSize(f):
     match = "exif:ExifImageLength:"
@@ -34,9 +38,10 @@ def getFontSize(f):
     for l in stdoutdata.splitlines():
         if match in l:
             m = l.split(match)[1].strip()
-            return int(m)/50
+            return int(m) / 50
 
     raise Exception("Cannot get picture size: %s." % f)
+
 
 if __name__ == '__main__':
     # http://www.imagemagick.org/Usage/annotating/
@@ -49,8 +54,7 @@ if __name__ == '__main__':
     for f in F:
         t = getTime(f)
         fontSize = getFontSize(f)
-        c = cmd % (f, fontSize, t.replace('_', '/'), f.replace('.', '_stamped.'))
+        c = cmd % (f, fontSize, t.replace('_', '/'), f.replace(
+            '.', '_stamped.'))
         print(c)
         os.system(c)
-
-

@@ -1,11 +1,9 @@
-
 import codecs
 import sys
 import glob
 import argparse
 
-import markdown # 3rd party
-
+import markdown  # 3rd party
 """
 #TODO
 
@@ -111,23 +109,27 @@ html_pre = html_pre.replace('__css__', css)
 javanowing = False
 html_pre_post = False
 
+
 def do():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--filename')
     args = parser.parse_args()
-    
+
     files = []
     if args.filename is not None:
         files = [args.filename]
-    
+
     if len(files) == 0:
         files += glob.glob('*.markdown')
         files += glob.glob('*.md')
-        
+
     print("Using files: %s" % files)
-    
+
     for file in files:
-        fh = codecs.open(file, 'r', encoding="utf-8", errors="xmlcharrefreplace")
+        fh = codecs.open(file,
+                         'r',
+                         encoding="utf-8",
+                         errors="xmlcharrefreplace")
         mdstr = fh.read()
         fh.close()
 
@@ -136,7 +138,7 @@ def do():
         filename = file + '.autogen.html'
         filename = filename.replace('.md', '')
         fh = codecs.open(filename, 'w', encoding='utf-8')
-        
+
         print('Writing: %s.' % filename)
         if javanowing:
             fh.write(autoreplyJavascriptHeader + html + autor_post)
@@ -146,6 +148,6 @@ def do():
             fh.write(html)
         fh.close()
 
+
 if __name__ == "__main__":
     do()
-    

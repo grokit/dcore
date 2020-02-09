@@ -18,11 +18,13 @@ import email.utils
 
 import dcore.private_data as private_data
 
+
 def __getCredentials():
     # Get password from pre-install private files.
-    gmail_user=private_data.low_security_email
-    gmail_pwd=private_data.low_security_email_pw
+    gmail_user = private_data.low_security_email
+    gmail_pwd = private_data.low_security_email_pw
     return gmail_user, gmail_pwd
+
 
 def __connect():
     gmail_user, gmail_pwd = __getCredentials()
@@ -37,7 +39,8 @@ def __connect():
     server.login(gmail_user, gmail_pwd)
     return server, gmail_user
 
-def sendEmail(to, subject, body, filenameAttach = None):
+
+def sendEmail(to, subject, body, filenameAttach=None):
     username, _ = __getCredentials()
 
     msg = email.mime.multipart.MIMEMultipart()
@@ -48,24 +51,29 @@ def sendEmail(to, subject, body, filenameAttach = None):
 
     msg.attach(email.mime.text.MIMEText(body))
 
-    # Adapted from: 
+    # Adapted from:
     # - http://stackoverflow.com/questions/3362600/how-to-send-email-attachments-with-python
     if filenameAttach != None:
         with open(filenameAttach, "rb") as fh:
-            part = email.mime.application.MIMEApplication( fh.read(), Name=os.path.basename(filenameAttach) )
-            part['Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(filenameAttach)
+            part = email.mime.application.MIMEApplication(
+                fh.read(), Name=os.path.basename(filenameAttach))
+            part[
+                'Content-Disposition'] = 'attachment; filename="%s"' % os.path.basename(
+                    filenameAttach)
             # If you call attach(...) again, can have a 2nd, 3rd, ... file.
             msg.attach(part)
 
     server, gmail_user = __connect()
     # From, To, Subject are part of protocol, will show up as mail subject, etc.
-    message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (gmail_user, ", ".join(to), subject, body) 
+    message = "\From: %s\nTo: %s\nSubject: %s\n\n%s" % (
+        gmail_user, ", ".join(to), subject, body)
     server.sendmail(gmail_user, to, msg.as_string())
     server.close()
 
     # If it fails, it will throw exception.
     print('Mail sent.')
     return msg.as_string()
+
 
 def getLastNMails(N):
 
@@ -88,19 +96,19 @@ def getLastNMails(N):
 
         # Somehow this does not work. Would have to look deeper on how to get sent mails.
         #mail.select("[Gmail]/Sent Mail")
-        
+
         mail.select("inbox")
 
         result, data = mail.search(None, "ALL")
-        ids = data[0].split() 
+        ids = data[0].split()
 
         N = min(N, len(ids))
         for i in range(N):
-            result, data = mail.fetch(ids[-(i+1)], "(RFC822)") 
+            result, data = mail.fetch(ids[-(i + 1)], "(RFC822)")
             rawEMails.append(data[0][1])
 
         mail.close()
-        
+
     except Exception as e:
         print("Exception: %s." % e)
         return None
@@ -113,9 +121,10 @@ def getLastNMails(N):
         M.append(m)
     return M
 
+
 if __name__ == '__main__':
     mails = getLastNMails(2)
     for m in mails:
-        print('~'*80)
+        print('~' * 80)
         print(m)
-        print('~'*80)
+        print('~' * 80)

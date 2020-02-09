@@ -11,25 +11,28 @@ openf <name>: fuzzy match with all files which are in .bash_history (expand ~). 
 """
 
 import sys
-import os 
+import os
 import re
 import argparse
 
 _meta_shell_command = 'hs'
 
+
 def getArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--cut_len', default=60, type=int)
     parser.add_argument('-e', '--execute', action='store_true')
-    parser.add_argument('filter', default = [], nargs='*')
+    parser.add_argument('filter', default=[], nargs='*')
     args = parser.parse_args()
     return args
+
 
 def filterLine(l):
     if len(l) == 0: return True
     if len(l.strip()) == 0: return True
     if l[0] == '#': return True
     return False
+
 
 if __name__ == '__main__':
 
@@ -48,7 +51,7 @@ if __name__ == '__main__':
     L = []
     for i, l in enumerate(lines):
         if i == 0: continue
-        if lines[i] != lines[i-1]:
+        if lines[i] != lines[i - 1]:
             L.append(lines[i])
     lines = L
 
@@ -66,9 +69,8 @@ if __name__ == '__main__':
             exit(0)
         s = cut - int(s)
         cmd = lines[s]
-        print('Executing `%s`.'%cmd)
+        print('Executing `%s`.' % cmd)
         os.system(cmd)
     else:
         for l in lines:
             print(l)
-

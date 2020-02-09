@@ -43,24 +43,38 @@ import dcore.data as data
 _meta_shell_command = 'fif'
 
 search_roots = [r'~/sync']
-cacheLoc = os.path.join(data.dcoreTempData(), os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 0.5*24*60*60 # Before automatically force regenerating.
+cacheLoc = os.path.join(data.dcoreTempData(),
+                        os.path.split(__file__)[1] + ".cache")
+cacheExpiryInSeconds = 0.5 * 24 * 60 * 60  # Before automatically force regenerating.
+
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('grep', type=str, nargs='*', default = None)
-    parser.add_argument('-r', '--reset', action="store_true", help="Force re-creation of the cache.")
-    parser.add_argument('-O', '--open', action="store_true", help="Open with OS-configured program.")
-    parser.add_argument('-e', '--vi', action="store_true", help="Open all files that match in (the BEST) text editor.")
+    parser.add_argument('grep', type=str, nargs='*', default=None)
+    parser.add_argument('-r',
+                        '--reset',
+                        action="store_true",
+                        help="Force re-creation of the cache.")
+    parser.add_argument('-O',
+                        '--open',
+                        action="store_true",
+                        help="Open with OS-configured program.")
+    parser.add_argument(
+        '-e',
+        '--vi',
+        action="store_true",
+        help="Open all files that match in (the BEST) text editor.")
     args = parser.parse_args()
     return args
 
-def getAllFiles(rootdir = '.'):
+
+def getAllFiles(rootdir='.'):
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
             F.append(os.path.normpath(os.path.join(dirpath, f)))
     return F
+
 
 def elementInList(f, filterArray):
     for e in filterArray:
@@ -68,23 +82,29 @@ def elementInList(f, filterArray):
             return True
     return False
 
+
 def filterOutIfArrayInElement(F, filterArray):
     return [f for f in F if not elementInList(f, filterArray)]
+
 
 def filterInCaseInsensitive(F, astr):
     astr = astr.lower()
     return [f for f in F if astr in f.lower()]
 
+
 def dateNow():
     return datetime.datetime.now(datetime.timezone.utc)
+
 
 def dateNowStr():
     return dateNow().isoformat()
 
+
 class Cache:
     def __init__(self, F):
         self.F = F
-        self.date = dateNow() 
+        self.date = dateNow()
+
 
 def gen():
     F = []
@@ -94,12 +114,14 @@ def gen():
         assert os.path.isdir(search_root)
         for f in getAllFiles(search_root):
             F.append(f)
-    F = filterOutIfArrayInElement(F, ['node_modules', '.git',  '.hg', '__pycache__', r'Out\Functional'])
+    F = filterOutIfArrayInElement(
+        F, ['node_modules', '.git', '.hg', '__pycache__', r'Out\Functional'])
     return F
+
 
 def do():
     args = getArgs()
-    
+
     F = None
     if not args.reset and os.path.isfile(cacheLoc):
         print('Loading cache from: %s.' % cacheLoc)
@@ -111,22 +133,25 @@ def do():
         else:
             print('Cache too old, wiping.')
             F = None
-    
+
     if F is None:
-        print("Generating cache from %s, this could take a while... grab a coffee and relax :)." % search_roots)
+        print(
+            "Generating cache from %s, this could take a while... grab a coffee and relax :)."
+            % search_roots)
         F = gen()
         print('Saving cache at: %s.' % cacheLoc)
         pickle.dump(Cache(F), open(cacheLoc, 'wb'))
-    
+
     if len(args.grep) != 0:
         gg = args.grep
-        print('Filter-in with: [%s]. Ordering and case ignored.' % ", ".join(gg))
+        print('Filter-in with: [%s]. Ordering and case ignored.' %
+              ", ".join(gg))
         for sub in gg:
             F = filterInCaseInsensitive(F, sub)
 
         for f in F:
             print(f)
-        
+
         if args.open is True:
             assert len(F) == 1
             for f in F:
@@ -138,6 +163,7 @@ def do():
             for f in F:
                 cmd = 'vi %s' % f
                 os.system(cmd)
+
 
 if __name__ == '__main__':
     do()

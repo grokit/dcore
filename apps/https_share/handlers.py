@@ -1,4 +1,3 @@
-
 import os
 import hashlib
 import logging
@@ -10,76 +9,87 @@ import htmlt
 
 log = logging.getLogger('log')
 
+
 def base64AsStr(str):
     return base64.b64encode(str.encode()).decode('ascii')
+
 
 def getHash(content):
     m = hashlib.md5()
     m.update(content)
     return m.hexdigest()
 
+
 def getHtmlDir(path):
-    
+
     lHtml = []
     try:
         files = os.listdir(path)
-        
+
         lHtml.append("<h2>Files</h2>")
-        
-        subFolder = os.path.abspath( os.path.join(path, "./..") )
-        subFolderFriendly = os.path.abspath( os.path.join(path, ".") ) + '/..'
-        
-        lHtml.append('Parent: <a href="query=%s">%s</a><br>' % (base64AsStr(subFolder), subFolderFriendly))
-        
+
+        subFolder = os.path.abspath(os.path.join(path, "./.."))
+        subFolderFriendly = os.path.abspath(os.path.join(path, ".")) + '/..'
+
+        lHtml.append('Parent: <a href="query=%s">%s</a><br>' %
+                     (base64AsStr(subFolder), subFolderFriendly))
+
         for file in files:
-            lHtml.append('<a href="query=%s">%s</a><br>' % (base64AsStr(os.path.join(path, file)), file))
-        
+            lHtml.append('<a href="query=%s">%s</a><br>' %
+                         (base64AsStr(os.path.join(path, file)), file))
+
     except BaseException as e:
         lHtml.append('Path not found: %s.<br>' % path)
         eStr = "%s" % e
         eStr = eStr.replace("\n", "<br>")
         lHtml.append(eStr)
         log.error(eStr)
-        
+
     return "\n".join(lHtml)
 
+
 def isPathAuthorized(authorizedFolder, queryFolder):
-    
+
     authorizedFolder = os.path.realpath(authorizedFolder)
     queryFolder = os.path.realpath(queryFolder)
-    
+
     last = queryFolder
-    while(True):
+    while (True):
 
         if queryFolder == authorizedFolder:
             return True
-        
-        queryFolder = os.path.realpath( os.path.join(queryFolder, '..') )
-        
+
+        queryFolder = os.path.realpath(os.path.join(queryFolder, '..'))
+
         if queryFolder == last:
             return False
-        
+
         last = queryFolder
-    
+
     return False
 
+
 def getStyle():
-    
-    css_file = os.path.join( os.path.dirname(os.path.realpath(__file__)), 'flask_style.css')
-    
+
+    css_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                            'flask_style.css')
+
     fh = open(css_file, 'r')
     cnt = fh.read()
     return cnt
 
+
 def getHtmlDebugInfo(httpHandler):
-    
+
     lHeaders = []
     for k, v in httpHandler.headers.items():
         lHeaders.append("%s: %s<br>" % (k, v))
-    
-    debug_mid = "<br><br><br><br><p><b>Debug Information</b><br>%s<br>%s<br>%s<br></p>" % (httpHandler.command, httpHandler.path, "".join(lHeaders))
-    
-    return '<div class="debug_info">%s</div>' % debug_mid    
+
+    debug_mid = "<br><br><br><br><p><b>Debug Information</b><br>%s<br>%s<br>%s<br></p>" % (
+        httpHandler.command, httpHandler.path, "".join(lHeaders))
+
+    return '<div class="debug_info">%s</div>' % debug_mid
+
 
 def extractHeadersInfo(listFileHandles):
     """
@@ -95,31 +105,34 @@ def extractHeadersInfo(listFileHandles):
     """
 
     log.debug(locals())
-    
+
     firstFh = listFileHandles[0]
     firstFh.seek(0)
     multipart = firstFh.read()
     header, data = multipart.split(b'\r\n\r\n', 1)
     header = header + b'\r\n\r\n'
-    
+
     log.debug(header)
-    
+
     boundaryTag = b'\r\n' + header.split(b'\r\n')[0]
     filename = header.split(b'filename="')[1].split(b'"')[0]
     filename = filename.decode('ascii')
-    
+
     log.debug('Detected boundary: %s.' % boundaryTag)
 
     dataStartPos = len(header)
-    
-    return filename, boundaryTag, dataStartPos 
 
-def writeMultipartFile(listFileHandlers, filenameOut, dataStartPos, boundaryTag):
+    return filename, boundaryTag, dataStartPos
+
+
+def writeMultipartFile(listFileHandlers, filenameOut, dataStartPos,
+                       boundaryTag):
 
     fh = open(filenameOut, 'wb')
 
     for i, fht in enumerate(listFileHandlers):
-        log.debug('Write non-temp chunk %i of %i.' % (i, len(listFileHandlers)))
+        log.debug('Write non-temp chunk %i of %i.' %
+                  (i, len(listFileHandlers)))
         fht.seek(0)
 
         done = False
@@ -145,14 +158,17 @@ def writeMultipartFile(listFileHandlers, filenameOut, dataStartPos, boundaryTag)
     fh.close()
     log.debug('Done writeMultipartFile.')
 
+
 def handleUploadSink(httpHandler):
-    
+
     if httpHandler.headers['content-length'] is None:
-        handleCustomError(httpHandler, "No 'content-length' header, browser is not trying to upload?")
+        handleCustomError(
+            httpHandler,
+            "No 'content-length' header, browser is not trying to upload?")
         return
-    
+
     length = int(httpHandler.headers['content-length'])
-    
+
     log.debug(httpHandler.headers)
     outputFolder = httpHandler.server.data['output_folder']
     log.debug('File upload output folder: %s.' % outputFolder)
@@ -163,111 +179,122 @@ def handleUploadSink(httpHandler):
     while True:
         fh = tempfile.TemporaryFile()
         Lfh.append(fh)
-        
+
         log.debug('Reading chunk %i.' % len(Lfh))
 
-        readLen = 50*2**20
-        if readLen > length-lenRecv:
-            readLen = length-lenRecv
+        readLen = 50 * 2**20
+        if readLen > length - lenRecv:
+            readLen = length - lenRecv
 
         log.debug('Attempt read %i byte(s).' % readLen)
         data = httpHandler.rfile.read(readLen)
         log.debug('Read %i byte(s).' % len(data))
         lenRecv += len(data)
         fh.write(data)
-        
+
         if len(data) == 0 or lenRecv == length:
             break
-    
+
     # This write the files in temp files, then merge to final file. Thus it writes everything twice. A better implementation would
     # write to a single file, and detect / correct MIME heads on the fly using the two latest chunks read.
     filename, boundaryTag, dataStartPos = extractHeadersInfo(Lfh)
-    filename = 'recv_' + filename # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
+    filename = 'recv_' + filename  # Avoid letting the client completely set the filename -- could override arbitrary files including scripts.
     fullpath = os.path.join(outputFolder, filename)
     log.debug('File upload output filename: %s.' % fullpath)
     writeMultipartFile(Lfh, fullpath, dataStartPos, boundaryTag)
 
     httpHandler.send_response(200)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     body = "<h2>File uploaded successfully.</h2><p>Filename: %s.<br>Len: %s.<br>MD5 hash: %s<br></p>"
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', body % (filename, len(data), 'hash computation skipped'))
+    html = html.replace(
+        '__body__', body % (filename, len(data), 'hash computation skipped'))
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
 
+
 def handleSetToken(httpHandler):
-    
+
     tokenV = httpHandler.path.split("/")[-1]
-    
+
     if tokenV[0] == '?':
         tokenV = tokenV.split('?accessToken=')[1]
     tokenV = urllib.parse.unquote(tokenV)
 
     httpHandler.send_response(200)
-    httpHandler.send_header('Content-type','text/html')
-    httpHandler.send_header('Set-Cookie', 'accessToken=%s;Path=/; HttpOnly' % tokenV)
+    httpHandler.send_header('Content-type', 'text/html')
+    httpHandler.send_header('Set-Cookie',
+                            'accessToken=%s;Path=/; HttpOnly' % tokenV)
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
-    html = html.replace('__head__', '<meta http-equiv="refresh" content="3;url=/" />')
+    html = html.replace('__head__',
+                        '<meta http-equiv="refresh" content="3;url=/" />')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', r'<p><b>Token set to: %s.</b></p>You will be redirected automatically.' % tokenV)
+    html = html.replace(
+        '__body__',
+        r'<p><b>Token set to: %s.</b></p>You will be redirected automatically.'
+        % tokenV)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
 
+
 def handleUrlListFiles(httpHandler):
-    
+
     queryPath = httpHandler.server.data['authorized_folder']
-    
+
     if "query=" in httpHandler.path:
         queryPath = httpHandler.path.split("query=")[1]
-        
+
         if type(queryPath) != type(b''):
-            queryPath = queryPath.encode()        
-        
+            queryPath = queryPath.encode()
+
         queryPath = base64.b64decode(queryPath)
-        
+
         if type(queryPath) == type(b''):
             queryPath = queryPath.decode()
-        
+
         log.debug("queryPath: %s" % queryPath)
-    
-    if not isPathAuthorized(httpHandler.server.data['authorized_folder'], queryPath):
+
+    if not isPathAuthorized(httpHandler.server.data['authorized_folder'],
+                            queryPath):
         handleNotAuthorizedFolder(httpHandler, queryPath)
         return
-    
+
     if os.path.isdir(queryPath):
         httpHandler.send_response(200)
-        httpHandler.send_header('Content-type','text/html')
+        httpHandler.send_header('Content-type', 'text/html')
         httpHandler.end_headers()
-        
+
         html = htmlt.html_template
         html = html.replace('__head__', '')
         html = html.replace('__style__', getStyle())
         html = html.replace('__body__', getHtmlDir(queryPath))
         html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-        
+
         httpHandler.wfile.write(html.encode())
-        
+
     elif os.path.isfile(queryPath):
-        
+
         filename = os.path.split(queryPath)[1]
-        
+
         httpHandler.send_response(200)
-        httpHandler.send_header('Content-disposition','attachment; filename=%s' % filename)
+        httpHandler.send_header('Content-disposition',
+                                'attachment; filename=%s' % filename)
         httpHandler.end_headers()
 
         fh = open(queryPath, 'rb')
         chunkSize = int(2**20)
         while True:
-            log.debug('User downloading %s, chunk size: %i.' % (filename, chunkSize))
+            log.debug('User downloading %s, chunk size: %i.' %
+                      (filename, chunkSize))
             fileBytes = fh.read(chunkSize)
             if len(fileBytes) == 0:
                 break
@@ -277,109 +304,115 @@ def handleUrlListFiles(httpHandler):
     else:
         handleNotFound(httpHandler)
 
+
 def handleMain(httpHandler):
-    
+
     httpHandler.send_response(200)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.main_html)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
-       
+
+
 def handleLog(httpHandler):
-    
+
     httpHandler.send_response(200)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     fh = open(logfilename, 'r')
     logCt = fh.read()
     fh.close()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', htmlt.main_log.format( logCt ))
+    html = html.replace('__body__', htmlt.main_log.format(logCt))
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
+
 
 def handleCustomError(httpHandler, errMsg):
-    
+
     errNo = 400
-    
+
     httpHandler.send_response(errNo)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
-    html = html.replace('__body__', r'<h2>%s Bad Request, %s</h2>' % (errNo, errMsg))
+    html = html.replace('__body__',
+                        r'<h2>%s Bad Request, %s</h2>' % (errNo, errMsg))
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
 
-    
+
 def handleNotFound(httpHandler):
-    
+
     httpHandler.send_response(404)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', r'<h2>404 Not Found :(</h2>')
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
+
     httpHandler.wfile.write(html.encode())
 
+
 def handleNotAuthorizedFolder(httpHandler, resource):
-    
+
     httpHandler.send_response(401)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.not_auth_folder_body)
-    html = html.replace('__resource__', os.path.realpath( resource ) )    
+    html = html.replace('__resource__', os.path.realpath(resource))
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
-    httpHandler.wfile.write(html.encode())    
+
+    httpHandler.wfile.write(html.encode())
+
 
 def handleNotAuthorized(httpHandler):
-    
+
     httpHandler.send_response(401)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.not_auth_body)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
-    httpHandler.wfile.write(html.encode())    
-    
+
+    httpHandler.wfile.write(html.encode())
+
+
 def handleUpload(httpHandler):
-    
+
     httpHandler.send_response(200)
-    httpHandler.send_header('Content-type','text/html')
+    httpHandler.send_header('Content-type', 'text/html')
     httpHandler.end_headers()
-    
+
     html = htmlt.html_template
     html = html.replace('__head__', '')
     html = html.replace('__style__', getStyle())
     html = html.replace('__body__', htmlt.upload_body)
     html = html.replace('__debug_info__', getHtmlDebugInfo(httpHandler))
-    
-    httpHandler.wfile.write(html.encode())
 
+    httpHandler.wfile.write(html.encode())

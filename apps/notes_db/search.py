@@ -14,8 +14,8 @@ import pathlib
 
 import dcore.apps.notes_db.data as data
 
-class Match:
 
+class Match:
     def __init__(self, filename, lineContent):
         self.filename = filename
         self.line = lineContent
@@ -37,23 +37,29 @@ class Match:
     def __str__(self):
         return self.strWithLine()
 
-def _walkGatherAllFiles(rootdir = '.'):
+
+def _walkGatherAllFiles(rootdir='.'):
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
-            F.append( os.path.join(dirpath, f) )
+            F.append(os.path.join(dirpath, f))
     return F
+
 
 ################################################################################
 # PUBLIC
 ################################################################################
 
+
 def getAllFiles():
     root = data.notesRoot()
     files = _walkGatherAllFiles(root)
-    files = [f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md']
+    files = [
+        f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md'
+    ]
     files = [f for f in files if not '/archived' in os.path.split(f)[0]]
     return files
+
 
 def sortMatchesByScore(matches, scores):
     assert len(matches) == len(scores)
@@ -64,6 +70,7 @@ def sortMatchesByScore(matches, scores):
     matches, scores = [[m for m, s in pairs], [s for m, s in pairs]]
 
     return matches, scores
+
 
 def extractMatchSetsFromFiles(files, query, context_range):
     """
@@ -78,23 +85,22 @@ def extractMatchSetsFromFiles(files, query, context_range):
                 m = re.search(query, line, re.IGNORECASE)
                 if m is not None:
                     g = m.group(0)
-                    match = Match(filename, line) 
+                    match = Match(filename, line)
 
                     ctx = []
-                    cr = context_range 
+                    cr = context_range
                     if cr % 2 == 1:
                         # Since -3//2 = 2 and not 1.
                         cr -= 1
 
-                    for r in range(-cr//2, cr//2+1, 1):
+                    for r in range(-cr // 2, cr // 2 + 1, 1):
                         if i + r >= 0 and i + r < len(lines):
                             if r == 0:
-                                ctx.append('**  ' + lines[i+r])
+                                ctx.append('**  ' + lines[i + r])
                             else:
-                                ctx.append('    ' + lines[i+r])
+                                ctx.append('    ' + lines[i + r])
 
                     match.context = "".join(ctx)
                     matches.append(match)
                 i += 1
     return matches
-

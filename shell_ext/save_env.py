@@ -8,7 +8,7 @@ Create dcore script that saves tmux, bashrc, ... files somewhere.
 """
 
 import os
-import sys 
+import sys
 import time
 import shutil
 
@@ -22,12 +22,12 @@ SAVE_ME = [
     '~/.i3',
     '~/.vimrc',
     '~/.tmux.conf',
-    '~/.profile', # macos
+    '~/.profile',  # macos
     '~/.bashrc',
     '~/.irssi',
     '~/.ssh',
     '~/.inputrc',
-    '~/.config/i3', # i3
+    '~/.config/i3',  # i3
     '~/.gnomerc',
     '~/.bash_history',
     '~/.config/liferea',
@@ -35,22 +35,25 @@ SAVE_ME = [
 ]
 
 SAVE_ME_MEH = [
-    '~/.viminfo', # not that useful, can likely contain private information.
+    '~/.viminfo',  # not that useful, can likely contain private information.
 ]
 
+
 def saveDir(f, dst):
-    dstName = os.path.split(f)[1] 
+    dstName = os.path.split(f)[1]
     src = f
     dst = os.path.join(dst, dstName)
     print('%s -> %s' % (src, dst))
     shutil.copytree(src, dst)
 
+
 def saveFile(f, dst):
-    dstName = os.path.split(f)[1] 
+    dstName = os.path.split(f)[1]
     src = f
     dst = os.path.join(dst, dstName)
     print('%s -> %s' % (src, dst))
     shutil.copy(src, dst)
+
 
 if __name__ == '__main__':
     BACKUP_IN = data.dcoreBackupEnv()
@@ -59,7 +62,7 @@ if __name__ == '__main__':
     SAVE_ME = [f for f in SAVE_ME if (os.path.isfile(f) or os.path.isdir(f))]
     BACKUP_IN = os.path.expanduser(BACKUP_IN)
 
-    dst = os.path.join(BACKUP_IN, str(int(time.time()*1000)))
+    dst = os.path.join(BACKUP_IN, str(int(time.time() * 1000)))
 
     for f in SAVE_ME:
         if os.path.isdir(f):

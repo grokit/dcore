@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 One-run install of `dcore`.
 
@@ -13,6 +12,7 @@ import os
 import platform
 
 # Do NOT import dcore from here ... first run it will not be available.
+
 
 def setupShortcutsBootstrap():
     """
@@ -44,14 +44,18 @@ export PATH=$PATH:%s
             file = bash_rc + '\n\n' + file
             open(fname, 'w').write(file)
         else:
-            print('Warning: skipping writing new `%s` since it looks like tag is already present.' % fname)
+            print(
+                'Warning: skipping writing new `%s` since it looks like tag is already present.'
+                % fname)
 
     cmd = '. %s' % fname
     print(cmd)
     os.system(cmd)
 
+
 def setupShortcuts():
     create_python_scripts_shortcuts.do()
+
 
 def delOld():
     folder = data.pathExt()
@@ -66,6 +70,7 @@ def delOld():
             print('Deleting %s.' % file)
             os.remove(file)
 
+
 def tryImports():
     try:
         import dcore.data as data
@@ -78,22 +83,13 @@ def tryImports():
     except ImportError as e:
         return False
 
+
 def setupBashRc():
     CONTENT = """
     
 ## Plugins
 
 ### https://vimawesome.com/plugin/ctrlp-vim + vimplug
-
-## Alias
-
-# pipe data to clipboard, e.g. cat <file> | cclip
-alias cclip='xclip -selection clipboard'
-alias clipp='xclip -selection clipboard -o'
-
-alias youtube_mp3='youtube-dl --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" '
-
-alias gg='gnome-open'
 
 ## Tmux Saves History Properly
 
@@ -123,13 +119,15 @@ HISTCONTROL=ignoreboth
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+cd ~/sync/dev
+tmux
 """
     fname = data.getBashrcOrEquivalent()
     env_setup.updateFileContentBetweenMarks(
-            os.path.expanduser(fname), 
-            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
-            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
-            CONTENT)
+        os.path.expanduser(fname), '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
+        '# DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
+
 
 def setupI3():
     CONTENT = """
@@ -152,10 +150,10 @@ bindsym XF86MonBrightnessDown exec nux low
 # me (end) ======
 """
     env_setup.updateFileContentBetweenMarks(
-            os.path.expanduser('~/.config/i3/config'), 
-            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
-            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
-            CONTENT)
+        os.path.expanduser('~/.config/i3/config'),
+        '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
+        '# DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
+
 
 def setupVi():
     CONTENT = """
@@ -209,10 +207,10 @@ command! E Explore
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 """
     env_setup.updateFileContentBetweenMarks(
-            os.path.expanduser('~/.vimrc'), 
-            '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
-            '" DCORE_SECTION_END_8ygmfmsu926z06ym', 
-            CONTENT)
+        os.path.expanduser('~/.vimrc'),
+        '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
+        '" DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
+
 
 def setupTmux():
     CONTENT = """
@@ -223,21 +221,24 @@ set -g status-fg colour38
 set-window-option -g mode-keys vi
 """
     env_setup.updateFileContentBetweenMarks(
-            os.path.expanduser('~/.tmux.conf'), 
-            '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym', 
-            '# DCORE_SECTION_END_8ygmfmsu926z06ym', 
-            CONTENT)
+        os.path.expanduser('~/.tmux.conf'),
+        '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
+        '# DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
+
 
 def setupGit():
     cmd = 'git config --global core.editor "vim"'
     print(cmd)
     assert os.system(cmd) == 0
 
+
 if __name__ == '__main__':
 
     if not tryImports():
         print('Not bootstrapped, ')
-        print('Attempting to bootstrap. You may need to restart your terminal for changes to take effect.')
+        print(
+            'Attempting to bootstrap. You may need to restart your terminal for changes to take effect.'
+        )
         setupShortcutsBootstrap()
         exit(0)
 
@@ -249,4 +250,3 @@ if __name__ == '__main__':
     setupVi()
     setupTmux()
     setupGit()
-

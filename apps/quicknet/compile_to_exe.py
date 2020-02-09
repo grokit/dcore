@@ -2,17 +2,17 @@
 
 from cx_Freeze import setup, Executable
 
-# icon="logo.ico", 
+# icon="logo.ico",
 executables = [
-        Executable("quicknet.py", appendScriptToExe=True, appendScriptToLibrary=False)
+    Executable("quicknet.py",
+               appendScriptToExe=True,
+               appendScriptToLibrary=False)
 ]
 
-buildOptions = dict(
-        create_shared_zip = False)
+buildOptions = dict(create_shared_zip=False)
 
-setup(
-        name = "out",
-        version = "0.1",
-        description = "cx_Freeze",
-        options = dict(build_exe = buildOptions),
-        executables = executables)
+setup(name="out",
+      version="0.1",
+      description="cx_Freeze",
+      options=dict(build_exe=buildOptions),
+      executables=executables)
