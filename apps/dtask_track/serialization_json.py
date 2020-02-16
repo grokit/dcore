@@ -21,10 +21,6 @@ class Encoder(json.JSONEncoder):
 
 
 def toFile(filename, workDoneSet):
-    # @@@bug: do not rewrite all file (do not want to delete extra data put manually into tasks).
-    # @@improvement: make file easy to read / modify manually
-    # date as localtime with proper ISO8601 encoding
-    # endlines between entries
 
     def dateToStr(w):
         ww = copy.deepcopy(w)
@@ -33,7 +29,6 @@ def toFile(filename, workDoneSet):
 
     workDoneSetWrite = list(map(dateToStr, workDoneSet))
 
-    #encoded = Encoder().encode(workDoneSetWrite)
     encoded = json.dumps(workDoneSetWrite,
                          cls=Encoder,
                          indent=4,
@@ -52,9 +47,6 @@ def fromFile(filename):
         workDone = work_unit.WorkDone(
             item['type'], item['length'], item['comment'],
             date_convention.dateStrToDateTime(item['date']))
-        # Fixed messed-up time file, only do to change timezone / apply offset.
-        #workDone.date = workDone.date.replace(tzinfo=date_convention.timeZone)
-        #workDone.date -= datetime.timedelta(hours=7)
         workUnits.append(workDone)
     workUnits.sort(key=lambda x: x.date)
     return workUnits
@@ -85,8 +77,6 @@ def unitTests():
         assert workUnits[i].type == wdRead[i].type
         assert workUnits[i].length == wdRead[i].length
         assert workUnits[i].comment == wdRead[i].comment
-        #print(workUnits[i].date)
-        #print(wdRead[i].date)
         assert workUnits[i].date == wdRead[i].date
 
     # Test default CTOR / serialization.

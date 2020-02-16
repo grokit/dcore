@@ -5,6 +5,10 @@ Provide search and search + quick-action.
 
 ## As
 
+- if a tag matches a folder name under articles, offer to merge (or tag `no-merge` if decide no)
+    - list-tags
+    - add-tags
+
 - ns a b c
     -> will not find a c. Should split space and do search independently IN ADDITION to full search (which gets more points).
 

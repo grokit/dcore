@@ -34,8 +34,8 @@ if __name__ == '__main__':
     assert len(filesc) == 1
     rv = -1
     file = os.path.abspath(filesc[0])
-    cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file,
-                                                                          file)
+    #cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
+    cmd = 'g++ -Wl,--no-as-needed -std=c++2a -pthread %s -o %s.tmpbin' % (file, file)
 
     # Extra warnings
     if False:

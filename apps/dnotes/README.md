@@ -3,6 +3,8 @@
 
 ## As
 
+- https://praxis.fortelabs.co/how-to-take-smart-notes/
+
 ns: penalize if /meh is in path
     if `meh` in filename of folder, penalize
 ++ consider path in search
