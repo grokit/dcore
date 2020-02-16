@@ -87,10 +87,10 @@ import argparse
 import re
 import math
 
-import dcore.apps.notes_db.data as data
-import dcore.apps.notes_db.meta as meta
-import dcore.apps.notes_db.score as score
-import dcore.apps.notes_db.search as search
+import dcore.apps.dnotes.data as data
+import dcore.apps.dnotes.meta as meta
+import dcore.apps.dnotes.score as score
+import dcore.apps.dnotes.search as search
 
 # ns: Note Search
 _meta_shell_command = 'ns'

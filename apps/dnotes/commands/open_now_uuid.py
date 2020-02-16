@@ -1,7 +1,7 @@
 """
 """
 import os
-import dcore.apps.notes_db.search as search
+import dcore.apps.dnotes.search as search
 
 _meta_shell_command = 'now'
 

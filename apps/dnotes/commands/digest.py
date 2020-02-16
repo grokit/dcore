@@ -16,9 +16,9 @@ import argparse
 import platform
 import shutil
 
-import dcore.apps.notes_db.options as options
-import dcore.apps.notes_db.search as search
-import dcore.apps.notes_db.score as score
+import dcore.apps.dnotes.options as options
+import dcore.apps.dnotes.search as search
+import dcore.apps.dnotes.score as score
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
 

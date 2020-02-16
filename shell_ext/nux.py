@@ -22,6 +22,7 @@ import inspect
 import argparse
 import os
 import datetime
+import time
 
 
 def getArgs():
@@ -85,6 +86,9 @@ def screenshot():
         filename = filename = filename + "_screenshot.png"
         osExec('cp /tmp/scrot_latest.png /tmp/%s' % filename)
     else:
+        print('Sleeping shortly ...')
+        time.sleep(0.5)
+        print('... taking screenshot')
         osExec('sshot')
 
 

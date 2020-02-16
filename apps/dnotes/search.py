@@ -12,7 +12,7 @@ import math
 import inspect
 import pathlib
 
-import dcore.apps.notes_db.data as data
+import dcore.apps.dnotes.data as data
 
 
 class Match:

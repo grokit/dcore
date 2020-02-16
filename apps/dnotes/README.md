@@ -1,67 +1,4 @@
 
-# TODO
-
-## As
-
-- https://praxis.fortelabs.co/how-to-take-smart-notes/
-
-ns: penalize if /meh is in path
-    if `meh` in filename of folder, penalize
-++ consider path in search
-
-if tag:::important --> HIGHER SCORE
-
-ns: BUILD THE DASHBOARD. TODO:::A should be unbreak-now (in red)
-ns <x> -c0 : just display match line with nothing else
-ns -o: don't print, just show choices
-python install: bashrc / profile: at one place not the same, just generalize
-find . | grep tata | save
-save: configurable, by default goes in a folder, picking a new name
-
-if search term anywhere in UUID, it's a big deal
-
-## Bs
-
-Reorgnize new structure:
-    - parse.py
-        - article -> content, titles, tags, uuid
-    - search.py
-        - return (rank, note-path)
-    - cmdline/ 
-        - all commands and shortcuts
-    - mutate.py
-        - append, fix metadata, move, ...
-
-- generalize shortcuts (no .basrc stuff), put all of them in ./commandline or something like that. 
--> nowa, nowb, nowc, now
-
-- See other TODOs in individual python files as well.
-
-tags
-    tag[SEP]now --> $ now either opens only one or list 
-    could make generic with topen <tag>
-    tag lost
-
-ns --list-tags
-    List all tags and popularity.
-    --uuid list of uuids
-
-t <t number>: create / open task folder
-ns -> sn `search notes`
-ns -l 10: list last 10 folders in `low`. Also: task?
-instead of uuid:::now, use tag:::now and allow > 1 with selection (/w default open most recently modified)
-tag:::wait
-complete task button: move from task to low, with tag `completed task` and add date if not there
-low: don't search beyond 3 months, older it is, lower score it gets
-had tag:::important: + ranking
-movenow: move to folder that has now. Can do that with any search folder (think how to consolidate).
-file <folder>: move to low, preprend date if not already exist
-
-notes:
-    refactor such that can know every score comes from which rule (class-like with name)
-    only lookback 3 months for low
-    kvp list, tag list <-- all in same meta package
-
 # Overview
 
 NotesDB: Take notes from a single Markdown file, and organize them in folders with metadata. Provide search utility which interprets metadata and folder structure (e.g. if search query in title, search will show before a note that has search query in body, search by tags, ...).
@@ -149,18 +86,18 @@ Might want to eventually have a cron job which outputs a webpage in a ./dashboar
 
 ### Metadata: UUID
 
-UUID has this form: `uuid:::notes_db_readme`.
+UUID has this form: `uuid:::dnotes_readme`.
 
 A UUID is _unique_: cannot have the same UUID on more than one document. However, a document can have multiple UUIDs. The reason for that is to allow UUID renames. UUID are used in order to publish on the web, so want to be able to rename and have two URLs point to the same document. For example:
 
-    uuid:::notes_db, notes_db_better
+    uuid:::dnotes, dnotes_better
 
-In this case, both `notes_db` and `notes_db_better` uniquely identify the document. The last uuid is deemed to be the most recent, so for URLs could redirect all UUIDs which is not the last one listed using a 301 to the URL of the las UUID.
+In this case, both `dnotes` and `dnotes_better` uniquely identify the document. The last uuid is deemed to be the most recent, so for URLs could redirect all UUIDs which is not the last one listed using a 301 to the URL of the las UUID.
 
 UUIDs links:
 
-    luid:::notes_db
-    link-uuid:::notes_db
+    luid:::dnotes
+    link-uuid:::dnotes
 
 Both mean exactly the same thing. Use in order to have a link to another document by UUID.
 Note that luid is missing a u intentionally in order not to turn up in a grep-search.

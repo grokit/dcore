@@ -192,6 +192,7 @@ autocmd FileType cpp nnoremap <F2> :w!<cr>:!cpprun %<cr>
 autocmd FileType go nnoremap <F3> :w!<cr>:!go fmt %<cr>:e<cr>
 autocmd FileType java nnoremap <F3> :w!<cr>:!astyle % --indent=spaces<cr>:e<cr>
 autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive --aggressive %<cr>:e<cr>
+autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>
 
 " F4: git commit.
 nnoremap <F4> :!gitpp<cr>

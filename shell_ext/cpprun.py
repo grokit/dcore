@@ -35,6 +35,7 @@ if __name__ == '__main__':
     rv = -1
     file = os.path.abspath(filesc[0])
     #cmd = 'g++ -Wl,--no-as-needed -std=c++14 -pthread %s -o %s.tmpbin' % (file, file)
+    # no -fcoroutines-ts in g++ so far
     cmd = 'g++ -Wl,--no-as-needed -std=c++2a -pthread %s -o %s.tmpbin' % (file, file)
 
     # Extra warnings

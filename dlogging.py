@@ -1,12 +1,12 @@
 import os
 import logging
 import datetime
-
-from logging.handlers import TimedRotatingFileHandler
+import logging.handlers
 
 import dcore.data as data
 import dcore.apps.gmail.gmail as gmail
 import dcore.private_data as private_data
+import dcore.do_every as do_every
 
 
 def dateForAnnotation():
@@ -17,25 +17,34 @@ def filterLog(logAsStr):
     """
     Nice to have in reverse order in mail client.
     """
-    l = logAsStr.splitlines()
-    l.reverse()
-    return "\n".join(l)
+    log_lines = logAsStr.splitlines()
+    log_lines.reverse()
+
+    out = []
+    isErr = False
+    for line in log_lines:
+        if '- ERROR -' in line:
+            out.append(line)
+            isErr = True
+    return isErr, "\n".join(out)
 
 
-def mirrorLogsToGMail():
-    import dcore.do_every as do_every
+def mirrorLogsErrorsToGMail():
     folder = data.logsdir()
 
     for f in os.listdir(folder):
         f = os.path.join(folder, f)
         if do_every.isFileModifiedSinceLastTouch(f):
-            print('Mirroring: %s' % f)
-            title = "GMail Logs File Mirror m3pzBxlKu %s %s" % (
+            title = "GMail Logs File Mirror 0qQjnrg4lHAdbbSTdaMoiFxSwT4qSB9y %s %s" % (
                 dateForAnnotation(), f)
             with open(f, 'r') as fh:
                 # What if file cannot be converted as str?
-                content = filterLog(fh.read())
-                gmail.sendEmail(private_data.primary_email, title, content)
+                is_err, content = filterLog(fh.read())
+                if is_err:
+                    print('Mirroring error(s) from: %s' % f)
+                    gmail.sendEmail(private_data.primary_email, title, content)
+                else:
+                    print('No need for mirror, no error found in log.')
             do_every.markFileAsCurrent(f)
         else:
             print('Current: %s' % f)
@@ -47,13 +56,29 @@ class GMailHandler(logging.Handler):
         msg = self.format(record)
         gmail.sendEmail(private_data.primary_email, title, msg)
 
+def genLogFilename():
+    """
+    This only works for long-lived processes:
+    rFileHandler = logging.handlers.TimedRotatingFileHandler(logFilename, when='D', interval=1)
+
+    ... so basically just pick a log name file that merges together by hour.
+    """
+    if True:
+        return 'dcore.%s.log' % datetime.datetime.now().strftime("%Y-%m-%d_%H:%M.%S.%f")
+    else:
+        return 'dcore.%s.log' % datetime.datetime.now().strftime("%Y-%m-%d_%H:00.000")
+
 
 def setup():
     logging.basicConfig(level=logging.DEBUG)
     folder = data.logsdir()
     data.createDirIfNotExist(folder)
-    logFilename = os.path.join(folder, 'dcore.log')
-    rFileHandler = TimedRotatingFileHandler(logFilename, when='D', interval=1)
+
+    logFilename = os.path.join(folder, genLogFilename())
+
+    # Safety measure: dlogging should not be used for long-lived processes, but in case it happens,
+    # roll the log every day.
+    rFileHandler = logging.handlers.TimedRotatingFileHandler(logFilename, when='D', interval=1)
 
     # Format
     formatter = logging.Formatter(

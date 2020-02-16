@@ -6,10 +6,14 @@ Metadata is assumed to reduce to a set of (key, value) 2-tuple.
 
 import re
 
-import dcore.apps.notes_db.options as options
+import dcore.apps.dnotes.options as options
 
 
 class Meta:
+    """
+    This is one chunk of metadata.
+    """
+
     def __init__(self, metaType, value):
         """
         Example:
@@ -22,8 +26,8 @@ class Meta:
 
         This gets broken into TWO Meta objects.
         """
-        assert type(metaType) == type('')
-        assert type(value) == type('')
+        assert type(metaType) == str
+        assert type(value) == str
 
         self.metaType = metaType
         self.value = value
@@ -36,8 +40,14 @@ class Meta:
 
 
 def extract(content):
-    "content -> T where T is a set of Meta."
-    "This is an extremely naive parser, might want to enventually replace when I have more than 5 minutes to code."
+    """
+    content -> T where T is a set of Meta.
+
+    This is an extremely naive parser, might want to enventually replace when I have more than 5 minutes to code.
+    Biggest flaw: can only have 1 meta per line.
+    """
+
+    assert type(content) == str
     M = []
 
     lines = content.splitlines()

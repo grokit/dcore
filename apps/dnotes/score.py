@@ -10,7 +10,7 @@ import time
 import math
 import pathlib
 
-import dcore.apps.notes_db.meta as meta
+import dcore.apps.dnotes.meta as meta
 
 DEBUG = False
 
@@ -81,6 +81,13 @@ def _titleLevel(line):
 
 
 def score(match, search_query):
+    """
+    TODO: break this down into multiple handlers.
+    - Different handler
+    - Some handler might just use metadata, some parse entire file.
+    - Handler score between -1.0 and 1.0, and we can have a global formulae
+      that multiplies with a factor (linear combination).
+    """
 
     match_score = 0
 
@@ -95,6 +102,9 @@ def score(match, search_query):
         lines = fh.readlines()
 
         # TODO: do this automatically when process m, don't re-pass all lines
+        # Also would help to parse whole document once, then pass around a "document"
+        # class, which contains all lines as a data field (worst case, most scorers
+        # only need metadata).
         metadata = meta.extract("\n".join(lines))
 
         # The flaw here is that this adds up infinitely with the number of lines.
@@ -133,6 +143,27 @@ def score(match, search_query):
                     bonus *= 5
 
                 match_score += bonus
+
+        # Some tags are granted a bonus / penalty.
+        for metad in metadata:
+            if metad.metaType == 'uuid':
+                match_score += 5
+
+            if metad.metaType == 'tag' and metad.value == 'not_important':
+                match_score -= 10
+            elif metad.metaType == 'tag' and metad.value == 'temp':
+                match_score -= 10
+            elif metad.metaType == 'tag' and metad.value == 'now':
+                match_score += 5
+            elif metad.metaType == 'tag' and metad.value == 'important':
+                match_score += 15
+            elif metad.metaType == 'tag' and metad.value == 'ztop':
+                match_score += 17
+            elif metad.metaType == 'tag' and metad.value == 'ytop':
+                match_score += 18
+            elif metad.metaType == 'tag' and metad.value == 'xtop':
+                match_score += 20
+
 
     for scorer in scorers:
         match_score += scorer.getScore()
