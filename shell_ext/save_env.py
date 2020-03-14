@@ -32,6 +32,7 @@ SAVE_ME = [
     '~/.bash_history',
     '~/.config/liferea',
     '~/.local/share/Anki2',
+    '~/.local/share/QuiteRss',
 ]
 
 SAVE_ME_MEH = [

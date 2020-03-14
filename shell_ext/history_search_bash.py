@@ -50,8 +50,7 @@ if __name__ == '__main__':
     # Remove multiple same commands in a row.
     L = []
     for i, l in enumerate(lines):
-        if i == 0: continue
-        if lines[i] != lines[i - 1]:
+        if i == 0 or lines[i] != lines[i - 1]:
             L.append(lines[i])
     lines = L
 

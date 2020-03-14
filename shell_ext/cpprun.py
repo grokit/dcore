@@ -56,6 +56,11 @@ if __name__ == '__main__':
         # then use:
         # gdp -tui <bin>
         # https://sourceware.org/gdb/onlinedocs/gdb/Backtrace.html
+        # 
+        # Note when using stdin:
+        # https://stackoverflow.com/questions/8422259/gdb-debugging-with-piped-input-not-arguments
+        # gdb ./my_bin
+        # run < file.in
     if args.gmon:
         # http://www.math.utah.edu/docs/info/gprof_3.html#SEC3
         print('Making profiling build. Look at gmon.out after.')

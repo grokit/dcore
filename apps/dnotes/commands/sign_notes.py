@@ -54,6 +54,8 @@ def getArgs():
 
 
 def getAllFiles(rootdir='.'):
+    rootdir = os.path.abspath(rootdir)
+    print(f'Using {rootdir} as fullpath.')
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:

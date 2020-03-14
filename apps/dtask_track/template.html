@@ -44,7 +44,6 @@ function getUnixTimeAtSeparation(){
 	return d
 }
 
-// @@ review currying.
 function onEach(x, fn){ for(var i = 0; i < x.length; ++i){ fn(x[i]) } }
 
 function dataToBuckets(data, timePeriodInDays, min, max){
@@ -162,6 +161,7 @@ genChart(data, 60, "w")
 //genChart(data, 30, "muda")
 genChart(data, 7, "work")
 genChart(data, 14, "work")
+genChart(data, 14, "iprep")
 genChart(data, 31, "work")
 genChart(data, 360, "work")
 genChart(data, 720, "work")
