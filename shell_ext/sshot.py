@@ -60,7 +60,16 @@ def getArgs():
         '--copy_last_to_curr_dir',
         action="store_true",
         default=False,
-        help='Copies the last screenshot taken to the current directory.')
+        help='Copies the last screenshot to the current directory.')
+
+    parser.add_argument(
+        '-b',
+        '--copy_to_clipboard',
+        action="store_true",
+        default=False,
+        help='Copies the last screenshot to clipboard.')
+
+
     args = parser.parse_args()
     return args
 
@@ -147,7 +156,14 @@ if __name__ == '__main__':
             if len(overrideName) < 4 or overrideName[-4:] != '.png':
                 overrideName += '.png'
         shutil.copy(last_ss, '%s' % overrideName)
-        print('Copying %s to current directory.' % overrideName)
+        print('Copied %s to current directory.' % overrideName)
+        sys.exit(0)
+
+    if args.copy_to_clipboard:
+        last_ss = screenshotsFilenameByModDate()[-1]
+        rv = os.system("xclip -selection clipboard -t image/png -i '%s'" % last_ss)
+        assert rv == 0
+        print('Copied %s to clipboard.' % last_ss)
         sys.exit(0)
 
     takeScreenshot()
