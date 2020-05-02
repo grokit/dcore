@@ -2,6 +2,7 @@
 # BUGS
 
 - Same key can be there multiple times ... forbid at entry.
+- Need to cleanup on refresh do that removed shortcuts gets removes (use tag like other apps use).
 
 # Documentation
 
@@ -19,7 +20,7 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 
 # TODO
 
-- . drl <-- go to latest remembered ... same as .cd0?
+- . drl <-- go to latest remembered?
 
 - dr: should keep remembered dirs in s small stack instead of alphabetical
     . cdl1, cdl2: goes to two remembered dir ago, even if not named --> makes dr -r more useful as a stack
@@ -43,9 +44,11 @@ Note that in Windows you do not need the `. ` prefix, simply type cd01, cd02.
 don't delete, write to 'deleted' file.
     dr -d --> open deleted file
 
-# Misc
+# Misc / Alternative
 
 Other silimar Project: http://linuxgazette.net/109/marinov.html
+
+- CDPATH, try application `autojump`
 
 # BUGS
 
@@ -93,36 +96,35 @@ def rememberDirs():
     # need to read again because might be different if there are duplicates
     dirs = getFileContent()
 
-    # create shortcut files
-    if os.path.isdir(path_ext_folder):
-        i = 0
-        for dir in dirs:
-
-            shortcut = ''
-            if ',' in dir:
-                shortcut, dir = dir.split(',')
-
-            new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
-            if platform.system() == 'Windows':
-                new_file += '.bat'
-            fh = open(new_file, 'w')
+    def createSortcut(new_file, dir):
+        if platform.system() == 'Windows':
+            new_file += '.bat'
+        with open(new_file, 'w') as fh:
             if platform.system() == 'Windows':
                 fh.write('cd /d "%s"' % dir)
             else:
                 fh.write('cd "%s"' % dir)
 
-            if shortcut != '':
-                new_file = os.path.join(path_ext_folder, r'cd%s' % shortcut)
-                if platform.system() == 'Windows':
-                    new_file += '.bat'
-                fh = open(new_file, 'w')
-                if platform.system() == 'Windows':
-                    fh.write('cd /d "%s"' % dir)
-                else:
-                    fh.write('cd "%s"' % dir)
+    # create shortcut files
+    if os.path.isdir(path_ext_folder):
+        for i, dir in enumerate(dirs):
 
-            fh.close()
-            i += 1
+            # numerical labels: cd01, cd02, ...
+            new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
+            createSortcut(new_file, dir)
+
+            # named labels: cddev, cdgame, ...
+            if ',' in dir:
+                shortcut, unpacked_dir = dir.split(',')
+                # cdl == cd last, it has a special meaning
+                assert shortcut != 'l'
+                new_file = os.path.join(path_ext_folder, r'cd%s' % shortcut)
+                createSortcut(new_file, unpacked_dir)
+
+        # cdl always point to last folder
+        new_file = os.path.join(path_ext_folder, r'cdl')
+        createSortcut(new_file, dir)
+
     else:
         raise Exception(path_ext_folder)
 

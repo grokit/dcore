@@ -58,7 +58,7 @@ def dcoreBackupEnv():
     Consider just putting in `backups/rolling/env` and zip + encrypt since
     could contain pws if typed by mistake in shell.
     """
-    return os.path.join(dcoreData(), 'backups/env')
+    return os.path.expanduser('~/sync/archive/backups/rolling/env/auto')
 
 
 def pathExt():

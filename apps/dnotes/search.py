@@ -1,6 +1,4 @@
 """
-# TODO
-
 This parses notes, and create Match based on query.
 A more complete abstraction would be to parse a Note class, against which it is possible to filter by query and rank.
 """
@@ -52,24 +50,24 @@ def _walkGatherAllFiles(rootdir='.'):
 
 
 def getAllFiles():
-    root = data.notesRoot()
+    root = data.get_notes_root_folder()
     files = _walkGatherAllFiles(root)
-    files = [
-        f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md'
-    ]
-    files = [f for f in files if not '/archived' in os.path.split(f)[0]]
+    files = [ f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md' ]
+    # TODO: *might* consider removing files from get_notes_archive_folder() (if gets slow or noisy).
     return files
 
-
-def sortMatchesByScore(matches, scores):
+def sortMatchesByScore(matches, scores, explanation):
     assert len(matches) == len(scores)
+    assert len(matches) == len(explanation)
 
-    pairs = list(zip(matches, scores))
+    pairs = list(zip(matches, scores, explanation))
     pairs = sorted(pairs, key=lambda x: x[1], reverse=True)
 
-    matches, scores = [[m for m, s in pairs], [s for m, s in pairs]]
+    matches, scores, explanations = [[m for m, s, e in pairs],
+                                     [s for m, s, e in pairs],
+                                     [e for m, s, e in pairs]]
 
-    return matches, scores
+    return matches, scores, explanations
 
 
 def extractMatchSetsFromFiles(files, query, context_range):

@@ -5,10 +5,9 @@ Get a daily digest of important, unclosed topics.
 
 - FIND a way to send on different schedule (FOREFRONT less often that TODO, etc)
 - If A, B, C, D: Show A, B. If no A, show B, C. Etc (hide lower priorities).
-
 """
 
-_meta_shell_command = 'n_digest'
+_meta_shell_command = 'nn_digest'
 
 import os
 import datetime
@@ -19,8 +18,6 @@ import shutil
 import dcore.apps.dnotes.options as options
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.score as score
-import dcore.apps.gmail.gmail as gmail
-import dcore.private_data as private_data
 
 
 def dateForAnnotation():
@@ -32,11 +29,14 @@ def render(query, context_range):
 
     matches = search.extractMatchSetsFromFiles(files, query, context_range)
     scores = []
+    explanations = []
     for match in matches:
-        mscore = score.score(match, query)
+        mscore, explanation = score.score(match, query, False)
         scores.append(mscore)
+        explanations.append(explanation)
 
-    matches, scores = search.sortMatchesByScore(matches, scores)
+    matches, scores, explanation = search.sortMatchesByScore(
+        matches, scores, explanations)
 
     T = []
     for m in matches:
@@ -65,7 +65,7 @@ def doTODOsScatteredAndList():
         content += "No pending items, good job!\n"
 
     title = "Digest TODOs R9uO6Eje %s" % (dateForAnnotation())
-    gmail.sendEmail(private_data.primary_email, title, content)
+    return Message(title, content)
 
 
 def doGoals():
@@ -73,7 +73,7 @@ def doGoals():
     content = cA
 
     title = "Digest Goals R97O6ejiKe %s" % (dateForAnnotation())
-    gmail.sendEmail(private_data.primary_email, title, content)
+    return Message(title, content)
 
 
 def doForefront():
@@ -81,14 +81,26 @@ def doForefront():
     content = cA
 
     title = "Digest Forefront Oei8Jae %s" % (dateForAnnotation())
-    gmail.sendEmail(private_data.primary_email, title, content)
+    return Message(title, content)
+
+
+class Message:
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
+
+    def __repr__(self):
+        return "%s, %s" % (self.title, self.content)
 
 
 def do():
-    doGoals()
-    doForefront()
-    doTODOsScatteredAndList()
+    messages = []
+    messages.append(doGoals())
+    messages.append(doForefront())
+    messages.append(doTODOsScatteredAndList())
+    return messages
 
 
 if __name__ == '__main__':
-    do()
+    messages = do()
+    print(messages)

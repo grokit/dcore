@@ -3,6 +3,18 @@
 - all files: glob.iglob <-- just use this instead of my own thing
 - merge with files.py
 
+Wouldn't it be easier to just:
+
+def getAllFiles(rootdir='.'):
+    rootdir = os.path.abspath(rootdir)
+    print(f'Using {rootdir} as fullpath.')
+    F = []
+    for dirpath, dirnames, filenames in os.walk(rootdir):
+        for f in filenames:
+            F.append(os.path.normpath(os.path.join(dirpath, f)))
+    return F
+?
+
 """
 import os
 import fnmatch

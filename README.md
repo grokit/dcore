@@ -16,3 +16,8 @@ This is a collection of Python scripts, which provide miscellaneous utilities su
 
 I use github to sync between machines, and I don't mind if other people use or derive from my stuff in here.
 However, be aware that I make breaking changes all the time, so if you plan to use it better fork your own version.
+
+## Links and References
+
+- See luid:::ns_note_search_notes_018273_dcore_and_ideas_328744
+

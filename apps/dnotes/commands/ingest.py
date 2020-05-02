@@ -1,5 +1,16 @@
 """
-Transform a flat note file to directories.
+Ingest scratch file (notes/ingest.md) into a categorized note.
+
+Usage:
+    ingest .../notes/ingest.md
+        - ingests the default scratch file
+    ingest <loc>
+        - infers from <loc> where the note should be ingested to
+    ingest -f <file>
+        - '' <file>
+
+# Maybe?
+- ingest -h : move ingested to cur dir
 """
 
 import os
@@ -8,11 +19,10 @@ import time
 import datetime
 import argparse
 
-import data
-import util
-import meta
-
-import options
+import dcore.apps.dnotes.data as data
+import dcore.apps.dnotes.util as util
+import dcore.apps.dnotes.meta as meta
+import dcore.apps.dnotes.options as options
 
 _meta_shell_command = 'ingest'
 
@@ -24,6 +34,12 @@ TIME_FORMAT = '%Y-%m-%d_%H:%M'
 # Putting back minutes so that notes of the day are ordered.
 #TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
 TIME_FORMAT_FOLDER_NAME = TIME_FORMAT.replace(":", "-")
+
+def getArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('location_hint', nargs='*', default=None, help='Location hint for the folder does the note get created in (find best match based on a number of rules).')
+    parser.add_argument('-o', '--output_folder', nargs=1, help='Specific output folder.')
+    return parser.parse_args()
 
 
 def timeStrToUnixTime(timeStr):
@@ -61,13 +77,13 @@ def detectTitle(line):
 
 class Note:
     @staticmethod
-    def fromText(noteMd):
+    def fromText(note_fulltext):
         note = Note()
 
         title = None
         unixTime = None
 
-        note.meta = meta.metaToDict(meta.extract(noteMd))
+        note.meta = meta.metaToDict(meta.extract(note_fulltext))
 
         if 'time' in note.meta:
             if unixTime is None:
@@ -78,7 +94,7 @@ class Note:
             else:
                 print('Multiple time tag per entry.', title)
 
-        lines = noteMd.splitlines()
+        lines = note_fulltext.splitlines()
         for line in lines:
             # Title is the first leading-pound of the note.
             potTitle = detectTitle(line)
@@ -87,18 +103,18 @@ class Note:
 
         if title is None:
             h = hashlib.new('sha256')
-            h.update(noteMd.encode())
-            title = 'Anonymous-Note-%s' % h.hexdigest()[0:8]
+            h.update(note_fulltext.encode())
+            title = 'anonymous note %s' % h.hexdigest()[0:8]
 
         # User did not use automatic tool for unixTime, insert unixTime of ingestion.
         if unixTime is None:
             unixTime = time.time()
             tag = ('\n\ntime%s' % options.MSEP) + unixTimeAsSafeStr(unixTime)
-            noteMd = noteMd + tag
+            note_fulltext = note_fulltext + tag
 
         note.title = title
         note.unixtime = unixTime
-        note.content = noteMd
+        note.content = note_fulltext
         return note
 
     def tags(self):
@@ -106,9 +122,9 @@ class Note:
             return set()
         return self.meta['tag']
 
-    def writeSelf(self, folderOut):
+    def writeSelf(self, folder_out):
         topFolderName = toFolderName(self.title, self.unixtime)
-        folderWriteTo = os.path.join(folderOut, topFolderName)
+        folderWriteTo = os.path.join(folder_out, topFolderName)
 
         while os.path.exists(folderWriteTo):
             print('Warning: `%s` already exist, picking next folder.' %
@@ -124,50 +140,10 @@ class Note:
             fh.write(self.content)
 
 
-def splitFlatFileInNoteChunck(lines):
-    """
-    # Note1
-
-    Content1
-
-    #
-
-    Content 2
-
-    # Note3
-
-    Content 3
-
-    Expected: yield 3 notes, second one with empty title.
-    """
-    assert type([]) == type(lines)
-
-    buf = []
-    potTitle = None
-    for line in lines:
-        newTitle = detectTitle(line)
-        if newTitle != None and potTitle == None:
-            potTitle = newTitle
-        elif newTitle != None and potTitle != None:
-            # We have two titles, can write completed section.
-            asStr = "".join(buf)
-            yield asStr
-
-            buf = []
-            potTitle = newTitle
-            newTitle = None
-        buf.append(line)
-
-    if len(buf) > 0:
-        asStr = "".join(buf)
-        yield asStr
-
-
-def backupFileToBeIngested(filename, folderOut, contentLines):
-    saveFolder = folderOut
+def backupFileToBeIngested(filename, folder_out, content):
+    saveFolder = folder_out
 
     util.createFolderIfNotExist(saveFolder)
-    content = "".join(contentLines)
     h = hashlib.new('sha256')
     h.update(content.encode())
     unixTime = time.time()
@@ -181,33 +157,16 @@ def backupFileToBeIngested(filename, folderOut, contentLines):
         fh.write(content)
 
 
-def ingest(folderOut, contentLines):
-
-    notes = splitFlatFileInNoteChunck(contentLines)
-
-    processedLoc = folderOut
-    for note in notes:
-        objNote = Note.fromText(note)
-
-        if 'merge' in objNote.tags():
-            # Do not handle this scenario yet...
-            pass
-
-        objNote.writeSelf(processedLoc)
-
-    return processedLoc
-
-
-def getArgs():
-    parser = argparse.ArgumentParser()
-    # nargs = ? -> optional, if not will throw error when user does
-    # not provide default.
-    # parser.add_argument('file', default = 'ingest.md', nargs = '?')
-    return parser.parse_args()
+def ingest(folder_out, contentLines):
+    objNote = Note.fromText(contentLines)
+    objNote.writeSelf(folder_out)
 
 
 def gitCommit(folder, message):
     os.chdir(folder)
+    if not os.path.exists('./.git'):
+        print('WARNING: notes is not a git repo. Skipping git operation.')
+        return
     os.system('git add -A')
     message = message.replace('"', '_')
     message = message.replace("'", '_')
@@ -215,28 +174,64 @@ def gitCommit(folder, message):
 
 
 def preChangeHook():
-    folderOut = data.notesRoot()
-    gitCommit(folderOut, "%s_preChangeHook" % __file__)
+    folder_out = data.get_notes_root_folder()
+    gitCommit(folder_out, "%s_preChangeHook" % __file__)
 
 
 def postChangeHook():
-    folderOut = data.notesRoot()
-    gitCommit(folderOut, "%s_postChangeHook" % __file__)
+    folder_out = data.get_notes_root_folder()
+    gitCommit(folder_out, "%s_postChangeHook" % __file__)
 
 
 if __name__ == '__main__':
     args = getArgs()
 
+    if args.output_folder:
+        assert args.location_hint is None
+        folder_out = args.output_folder
+    elif args.location_hint:
+        candidates = []
+        if os.path.exists(data.get_notes_project_folder()):
+            candidates += os.scandir(data.get_notes_project_folder())
+        if os.path.exists(data.get_notes_articles_folder()):
+            candidates += os.scandir(data.get_notes_articles_folder())
+
+        candidates = [dir_entry.path for dir_entry in candidates]
+        assert len(candidates) == len([folder for folder in candidates if os.path.isdir(folder)])
+
+        picked = []
+        for cand in candidates:
+            if '/' in cand:
+                top_folder = cand.split('/')[-1]
+
+            hint = " ".join(args.location_hint).strip()
+            if hint in top_folder:
+                picked.append(cand)
+
+        if len(picked) == 0:
+            print('No match found. Cancelling.')
+            exit(0)
+
+        if len(picked) > 1:
+            print('Too many matches:')
+            for pick in picked:
+                print('\t%s' % pick)
+            exit(-1)
+
+        folder_out = picked[0]
+
+    else:
+        folder_out = data.get_notes_low_folder()
+
     preChangeHook()
 
-    folderOut = data.notesRoot()
-    filename = data.ingestFilename(folderOut)
+    fullpath = data.get_ingest_fullpath()
 
-    contentLines = open(filename).readlines()
+    content = open(fullpath).read()
 
-    backupFileToBeIngested(filename, os.path.join(folderOut, 'backups'),
-                           contentLines)
-    ingest(os.path.join(folderOut, 'notes/low'), contentLines)
-    os.remove(filename)
+    backupFileToBeIngested(fullpath, data.get_notes_backup_folder(), content)
+
+    ingest(folder_out, content)
+    os.remove(fullpath)
 
     postChangeHook()

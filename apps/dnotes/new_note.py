@@ -7,6 +7,9 @@ Create a note document (or append to if already exists) in the note_db folder an
 
 - Scatter and merge: be able to take one-off notes of little importance, but late when a lot of small things are scattered at different places, make it obvious (thourgh search-and-match) and easy to merge.
 
+- Main design characteristic: if you have an idea, as short a time possible to be writing.
+    -> put the friction at ingest time if necessary.
+
 ## Insert file as journal entry (directly in text file)
     
     $ nn < file
@@ -22,7 +25,6 @@ _meta_shell_command = 'nn'
 import os
 import datetime
 import argparse
-import platform
 import shutil
 
 import data
@@ -52,7 +54,7 @@ def getArgs():
     return parser.parse_args()
 
 
-def annotateDateIfNotAlreadyDoneg(file, force=False):
+def annotateDateIfNotAlreadyDone(file, force=False):
     with open(file, 'r') as fh:
         fileContent = fh.read()
 
@@ -63,28 +65,12 @@ def annotateDateIfNotAlreadyDoneg(file, force=False):
             fh.write(annotation + '\n' + fileContent)
 
 
-def openInEditor(noteFilename):
-    if platform.system() == 'Windows':
-        c = 'notepad %s' % noteFilename
-    else:
-        c = 'vim %s' % noteFilename
-    os.system(c)
-
-
-def resolveDataLocation(dataLocation=None):
-    if dataLocation == None:
-        dataLocation = data.notesRoot()
-
-    file = data.ingestFilename(dataLocation)
-    return dataLocation, file
-
-
 if __name__ == '__main__':
     args = getArgs()
 
-    dataLocation, noteFilename = resolveDataLocation()
-    util.createFolderIfNotExist(dataLocation)
-    util.createFileIfNotExist(noteFilename)
+    fullpath = data.get_ingest_fullpath()
+    util.createFolderIfNotExist(os.path.split(fullpath)[0])
+    util.createFileIfNotExist(fullpath)
 
-    annotateDateIfNotAlreadyDoneg(noteFilename, args.force_time_tagging)
-    openInEditor(noteFilename)
+    annotateDateIfNotAlreadyDone(fullpath, args.force_time_tagging)
+    util.openInEditor(fullpath)

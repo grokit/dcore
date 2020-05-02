@@ -13,7 +13,6 @@ class Meta:
     """
     This is one chunk of metadata.
     """
-
     def __init__(self, metaType, value):
         """
         Example:

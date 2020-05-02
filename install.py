@@ -171,6 +171,10 @@ syntax on
 " set background=light
 " colorscheme solarized
 
+" case
+set ignorecase
+set smartcase
+
 filetype indent plugin on
 " show existing tab with 4 spaces width
 set tabstop=4
@@ -181,31 +185,37 @@ set expandtab
 
 " Shortcuts
 nnoremap <C-t> :tabedit %<cr>
+nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
 
 " F2: compile and run current file.
-autocmd FileType python nnoremap <F2> :w!<cr>:exec '!python3' shellescape(@%, 1)<cr>
-autocmd FileType go nnoremap <F2> :w!<cr>:!go run %<cr>
-autocmd FileType java nnoremap <F2> :w!<cr>:!javarun %<cr>
-autocmd FileType cpp nnoremap <F2> :w!<cr>:!cpprun %<cr>
+autocmd FileType python nnoremap <F2> :wa!<cr>:exec '!python3' shellescape(@%, 1)<cr>
+autocmd FileType go nnoremap <F2> :wa!<cr>:!go run %<cr>
+autocmd FileType java nnoremap <F2> :wa!<cr>:!javarun %<cr>
+autocmd FileType cpp nnoremap <F2> :wa!<cr>:!cpprun %<cr>
+autocmd FileType llvmir nnoremap <F2> :wa!<cr>:!lli %<cr>
 
 " F3: format current file.
 autocmd FileType go nnoremap <F3> :w!<cr>:!go fmt %<cr>:e<cr>
 autocmd FileType java nnoremap <F3> :w!<cr>:!astyle % --indent=spaces<cr>:e<cr>
 autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive --aggressive %<cr>:e<cr>
-autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>
+autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>:e<cr>
 
 " F4: git commit.
 nnoremap <F4> :!gitpp<cr>
+
+" F5 / F6 spellcheck
+nnoremap <F5> :set spell spelllang=en_us<cr>
+nnoremap <F6> :set nospell<cr>
 
 " some extension added other command that starts with E.
 " make it explicit here what I intend by E
 command! E Explore
 
-":set spell spelllang=en_us
-":set nospell
-
 " vi / Markdown
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+
+" ctags. generate using ctags -R -f ctags .
+set tags=./ctags;
 """
     env_setup.updateFileContentBetweenMarks(
         os.path.expanduser('~/.vimrc'),
@@ -250,4 +260,4 @@ if __name__ == '__main__':
     setupI3()
     setupVi()
     setupTmux()
-    setupGit()
+    #setupGit()

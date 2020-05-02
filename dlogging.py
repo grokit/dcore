@@ -4,9 +4,6 @@ import datetime
 import logging.handlers
 
 import dcore.data as data
-import dcore.apps.gmail.gmail as gmail
-import dcore.private_data as private_data
-import dcore.do_every as do_every
 
 
 def dateForAnnotation():
@@ -29,32 +26,6 @@ def filterLog(logAsStr):
     return isErr, "\n".join(out)
 
 
-def mirrorLogsErrorsToGMail():
-    folder = data.logsdir()
-
-    for f in os.listdir(folder):
-        f = os.path.join(folder, f)
-        if do_every.isFileModifiedSinceLastTouch(f):
-            title = "GMail Logs File Mirror 0qQjnrg4lHAdbbSTdaMoiFxSwT4qSB9y %s %s" % (
-                dateForAnnotation(), f)
-            with open(f, 'r') as fh:
-                # What if file cannot be converted as str?
-                is_err, content = filterLog(fh.read())
-                if is_err:
-                    print('Mirroring error(s) from: %s' % f)
-                    gmail.sendEmail(private_data.primary_email, title, content)
-                else:
-                    print('No need for mirror, no error found in log.')
-            do_every.markFileAsCurrent(f)
-        else:
-            print('Current: %s' % f)
-
-
-class GMailHandler(logging.Handler):
-    def emit(self, record):
-        title = "GMail Handler m3pzBxlKu %s" % dateForAnnotation()
-        msg = self.format(record)
-        gmail.sendEmail(private_data.primary_email, title, msg)
 
 def genLogFilename():
     """
@@ -64,9 +35,11 @@ def genLogFilename():
     ... so basically just pick a log name file that merges together by hour.
     """
     if True:
-        return 'dcore.%s.log' % datetime.datetime.now().strftime("%Y-%m-%d_%H:%M.%S.%f")
+        return 'dcore.%s.log' % datetime.datetime.now().strftime(
+            "%Y-%m-%d_%H:%M.%S.%f")
     else:
-        return 'dcore.%s.log' % datetime.datetime.now().strftime("%Y-%m-%d_%H:00.000")
+        return 'dcore.%s.log' % datetime.datetime.now().strftime(
+            "%Y-%m-%d_%H:00.000")
 
 
 def setup():
@@ -78,21 +51,18 @@ def setup():
 
     # Safety measure: dlogging should not be used for long-lived processes, but in case it happens,
     # roll the log every day.
-    rFileHandler = logging.handlers.TimedRotatingFileHandler(logFilename, when='D', interval=1)
+    rFileHandler = logging.handlers.TimedRotatingFileHandler(logFilename,
+                                                             when='D',
+                                                             interval=1)
 
     # Format
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     rFileHandler.setFormatter(formatter)
-    #logging.getLogger('').setFormatter(formatter)
 
     rootLogger = logging.getLogger('')
     rootLogger.addHandler(rFileHandler)
-    if False:
-        rootLogger.addHandler(GMailHandler())
 
 
 if __name__ == '__main__':
     setup()
-    #mirrorLogsToGMail()
-    #logging.info('test-append')

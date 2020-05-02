@@ -1,7 +1,5 @@
 """
 Score matches in a sensible way for our dear user.
-
-This needs some refactoring.
 """
 
 import re
@@ -9,20 +7,66 @@ import os
 import time
 import math
 import pathlib
+import inspect
 
 import dcore.apps.dnotes.meta as meta
 
 DEBUG = False
 
 
-class ScorerLinesMentions:
-    """
-    One of N scorers.
-    """
+class __ScorerBase:
     def __init__(self):
-        self.total_score = 0
+        pass
 
-    def score(self, search_query, lines):
+    def score(self):
+        raise "no implemented"
+
+    def get_importance(self):
+        return 1.0
+
+
+################################################################################
+# SCORERS IMPLEMENTATIONS
+################################################################################
+
+
+class __ScorerTitleOrTopOfDocument(__ScorerBase):
+    """
+    If something is on upper title: important.
+    If it's in a later title: proportional to how low in document
+        and what level title.
+    """
+    def score(self, search_query, lines, metadata, line, filename):
+        score = 0
+
+        # Bonus if in title, even better if towards beginning of file.
+        for i, ll in enumerate(lines):
+            titleMatchBonus = 0
+            rmatch = re.search(search_query, ll, re.IGNORECASE)
+
+            if rmatch is not None:
+                level = _titleLevel(ll)
+
+                multiplier_pos_in_document = 1 - (min(i, 100) / 100)
+                multiplier_pos_in_document *= multiplier_pos_in_document
+                titleMatchBonus = multiplier_pos_in_document * (0.5 *
+                                                                (4 - level) /
+                                                                4.0)
+
+                # If match verbatim (no regex), even better!
+                if search_query in ll:
+                    titleMatchBonus *= 1.2
+
+            score += titleMatchBonus
+
+        return score
+
+    def get_importance(self):
+        return 2.5
+
+
+class __ScorerLinesMentions(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, filename):
         bonus = 0
 
         # Bonus if mentionned a lot in file.
@@ -37,14 +81,145 @@ class ScorerLinesMentions:
                 nmention = 10
             bonus = 5 * (nmention / 20)
 
-        if DEBUG:
+        if False and DEBUG:
             fn = inspect.stack()[0][3]
             print('%s: %s' % (fn, bonus))
 
-        self.total_score += bonus
+        return bonus
 
-    def getScore(self):
-        return self.total_score
+    def get_importance(self):
+        return 1.0
+
+
+class __ScorerInSpecificFolders(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, filename):
+        score = 0
+
+        path = os.path.split(filename)[0]
+
+        # Some folder have special score.
+        # /folder since /folder/ happens for last folder.
+        if _isLineTitle(line):
+            score += 0.2
+        if '/articles' in path:
+            # Improve: use os.path.commonprefix([]) and get_notes_archive_folder(), get_notes_low_folder(), ...
+            score += 0.5
+        if '/00_quality_b' in path:
+            score -= 0.3
+        if '/00_quality_c' in path:
+            score -= 0.4
+        if '/low' in path:
+            score -= 0.4
+        if '/done' in path:
+            score -= 0.3
+
+        return score
+
+
+class __ScorerTagsAndUUID(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, filename):
+        score = 0
+
+        # Bonus if match any tag, LARGE bonus if match uuid.
+        uuidVerifyUnique = None
+        for metad in metadata:
+            if re.search(search_query, metad.value, re.IGNORECASE):
+                bonus = 0.1
+                if metad.metaType == 'uuid':
+                    # Just sanity, uuid is meant to be unique per document.
+                    assert uuidVerifyUnique is None
+                    uuidVerifyUnique = metad.value
+                    bonus = 0.3
+
+                score += bonus
+
+        return score
+
+    def get_importance(self):
+        return 1.0
+
+
+class __ScorerSpecialTags(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, filename):
+        score = 0
+
+        # Some tags are granted a bonus / penalty.
+        for metad in metadata:
+            if metad.metaType == 'uuid':
+                score += 0.3
+
+            if metad.metaType == 'tag' and metad.value == 'not_important':
+                score -= 0.5
+            elif metad.metaType == 'tag' and metad.value == 'temp':
+                score -= 0.3
+            elif metad.metaType == 'tag' and metad.value == 'now':
+                score += 0.3
+            elif metad.metaType == 'tag' and metad.value == 'important':
+                score += 0.2
+            elif metad.metaType == 'tag' and metad.value == 'ztop':
+                score += 0.6
+            elif metad.metaType == 'tag' and metad.value == 'ytop':
+                score += 0.7
+            elif metad.metaType == 'tag' and metad.value == 'xtop':
+                score += 0.8
+
+        return score
+
+    def get_importance(self):
+        return 1.0
+
+
+class __ScorerTopLevelFolder(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, filename):
+        score = 0
+
+        # Bonus if query matches the top level folder.
+        folderName = os.path.split(filename)[0]
+        if '/' in folderName:
+            folderName = folderName.split('/')[-1]
+            if re.search(search_query, folderName, re.IGNORECASE):
+                score = 1.0
+
+        # Future: might get some points for matching other folders,
+        #         but less and less as goes up to notes root.
+
+        return score
+
+    def get_importance(self):
+        return 1.0
+
+
+class __ScorerLastModifiedTime(__ScorerBase):
+    """
+    Something modified more recently is more relevant.
+    """
+    def score(self, search_query, lines, metadata, line, filename):
+        lastModified = _lastModified(filename)
+        distFromNowDays = (time.time() - lastModified) / (60 * 60 * 24)
+        assert distFromNowDays >= 0
+
+        # solve for: e^(-x*365) = 0.5 -> -math.log(0.5)/365
+        # this means that:
+        # - an item modified a year ago gets a score of 0.5.
+        # - an item modified today gets a score of 1.0.
+        score = math.exp(-0.0018990333713971104 * distFromNowDays)
+
+        # enforce stable sort by inserting consistent but very small
+        # score based on name
+        t = 1
+        for c in filename:
+            t = (t * 7 + ord(c)) % 2**30 + 0.0001
+        score += 1 / t
+
+        return score
+
+    def get_importance(self):
+        return 1.0
+
+
+################################################################################
+# UTILS
+################################################################################
 
 
 def _lastModified(filename):
@@ -52,7 +227,7 @@ def _lastModified(filename):
     return mtime
 
 
-def isLineTitle(line):
+def _isLineTitle(line):
     if len(line) > 1 and line[0] == '#':
         return True
     return False
@@ -77,141 +252,60 @@ def _titleLevel(line):
     if len(line) >= 4 and line[3] == '#':
         level += 1
 
+    assert level <= 4
     return level
 
 
-def score(match, search_query):
-    """
-    TODO: break this down into multiple handlers.
-    - Different handler
-    - Some handler might just use metadata, some parse entire file.
-    - Handler score between -1.0 and 1.0, and we can have a global formulae
-      that multiplies with a factor (linear combination).
-    """
+################################################################################
+# PUBLIC API
+################################################################################
 
-    match_score = 0
+
+def score(match, search_query, is_explain):
 
     if DEBUG:
         print('scoring file: ', match.filename)
 
     scorers = []
-    scorers.append(ScorerLinesMentions())
+    # Content
+    scorers.append(__ScorerTitleOrTopOfDocument())
+    scorers.append(__ScorerLinesMentions())
+    # Tags
+    scorers.append(__ScorerTagsAndUUID())
+    scorers.append(__ScorerSpecialTags())
+    # Folders
+    scorers.append(__ScorerInSpecificFolders())
+    scorers.append(__ScorerTopLevelFolder())
+    # Time
+    scorers.append(__ScorerLastModifiedTime())
 
     with open(match.filename) as fh:
-        i = 0
         lines = fh.readlines()
 
-        # TODO: do this automatically when process m, don't re-pass all lines
-        # Also would help to parse whole document once, then pass around a "document"
-        # class, which contains all lines as a data field (worst case, most scorers
-        # only need metadata).
-        metadata = meta.extract("\n".join(lines))
+    # extract metadata
+    metadata = meta.extract("\n".join(lines))
 
-        # The flaw here is that this adds up infinitely with the number of lines.
-        #score_linesMentions(search_query, lines, scores, DEBUG)
-        for scorer in scorers:
-            scorer.score(search_query, lines)
-
-        # Bonus if in title, even better if towards beginning of file.
-        lineMatchBonus = 0
-        titleMatchBonus = 0
-        for l in lines:
-            rmatch = re.search(search_query, l, re.IGNORECASE)
-
-            multiplier = 1 - (i / len(lines))
-
-            if rmatch is not None:
-                level = _titleLevel(l)
-
-                if level == 0:
-                    lineMatchBonus += 1
-                else:
-                    titleMatchBonus += multiplier * (
-                        2 + 5 * (4 - _titleLevel(l)) / 4.0)
-
-        match_score += min(5, lineMatchBonus) + min(10, titleMatchBonus)
-
-        # Bonus if match any tag, LARGE bonus if match uuid.
-        uuidVerifyUnique = None
-        for metad in metadata:
-            if re.search(search_query, metad.value, re.IGNORECASE):
-                bonus = 5
-                if metad.metaType == 'uuid':
-                    # Just sanity, uuid is meant to be unique per document.
-                    assert uuidVerifyUnique is None
-                    uuidVerifyUnique = metad.value
-                    bonus *= 5
-
-                match_score += bonus
-
-        # Some tags are granted a bonus / penalty.
-        for metad in metadata:
-            if metad.metaType == 'uuid':
-                match_score += 5
-
-            if metad.metaType == 'tag' and metad.value == 'not_important':
-                match_score -= 10
-            elif metad.metaType == 'tag' and metad.value == 'temp':
-                match_score -= 10
-            elif metad.metaType == 'tag' and metad.value == 'now':
-                match_score += 5
-            elif metad.metaType == 'tag' and metad.value == 'important':
-                match_score += 15
-            elif metad.metaType == 'tag' and metad.value == 'ztop':
-                match_score += 17
-            elif metad.metaType == 'tag' and metad.value == 'ytop':
-                match_score += 18
-            elif metad.metaType == 'tag' and metad.value == 'xtop':
-                match_score += 20
-
-
+    total_score = 0
+    explanation = []
+    if is_explain:
+        explanation = [match.filename]
     for scorer in scorers:
-        match_score += scorer.getScore()
+        score = scorer.score(search_query, lines, metadata, match.line,
+                             match.filename)
 
-    # MOVE to scorers! Why two patterns?
-    # just pass lines
-    #
-    # Some folder have special score.
-    # /folder since /folder/ happens for last folder.
-    if isLineTitle(match.line):
-        match_score += 4
-    if '/articles' in os.path.split(match.filename)[0]:
-        match_score += 10
-    if '/quality-b' in os.path.split(match.filename)[0]:
-        match_score -= 5
-    if '/low' in os.path.split(match.filename)[0]:
-        match_score -= 10
-    if '/done' in os.path.split(match.filename)[0]:
-        match_score -= 15
+        if is_explain:
+            explanation.append("%s, %s" % ("{:6.2f}".format(
+                score * scorer.get_importance()), scorer.__class__.__name__))
 
-    # Bonus if query matches anything in top level folder.
-    folderName = os.path.split(match.filename)[0]
-    if '/' in folderName:
-        folderName = folderName.split('/')[-1]
-        if re.search(search_query, folderName, re.IGNORECASE):
-            match_score += 10
+        # Bound. Eventually, warn if it's out of bound...
+        if score < -1.0:
+            score = -1.0
+        if score > 1.0:
+            score = 1.0
 
-    # Based on time
-    lastModified = _lastModified(match.filename)
-    distFromNowDays = (time.time() - lastModified) / (60 * 60 * 24)
-    assert distFromNowDays >= 0
+        if False and is_explain:
+            explanation.append("%s, %s" % ("{:6.2f}".format(
+                score * scorer.get_importance()), scorer.__class__.__name__))
+        total_score += score * scorer.get_importance()
 
-    # solve for: e^(-x*365) = 0.5 -> -math.log(0.5)/365
-    # This means that an item a year from now get score reduced by ~50%.
-    correction = max(0.25, math.exp(-0.0018990333713971104 * distFromNowDays))
-
-    if match_score < 0 and correction != 0:
-        correction = 1 / correction
-
-    match_score *= correction
-
-    # print(f'dist: {match.filename}: {distFromNowDays}, corr: {correction}, score: {match_score}')
-
-    # enforce stable sort by inserting consistent but very small
-    # score based on name
-    t = 1
-    for c in match.filename:
-        t = (t * 7 + ord(c)) % 2**30 + 0.0001
-    match_score += 1 / t
-
-    return match_score
+    return total_score, "\n".join(explanation)

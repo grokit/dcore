@@ -19,9 +19,7 @@ _meta_shell_command = 'rename_files'
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    #parser.add_argument('mode', nargs='?', default='remove_spaces')
     parser.add_argument('mode', nargs='?', default='remove_aggressive')
-    #parser.add_argument('mode', nargs='?', default='remove_non_az')
     parser.add_argument('rest', nargs='?')
     parser.add_argument('-a',
                         '--apply',
@@ -57,7 +55,7 @@ def removeSpace(filename, args):
 def removeAggressive(filename, args):
     v = set(
         'abcdefghijklmnopqrstuvwxyz._ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]'
-    )  # ()
+    )  # ()-
 
     toLower = True
 

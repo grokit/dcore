@@ -72,7 +72,7 @@ def getMetadataFromPyFiles(pyfiles):
     """
     meta: (python file, shell command, special flags)
 
-    :::meta[0, 1 or 2] is confusing. Just create a class with names entities.
+    Improve: meta[0, 1 or 2] is confusing. Just create a class with names entities.
     """
 
     meta = []
@@ -117,7 +117,8 @@ def createShortcuts(lMeta):
         fh = open(fileOut, 'w')
         fh.write(fileContent)
         fh.close()
-        os.system('chmod +x %s' % fileOut)
+        cmd = 'chmod +x "%s"' % fileOut
+        assert os.system(cmd) == 0
 
 
 def do():

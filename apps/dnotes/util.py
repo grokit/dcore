@@ -1,5 +1,6 @@
-import os
 
+import os
+import platform
 
 def createFolderIfNotExist(folder):
     if not os.path.isdir(folder):
@@ -12,3 +13,13 @@ def createFileIfNotExist(file):
         print('File does not exist, creating.')
         with open(file, 'w') as fh:
             fh.write('')
+
+def openInEditor(noteFilename):
+    if platform.system() == 'Windows':
+        c = 'notepad %s' % noteFilename
+    else:
+        c = 'vi %s' % noteFilename
+    rs = os.system(c)
+    assert rs == 0
+
+
