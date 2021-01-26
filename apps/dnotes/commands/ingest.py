@@ -140,23 +140,6 @@ class Note:
             fh.write(self.content)
 
 
-def backupFileToBeIngested(filename, folder_out, content):
-    saveFolder = folder_out
-
-    util.createFolderIfNotExist(saveFolder)
-    h = hashlib.new('sha256')
-    h.update(content.encode())
-    unixTime = time.time()
-    timeTag = unixTimeAsSafeStr(unixTime)
-    saveFile = os.path.join('ingest.%s.%s.processed' %
-                            (timeTag, h.hexdigest()[-16:]))
-    saveFile = os.path.join(saveFolder, saveFile)
-
-    with open(saveFile, 'w') as fh:
-        print('Saving ingested data at `%s`.' % saveFile)
-        fh.write(content)
-
-
 def ingest(folder_out, contentLines):
     objNote = Note.fromText(contentLines)
     objNote.writeSelf(folder_out)
@@ -228,8 +211,6 @@ if __name__ == '__main__':
     fullpath = data.get_ingest_fullpath()
 
     content = open(fullpath).read()
-
-    backupFileToBeIngested(fullpath, data.get_notes_backup_folder(), content)
 
     ingest(folder_out, content)
     os.remove(fullpath)

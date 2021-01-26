@@ -11,7 +11,7 @@ def get_notes_root_folder():
         # If you are using dcore system, take root from there.
         import dcore.data as data
         dataLocation = data.dcoreData()
-        dataLocation = os.path.join(dataLocation, 'dnotes')
+        dataLocation = os.path.join(dataLocation, 'notes')
     except ImportError as e:
         pass
 
@@ -24,19 +24,16 @@ def get_notes_root_folder():
     return dataLocation
 
 def get_notes_low_folder():
-    return os.path.join(get_notes_root_folder(), 'notes/low')
+    return os.path.join(get_notes_root_folder(), 'low')
 
 def get_notes_project_folder():
-    return os.path.join(get_notes_root_folder(), 'notes/projects')
+    return os.path.join(get_notes_root_folder(), 'projects')
 
 def get_notes_articles_folder():
-    return os.path.join(get_notes_root_folder(), 'notes/articles')
+    return os.path.join(get_notes_root_folder(), 'articles')
 
 def get_notes_archive_folder():
-    return os.path.join(get_notes_root_folder(), 'notes/archived')
-
-def get_notes_backup_folder():
-    return os.path.join(get_notes_root_folder(), 'backups')
+    return os.path.join(get_notes_root_folder(), 'archived')
 
 def get_ingest_fullpath():
-    return os.path.join(get_notes_root_folder(), 'notes/ingest.md')
+    return os.path.join(get_notes_root_folder(), 'ingest.md')
