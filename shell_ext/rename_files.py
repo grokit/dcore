@@ -68,6 +68,12 @@ def removeAggressive(filename, args):
         else:
             if l == 'ä':
                 fout.append('a')
+            elif l == 'à':
+                fout.append('a')
+            elif l == '&':
+                found.append('and')
+            elif l == 'é':
+                fout.append('e')
             else:
                 fout.append('_')
     return "".join(fout)

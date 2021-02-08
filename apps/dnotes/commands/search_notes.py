@@ -16,7 +16,7 @@ import dcore.apps.dnotes.score as score
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 
-# ns: Note Search
+# ns: note search
 _meta_shell_command = 'ns'
 
 
@@ -27,7 +27,7 @@ def getArgs():
                         '--context_range',
                         nargs='?',
                         type=int,
-                        default=5)
+                        default=0)
     parser.add_argument('--number_of_matches_display', type=int, default=5)
     parser.add_argument('-t', '--search_tags', action='store_true')
     parser.add_argument(
@@ -94,20 +94,19 @@ if __name__ == '__main__':
 
     assert len(query) > 0
 
-    files = search.getAllFiles()
+    files = util.get_all_note_files()
 
-    matches = search.extractMatchSetsFromFiles(files, query,
-                                               G_ARGS.context_range)
+    matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
 
     if G_ARGS.search_tags:
         matches = [m for m in matches if isLineTitle(m.line)]
 
     if G_ARGS.search_only:
-        for m in matches:
+        for match in matches:
             if G_ARGS.context_range == 0:
-                print(m.strAlone())
+                print(match.matchAsOneLiner())
             else:
-                print(m)
+                print(match.strWithLine())
         sys.exit(0)
 
     matches = _dedupMatches(matches)

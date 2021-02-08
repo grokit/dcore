@@ -55,7 +55,7 @@ class __ScorerTitleOrTopOfDocument(__ScorerBase):
 
                 # If match verbatim (no regex), even better!
                 if search_query in ll:
-                    titleMatchBonus *= 1.2
+                    titleMatchBonus += 0.2
 
             score += titleMatchBonus
 
@@ -125,7 +125,7 @@ class __ScorerTagsAndUUID(__ScorerBase):
         for metad in metadata:
             if re.search(search_query, metad.value, re.IGNORECASE):
                 bonus = 0.1
-                if metad.metaType == 'uuid':
+                if metad.meta_type == 'uuid':
                     # Just sanity, uuid is meant to be unique per document.
                     assert uuidVerifyUnique is None
                     uuidVerifyUnique = metad.value
@@ -145,22 +145,22 @@ class __ScorerSpecialTags(__ScorerBase):
 
         # Some tags are granted a bonus / penalty.
         for metad in metadata:
-            if metad.metaType == 'uuid':
+            if metad.meta_type == 'uuid':
                 score += 0.3
 
-            if metad.metaType == 'tag' and metad.value == 'not_important':
+            if metad.meta_type == 'tag' and metad.value == 'not_important':
                 score -= 0.5
-            elif metad.metaType == 'tag' and metad.value == 'temp':
+            elif metad.meta_type == 'tag' and metad.value == 'temp':
                 score -= 0.3
-            elif metad.metaType == 'tag' and metad.value == 'now':
+            elif metad.meta_type == 'tag' and metad.value == 'now':
                 score += 0.3
-            elif metad.metaType == 'tag' and metad.value == 'important':
+            elif metad.meta_type == 'tag' and metad.value == 'important':
                 score += 0.2
-            elif metad.metaType == 'tag' and metad.value == 'ztop':
+            elif metad.meta_type == 'tag' and metad.value == 'ztop':
                 score += 0.6
-            elif metad.metaType == 'tag' and metad.value == 'ytop':
+            elif metad.meta_type == 'tag' and metad.value == 'ytop':
                 score += 0.7
-            elif metad.metaType == 'tag' and metad.value == 'xtop':
+            elif metad.meta_type == 'tag' and metad.value == 'xtop':
                 score += 0.8
 
         return score

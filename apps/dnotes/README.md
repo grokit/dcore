@@ -122,3 +122,7 @@ User pandoc to convert .docx to Markdown. I have an utility that helps convertin
     in: Ingest Notes, Break-Down the ingest.md file into smaller notes which each get their own folder.
     sc: Screenshot Copy, Put last screenshot take in ingest directory and link in ingest.md.
 
+# Unit Tests
+
+- In ./unit_tests, see https://docs.python.org/3/library/unittest.html
+

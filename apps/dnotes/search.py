@@ -6,11 +6,13 @@ A more complete abstraction would be to parse a Note class, against which it is 
 import os
 import argparse
 import re
+
 import math
 import inspect
 import pathlib
 
 import dcore.apps.dnotes.data as data
+import dcore.apps.dnotes.util as util
 
 
 class Match:
@@ -26,35 +28,20 @@ class Match:
         if self.context is not None:
             content = self.context
 
-        s = "%s:\n%s" % (self.filename, content)
-        return s
+        return "%s:\n%s" % (self.filename, content)
 
     def strAlone(self):
         return self.line.strip()
 
-    def __str__(self):
-        return self.strWithLine()
-
-
-def _walkGatherAllFiles(rootdir='.'):
-    F = []
-    for dirpath, dirnames, filenames in os.walk(rootdir):
-        for f in filenames:
-            F.append(os.path.join(dirpath, f))
-    return F
+    def matchAsOneLiner(self):
+        # todo:::a1 RESUME: remove the "common path filename" if a common root in cwd
+        return "%s: %s" % (self.filename, self.line.strip())
 
 
 ################################################################################
 # PUBLIC
 ################################################################################
 
-
-def getAllFiles():
-    root = data.get_notes_root_folder()
-    files = _walkGatherAllFiles(root)
-    files = [ f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md' ]
-    # TODO: *might* consider removing files from get_notes_archive_folder() (if gets slow or noisy).
-    return files
 
 def sortMatchesByScore(matches, scores, explanation):
     assert len(matches) == len(scores)
@@ -70,7 +57,7 @@ def sortMatchesByScore(matches, scores, explanation):
     return matches, scores, explanations
 
 
-def extractMatchSetsFromFiles(files, query, context_range):
+def extractMatchSetsFromFiles(files, query, context_range = 5):
     """
     Note: this returns a SET of matches, can be > 1 per file.
     """

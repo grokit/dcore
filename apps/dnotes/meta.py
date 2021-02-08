@@ -13,26 +13,29 @@ class Meta:
     """
     This is one chunk of metadata.
     """
-    def __init__(self, metaType, value):
+    def __init__(self, meta_type, value, source_line):
         """
         Example:
 
         tag:::tag1
-        metaType: tag
+        meta_type: tag
         value: tag1
 
         tag:::tag1, tag2
 
         This gets broken into TWO Meta objects.
         """
-        assert type(metaType) == str
+        assert type(meta_type) == str
         assert type(value) == str
+        assert type(source_line) == str
+        assert len(source_line.splitlines()) == 1
 
-        self.metaType = metaType
+        self.meta_type = meta_type
         self.value = value
+        self.source_line = source_line
 
     def __str__(self):
-        return str(self.__dict__)
+        return str("%s: %s" % (self.meta_type, self.value))
 
     def __repr__(self):
         return self.__str__()
@@ -79,46 +82,17 @@ def extract(content):
             R = [r.strip() for r in R]
 
             for r in R:
-                M.append(Meta(l, r))
+                M.append(Meta(l, r, line))
     return M
 
 
 def metaToDict(metaList):
     M = {}
     for m in metaList:
-        if m.metaType not in M:
-            M[m.metaType] = set()
+        if m.meta_type not in M:
+            M[m.meta_type] = set()
 
-        M[m.metaType].add(m.value)
+        M[m.meta_type].add(m.value)
     return M
 
 
-def unitTest():
-    testDoc = """
-    \ntag:::tag4
-
-    something prior. tag:::tag1, tag2
-
-    tag:::tag3 not_tag is not a tag since it is not comma separated
-
-    pre:::post
-    """
-
-    meta = extract(testDoc)
-    for m in meta:
-        print(m)
-    assert len(meta) == 5
-    metaDict = metaToDict(meta)
-
-    assert len(metaDict['tag']) == 4
-    assert 'tag1' in metaDict['tag']
-    assert 'tag2' in metaDict['tag']
-    assert 'tag3' in metaDict['tag']
-    assert 'tag4' in metaDict['tag']
-    assert 'not_tag' not in metaDict['tag']
-    assert len(metaDict['pre']) == 1
-    assert 'post' in metaDict['pre']
-
-
-if __name__ == '__main__':
-    unitTest()

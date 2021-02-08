@@ -4,8 +4,16 @@ Data location.
 
 import os
 
+UNIT_TESTS_OVERRIDE_ROOT_FOLDER = None
+
+def test_hijack_root_folder():
+    path, _ = os.path.split(__file__)
+    return os.path.join(path, 'unit_tests/mock_notes_dir')
 
 def get_notes_root_folder():
+    if UNIT_TESTS_OVERRIDE_ROOT_FOLDER is not None:
+        return UNIT_TESTS_OVERRIDE_ROOT_FOLDER
+
     dataLocation = os.path.expanduser('~/dnotes')
     try:
         # If you are using dcore system, take root from there.

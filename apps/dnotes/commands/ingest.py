@@ -180,7 +180,8 @@ if __name__ == '__main__':
             candidates += os.scandir(data.get_notes_articles_folder())
 
         candidates = [dir_entry.path for dir_entry in candidates]
-        assert len(candidates) == len([folder for folder in candidates if os.path.isdir(folder)])
+        # ? check in which circumstances .path is not a folder ?
+        candidates = [folder for folder in candidates if os.path.isdir(folder)]
 
         picked = []
         for cand in candidates:
