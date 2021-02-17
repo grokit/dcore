@@ -8,15 +8,32 @@ import dcore.apps.dnotes.meta as module_meta
 
 class Tests(unittest.TestCase):
 
-    def test(self):
+    def test_basic(self):
         data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
-        b_marks = bookmarks.get_bookmarks()
+        b_marks = bookmarks._extract_bookmarks()
 
         urls = set([bb.url for bb in b_marks])
         self.assertTrue('https://www.rijksmuseum.nl/en' in urls)
 
         values = set([bb.value for bb in b_marks])
-        self.assertTrue('], smart cs person, https://bellard.org/' in values)
+        # This also checks we remove the funny first characters
+        self.assertTrue('smart cs person; library of personal projects, https://bellard.org/' in values)
+
+    def test_query(self):
+        data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
+
+        b_marks = bookmarks.get_bookmarks_matching(['library'])
+        values = set([bb.value for bb in b_marks])
+        print(values)
+        assert len(values) == 2
+        self.assertTrue('smart cs person; library of personal projects, https://bellard.org/' in values)
+        self.assertTrue('ACM digital library, https://dl.acm.org/' in values)
+
+        # more restrictive: two terms, expect to filter down to ACM only
+        b_marks = bookmarks.get_bookmarks_matching(['library', 'ACM'])
+        values = set([bb.value for bb in b_marks])
+        assert len(values) == 1
+        self.assertTrue('ACM digital library, https://dl.acm.org/' in values)
 
 if __name__ == '__main__':
     unittest.main()

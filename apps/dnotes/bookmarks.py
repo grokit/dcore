@@ -18,11 +18,7 @@ class Bookmark:
     def __repr__(self):
         return self.__str__()
 
-################################################################################
-# PUBLIC
-################################################################################
-
-def get_bookmarks():
+def _extract_bookmarks():
     note_files = util.get_all_note_files()
 
     bookmarks = []
@@ -44,3 +40,32 @@ def get_bookmarks():
                 bookmarks.append(bm)
 
     return bookmarks
+
+################################################################################
+# PUBLIC
+################################################################################
+
+def get_bookmarks_matching(query):
+    """
+    All strings in query need to present at some position in the bookmark.
+    """
+    assert type(query) == list
+
+    bmarks = _extract_bookmarks()
+
+    bmarks_filtered = []
+    if len(query) == 0:
+        bmarks_filtered = bmarks
+    else:
+        for bb in bmarks:
+            matched = True
+            for sq in query:
+                if not (sq.lower() in bb.value.lower()):
+                    matched = False
+                    break
+            if matched:
+                bmarks_filtered.append(bb)
+
+    return bmarks_filtered
+
+

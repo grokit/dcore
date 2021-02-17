@@ -20,7 +20,7 @@ Note: UNIT-TEST mock file.
 ## Cs
 
 - [item:::bookmark], make music open-source and linux, https://lmms.io/
-- [item:::bookmark], smart cs person, https://bellard.org/
+- [item:::bookmark], smart cs person; library of personal projects, https://bellard.org/
  
 
 

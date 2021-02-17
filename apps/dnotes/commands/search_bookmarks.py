@@ -33,24 +33,12 @@ def getArgs():
 if __name__ == '__main__':
     G_ARGS = getArgs()
 
-    bmarks = bookmarks.get_bookmarks()
-
-    bmarks_filtered = []
-
-    if G_ARGS.search_query == []:
-        bmarks_filtered = bmarks
-    else:
-        for bb in bmarks:
-            for sq in G_ARGS.search_query:
-                if sq.lower() in bb.value.lower():
-                    bmarks_filtered.append(bb)
-                break
-
-    for bb in bmarks_filtered:
+    bmarks = bookmarks.get_bookmarks_matching(G_ARGS.search_query)
+    for bb in bmarks:
         print(bb)
 
-    if G_ARGS.open_first and len(bmarks_filtered) > 0:
-        bb = bmarks_filtered[0]
+    if G_ARGS.open_first and len(bmarks) > 0:
+        bb = bmarks[0]
         print('Open browser for url: %s.' % bb.url)
         webbrowser.open_new_tab(bb.url)
 
