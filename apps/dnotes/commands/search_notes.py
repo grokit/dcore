@@ -29,7 +29,6 @@ def getArgs():
                         type=int,
                         default=0)
     parser.add_argument('--number_of_matches_display', type=int, default=5)
-    parser.add_argument('-t', '--search_tags', action='store_true')
     parser.add_argument(
         '-a',
         '--select_all',
@@ -41,6 +40,8 @@ def getArgs():
                         '--explain',
                         action='store_true',
                         help='If on, explain the score.')
+    parser.add_argument('-t',
+                        '--tag')
     parser.add_argument('-s', '--search_only', action='store_true')
     parser.add_argument('-O',
                         '--open_first_matching_file',
@@ -92,14 +93,25 @@ if __name__ == '__main__':
     if G_ARGS.select_all:
         query = '.*'
 
-    assert len(query) > 0
+    #assert len(query) > 0
+    query = query.strip()
 
     files = util.get_all_note_files()
 
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
+    matches = _dedupMatches(matches)
 
-    if G_ARGS.search_tags:
-        matches = [m for m in matches if isLineTitle(m.line)]
+    if G_ARGS.tag:
+        filtered = []
+        for match in matches:
+            metas = meta.extract(open(match.filename, 'r').read())
+            #print(match.filename)
+            #print(metas)
+            for meta_ in metas:
+                if meta_.meta_type == 'tag' and meta_.value == G_ARGS.tag:
+                    filtered.append(match)
+
+        matches = filtered 
 
     if G_ARGS.search_only:
         for match in matches:
@@ -109,7 +121,6 @@ if __name__ == '__main__':
                 print(match.strWithLine())
         sys.exit(0)
 
-    matches = _dedupMatches(matches)
 
     scores = []
     explanations = []

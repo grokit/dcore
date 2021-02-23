@@ -179,9 +179,16 @@ if __name__ == '__main__':
         if os.path.exists(data.get_notes_articles_folder()):
             candidates += os.scandir(data.get_notes_articles_folder())
 
+        sub = []
+        for cand in candidates:
+            sub += os.scandir(cand)
+        candidates += sub
+
         candidates = [dir_entry.path for dir_entry in candidates]
         # ? check in which circumstances .path is not a folder ?
         candidates = [folder for folder in candidates if os.path.isdir(folder)]
+
+        candidates = set(candidates)
 
         picked = []
         for cand in candidates:

@@ -10,20 +10,6 @@ def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
 
-def filterLog(logAsStr):
-    """
-    Nice to have in reverse order in mail client.
-    """
-    log_lines = logAsStr.splitlines()
-    log_lines.reverse()
-
-    out = []
-    isErr = False
-    for line in log_lines:
-        if '- ERROR -' in line:
-            out.append(line)
-            isErr = True
-    return isErr, "\n".join(out)
 
 
 

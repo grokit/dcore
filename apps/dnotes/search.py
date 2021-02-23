@@ -34,7 +34,6 @@ class Match:
         return self.line.strip()
 
     def matchAsOneLiner(self):
-        # todo:::a1 RESUME: remove the "common path filename" if a common root in cwd
         return "%s: %s" % (self.filename, self.line.strip())
 
 
@@ -65,27 +64,32 @@ def extractMatchSetsFromFiles(files, query, context_range = 5):
     for filename in files:
         with open(filename) as fh:
             lines = fh.readlines()
+            # We could extract and store Meta here. We don't, and do it 
+            # on demand later if necessary.
             i = 0
-            for line in lines:
-                m = re.search(query, line, re.IGNORECASE)
-                if m is not None:
-                    g = m.group(0)
-                    match = Match(filename, line)
+            if len(query.strip()) == 0:
+                matches.append(Match(filename, ""))
+            else:
+                for line in lines:
+                    m = re.search(query, line, re.IGNORECASE)
+                    if m is not None:
+                        g = m.group(0)
+                        match = Match(filename, line)
 
-                    ctx = []
-                    cr = context_range
-                    if cr % 2 == 1:
-                        # Since -3//2 = 2 and not 1.
-                        cr -= 1
+                        ctx = []
+                        cr = context_range
+                        if cr % 2 == 1:
+                            # Since -3//2 = 2 and not 1.
+                            cr -= 1
 
-                    for r in range(-cr // 2, cr // 2 + 1, 1):
-                        if i + r >= 0 and i + r < len(lines):
-                            if r == 0:
-                                ctx.append('**  ' + lines[i + r])
-                            else:
-                                ctx.append('    ' + lines[i + r])
+                        for r in range(-cr // 2, cr // 2 + 1, 1):
+                            if i + r >= 0 and i + r < len(lines):
+                                if r == 0:
+                                    ctx.append('**  ' + lines[i + r])
+                                else:
+                                    ctx.append('    ' + lines[i + r])
 
-                    match.context = "".join(ctx)
-                    matches.append(match)
-                i += 1
+                        match.context = "".join(ctx)
+                        matches.append(match)
+                    i += 1
     return matches
