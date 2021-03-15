@@ -93,7 +93,6 @@ if __name__ == '__main__':
     if G_ARGS.select_all:
         query = '.*'
 
-    #assert len(query) > 0
     query = query.strip()
 
     files = util.get_all_note_files()
@@ -105,8 +104,6 @@ if __name__ == '__main__':
         filtered = []
         for match in matches:
             metas = meta.extract(open(match.filename, 'r').read())
-            #print(match.filename)
-            #print(metas)
             for meta_ in metas:
                 if meta_.meta_type == 'tag' and meta_.value == G_ARGS.tag:
                     filtered.append(match)
