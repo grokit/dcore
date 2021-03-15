@@ -93,6 +93,7 @@ if __name__ == '__main__':
     if G_ARGS.select_all:
         query = '.*'
 
+    # empty query == match all
     query = query.strip()
 
     files = util.get_all_note_files()

@@ -21,6 +21,8 @@ Note: UNIT-TEST mock file.
 
 - [item:::bookmark], make music open-source and linux, https://lmms.io/
 - [item:::bookmark], smart cs person; library of personal projects, https://bellard.org/
+
+- [item:::bookmark], test url shortened, short/link/to/web
  
 
 

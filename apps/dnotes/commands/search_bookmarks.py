@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     bmarks = bookmarks.get_bookmarks_matching(G_ARGS.search_query)
     for bb in bmarks:
-        print(bb)
+        print("\n%s"%bb)
 
     if G_ARGS.open_first and len(bmarks) > 0:
         bb = bmarks[0]

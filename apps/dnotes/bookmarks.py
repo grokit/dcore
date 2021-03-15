@@ -34,6 +34,8 @@ def _extract_bookmarks():
                 value = value.strip()
                 bm = Bookmark(value)
                 match = re.search('(http[s]{0,1}://[^ ]*)', bm.value)
+                if match is None:
+                    match = re.search('(\w+/[^ ]*)', bm.value)
                 if match is not None:
                     bm.url = match.group(1)
 

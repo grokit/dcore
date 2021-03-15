@@ -24,7 +24,6 @@ class Tests(unittest.TestCase):
 
         b_marks = bookmarks.get_bookmarks_matching(['library'])
         values = set([bb.value for bb in b_marks])
-        print(values)
         assert len(values) == 2
         self.assertTrue('smart cs person; library of personal projects, https://bellard.org/' in values)
         self.assertTrue('ACM digital library, https://dl.acm.org/' in values)
@@ -34,6 +33,17 @@ class Tests(unittest.TestCase):
         values = set([bb.value for bb in b_marks])
         assert len(values) == 1
         self.assertTrue('ACM digital library, https://dl.acm.org/' in values)
+
+    def test_shortlink(self):
+        data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
+
+        b_marks = bookmarks.get_bookmarks_matching(['st url shortened'])
+        values = set([bb.value for bb in b_marks])
+        assert len(values) == 1
+        self.assertTrue('test url shortened, short/link/to/web' in values)
+        urls = set([bb.url for bb in b_marks])
+        assert len(urls) == 1
+        self.assertTrue('short/link/to/web' in urls)
 
 if __name__ == '__main__':
     unittest.main()
