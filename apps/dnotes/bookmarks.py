@@ -34,18 +34,31 @@ def _extract_bookmarks():
                 value = value.strip()
                 bm = Bookmark(value)
                 match = re.search('(http[s]{0,1}://[^ ]*)', bm.value)
+                # support short urls: short/link/format
                 if match is None:
                     match = re.search('(\w+/[^ ]*)', bm.value)
                 if match is not None:
                     bm.url = match.group(1)
 
-                bookmarks.append(bm)
+                match = BookmarkMatch()
+                match.formatted_report = bm
+                match.fullpath_origin = ff
+                bookmarks.append(match)
 
     return bookmarks
 
 ################################################################################
 # PUBLIC
 ################################################################################
+
+class BookmarkMatch:
+
+    def __init__(self):
+        self.formatted_report = None
+        self.fullpath_origin = None
+
+    def __str__(self):
+        return "%s" % self.formatted_report
 
 def get_bookmarks_matching(query):
     """
@@ -60,6 +73,7 @@ def get_bookmarks_matching(query):
         bmarks_filtered = bmarks
     else:
         for bb in bmarks:
+            bb = bb.formatted_report
             matched = True
             for sq in query:
                 if not (sq.lower() in bb.value.lower()):

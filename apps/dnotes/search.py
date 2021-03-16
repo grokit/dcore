@@ -11,6 +11,8 @@ import math
 import inspect
 import pathlib
 
+import dcore.dcolor as dcolor
+
 import dcore.apps.dnotes.data as data
 import dcore.apps.dnotes.util as util
 
@@ -28,13 +30,13 @@ class Match:
         if self.context is not None:
             content = self.context
 
-        return "%s:\n%s" % (self.filename, content)
+        return "%s\n%s" % (dcolor.green(self.filename), content)
 
     def strAlone(self):
         return self.line.strip()
 
     def matchAsOneLiner(self):
-        return "%s: %s" % (self.filename, self.line.strip())
+        return "%s\n%s" % (dcolor.green(self.filename), self.line.strip())
 
 
 ################################################################################

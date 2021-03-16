@@ -49,6 +49,17 @@ def extractFilesFuzzy(lines):
         l = l.strip()
         if ':' in l:
             l = l.split(':')[0]
+
+        # remove color marking if present
+        # see https://stackoverflow.com/questions/39473297/how-do-i-print-colored-output-with-python-3
+        if l[0:2] == '\033[':
+            l = l[2:]
+            i = l.find('m')
+            if i != -1: 
+                l = l[i+1:]
+                i = l.find('\033[')
+                if i != -1: 
+                    l = l[:i]
         if os.path.isfile(l):
             F.add(l)
     return F

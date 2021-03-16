@@ -61,6 +61,9 @@ def dcoreBackupEnv():
     return os.path.expanduser('~/sync/archive/backups/rolling/env/auto')
 
 
+def backup_phone_dir():
+    return os.path.expanduser('~/sync/archive/backups/rolling/phone/auto')
+
 def pathExt():
     """
     Where we put generated shortcuts that are in path.

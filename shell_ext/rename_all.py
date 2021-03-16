@@ -80,8 +80,8 @@ if __name__ == '__main__':
     DEBUG = args.debug
 
     if False:
-        args.f = 'throw Error'
-        args.t = 'throw new Error'
+        args.f = ''
+        args.t = ''
 
     if not args.nocontent:
         for f in getFiles():

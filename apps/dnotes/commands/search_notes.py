@@ -28,7 +28,7 @@ def getArgs():
                         nargs='?',
                         type=int,
                         default=0)
-    parser.add_argument('--number_of_matches_display', type=int, default=5)
+    parser.add_argument('-n', '--number_of_matches_display', type=int, default=10)
     parser.add_argument(
         '-a',
         '--select_all',
@@ -115,6 +115,7 @@ if __name__ == '__main__':
         for match in matches:
             if G_ARGS.context_range == 0:
                 print(match.matchAsOneLiner())
+                print('')
             else:
                 print(match.strWithLine())
         sys.exit(0)

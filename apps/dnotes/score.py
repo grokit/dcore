@@ -36,7 +36,7 @@ class __ScorerTitleOrTopOfDocument(__ScorerBase):
     If it's in a later title: proportional to how low in document
         and what level title.
     """
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
         # Bonus if in title, even better if towards beginning of file.
@@ -66,7 +66,7 @@ class __ScorerTitleOrTopOfDocument(__ScorerBase):
 
 
 class __ScorerLinesMentions(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         bonus = 0
 
         # Bonus if mentionned a lot in file.
@@ -92,10 +92,10 @@ class __ScorerLinesMentions(__ScorerBase):
 
 
 class __ScorerInSpecificFolders(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
-        path = os.path.split(filename)[0]
+        path = os.path.split(fullpath)[0]
 
         # Some folder have special score.
         # /folder since /folder/ happens for last folder.
@@ -117,7 +117,7 @@ class __ScorerInSpecificFolders(__ScorerBase):
 
 
 class __ScorerTagsAndUUID(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
         # Bonus if match any tag, LARGE bonus if match uuid.
@@ -140,7 +140,7 @@ class __ScorerTagsAndUUID(__ScorerBase):
 
 
 class __ScorerSpecialTags(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
         # Some tags are granted a bonus / penalty.
@@ -170,11 +170,11 @@ class __ScorerSpecialTags(__ScorerBase):
 
 
 class __ScorerTopLevelFolder(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, filename):
+    def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
         # Bonus if query matches the top level folder.
-        folderName = os.path.split(filename)[0]
+        folderName = os.path.split(fullpath)[0]
         if '/' in folderName:
             folderName = folderName.split('/')[-1]
             if re.search(search_query, folderName, re.IGNORECASE):
@@ -193,8 +193,8 @@ class __ScorerLastModifiedTime(__ScorerBase):
     """
     Something modified more recently is more relevant.
     """
-    def score(self, search_query, lines, metadata, line, filename):
-        lastModified = _lastModified(filename)
+    def score(self, search_query, lines, metadata, line, fullpath):
+        lastModified = _lastModified(fullpath)
         distFromNowDays = (time.time() - lastModified) / (60 * 60 * 24)
         assert distFromNowDays >= 0
 
@@ -207,11 +207,26 @@ class __ScorerLastModifiedTime(__ScorerBase):
         # enforce stable sort by inserting consistent but very small
         # score based on name
         t = 1
-        for c in filename:
+        for c in fullpath:
             t = (t * 7 + ord(c)) % 2**30 + 0.0001
         score += 1 / t
 
         return score
+
+    def get_importance(self):
+        return 1.0
+
+class __ScorerFilename(__ScorerBase):
+    """
+    Adjust score based on the note file.
+    """
+    def score(self, search_query, lines, metadata, line, fullpath):
+        _, filename = os.path.split(fullpath)
+
+        if 'meh' in filename:
+            return -1.0
+
+        return 0
 
     def get_importance(self):
         return 1.0
@@ -273,6 +288,8 @@ def score(match, search_query, is_explain):
     # Tags
     scorers.append(__ScorerTagsAndUUID())
     scorers.append(__ScorerSpecialTags())
+    # Filename
+    scorers.append(__ScorerFilename())
     # Folders
     scorers.append(__ScorerInSpecificFolders())
     scorers.append(__ScorerTopLevelFolder())
@@ -294,8 +311,8 @@ def score(match, search_query, is_explain):
                              match.filename)
 
         if is_explain:
-            explanation.append("%s, %s" % ("{:6.2f}".format(
-                score * scorer.get_importance()), scorer.__class__.__name__))
+            explanation.append("%s, %s, weight: %.2f" % ("{:6.2f}".format(
+                score * scorer.get_importance()), scorer.__class__.__name__, scorer.get_importance()))
 
         # Bound. Eventually, warn if it's out of bound...
         if score < -1.0:

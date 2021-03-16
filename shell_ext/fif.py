@@ -1,20 +1,18 @@
 """
 # Find Files
 
-Index all files under dir and fast find.
-Thought about deleting this as I'm using less and less, but direct fif -o <file> is awesome for quick open of books and such.
+Index all files under dir recursively and fast find.
+fif -O <file> will open the file with default application if there is only 1 match.
 
 # TODO
 
 ## As
 
-- This is very good, especially if: -o -> open file, if > 1 offer open a list.
-    BUT: non standard matching is counter intuitive. Just replace with regex.
+- If -O +1 more than one match, ask which one to open.
 
 ## Bs
 
 - Have an 'exact string' mode as an option.
-- fif -o : open file for all indexed recursive(dirs), ask from list if > 1 match.
 
 - implement fif --fuid
         to me
@@ -45,8 +43,9 @@ _meta_shell_command = 'fif'
 search_roots = [r'~/sync']
 cacheLoc = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
-cacheExpiryInSeconds = 0.5 * 24 * 60 * 60  # Before automatically force regenerating.
 
+# Before automatically force regenerating.
+cacheExpiryInSeconds = 2.0 * 24 * 60 * 60  
 
 def getArgs():
     parser = argparse.ArgumentParser()
