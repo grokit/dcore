@@ -43,6 +43,7 @@ def _extract_bookmarks():
                 match = BookmarkMatch()
                 match.formatted_report = bm
                 match.fullpath_origin = ff
+                match.url = bm.url
                 bookmarks.append(match)
 
     return bookmarks
@@ -54,6 +55,7 @@ def _extract_bookmarks():
 class BookmarkMatch:
 
     def __init__(self):
+        self.url = None
         self.formatted_report = None
         self.fullpath_origin = None
 
@@ -73,10 +75,10 @@ def get_bookmarks_matching(query):
         bmarks_filtered = bmarks
     else:
         for bb in bmarks:
-            bb = bb.formatted_report
+            report = bb.formatted_report
             matched = True
             for sq in query:
-                if not (sq.lower() in bb.value.lower()):
+                if not (sq.lower() in report.value.lower()):
                     matched = False
                     break
             if matched:

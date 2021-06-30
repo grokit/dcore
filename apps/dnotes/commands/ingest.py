@@ -181,7 +181,8 @@ if __name__ == '__main__':
 
         sub = []
         for cand in candidates:
-            sub += os.scandir(cand)
+            if os.path.isdir(cand):
+                sub += os.scandir(cand)
         candidates += sub
 
         candidates = [dir_entry.path for dir_entry in candidates]

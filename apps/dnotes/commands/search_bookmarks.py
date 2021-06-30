@@ -54,11 +54,10 @@ if __name__ == '__main__':
     bmarks = bookmarks.get_bookmarks_matching(G_ARGS.search_query)
     for bb in bmarks:
 
-        where = ''
         if G_ARGS.where:
-            where = '%s\n' % bb.fullpath_origin
-            where = dcolor.green(where)
-        print("\n%s%s"%(where, bb))
+            print(dcolor.green(bb.fullpath_origin))
+
+        print("%s\n%s\n" % (bb, dcolor.blue(bb.url)))
 
     if G_ARGS.open_first and len(bmarks) > 0:
         bb = bmarks[0]
