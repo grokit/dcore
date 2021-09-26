@@ -147,9 +147,6 @@ def ingest(folder_out, contentLines):
 
 def gitCommit(folder, message):
     os.chdir(folder)
-    if not os.path.exists('./.git'):
-        print('WARNING: notes is not a git repo. Skipping git operation.')
-        return
     os.system('git add -A')
     message = message.replace('"', '_')
     message = message.replace("'", '_')

@@ -86,7 +86,13 @@ def sign(root):
     for f in getAllFiles(root):
         with open(f, 'rb') as fh:
             data = fh.read()
-        signData.hashes.append(_hash(str(unixTimeMS).encode() + b'_' + data))
+        # If want to include filename:
+        if True:
+            #path = os.path.split(f)[1]
+            path = f
+            signData.hashes.append(path + ': ' + _hash(str(unixTimeMS).encode() + b'_' + data))
+        else:
+            signData.hashes.append(_hash(str(unixTimeMS).encode() + b'_' + data))
     signData.hashes.sort()
 
     signData.unixTimeMS = unixTimeMS

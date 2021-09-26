@@ -13,6 +13,7 @@ import sys
 
 import dcore.search_files as fsearch
 import dcore.data as data
+import dcore.utils as dutils
 
 shell_meta_search = '_meta_shell_command'
 _meta_shell_command = 'generate_shortcuts'
@@ -41,20 +42,6 @@ def findPyFiles():
         P += [pyfile for pyfile in pyfiles if isOK(pyfile)]
 
     return P
-
-
-def delCurrentShortcuts():
-    "Delete all files that have special marker inside output directory."
-    scriptsOutputFolder = data.pathExt()
-
-    tag = data.tagShortcutsForDeletion()
-    for f in os.listdir(scriptsOutputFolder):
-        f = os.path.join(scriptsOutputFolder, f)
-        with open(f, 'r') as fh:
-            fdata = fh.read()
-        if tag in fdata:
-            print('Deleting script shortcut: %s.' % f)
-            os.remove(f)
 
 
 def getAutogenFileTemplate():
@@ -123,7 +110,7 @@ def createShortcuts(lMeta):
 
 def do():
     pyFiles = findPyFiles()
-    delCurrentShortcuts()
+    dutils.delCurrentShortcuts(data.tagShortcutsForDeletion())
     meta = getMetadataFromPyFiles(pyFiles)
     createShortcuts(meta)
 

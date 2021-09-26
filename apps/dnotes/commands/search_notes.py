@@ -15,6 +15,7 @@ import dcore.apps.dnotes.meta as meta
 import dcore.apps.dnotes.score as score
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
+import dcore.apps.dnotes.options as options
 
 # ns: note search
 _meta_shell_command = 'ns'
@@ -46,6 +47,10 @@ def getArgs():
     parser.add_argument('-O',
                         '--open_first_matching_file',
                         action='store_true')
+
+    parser.add_argument('-u',
+                        '--open_uuid',
+                        help='Find an open file with corresponding unique id.')
 
     # This is now sefault.
     #parser.add_argument('-o', '--open_matching_file', action='store_true')
@@ -86,6 +91,7 @@ def _dedupMatches(matches):
 if __name__ == '__main__':
     G_ARGS = getArgs()
 
+
     query = ""
     if len(G_ARGS.search_query) > 0:
         query = " ".join(G_ARGS.search_query)
@@ -97,6 +103,11 @@ if __name__ == '__main__':
     query = query.strip()
 
     files = util.get_all_note_files()
+
+    open_first_matching_file = G_ARGS.open_first_matching_file
+    if G_ARGS.open_uuid:
+        query = 'uuid' + options.MSEP + G_ARGS.open_uuid
+        open_first_matching_file = True
 
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
     matches = _dedupMatches(matches)
@@ -143,7 +154,7 @@ if __name__ == '__main__':
             if i < len(explanations):
                 print(explanations[i])
 
-    if not G_ARGS.open_first_matching_file and len(matches) > 1:
+    if not open_first_matching_file and len(matches) > 1:
         selected = _manualSelect(matches, scores, nCut)
 
     util.openInEditor(selected.filename)

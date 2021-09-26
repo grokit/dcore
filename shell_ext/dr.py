@@ -64,6 +64,7 @@ import argparse
 import platform
 
 import dcore.data as data
+import dcore.utils as dutils
 
 path_ext_folder = data.pathExt()
 cacheFile = os.path.join(data.dcoreData(),
@@ -89,6 +90,8 @@ def rememberDirs():
             fh.write("\n".join(bad))
             fh.write("\n")
 
+    dutils.delCurrentShortcuts(data.tagShortcutsForDeletionForDr())
+
     dirs = [d for d in dirs if d not in bad]
 
     setFileContent(dirs)
@@ -97,13 +100,14 @@ def rememberDirs():
     dirs = getFileContent()
 
     def createSortcut(new_file, dir):
+        tag = 'Auto del tag: ' + data.tagShortcutsForDeletionForDr()
         if platform.system() == 'Windows':
             new_file += '.bat'
         with open(new_file, 'w') as fh:
             if platform.system() == 'Windows':
-                fh.write('cd /d "%s"' % dir)
+                fh.write('Rem %s\ncd /d "%s"' % (tag, dir))
             else:
-                fh.write('cd "%s"' % dir)
+                fh.write('# %s\ncd "%s"' % (tag, dir))
 
     # create shortcut files
     if os.path.isdir(path_ext_folder):

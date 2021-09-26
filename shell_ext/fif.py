@@ -45,7 +45,7 @@ cacheLoc = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
 
 # Before automatically force regenerating.
-cacheExpiryInSeconds = 2.0 * 24 * 60 * 60  
+cacheExpiryInSeconds = 7.0 * 24 * 60 * 60  
 
 def getArgs():
     parser = argparse.ArgumentParser()
@@ -148,15 +148,19 @@ def do():
         for sub in gg:
             F = filterInCaseInsensitive(F, sub)
 
-        for f in F:
-            print(f)
+        for i, f in enumerate(F):
+            print('(%.2i) %s' % (i, f))
 
         if args.open is True:
-            assert len(F) == 1
-            for f in F:
-                cmd = 'xdg-open %s& >/dev/null 2>&1' % f
-                print(cmd)
-                os.system(cmd)
+            open_ith = 0
+            if len(F) > 1:
+                open_ith = int(input('Open which one?\n'))
+
+            f = F[open_ith]
+
+            cmd = 'xdg-open %s& >/dev/null 2>&1' % f
+            print(cmd)
+            os.system(cmd)
 
         if args.vi is True:
             for f in F:

@@ -81,6 +81,7 @@ def listFilesContainingString(s):
     """
 
     files = []
+    # warning: ignores files without extention
     for filename in glob.iglob('**/*.**', recursive=True):
         try:
             with open(filename) as fh:

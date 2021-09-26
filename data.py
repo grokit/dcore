@@ -26,6 +26,8 @@ def getBashrcOrEquivalent():
 def tagShortcutsForDeletion():
     return "0jb02xhs83hayd9fugb7wu2as3q419ki"
 
+def tagShortcutsForDeletionForDr():
+    return "kT3ZU6rZu2fDT23UfVNgVATAY7W6NmQn"
 
 def dcoreRoot():
     """
@@ -52,6 +54,8 @@ def logsdir():
 def dcoreData():
     return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
 
+def taskTrackFolder():
+    return os.path.join(dcoreData(), 'dtask_track')
 
 def dcoreBackupEnv():
     """
@@ -79,6 +83,7 @@ def createDirIfNotExist(dData):
 def getDirs():
     dirs = []
     dirs.append(dcoreData())
+    dirs.append(taskTrackFolder())
     dirs.append(dcoreTempData())
     dirs.append(pathExt())
     return dirs
