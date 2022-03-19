@@ -91,31 +91,6 @@ class __ScorerLinesMentions(__ScorerBase):
         return 1.0
 
 
-class __ScorerInSpecificFolders(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, fullpath):
-        score = 0
-
-        path = os.path.split(fullpath)[0]
-
-        # Some folder have special score.
-        # /folder since /folder/ happens for last folder.
-        if _isLineTitle(line):
-            score += 0.2
-        if '/articles' in path:
-            # Improve: use os.path.commonprefix([]) and get_notes_archive_folder(), get_notes_low_folder(), ...
-            score += 0.5
-        if '/00_quality_b' in path:
-            score -= 0.3
-        if '/00_quality_c' in path:
-            score -= 0.4
-        if '/low' in path:
-            score -= 0.4
-        if '/done' in path:
-            score -= 0.3
-
-        return score
-
-
 class __ScorerTagsAndUUID(__ScorerBase):
     def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
@@ -216,6 +191,38 @@ class __ScorerLastModifiedTime(__ScorerBase):
     def get_importance(self):
         return 1.0
 
+class __ScorerPathFolder(__ScorerBase):
+    """
+    Adjust score based on the note folder or path.
+    """
+    def score(self, search_query, lines, metadata, line, fullpath):
+        score = 0
+
+        path = os.path.split(fullpath)[0]
+
+        # Some folder have special score.
+        # /folder since /folder/ happens for last folder.
+        if _isLineTitle(line):
+            score += 0.2
+        if '/articles' in path:
+            # Improve: use os.path.commonprefix([]) and get_notes_archive_folder(), get_notes_low_folder(), ...
+            score += 0.5
+        if 'quality_b' in path:
+            score -= 0.3
+        if 'quality_c' in path:
+            score -= 0.4
+        if '/low' in path:
+            score -= 0.4
+        if '/done' in path:
+            score -= 0.3
+        if 'archived' in path:
+            score -= 0.7
+
+        score = min(1.0, score)
+        score = max(-1.0, score)
+
+        return score
+
 class __ScorerFilename(__ScorerBase):
     """
     Adjust score based on the note file.
@@ -223,10 +230,15 @@ class __ScorerFilename(__ScorerBase):
     def score(self, search_query, lines, metadata, line, fullpath):
         _, filename = os.path.split(fullpath)
 
-        if 'meh' in filename:
-            return -1.0
+        score = 0
 
-        return 0
+        if 'meh' in filename:
+            score += -1.0
+
+        score = min(1.0, score)
+        score = max(-1.0, score)
+
+        return score
 
     def get_importance(self):
         return 1.0
@@ -291,7 +303,7 @@ def score(match, search_query, is_explain):
     # Filename
     scorers.append(__ScorerFilename())
     # Folders
-    scorers.append(__ScorerInSpecificFolders())
+    scorers.append(__ScorerPathFolder())
     scorers.append(__ScorerTopLevelFolder())
     # Time
     scorers.append(__ScorerLastModifiedTime())
