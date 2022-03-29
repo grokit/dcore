@@ -121,27 +121,23 @@ class __ScorerSpecialTags(__ScorerBase):
         # Some tags are granted a bonus / penalty.
         for metad in metadata:
             if metad.meta_type == 'uuid':
-                score += 0.3
+                score += 0.2
 
             if metad.meta_type == 'tag' and metad.value == 'not_important':
-                score -= 0.5
+                score -= 0.8
             elif metad.meta_type == 'tag' and metad.value == 'temp':
                 score -= 0.3
             elif metad.meta_type == 'tag' and metad.value == 'now':
                 score += 0.3
             elif metad.meta_type == 'tag' and metad.value == 'important':
-                score += 0.2
-            elif metad.meta_type == 'tag' and metad.value == 'ztop':
-                score += 0.6
-            elif metad.meta_type == 'tag' and metad.value == 'ytop':
                 score += 0.7
             elif metad.meta_type == 'tag' and metad.value == 'xtop':
-                score += 0.8
+                score += 1.0
 
         return score
 
     def get_importance(self):
-        return 1.0
+        return 3.0
 
 
 class __ScorerTopLevelFolder(__ScorerBase):
@@ -216,6 +212,9 @@ class __ScorerPathFolder(__ScorerBase):
         if '/done' in path:
             score -= 0.3
         if 'archived' in path:
+            score -= 0.7
+        if 'deprecate' in path:
+            # also matches deprecated
             score -= 0.7
 
         score = min(1.0, score)

@@ -15,6 +15,49 @@ def _walkGatherAllFiles(rootdir='.'):
 # PUBLIC
 ################################################################################
 
+
+def manualSelectMatchesScores(matches, scores, nCut=30):
+    """
+    TODO: generalize to just select n things, not just match/scores. Merge with manualSelect(_) below.
+    """
+
+    print(
+        'Select an item by entering its corresponding number. Enter cancels.')
+    i = 0
+
+    if len(matches) > nCut:
+        matches = matches[0:nCut]
+        print('Too many matches, cutting down to %s.' % len(matches))
+
+    for i in range(len(matches)):
+        print('%.2d (%.2f): %s' % (i, scores[i], matches[i].filename))
+
+    s = input()
+    if len(s) == 0: return None
+    s = int(s)
+
+    return matches[s]
+
+def manualSelect(str_list, nCut=30):
+
+    print(
+        'Select an item by entering its corresponding number. Enter cancels.')
+    i = 0
+
+    if len(str_list) > nCut:
+        matches = matches[0:nCut]
+        print('Too many matches, cutting down to %s.' % len(str_list))
+
+    for i in range(len(str_list)):
+        print('%.2d: %s' % (i, str_list[i]))
+
+    s = input()
+    if len(s) == 0: return None
+    s = int(s)
+
+    return str_list[s]
+
+
 def get_all_note_files():
     files = _walkGatherAllFiles(data.get_notes_root_folder())
     files = [ f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md' ]

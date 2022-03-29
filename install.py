@@ -13,6 +13,93 @@ import platform
 
 # Do NOT import dcore from here ... first run it will not be available.
 
+def setupVi():
+    CONTENT = """
+" use global dir for swap files
+" if does not exist, will use current dir
+set directory^=$HOME/.vim/swapfiles//
+
+execute pathogen#infect()
+
+syntax on
+
+" set background=dark
+" colorscheme solarized
+
+" set background=light
+" colorscheme solarized
+
+" case
+set ignorecase
+set smartcase
+
+filetype indent plugin on
+" show existing tab with 4 spaces width
+set tabstop=4
+" " when indenting with '>', use 4 spaces width
+set shiftwidth=4
+" " On pressing tab, insert 4 spaces
+set expandtab
+
+" Shortcuts
+nnoremap <C-t> :tabedit %<cr>
+nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
+
+" F2: compile and run current file.
+autocmd FileType python nnoremap <F2> :wa!<cr>:exec '!python3' shellescape(@%, 1)<cr>
+autocmd FileType go nnoremap <F2> :wa!<cr>:!go run %<cr>
+autocmd FileType java nnoremap <F2> :wa!<cr>:!javarun %<cr>
+autocmd FileType cpp nnoremap <F2> :wa!<cr>:!cpprun %<cr>
+autocmd FileType llvmir nnoremap <F2> :wa!<cr>:!lli %<cr>
+autocmd FileType rust nnoremap <F2> :wa!<cr>:!cargo run<cr>
+
+" F3: format current file.
+autocmd FileType go nnoremap <F3> :w!<cr>:!go fmt %<cr>:e<cr>
+autocmd FileType java nnoremap <F3> :w!<cr>:!astyle % --indent=spaces<cr>:e<cr>
+autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive --aggressive %<cr>:e<cr>
+autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>:e<cr>
+autocmd FileType rust nnoremap <F3> :w!<cr>:!rustfmt %<cr>:e<cr>
+
+" F4: git commit.
+nnoremap <F4> :wa!<cr>:!git add -A :/ && git commit -a -m "vi-f4-commit"<cr>
+
+" F5 / F6 spellcheck
+nnoremap <F5> :set spell spelllang=en_us<cr>
+nnoremap <F6> :set nospell<cr>
+
+" some extension added other command that starts with E.
+" make it explicit here what I intend by E
+command! E Explore
+
+" === vi / Markdown ===
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+hi link markdownError NONE
+" for markdown files, do no highlight ** between ** asterix `*`.
+highlight link markdownItalic NONE
+
+" ctags. generate using ctags -R -f ctags .
+set tags=./ctags;
+
+" Instead of auto, just :FormatCode instead
+" " vim-codefmt
+" augroup autoformat_settings
+"     autocmd FileType bzl AutoFormatBuffer buildifier
+"     autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+"     autocmd FileType dart AutoFormatBuffer dartfmt
+"     autocmd FileType go AutoFormatBuffer gofmt
+"     autocmd FileType gn AutoFormatBuffer gn
+"     autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
+"     autocmd FileType java AutoFormatBuffer google-java-format
+"     autocmd FileType python AutoFormatBuffer yapf
+"     " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+"     autocmd FileType rust AutoFormatBuffer rustfmt
+"     autocmd FileType vue AutoFormatBuffer prettier
+" augroup END
+"""
+    env_setup.updateFileContentBetweenMarks(
+        os.path.expanduser('~/.vimrc'),
+        '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
+        '" DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
 
 def setupShortcutsBootstrap():
     """
@@ -120,7 +207,7 @@ HISTCONTROL=ignoreboth
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-cd ~/sync/dev
+cd ~/no_sync
 tmux
 """
     fname = data.getBashrcOrEquivalent()
@@ -153,74 +240,6 @@ bindsym XF86MonBrightnessDown exec nux low
         os.path.expanduser('~/.config/i3/config'),
         '# DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
         '# DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
-
-
-def setupVi():
-    CONTENT = """
-" use global dir for swap files
-" if does not exist, will use current dir
-set directory^=$HOME/.vim/swapfiles//
-
-execute pathogen#infect()
-
-syntax on
-
-" set background=dark
-" colorscheme solarized
-
-" set background=light
-" colorscheme solarized
-
-" case
-set ignorecase
-set smartcase
-
-filetype indent plugin on
-" show existing tab with 4 spaces width
-set tabstop=4
-" " when indenting with '>', use 4 spaces width
-set shiftwidth=4
-" " On pressing tab, insert 4 spaces
-set expandtab
-
-" Shortcuts
-nnoremap <C-t> :tabedit %<cr>
-nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
-
-" F2: compile and run current file.
-autocmd FileType python nnoremap <F2> :wa!<cr>:exec '!python3' shellescape(@%, 1)<cr>
-autocmd FileType go nnoremap <F2> :wa!<cr>:!go run %<cr>
-autocmd FileType java nnoremap <F2> :wa!<cr>:!javarun %<cr>
-autocmd FileType cpp nnoremap <F2> :wa!<cr>:!cpprun %<cr>
-autocmd FileType llvmir nnoremap <F2> :wa!<cr>:!lli %<cr>
-
-" F3: format current file.
-autocmd FileType go nnoremap <F3> :w!<cr>:!go fmt %<cr>:e<cr>
-autocmd FileType java nnoremap <F3> :w!<cr>:!astyle % --indent=spaces<cr>:e<cr>
-autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive --aggressive %<cr>:e<cr>
-autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>:e<cr>
-
-" F4: git commit.
-nnoremap <F4> :!gitpp<cr>
-
-" F5 / F6 spellcheck
-nnoremap <F5> :set spell spelllang=en_us<cr>
-nnoremap <F6> :set nospell<cr>
-
-" some extension added other command that starts with E.
-" make it explicit here what I intend by E
-command! E Explore
-
-" vi / Markdown
-au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
-
-" ctags. generate using ctags -R -f ctags .
-set tags=./ctags;
-"""
-    env_setup.updateFileContentBetweenMarks(
-        os.path.expanduser('~/.vimrc'),
-        '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
-        '" DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
 
 
 def setupTmux():
@@ -261,3 +280,4 @@ if __name__ == '__main__':
     setupVi()
     setupTmux()
     #setupGit()
+

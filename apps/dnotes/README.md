@@ -26,7 +26,6 @@ Addressed scenarios:
 	
 	/ingest.md: All notes captured go there. Feel free to copy / paste from your favorite note capturing tool (e.g. Word or Google Docs).
     
-    ::::::TODO: replace low -> auto
     /low/: Notes go there by default.
     
     /articles/: Move things there that are more important.

@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 """
 Rename files / folders with nice, commonly used patterns.
+
+# TODO
+
+- should be able to rename from a to b, e.g.:
+    - abc_file.pdf -> rename_files abc def -> def_file.pdf
 """
 
 import re

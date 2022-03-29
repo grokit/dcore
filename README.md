@@ -20,4 +20,6 @@ However, be aware that I make breaking changes all the time, so if you plan to u
 ## Links and References
 
 - See luid:::ns_note_search_notes_018273_dcore_and_ideas_328744
+    ns -u ns_note_search_notes_018273_dcore_and_ideas_328744
+
 

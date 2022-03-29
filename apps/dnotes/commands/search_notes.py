@@ -2,6 +2,10 @@
 Provide search and search + quick-action.
 
 - See luid:::ns_note_search_notes_018273_dcore_and_ideas_328744
+
+# BUGS
+- `engineering less` does not bring up lessons: engineering (since order different)
+- word in title or uuid should rank higher
 """
 
 import sys
@@ -9,6 +13,7 @@ import os
 import argparse
 import re
 import math
+import time
 
 import dcore.apps.dnotes.data as data
 import dcore.apps.dnotes.meta as meta
@@ -52,29 +57,14 @@ def getArgs():
                         '--open_uuid',
                         help='Find an open file with corresponding unique id.')
 
+    parser.add_argument('-f',
+                        '--filter',
+                        action='store_true',
+                        help='WIP -- custom filters.')
+
     # This is now sefault.
     #parser.add_argument('-o', '--open_matching_file', action='store_true')
     return parser.parse_args()
-
-
-def _manualSelect(matches, scores, nCut=30):
-
-    print(
-        'Select an item by entering its corresponding number. Enter cancels.')
-    i = 0
-
-    if len(matches) > nCut:
-        matches = matches[0:nCut]
-        print('Too many matches, cutting down to %s.' % len(matches))
-
-    for i in range(len(matches)):
-        print('%.2d (%.2f): %s' % (i, scores[i], matches[i].filename))
-
-    s = input()
-    if len(s) == 0: return None
-    s = int(s)
-
-    return matches[s]
 
 
 def _dedupMatches(matches):
@@ -111,6 +101,10 @@ if __name__ == '__main__':
 
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
     matches = _dedupMatches(matches)
+
+    if G_ARGS.filter:
+        print('WIP -- work in progress filters')
+        matches = [mm for mm in matches if mm.last_mod_unixseconds >= time.time() - 24 * 60 * 60 * 1]
 
     if G_ARGS.tag:
         filtered = []
@@ -155,6 +149,6 @@ if __name__ == '__main__':
                 print(explanations[i])
 
     if not open_first_matching_file and len(matches) > 1:
-        selected = _manualSelect(matches, scores, nCut)
+        selected = util.manualSelectMatchesScores(matches, scores, nCut)
 
     util.openInEditor(selected.filename)

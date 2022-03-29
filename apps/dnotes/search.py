@@ -21,6 +21,7 @@ class Match:
     def __init__(self, filename, lineContent):
         self.filename = filename
         self.line = lineContent
+        self.last_mod_unixseconds = os.path.getmtime(self.filename)
 
         # Lines around the match (optional).
         self.context = None

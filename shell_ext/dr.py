@@ -51,9 +51,6 @@ Other silimar Project: http://linuxgazette.net/109/marinov.html
 - CDPATH, try application `autojump`
 
 # BUGS
-
-- Old shortcuts not deleted.
-
 """
 
 _meta_shell_command = 'dr'
@@ -113,10 +110,6 @@ def rememberDirs():
     if os.path.isdir(path_ext_folder):
         for i, dir in enumerate(dirs):
 
-            # numerical labels: cd01, cd02, ...
-            new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
-            createSortcut(new_file, dir)
-
             # named labels: cddev, cdgame, ...
             if ',' in dir:
                 shortcut, unpacked_dir = dir.split(',')
@@ -124,6 +117,13 @@ def rememberDirs():
                 assert shortcut != 'l'
                 new_file = os.path.join(path_ext_folder, r'cd%s' % shortcut)
                 createSortcut(new_file, unpacked_dir)
+                # also create a numerical label
+                new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
+                createSortcut(new_file, unpacked_dir)
+            else:
+                # numerical labels: cd01, cd02, ...
+                new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
+                createSortcut(new_file, dir)
 
         # cdl always point to last folder
         new_file = os.path.join(path_ext_folder, r'cdl')
