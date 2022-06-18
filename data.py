@@ -57,10 +57,12 @@ def dcoreData():
 def taskTrackFolder():
     return os.path.join(dcoreData(), 'dtask_track')
 
-def dcoreBackupEnv():
+def dcoreBackupEnvironment():
     """
-    Consider just putting in `backups/rolling/env` and zip + encrypt since
-    could contain pws if typed by mistake in shell.
+    Where to put stuff which is not in the main backup root dir, but
+    we want to keep nevertheless. It gets copied there by the script.
+
+    WARNING: this directory will be auto-cleared each time by the script.
     """
     return os.path.expanduser('~/sync/archive/backups/rolling/env/auto')
 

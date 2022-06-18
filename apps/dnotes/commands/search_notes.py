@@ -100,6 +100,18 @@ if __name__ == '__main__':
         open_first_matching_file = True
 
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
+
+    if G_ARGS.search_only:
+        # Do this BEFORE _dedupMatches, otherwise, will not see when multiple matches
+        # in the same file.
+        for match in matches:
+            if G_ARGS.context_range == 0:
+                print(match.matchAsOneLiner())
+                print('')
+            else:
+                print(match.strWithLine())
+        sys.exit(0)
+
     matches = _dedupMatches(matches)
 
     if G_ARGS.filter:
@@ -116,14 +128,6 @@ if __name__ == '__main__':
 
         matches = filtered 
 
-    if G_ARGS.search_only:
-        for match in matches:
-            if G_ARGS.context_range == 0:
-                print(match.matchAsOneLiner())
-                print('')
-            else:
-                print(match.strWithLine())
-        sys.exit(0)
 
 
     scores = []
