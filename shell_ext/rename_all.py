@@ -46,6 +46,7 @@ def renameFileContent(filename, frm, to):
         print('renameFileContent ', filename)
     with open(filename, 'r') as fh:
         content = fh.read()
+    if frm not in content: return
     with open(filename, 'w') as fh:
         content = content.replace(frm, to)
         fh.write(content)

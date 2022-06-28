@@ -202,10 +202,7 @@ if __name__ == '__main__':
             exit(0)
 
         if len(picked) > 1:
-            print('Too many matches:')
-            for pick in picked:
-                print('\t%s' % pick)
-            print('Select folder to match:')
+            print('Too many matches, select folder to ingest to:')
             picked = [util.manualSelect(picked)]
 
         folder_out = picked[0]
