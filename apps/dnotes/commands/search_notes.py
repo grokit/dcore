@@ -121,7 +121,7 @@ if __name__ == '__main__':
     if G_ARGS.tag:
         filtered = []
         for match in matches:
-            metas = meta.extract(open(match.filename, 'r').read())
+            metas = meta.extract(match.filename, open(match.filename, 'r').read())
             for meta_ in metas:
                 if meta_.meta_type == 'tag' and meta_.value == G_ARGS.tag:
                     filtered.append(match)

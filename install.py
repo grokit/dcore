@@ -60,8 +60,8 @@ autocmd FileType python nnoremap <F3> :w!<cr>:!autopep8 --in-place --aggressive 
 autocmd FileType cpp nnoremap <F3> :w!<cr>:!clang-format -i %<cr>:e<cr>
 autocmd FileType rust nnoremap <F3> :w!<cr>:!rustfmt %<cr>:e<cr>
 
-" F4: git commit.
-nnoremap <F4> :wa!<cr>:!git add -A :/ && git commit -a -m "vi-f4-commit"<cr>
+" F4: git commit. WARNING: will change the current working directory of vi.
+nnoremap <F4> :wa!<CR>:cd %:p:h<CR>:!git add -A :/ && git commit -a -m :vi-f4-commit:<cr>
 
 " F5 / F6 spellcheck
 nnoremap <F5> :set spell spelllang=en_us<cr>

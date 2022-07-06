@@ -1,3 +1,7 @@
+"""
+Alternatives:
+- Clipboard integration between tmux, nvim, zsh, x11, across SSH sessions: https://news.ycombinator.com/item?id=32037489
+"""
 
 _meta_shell_command = 'clipb'
 

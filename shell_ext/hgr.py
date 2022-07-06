@@ -17,6 +17,19 @@ def getArgs():
     args = parser.parse_args()
     return args
 
+def is_time_annotation_line(line):
+    """
+    Some shell are configured to add date/time, e.g.:
+    #1656878732
+    # 1656878732
+    """
+    line = line.strip()
+    if line[0:1] == '#':
+        line = line[1:].strip()
+        if line.isnumeric():
+            return True
+    return False
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         args = getArgs()
@@ -43,4 +56,5 @@ if __name__ == '__main__':
     lst_filtered.reverse()
 
     for ll in lst_filtered:
-        print(ll)
+        if not is_time_annotation_line(ll):
+            print(ll)

@@ -18,4 +18,30 @@ def delCurrentShortcuts(tag):
             # print('Deleting script shortcut: %s.' % f)
             os.remove(f)
 
+def insert_cut(filename, cut_marker_start, cut_marker_end, to_insert_list, clobber=False):
+    """
+    clobber=True: erase what was previously between the markers.
+
+    returns: the whole file as string with the proper insertion.
+    """
+
+    lines = []
+    cut = []
+    for i, line in enumerate(open(filename, 'r').readlines()):
+        if cut_marker_start in line:
+            cut.append(i)
+        if cut_marker_end in line:
+            assert i > 0
+            cut.append(i)
+        lines.append(line)
+    assert len(cut) == 2
+    assert cut[1] > cut[0]
+
+    if clobber:
+        lines = lines[0:cut[0]+1] + to_insert_list + lines[cut[1]:]
+    else:
+        lines = lines[0:cut[0]+1] + to_insert_list + lines[cut[0]+1:]
+
+    return "".join(lines)
+
 
