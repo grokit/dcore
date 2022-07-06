@@ -18,6 +18,14 @@ Create a note document (or append to if already exists) in the note_db folder an
     
     $ nn -f filename
 
+# TODOs
+
+## As
+## Bs
+- nn replace the time meta
+## Cs
+
+
 """
 
 _meta_shell_command = 'nn'

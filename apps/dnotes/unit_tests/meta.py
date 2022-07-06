@@ -23,7 +23,7 @@ class Tests(unittest.TestCase):
         pre:::post
         """
 
-        meta = module_meta.extract(testDoc)
+        meta = module_meta.extract("fake.filename", testDoc)
         if False:
             for m in meta:
                 print(m)
@@ -46,7 +46,7 @@ class Tests(unittest.TestCase):
         - [item:::bookmark], discover classical art browse and download high-resolution public domain artworks, https://artvee.com/
         """
 
-        meta = module_meta.extract(testDoc)
+        meta = module_meta.extract("fake.filename", testDoc)
         if False:
             for m in meta:
                 print(m)

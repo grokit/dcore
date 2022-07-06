@@ -1,7 +1,5 @@
 """
-Meta is handled as <key><separator><value>. 
-
-Metadata is assumed to reduce to a set of (key, value) 2-tuple.
+This meta class has became the de-facto parser of filename -> metadata.
 """
 
 import re
@@ -13,7 +11,7 @@ class Meta:
     """
     This is one chunk of metadata.
     """
-    def __init__(self, meta_type, value, source_line):
+    def __init__(self, meta_type, value, source_line, source_file):
         """
         Example:
 
@@ -33,6 +31,8 @@ class Meta:
         self.meta_type = meta_type
         self.value = value
         self.source_line = source_line
+        self.source_filename = source_file
+
 
     def __str__(self):
         return str("%s: %s" % (self.meta_type, self.value))
@@ -41,7 +41,7 @@ class Meta:
         return self.__str__()
 
 
-def extract(content):
+def extract(orig_filename, content):
     """
     content -> T where T is a set of Meta.
 
@@ -82,7 +82,7 @@ def extract(content):
             R = [r.strip() for r in R]
 
             for r in R:
-                M.append(Meta(l, r, line))
+                M.append(Meta(l, r, line, orig_filename))
     return M
 
 

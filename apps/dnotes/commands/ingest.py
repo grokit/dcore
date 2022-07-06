@@ -83,7 +83,7 @@ class Note:
         title = None
         unixTime = None
 
-        note.meta = meta.metaToDict(meta.extract(note_fulltext))
+        note.meta = meta.metaToDict(meta.extract("fake.filename", note_fulltext))
 
         if 'time' in note.meta:
             if unixTime is None:

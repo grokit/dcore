@@ -311,7 +311,7 @@ def score(match, search_query, is_explain):
         lines = fh.readlines()
 
     # extract metadata
-    metadata = meta.extract("\n".join(lines))
+    metadata = meta.extract(match.filename, "\n".join(lines))
 
     total_score = 0
     explanation = []

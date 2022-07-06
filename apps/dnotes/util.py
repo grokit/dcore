@@ -3,6 +3,7 @@ import os
 import platform
 
 import dcore.apps.dnotes.data as data
+import dcore.apps.dnotes.meta as meta
 
 def _walkGatherAllFiles(rootdir='.'):
     F = []
@@ -14,6 +15,21 @@ def _walkGatherAllFiles(rootdir='.'):
 ################################################################################
 # PUBLIC
 ################################################################################
+
+
+def select_filename_by_uuid(uuid):
+    files = get_all_note_files()
+
+    filename = None
+    for ff in files:
+        metas = meta.extract(ff, open(ff).read())
+        for mm in metas:
+            if mm.meta_type == 'uuid':
+                if mm.value == uuid:
+                    assert filename is None
+                    filename = mm.source_filename
+    assert filename is not None
+    return filename
 
 
 def manualSelectMatchesScores(matches, scores, nCut=30):
@@ -56,7 +72,6 @@ def manualSelect(str_list, nCut=30):
     s = int(s)
 
     return str_list[s]
-
 
 def get_all_note_files():
     files = _walkGatherAllFiles(data.get_notes_root_folder())

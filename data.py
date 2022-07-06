@@ -57,6 +57,9 @@ def dcoreData():
 def taskTrackFolder():
     return os.path.join(dcoreData(), 'dtask_track')
 
+def automatic_backups_dir():
+    return os.path.expanduser('~/sync/archive/backups/auto')
+
 def dcoreBackupEnvironment():
     """
     Where to put stuff which is not in the main backup root dir, but
@@ -64,11 +67,14 @@ def dcoreBackupEnvironment():
 
     WARNING: this directory will be auto-cleared each time by the script.
     """
-    return os.path.expanduser('~/sync/archive/backups/rolling/env/auto')
+    return os.path.join(automatic_backups_dir(), 'env')
 
 
 def backup_phone_dir():
-    return os.path.expanduser('~/sync/archive/backups/rolling/phone/auto')
+    return os.path.join(automatic_backups_dir(), 'phone')
+
+def metrics_graphs_dir():
+    return os.path.join(automatic_backups_dir(), 'metrics_graphs')
 
 def pathExt():
     """
