@@ -53,8 +53,7 @@ if __name__ == '__main__':
 
     if len(filenames) == 0 or args.all:
         filenames += get_by_tag('now')
-
-    if not args.all:
+    else:
         tmp = get_by_tag('now')
         if len(tmp) > 0:
             print('Ignoring the following given flags or presence of `nowa`:')
