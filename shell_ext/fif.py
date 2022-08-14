@@ -47,7 +47,7 @@ cacheLoc = os.path.join(data.dcoreTempData(),
 # Before automatically force regenerating.
 cacheExpiryInSeconds = 7.0 * 24 * 60 * 60  
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('grep', type=str, nargs='*', default=None)
     parser.add_argument('-r',
@@ -119,7 +119,7 @@ def gen():
 
 
 def do():
-    args = getArgs()
+    args = get_args()
 
     F = None
     if not args.reset and os.path.isfile(cacheLoc):

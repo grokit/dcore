@@ -14,7 +14,7 @@ import re
 _meta_shell_command = 'ff'
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     """
     parser.add_argument('grep', type=str, nargs='*', default = None)

@@ -65,7 +65,7 @@ def extractFilesFuzzy(lines):
     return F
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s',
                         '--str_match',
@@ -117,7 +117,7 @@ def openFilesFromStdin():
 
 if __name__ == '__main__':
 
-    args = getArgs()
+    args = get_args()
 
     files = []
     if args.colon_open:

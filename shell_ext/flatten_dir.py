@@ -6,7 +6,7 @@ import shutil
 
 _meta_shell_command = 'flatten_dir'
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--apply', action="store_true", help='')
     return parser.parse_args()
@@ -18,7 +18,7 @@ def reduce_to_immediate(path):
     return rv
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
     files = list(glob.iglob('.' + '/**/*.**', recursive=True))
     files_mov = [(ff, os.path.split(ff)[1]) for ff in files]
     folders_rm = [reduce_to_immediate(os.path.split(ff)[0]) for ff in files]

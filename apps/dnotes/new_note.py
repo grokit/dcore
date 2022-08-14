@@ -53,7 +53,7 @@ def dateForAnnotation():
     return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t',
                         '--force_time_tagging',
@@ -74,7 +74,7 @@ def annotateDateIfNotAlreadyDone(file, force=False):
 
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
 
     fullpath = data.get_ingest_fullpath()
     util.createFolderIfNotExist(os.path.split(fullpath)[0])

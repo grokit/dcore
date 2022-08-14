@@ -26,7 +26,7 @@ import dcore.apps.dnotes.options as options
 _meta_shell_command = 'ns'
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='*')
     parser.add_argument('-C',
@@ -66,7 +66,7 @@ def getArgs():
 
 
 if __name__ == '__main__':
-    G_ARGS = getArgs()
+    G_ARGS = get_args()
 
 
     query = ""

@@ -14,7 +14,7 @@ _meta_shell_command = 'rename_all'
 DEBUG = True
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('f', help='from')
     parser.add_argument('t', help='to')
@@ -76,7 +76,7 @@ def getFiles():
 
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
     print(args)
     DEBUG = args.debug
 

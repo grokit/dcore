@@ -26,7 +26,7 @@ import dcore.apps.dnotes.bookmarks as bookmarks
 
 _meta_shell_command = 'book'
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('search_query', nargs='*')
     parser.add_argument(
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for i in range(80):
         print('')
     print('-'*60 + '````')
-    G_ARGS = getArgs()
+    G_ARGS = get_args()
 
     bmarks = bookmarks.get_bookmarks_matching(G_ARGS.search_query)
     for bb in bmarks:

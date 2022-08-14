@@ -25,7 +25,7 @@ import os
 _meta_shell_command = 'edits'
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('shortcut_to_edit')
     args = parser.parse_args()
@@ -55,7 +55,7 @@ def findExecutableScripts():
 
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
 
     editor = 'vi'
 

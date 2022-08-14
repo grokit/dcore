@@ -16,7 +16,7 @@ import time
 _meta_shell_command = 'rename_files'
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', nargs='?', default='remove_aggressive')
     parser.add_argument('rest', nargs='?')
@@ -164,7 +164,7 @@ if __name__ == '__main__':
         'order_by': order_by,
     }
 
-    args = getArgs()
+    args = get_args()
     mode = args.mode
 
     if args.file is not None:

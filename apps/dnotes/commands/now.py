@@ -18,7 +18,7 @@ _meta_shell_command = 'now'
 
 import sys
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-a',
@@ -47,7 +47,7 @@ def get_by_tag(tag):
 
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
 
     filenames = get_by_tag('nowa')
 

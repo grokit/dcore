@@ -10,7 +10,7 @@ import argparse
 _meta_shell_command = 'hgr'
 
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     # https://docs.python.org/3/library/argparse.html#nargs
     parser.add_argument('regex', nargs='+')
@@ -32,7 +32,7 @@ def is_time_annotation_line(line):
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        args = getArgs()
+        args = get_args()
         regex = " ".join(args.regex).strip()
     else:
         regex = '.*'

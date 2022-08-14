@@ -35,7 +35,7 @@ TIME_FORMAT = '%Y-%m-%d_%H:%M'
 #TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
 TIME_FORMAT_FOLDER_NAME = TIME_FORMAT.replace(":", "-")
 
-def getArgs():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('location_hint', nargs='*', default=None, help='Location hint for the folder does the note get created in (find best match based on a number of rules).')
     parser.add_argument('-o', '--output_folder', nargs=1, help='Specific output folder.')
@@ -164,7 +164,7 @@ def postChangeHook():
 
 
 if __name__ == '__main__':
-    args = getArgs()
+    args = get_args()
 
     if args.output_folder:
         assert args.location_hint is None
