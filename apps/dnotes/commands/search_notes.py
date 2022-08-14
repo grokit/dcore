@@ -62,20 +62,7 @@ def getArgs():
                         action='store_true',
                         help='WIP -- custom filters.')
 
-    # This is now sefault.
-    #parser.add_argument('-o', '--open_matching_file', action='store_true')
     return parser.parse_args()
-
-
-def _dedupMatches(matches):
-    dedup = {}
-    for m in matches:
-        dedup[m.filename] = m
-
-    dedup_matches = []
-    for k in dedup:
-        dedup_matches.append(dedup[k])
-    return dedup_matches
 
 
 if __name__ == '__main__':
@@ -102,7 +89,7 @@ if __name__ == '__main__':
     matches = search.extractMatchSetsFromFiles(files, query, G_ARGS.context_range)
 
     if G_ARGS.search_only:
-        # Do this BEFORE _dedupMatches, otherwise, will not see when multiple matches
+        # Do this BEFORE util.dedup_matches_to_one_per_file, otherwise, will not see when multiple matches
         # in the same file.
         for match in matches:
             if G_ARGS.context_range == 0:
@@ -112,7 +99,7 @@ if __name__ == '__main__':
                 print(match.strWithLine())
         sys.exit(0)
 
-    matches = _dedupMatches(matches)
+    matches = util.dedup_matches_to_one_per_file(matches)
 
     if G_ARGS.filter:
         print('WIP -- work in progress filters')
@@ -127,8 +114,6 @@ if __name__ == '__main__':
                     filtered.append(match)
 
         matches = filtered 
-
-
 
     scores = []
     explanations = []

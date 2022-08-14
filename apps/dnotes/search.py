@@ -6,7 +6,6 @@ A more complete abstraction would be to parse a Note class, against which it is 
 import os
 import argparse
 import re
-
 import math
 import inspect
 import pathlib
@@ -39,15 +38,22 @@ class Match:
     def matchAsOneLiner(self):
         return "%s\n%s" % (dcolor.green(self.filename), self.line.strip())
 
+    def __str__(self):
+        #return f'{self.filename}; {self.line[0:20]}...'
+        return self.strWithLine()
+
 
 ################################################################################
 # PUBLIC
 ################################################################################
 
 
-def sortMatchesByScore(matches, scores, explanation):
+def sortMatchesByScore(matches, scores, explanation=None):
     assert len(matches) == len(scores)
-    assert len(matches) == len(explanation)
+    if explanation is not None:
+        assert len(matches) == len(explanation)
+    else:
+        explanation = ['']*len(matches)
 
     pairs = list(zip(matches, scores, explanation))
     pairs = sorted(pairs, key=lambda x: x[1], reverse=True)

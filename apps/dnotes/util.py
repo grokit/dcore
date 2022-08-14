@@ -99,3 +99,12 @@ def openInEditor(noteFilename):
     assert rs == 0
 
 
+def dedup_matches_to_one_per_file(matches):
+    dedup = {}
+    for m in matches:
+        dedup[m.filename] = m
+
+    dedup_matches = []
+    for k in dedup:
+        dedup_matches.append(dedup[k])
+    return dedup_matches
