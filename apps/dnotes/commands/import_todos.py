@@ -51,21 +51,22 @@ if __name__ == '__main__':
     matches = search.extractMatchSetsFromFiles(filenames, f'todo{options.MSEP}')
 
     filename = util.select_filename_by_uuid('todo_r554')
-    todo_content = open(filename, 'r').read()
+    print(filename)
+    exit(0)
 
-    # note: will not put annotations in todo inside todo
-    matches = [mm for mm in matches if funky_filter(mm.line) and mm.line.strip() not in todo_content]
+    matches = [mm for mm in matches if funky_filter(mm.line) and mm.filename is not filename]
     matches = sorted(matches, key=lambda x: funky_sort(x.line), reverse=False)
 
     sep= '\n\t'
     for mm in matches:
         to_insert_list.append(f'{mm.filename}{sep}{mm.line.strip()}')
 
+    to_insert_list = [tt + '\n' for tt in to_insert_list]
+    print("".join(to_insert_list))
+
     cut_marker_begin = 'INSERT-TODO-A-BEGIN'
     cut_marker_end = 'INSERT-TODO-A-END'
-
-    to_insert_list = [tt + '\n' for tt in to_insert_list]
-    content = dutils.insert_cut(filename, cut_marker_begin, cut_marker_end, to_insert_list)
+    content = dutils.insert_cut(filename, cut_marker_begin, cut_marker_end, to_insert_list, clobber=True)
     with open(filename, 'w') as fh:
         fh.write(content)
 
