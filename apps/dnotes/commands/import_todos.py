@@ -21,6 +21,12 @@ def get_args():
     return parser.parse_args()
 
 def funky_sort(line):
+    """
+    Sort by post-separator string:
+
+    todo:a -> a
+    todo:b -> b
+    """
     line = line.lower()
     if options.MSEP not in line:
         return 'z'*10
