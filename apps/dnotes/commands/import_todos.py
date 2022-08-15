@@ -51,10 +51,8 @@ if __name__ == '__main__':
     matches = search.extractMatchSetsFromFiles(filenames, f'todo{options.MSEP}')
 
     filename = util.select_filename_by_uuid('todo_r554')
-    print(filename)
-    exit(0)
 
-    matches = [mm for mm in matches if funky_filter(mm.line) and mm.filename is not filename]
+    matches = [mm for mm in matches if funky_filter(mm.line) and mm.filename != filename]
     matches = sorted(matches, key=lambda x: funky_sort(x.line), reverse=False)
 
     sep= '\n\t'
