@@ -34,77 +34,21 @@ import argparse
 import tempfile
 import platform
 
+import dcore.fuzzy_extract as fuzzy_extract
+
 _meta_shell_command = 'vimt'
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    return parser.parse_args()
 
-def fromStdInIfData():
+def read_from_stdin():
     if not sys.stdin.isatty():
         return sys.stdin.read()
     return None
 
 
-def extractFilesFuzzy(lines):
-    F = set()
-    for l in lines:
-        l = l.strip()
-        if ':' in l:
-            l = l.split(':')[0]
-
-        # remove color marking if present
-        # see https://stackoverflow.com/questions/39473297/how-do-i-print-colored-output-with-python-3
-        if l[0:2] == '\033[':
-            l = l[2:]
-            i = l.find('m')
-            if i != -1: 
-                l = l[i+1:]
-                i = l.find('\033[')
-                if i != -1: 
-                    l = l[:i]
-        if os.path.isfile(l):
-            F.add(l)
-    return F
-
-
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-s',
-                        '--str_match',
-                        default=False,
-                        help='Open all files which has str_match in.')
-    parser.add_argument('-c', '--colon_open', action="store_true")
-    return parser.parse_args()
-
-
-def listFilesContainingString(s):
-    """
-    Look all files recursively and if has s, then return.
-    """
-
-    files = []
-    # warning: ignores files without extention
-    for filename in glob.iglob('**/*.**', recursive=True):
-        try:
-            with open(filename) as fh:
-                content = fh.read()
-                if s in content:
-                    files.append(filename)
-        except:
-            print('Skipping: %s.' % filename)
-    return files
-
-
-def colonOpen(s):
-    return listFilesContainingString(':' * 3)
-
-
-def openFilesFromStdin():
-    rd = fromStdInIfData()
-    if rd is None:
-        raise Exception(
-            "Not implemented: maybe some cool shortcut to open files in vim")
-
-    files = extractFilesFuzzy(rd.splitlines())
-
+def open_in_vim(files):
     # For some odd reason, this does not work with writing file.
     # Have to use alternate opening strategy which is limited to some OS.
     if platform.system().lower() == 'linux':
@@ -114,32 +58,17 @@ def openFilesFromStdin():
     print(cmd)
     os.system(cmd)
 
-
-if __name__ == '__main__':
-
+def do():
     args = get_args()
 
-    files = []
-    if args.colon_open:
-        files = colonOpen(args.str_match)
-    elif args.str_match:
-        files = listFilesContainingString(args.str_match)
-    else:
-        print('Reading from stdin...')
-        openFilesFromStdin()
-        exit(0)
+    data = read_from_stdin()
+    if data is None:
+        print('No stdin data. This util expects data to be piped-in.')
+        exit(-1)
+    files = fuzzy_extract.extract_files_fuzzy(data)
+    print(f'found: {files}')
 
-    print('Using files: %s.' % files)
-    if len(files) == 0:
-        print('No files.')
-        exit(0)
-    elif len(files) > 50:
-        print('Too many files, not opening.')
-        exit(0)
+    open_in_vim(files)
 
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        tmpfile = tmpdirname + '/.vimf'
-        open(tmpfile, 'w').write("\n".join(files))
-        cmd = 'vi -p `cat %s`' % tmpfile
-        print(cmd)
-        os.system(cmd)
+if __name__ == '__main__':
+    do()

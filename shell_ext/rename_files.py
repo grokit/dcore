@@ -63,6 +63,7 @@ def removeAggressive(filename, args, state):
         'â': 'a',
         '&': 'and',
         'é': 'e',
+        'ê': 'e',
         'è': 'e',
         'ô': 'o',
         'ç': 'c',

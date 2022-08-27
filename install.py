@@ -43,6 +43,7 @@ set expandtab
 
 " Shortcuts
 nnoremap <C-t> :tabedit %<cr>
+"" Flip between .h and .cc files.
 nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
 
 " F2: compile and run current file.

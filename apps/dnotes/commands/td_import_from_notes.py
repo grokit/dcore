@@ -34,12 +34,21 @@ def funky_sort(line):
 
 def funky_filter(line):
     line = line.lower()
-    if f'{options.MSEP}a' in line:
-        return True
-    if f'{options.MSEP}b' in line:
-        return True
-    if f'{options.MSEP}c' in line:
-        return True
+
+    if False:
+        """
+        Require a, b, or c after marker.
+        """
+        if f'{options.MSEP}a' in line:
+            return True
+        if f'{options.MSEP}b' in line:
+            return True
+        if f'{options.MSEP}c' in line:
+            return True
+    else:
+        if f'{options.MSEP}' in line:
+            return True
+
     return False
 
 if __name__ == '__main__':

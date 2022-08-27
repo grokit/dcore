@@ -9,10 +9,6 @@ import dcore.data as data
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()
 
-
-
-
-
 def genLogFilename():
     """
     This only works for long-lived processes:
@@ -40,7 +36,6 @@ def setup():
     rFileHandler = logging.handlers.TimedRotatingFileHandler(logFilename,
                                                              when='D',
                                                              interval=1)
-
     # Format
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
