@@ -10,6 +10,7 @@ One-run install of `dcore`.
 import sys
 import os
 import platform
+import shutil
 
 # Do NOT import dcore from here ... first run it will not be available.
 
@@ -45,6 +46,11 @@ set expandtab
 nnoremap <C-t> :tabedit %<cr>
 "" Flip between .h and .cc files.
 nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
+
+"" dvext 
+"" <leader> is `\`
+"" :nnoremap <leader>o :w<cr>:call DextOpenLink()<cr>
+:nnoremap <leader>o :call DextOpenLink()<cr>
 
 " F2: compile and run current file.
 autocmd FileType python nnoremap <F2> :wa!<cr>:exec '!python3' shellescape(@%, 1)<cr>
@@ -101,6 +107,16 @@ set tags=./ctags;
         os.path.expanduser('~/.vimrc'),
         '" DCORE_SECTION_BEGIN_8ygmfmsu926z06ym',
         '" DCORE_SECTION_END_8ygmfmsu926z06ym', CONTENT)
+
+    VI_EXT_LOCATION = os.path.expanduser('~/.vim/bundle/dvext')
+    if os.path.exists(VI_EXT_LOCATION):
+        shutil.rmtree(VI_EXT_LOCATION)
+
+    
+    # avoid using any data folder
+    this_file_dir = os.path.dirname(__file__)
+    src_loc = os.path.abspath(os.path.join(this_file_dir, 'vim_extensions/dvext'))
+    shutil.copytree(src_loc, VI_EXT_LOCATION)
 
 def setupShortcutsBootstrap():
     """

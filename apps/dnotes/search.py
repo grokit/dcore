@@ -14,6 +14,7 @@ import dcore.dcolor as dcolor
 
 import dcore.apps.dnotes.data as data
 import dcore.apps.dnotes.util as util
+import dcore.apps.dnotes.meta as meta
 
 
 class Match:
@@ -47,6 +48,23 @@ class Match:
 # PUBLIC
 ################################################################################
 
+def get_filenames_matching_meta(meta_key, meta_value):
+    """
+    E.g. key: uuid, value: 123456789
+    """
+    files = util.get_all_note_files()
+
+    files_matching = []
+
+    for ff in files:
+        metas = meta.extract(ff, open(ff).read())
+        for mm in metas:
+            if mm.meta_type == meta_key:
+                if mm.value == meta_value:
+                    filename = mm.source_filename
+                    files_matching.append(filename)
+
+    return files_matching
 
 def sortMatchesByScore(matches, scores, explanation=None):
     assert len(matches) == len(scores)

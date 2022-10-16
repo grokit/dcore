@@ -37,8 +37,7 @@ def extract_files_fuzzy(data, is_file_fn = None):
     for line in lines:
         line = line.strip()
         line = __rm_color(line)
-        if False:
-            line = __rm_colon(line)
+        line = __rm_colon(line)
 
         if is_file_fn(line):
             files.add(line)
