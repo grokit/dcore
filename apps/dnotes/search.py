@@ -98,11 +98,24 @@ def extractMatchSetsFromFiles(files, query, context_range = 5):
                 matches.append(Match(filename, ""))
             else:
                 for line in lines:
-                    m = re.search(query, line, re.IGNORECASE)
-                    if m is not None:
-                        g = m.group(0)
+                    match = None
+
+                    # regex
+                    mm = re.search(query, line, re.IGNORECASE)
+                    if mm is not None:
                         match = Match(filename, line)
 
+                    # check different orders
+                    query_chunk = query.split(' ')
+                    query_chunk = [qc for qc in query_chunk if len(qc) > 0]
+                    n_match = 0
+                    for chunk in query_chunk:
+                        if chunk in line:
+                            n_match += 1
+                    if len(query_chunk) > 0 and n_match / len(query_chunk) == 1.0:
+                        match = Match(filename, line)
+
+                    if match is not None:
                         ctx = []
                         cr = context_range
                         if cr % 2 == 1:

@@ -74,9 +74,16 @@ def manualSelect(str_list, nCut=30):
     return str_list[s]
 
 def get_all_note_files():
-    files = _walkGatherAllFiles(data.get_notes_root_folder())
-    files = [ f for f in files if os.path.splitext(os.path.split(f)[1])[1] == '.md' ]
-    # TODO: *might* consider removing files from get_notes_archive_folder() (if gets slow or noisy).
+    files = []
+
+    files += _walkGatherAllFiles(data.get_notes_root_folder())
+
+    for loc in data.get_notes_folders_ext():
+        files += _walkGatherAllFiles(loc)
+
+    files = [ff for ff in files if os.path.splitext(os.path.split(ff)[1])[1] == '.md' ]
+    files = list(set(files))
+
     return files
 
 def createFolderIfNotExist(folder):

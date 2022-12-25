@@ -65,6 +65,7 @@ def removeAggressive(filename, args, state):
         'é': 'e',
         'ê': 'e',
         'è': 'e',
+        'ë': 'e',
         'ô': 'o',
         'ç': 'c',
         'Ä': 'A',
@@ -123,8 +124,10 @@ def date(f, args, state):
     return "%s_%s" % (t, f)
 
 
-def custom(f, args, state):
-    return f.replace('__', '_')
+def custom(ff, args, state):
+    ff = ff.replace('_', '')
+    ff = ff.replace('-', '')
+    return ff
 
 def sequence(f, args, state):
     """

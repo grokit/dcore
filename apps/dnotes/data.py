@@ -31,6 +31,11 @@ def get_notes_root_folder():
 
     return dataLocation
 
+def get_notes_folders_ext():
+    out = []
+    out.append(os.path.expanduser('~/sync/dev/windows_computer/sync_w_win'))
+    return out
+
 def get_notes_low_folder():
     return os.path.join(get_notes_root_folder(), 'low')
 
