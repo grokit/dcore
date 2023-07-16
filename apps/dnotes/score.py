@@ -142,6 +142,7 @@ class __ScorerSpecialTags(__ScorerBase):
 
 class __ScorerTopLevelFolder(__ScorerBase):
     def score(self, search_query, lines, metadata, line, fullpath):
+        # todo:::b1 -- definitely a bug here; sometimes scoring is wrong
         score = 0
 
         # Bonus if query matches the top level folder.
