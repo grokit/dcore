@@ -140,27 +140,6 @@ class __ScorerSpecialTags(__ScorerBase):
         return 3.0
 
 
-class __ScorerTopLevelFolder(__ScorerBase):
-    def score(self, search_query, lines, metadata, line, fullpath):
-        # todo:::b1 -- definitely a bug here; sometimes scoring is wrong
-        score = 0
-
-        # Bonus if query matches the top level folder.
-        folderName = os.path.split(fullpath)[0]
-        if '/' in folderName:
-            folderName = folderName.split('/')[-1]
-            if re.search(search_query, folderName, re.IGNORECASE):
-                score = 1.0
-
-        # Future: might get some points for matching other folders,
-        #         but less and less as goes up to notes root.
-
-        return score
-
-    def get_importance(self):
-        return 1.0
-
-
 class __ScorerLastModifiedTime(__ScorerBase):
     """
     Something modified more recently is more relevant.
@@ -201,27 +180,55 @@ class __ScorerPathFolder(__ScorerBase):
         # /folder since /folder/ happens for last folder.
         if _isLineTitle(line):
             score += 0.2
-        if '/articles' in path:
+        if '/articles/' in path:
             # Improve: use os.path.commonprefix([]) and get_notes_archive_folder(), get_notes_low_folder(), ...
             score += 0.5
-        if 'quality_b' in path:
+        if '/quality_b/' in path:
             score -= 0.3
-        if 'quality_c' in path:
+        if '/quality_c/' in path:
             score -= 0.4
-        if '/low' in path:
-            score -= 0.4
-        if '/done' in path:
+        if '/low/' in path:
+            score -= 0.8
+        if '/done/' in path:
             score -= 0.3
-        if 'archived' in path:
+        if '/archived/' in path:
             score -= 0.7
-        if 'deprecate' in path:
-            # also matches deprecated
+        if '/deprecate/' in path:
+            score -= 0.7
+        if '/deprecated/' in path:
             score -= 0.7
 
-        score = min(1.0, score)
-        score = max(-1.0, score)
+        if score > 1.0:
+            score = 1.0
+        if score < -1.0:
+            score = -1.0
 
         return score
+
+    def get_importance(self):
+        return 3.0
+
+class __ScorerPathFolderInQuery(__ScorerBase):
+    def score(self, search_query, lines, metadata, line, fullpath):
+        score = 0
+        path = os.path.split(fullpath)[0]
+
+        # path: aa/bb/cc if query is cc or bb, score is higher
+        path_chunk = path.split(os.path.sep)
+        for cc in search_query.split(' '):
+            for i, pp in enumerate(path_chunk):
+                if cc in pp:
+                    score += 0.8 * (i+1) / len(path_chunk)
+
+        if score > 1.0:
+            score = 1.0
+        if score < -1.0:
+            score = -1.0
+
+        return score
+
+    def get_importance(self):
+        return 5.0
 
 class __ScorerFilename(__ScorerBase):
     """
@@ -304,7 +311,7 @@ def score(match, search_query, is_explain):
     scorers.append(__ScorerFilename())
     # Folders
     scorers.append(__ScorerPathFolder())
-    scorers.append(__ScorerTopLevelFolder())
+    scorers.append(__ScorerPathFolderInQuery())
     # Time
     scorers.append(__ScorerLastModifiedTime())
 
