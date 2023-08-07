@@ -1,5 +1,6 @@
 
 import vim
+import webbrowser
 
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.options as options
@@ -35,10 +36,21 @@ def get_curr_word():
 
     return line[i_left:i_right]
 
+def _remove_paren(ww):
+    if ww[0] == '(':
+        ww = ww[1:]
+    if ww[-1] == ')':
+        ww = ww[0:-1]
+    if ww[0] == '[':
+        ww = ww[1:]
+    if ww[-1] == ']':
+        ww = ww[0:-1]
+    return ww
 
 def open_link():
     word = get_curr_word().strip()
-    print(f'got: `{word}`')
+    print(f'got v2: `{word}` -> {_remove_paren(word)}')
+    word = _remove_paren(word)
 
     filenames_matched = []
     if options.MSEP in word:
@@ -48,11 +60,20 @@ def open_link():
             # luid = search for related uuid
             if meta_key == 'luid':
                 meta_key = 'uuid'
+            if meta_key == 'lloc':
+                meta_key = 'loc'
             filenames_matched += search.get_filenames_matching_meta(meta_key, meta_value)
 
+    matched_once = False
     for filename in filenames_matched:
-        #vim.command(f':e {uuid_filename}')
         vim.command(f':tabe {filename}')
+        matched_once = True
+
+    if not matched_once:
+        if len(word.split('/')) == 2:
+            pre, post = word.split('/')
+            if pre in set(['go', 'b']):
+                webbrowser.open(f'http://{word}')
 
 def test_print():
     print('hello vim')
