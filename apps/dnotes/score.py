@@ -325,6 +325,7 @@ def score(match, search_query, is_explain):
     explanation = []
     if is_explain:
         explanation = [match.filename]
+
     for scorer in scorers:
         score = scorer.score(search_query, lines, metadata, match.line,
                              match.filename)
@@ -344,4 +345,8 @@ def score(match, search_query, is_explain):
                 score * scorer.get_importance()), scorer.__class__.__name__))
         total_score += score * scorer.get_importance()
 
-    return total_score, "\n".join(explanation)
+    tot_importance = 0
+    for scorer in scorers:
+        tot_importance += scorer.get_importance()
+
+    return total_score / tot_importance, "\n".join(explanation)
