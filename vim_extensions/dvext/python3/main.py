@@ -72,8 +72,19 @@ def open_link():
     if not matched_once:
         if len(word.split('/')) == 2:
             pre, post = word.split('/')
-            if pre in set(['go', 'b']):
+            if pre in set(['go', 'b', 'cl']):
                 webbrowser.open(f'http://{word}')
+                matched_once = True
+
+    if not matched_once:
+        if word[0:7] == 'http://' or word[0:8] == 'https://':
+            webbrowser.open(f'{word}')
+            matched_once = True
+
+    if not matched_once:
+        if word[0:5] == 'b/hot':
+            webbrowser.open(f'http://{word}')
+            matched_once = True
 
 def test_print():
     print('hello vim')
