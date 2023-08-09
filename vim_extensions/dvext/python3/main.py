@@ -26,17 +26,22 @@ def get_curr_word():
     i_left = 0
     i_right = len(line)
 
+    sep = set([' ', '\t'])
     for j in range(col, len(line)):
-        if line[j] == ' ': break
+        if line[j] in sep: break
         i_right = j+1
 
     for j in range(col, -1, -1):
-        if line[j] == ' ': break
+        if line[j] in sep: break
         i_left = j
 
     return line[i_left:i_right]
 
 def _remove_paren(ww):
+    # Don't mess with URLs (they would end with paren).
+    if ww.startswith('http'):
+        return ww
+
     if ww[0] == '(':
         ww = ww[1:]
     if ww[-1] == ')':
@@ -45,6 +50,7 @@ def _remove_paren(ww):
         ww = ww[1:]
     if ww[-1] == ']':
         ww = ww[0:-1]
+
     return ww
 
 def open_link():
