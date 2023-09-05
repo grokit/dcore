@@ -156,9 +156,12 @@ def do():
             if len(F) > 1:
                 open_ith = int(input('Open which one?\n'))
 
-            f = F[open_ith]
+            ff = F[open_ith]
 
-            cmd = 'xdg-open %s& >/dev/null 2>&1' % f
+            app = 'xdg-open'
+            if os.path.splitext(ff)[1] == '.webm':
+                app = 'vlc'
+            cmd = f'{app} {ff}& >/dev/null 2>&1' 
             print(cmd)
             os.system(cmd)
 

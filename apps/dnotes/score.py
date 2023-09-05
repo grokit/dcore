@@ -30,23 +30,26 @@ class __ScorerBase:
 ################################################################################
 
 
-class __ScorerTitleOrTopOfDocument(__ScorerBase):
+class __ScorerInTitle(__ScorerBase):
     """
-    If something is on upper title: important.
-    If it's in a later title: proportional to how low in document
-        and what level title.
+    When the query matches a title or section.
+    
+    - Higher score for # vs. ## headings.
+    - Higher score for first heading (soft implemented).
     """
     def score(self, search_query, lines, metadata, line, fullpath):
         score = 0
 
         # Bonus if in title, even better if towards beginning of file.
         for i, ll in enumerate(lines):
+            ll = ll.strip()
             titleMatchBonus = 0
             rmatch = re.search(search_query, ll, re.IGNORECASE)
 
             if rmatch is not None:
                 level = _titleLevel(ll)
-
+                if level == 0:
+                    continue
                 multiplier_pos_in_document = 1 - (min(i, 100) / 100)
                 multiplier_pos_in_document *= multiplier_pos_in_document
                 titleMatchBonus = multiplier_pos_in_document * (0.5 *
@@ -57,8 +60,7 @@ class __ScorerTitleOrTopOfDocument(__ScorerBase):
                 if search_query in ll:
                     titleMatchBonus += 0.2
 
-            score += titleMatchBonus
-
+                score += titleMatchBonus
         return score
 
     def get_importance(self):
@@ -302,7 +304,7 @@ def score(match, search_query, is_explain):
 
     scorers = []
     # Content
-    scorers.append(__ScorerTitleOrTopOfDocument())
+    scorers.append(__ScorerInTitle())
     scorers.append(__ScorerLinesMentions())
     # Tags
     scorers.append(__ScorerTagsAndUUID())
