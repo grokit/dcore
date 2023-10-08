@@ -10,6 +10,7 @@ import math
 import time
 
 import dcore.osrun as osrun 
+import dcore.data as dcore_data
 import dcore.apps.dnotes.data as data
 import dcore.apps.dnotes.meta as meta
 import dcore.apps.dnotes.score as score
@@ -43,12 +44,16 @@ def process_git_log_output(stdout, root_folder):
     Out: array with raw output but small details such as normalized lines.
     """
 
+    #path_ext = dcore_data.pathExt()
+
     out = []
     for line in stdout.splitlines():
         line = line.strip()
         if len(line) == 0: continue
         line = os.path.join(root_folder, line)
         line = os.path.abspath(line)
+        # print(path_ext, line)
+        #if path_ext in line: continue
         out.append(line)
     return out
 
@@ -84,11 +89,14 @@ if __name__ == '__main__':
     else:
         root_folder = '.'
 
+    if False:
+        print(f'Using root_folder: {root_folder}.')
+
     overshoot = 100
     if G_ARGS.stats:
         overshoot = 1000
     # Note: -n {G_ARGS.num_files} is actually the number of previous commits looked at.
-    rv, stdout, stderr = osrun.executeCmd(f"git log -n {G_ARGS.num_files + overshoot} --name-only --pretty=format:''")
+    rv, stdout, stderr = osrun.executeCmd(f"git log -n {G_ARGS.num_files + overshoot} --name-only --relative --pretty=format:'' .")
     assert rv == 0
     assert len(stderr) == 0
 
