@@ -4,9 +4,6 @@ uuid:::811239781239273192873819231
 Other tools:
 - pdfarranger is really great at rotating and re-arranging pages.
     - sudo apt install pdfarranger
-
-TODO:
-    - convert to grayscale: convert -density 100 -colorspace Gray in.pdf out.pdf (could also do it to lower resolution)
 """
 import os
 import argparse
@@ -31,7 +28,7 @@ def compress(args):
     input_file = args.file[0]
     output_file =  _gen_output_file(input_file, '_compressed')
     QUALITY = 'screen' # 72 dpi
-    #QUALITY = 'ebook' # 150 dpi
+    QUALITY = 'ebook' # 150 dpi
     CMD = f'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/{QUALITY} -dNOPAUSE -dQUIET -dBATCH -sOutputFile={output_file} {input_file}'
 
     print(CMD)
@@ -66,11 +63,19 @@ def join(args):
     print(CMD)
     os.system(CMD)
 
+def grayscale(args):
+    input_file = args.file[0]
+    output_file =  _gen_output_file(input_file, '_grayscale')
+    CMD = f' gs -sDEVICE=pdfwrite -sProcessColorModel=DeviceGray -sColorConversionStrategy=Gray -dOverrideICC  -o {output_file} -f {input_file}'
+    print(CMD)
+    os.system(CMD)
+
 COMMANDS = {
         'compress': compress,
         'rotate': rotate,
         'split': split,
         'join': join,
+        'grayscale': grayscale,
         }
 
 if __name__ == '__main__':

@@ -125,3 +125,7 @@ User pandoc to convert .docx to Markdown. I have an utility that helps convertin
 
 - In ./unit_tests, see https://docs.python.org/3/library/unittest.html
 
+# Alternatives
+
+- One Note
+- Obsidian

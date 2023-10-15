@@ -132,14 +132,14 @@ class __ScorerSpecialTags(__ScorerBase):
             elif metad.meta_type == 'tag' and metad.value == 'now':
                 score += 0.3
             elif metad.meta_type == 'tag' and metad.value == 'important':
-                score += 0.7
-            elif metad.meta_type == 'tag' and metad.value == 'xtop':
+                score += 0.85
+            elif metad.meta_type == 'tag' and metad.value == 'very_important':
                 score += 1.0
 
         return score
 
     def get_importance(self):
-        return 3.0
+        return 5.0
 
 
 class __ScorerLastModifiedTime(__ScorerBase):
@@ -336,7 +336,7 @@ def score(match, search_query, is_explain):
             explanation.append("%s, %s, weight: %.2f" % ("{:6.2f}".format(
                 score * scorer.get_importance()), scorer.__class__.__name__, scorer.get_importance()))
 
-        # Bound. Eventually, warn if it's out of bound...
+        # Bound to [-1.0 ... 1.0]. Eventually, warn if it's out of bound...
         if score < -1.0:
             score = -1.0
         if score > 1.0:

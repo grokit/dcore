@@ -12,6 +12,17 @@ import sys
 import os
 import platform
 
+def cls_file_delimiter():
+    """
+    This is used to delineate a marker in a file.
+    First use is in CLS to prevent capturing before the last CLS.
+
+    It can be used in the future as the generic delimiter in files.
+    """
+    return '===' + '=-' * 20 + '-DELIMITER-' + '=-' * 20 + '==='
+
+def sync_root():
+    return os.path.expanduser('~/sync')
 
 def getBashrcOrEquivalent():
     """
@@ -44,7 +55,7 @@ def dcoreExtRoot():
 
 
 def dcoreTempData():
-    return os.path.abspath(os.path.expanduser('~/sync/dcore_data_temp'))
+    return os.path.abspath(os.path.join(sync_root(), 'dcore_data_temp'))
 
 
 def logsdir():
@@ -52,13 +63,13 @@ def logsdir():
 
 
 def dcoreData():
-    return os.path.abspath(os.path.expanduser('~/sync/dcore_data'))
+    return os.path.abspath(os.path.join(sync_root(), 'dcore_data'))
 
 def taskTrackFolder():
     return os.path.join(dcoreData(), 'dtask_track')
 
 def automatic_backups_dir():
-    return os.path.expanduser('~/sync/archive/backups/auto')
+    return os.path.join(sync_root(), 'archive/backups/auto')
 
 def dcoreBackupEnvironment():
     """
@@ -105,3 +116,7 @@ def createAllDirsIfNotExist():
     for dData in getDirs():
         print('Creating %s if not exist.' % dData)
         createDirIfNotExist(dData)
+
+
+if __name__ == '__main__':
+    print(dcoreData())

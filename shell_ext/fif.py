@@ -21,13 +21,15 @@ fif -O <file> will open the file with default application if there is only 1 mat
         marks file qith unique id
         warn on console if > 1 with same id on disk
 
+- formalize data structure (could be just python freeze or flat 1 liner separated by commas)
+- also store last mod as metadata
+- also store hash (async, and can do 1MB at a time in files)
+    - could / should use as a common library ("progressive hash")
+- be able to tell when files are added, deleted, moved, etc -> leave a journal behind (I have an old script that does that, could revive it)
+
 # BUGS
 
-- It does not intex and list files that begin with .period.
-
-- I should retire this for much simpler:
-    - Store all fullpaths.
-    - Search with regex.
+- It does not index and/or list files that begin with .period.
 """
 
 import os
@@ -37,10 +39,11 @@ import datetime
 import platform
 
 import dcore.data as data
+import dcore.utils as utils
 
 _meta_shell_command = 'fif'
 
-search_roots = [r'~/sync']
+search_roots = [data.sync_root()]
 cacheLoc = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
 
@@ -157,19 +160,7 @@ def do():
                 open_ith = int(input('Open which one?\n'))
 
             ff = F[open_ith]
-
-            app = 'xdg-open'
-            if os.path.splitext(ff)[1] == '.webm':
-                app = 'vlc'
-            cmd = f'{app} {ff}& >/dev/null 2>&1' 
-            print(cmd)
-            os.system(cmd)
-
-        if args.vi is True:
-            for f in F:
-                cmd = 'vi %s' % f
-                os.system(cmd)
-
+            utils.open_file_autoselect_app(ff)
 
 if __name__ == '__main__':
     do()

@@ -45,3 +45,19 @@ def insert_cut(filename, cut_marker_start, cut_marker_end, to_insert_list, clobb
     return "".join(lines)
 
 
+
+def open_file_autoselect_app(filename):
+    app = 'xdg-open'
+    if os.path.splitext(filename)[1] in set(['.webm', '.mp4']):
+        app = 'mpv'
+    elif os.path.splitext(filename)[1] in set(['.md', '.txt']):
+        # vi: would need to fix console issues
+        # app = 'vi'
+        pass
+    elif os.path.splitext(filename)[1] == '.pdf':
+        app = 'okular'
+    else:
+        app = 'gio open'
+    cmd = f'{app} {filename}& >/dev/null 2>&1' 
+    print(cmd)
+    os.system(cmd)
