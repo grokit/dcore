@@ -47,6 +47,7 @@ def insert_cut(filename, cut_marker_start, cut_marker_end, to_insert_list, clobb
 
 
 def open_file_autoselect_app(filename):
+    # app = 'gio open'
     app = 'xdg-open'
     if os.path.splitext(filename)[1] in set(['.webm', '.mp4']):
         app = 'mpv'
@@ -56,8 +57,6 @@ def open_file_autoselect_app(filename):
         pass
     elif os.path.splitext(filename)[1] == '.pdf':
         app = 'okular'
-    else:
-        app = 'gio open'
     cmd = f'{app} {filename}& >/dev/null 2>&1' 
     print(cmd)
     os.system(cmd)
