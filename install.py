@@ -266,6 +266,8 @@ set -g mouse on
 set -g status-bg colour17
 set -g status-fg colour38
 set-window-option -g mode-keys vi
+
+set-option -g history-limit 1000000
 """
     env_setup.updateFileContentBetweenMarks(
         os.path.expanduser('~/.tmux.conf'),
