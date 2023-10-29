@@ -19,14 +19,8 @@ import argparse
 def getCommandLineArguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        '-m',
-        '--milliseconds_mode',
-        action="store_true",
-        help='Use milliseconds instead of seconds since epoch.')
-
     parser.add_argument('time',
-                        type=int,
+                        type=float,
                         nargs='?',
                         help='Unix time to transform to readable date-time.')
 
@@ -36,11 +30,13 @@ def getCommandLineArguments():
 
 
 def unixTimeToReadeableStr(unix_time):
-    if unix_time > 2**35:  # limitation of time.ctime
-        raise ValueError("unix_time: %s is too large" % unix_time)
+    while unix_time > 2**35:  # limitation of time.ctime
+        #raise ValueError("unix_time: %s is too large" % unix_time)
+        unix_time = unix_time/1000
 
-    dtc = datetime.datetime(*(time.gmtime(unix_time))[:6]).isoformat()
-    return "localtime: %s\nutc time: %s" % (time.ctime(unix_time), dtc)
+    dtc_local = (datetime.datetime.utcfromtimestamp(unix_time) +datetime.timedelta(seconds=datetime.datetime.now().astimezone().utcoffset().total_seconds())).astimezone()
+    dtc = datetime.datetime.utcfromtimestamp(unix_time)
+    return "localtime: %s\nutc time : %s" % (dtc_local, dtc)
 
 
 if __name__ == '__main__':
@@ -52,8 +48,5 @@ if __name__ == '__main__':
         print(time.time())
         exit(0)
 
-    unixTime = int(args.time)
-    if args.milliseconds_mode:
-        unixTime = unixTime / 1000
-
+    unixTime = float(args.time)
     print(unixTimeToReadeableStr(unixTime))
