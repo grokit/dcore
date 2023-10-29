@@ -1,5 +1,6 @@
 import datetime
 import os
+import platform
 
 import dcore.data as data
 
@@ -60,3 +61,13 @@ def open_file_autoselect_app(filename):
     cmd = f'{app} {filename}& >/dev/null 2>&1' 
     print(cmd)
     os.system(cmd)
+
+
+def openInEditor(noteFilename):
+    if platform.system() == 'Windows':
+        cmd = 'notepad %s' % noteFilename
+    else:
+        cmd = 'vi %s' % noteFilename
+    rs = os.system(cmd)
+    assert rs == 0
+

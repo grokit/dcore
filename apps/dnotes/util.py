@@ -97,15 +97,6 @@ def createFileIfNotExist(file):
         with open(file, 'w') as fh:
             fh.write('')
 
-def openInEditor(noteFilename):
-    if platform.system() == 'Windows':
-        cmd = 'notepad %s' % noteFilename
-    else:
-        cmd = 'vi %s' % noteFilename
-    rs = os.system(cmd)
-    assert rs == 0
-
-
 def dedup_matches_to_one_per_file(matches):
     dedup = {}
     for m in matches:

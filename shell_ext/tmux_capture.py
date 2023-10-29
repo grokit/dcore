@@ -1,13 +1,27 @@
+"""
+tmux_capture: capture tmux content to a file.
 
+# TODO
+"""
 import os
 import datetime
+import argparse
 
 import dcore.data as data
+import dcore.utils as utils
 
 _meta_shell_command = 'tmux_capture'
 
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o', '--open', action='store_true', help='Open the file in a text editor after capture.')
+    parser.add_argument('-c', '--cat', action='store_true', help='Print the file after capture.')
+    args = parser.parse_args()
+    return args
+
 _SAFESET = set('0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 def safeset(ss):
+    # TODO: replace with data.date_safe_for_filename()
     out = []
     for cc in ss:
         if cc in _SAFESET:
@@ -24,6 +38,7 @@ def find(folder, pattern, i):
 
 if __name__ == '__main__':
     folder = os.path.join(data.logsdir(), 'tmux')
+    G_ARGS = get_args()
     data.createDirIfNotExist(folder)
 
     pattern = 'tmux_capture'
@@ -33,7 +48,7 @@ if __name__ == '__main__':
         i += 1
         filename = find(folder, pattern, i)
 
-    cmd = f'tmux capture-pane -S -1000000 && tmux save-buffer {filename}'
+    cmd = f'tmux capture-pane -J -S- -E- && tmux save-buffer {filename}'
     print(cmd)
     os.system(cmd)
 
@@ -49,5 +64,13 @@ if __name__ == '__main__':
     if found_delim:
         with open(filename, 'w') as fh:
             fh.write("".join(out))
+
+    if G_ARGS.open:
+        utils.openInEditor(filename)
+    if G_ARGS.cat:
+        with open(filename, 'r') as fh:
+            for line in fh.readlines():
+                print(line, end='')
+
 
 

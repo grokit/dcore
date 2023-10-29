@@ -22,6 +22,8 @@ import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
 
+import dcore.utils as utils 
+
 # ns: note search
 _meta_shell_command = 'ns'
 
@@ -140,4 +142,4 @@ if __name__ == '__main__':
     if not open_first_matching_file and len(matches) > 1:
         selected = util.manualSelectMatchesScores(matches, scores, nCut)
 
-    util.openInEditor(selected.filename)
+    utils.openInEditor(selected.filename)

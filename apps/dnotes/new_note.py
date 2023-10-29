@@ -35,10 +35,12 @@ import datetime
 import argparse
 import shutil
 
+# ? why not normal absolute path?
 import data
 import util
-
 import options
+
+import dcore.utils as utils 
 
 
 def dateForFile():
@@ -81,4 +83,4 @@ if __name__ == '__main__':
     util.createFileIfNotExist(fullpath)
 
     annotateDateIfNotAlreadyDone(fullpath, args.force_time_tagging)
-    util.openInEditor(fullpath)
+    utils.openInEditor(fullpath)

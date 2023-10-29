@@ -9,6 +9,8 @@ A shortlist of items tagged as now and/or pinned with nowa tag.
 import os
 import argparse
 
+import dcore.utils as utils   
+
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.meta as meta
 import dcore.apps.dnotes.util as util
@@ -86,6 +88,6 @@ if __name__ == '__main__':
     else:
         selected = matches[0]
 
-    util.openInEditor(selected.filename)
+    utils.openInEditor(selected.filename)
 
 
