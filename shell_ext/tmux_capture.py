@@ -14,27 +14,13 @@ _meta_shell_command = 'tmux_capture'
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--open', action='store_true', help='Open the file in a text editor after capture.')
+    parser.add_argument('-o', '--open', action='store_true', help='Open the most recent written file.')
     parser.add_argument('-c', '--cat', action='store_true', help='Print the file after capture.')
     args = parser.parse_args()
     return args
 
-_SAFESET = set('0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-def safeset(ss):
-    # TODO: replace with data.date_safe_for_filename()
-    out = []
-    for cc in ss:
-        if cc in _SAFESET:
-            out.append(cc)
-        else:
-            out.append('_')
-    return "".join(out)
-
-def date_now_iso_8601_safe_folder():
-    return safeset(datetime.datetime.now().astimezone().isoformat())
-
 def find(folder, pattern, i):
-    return os.path.expanduser(os.path.join(folder, f'{pattern}_{date_now_iso_8601_safe_folder()}.log'))
+    return os.path.expanduser(os.path.join(folder, f'{pattern}_{utils.date_now_iso_8601_safe_folder()}.log'))
 
 if __name__ == '__main__':
     folder = os.path.join(data.logsdir(), 'tmux')
@@ -43,6 +29,8 @@ if __name__ == '__main__':
 
     if G_ARGS.open:
         files = os.listdir(folder)
+        if len(files) == 0:
+            exit(0)
         filename = os.path.join(folder, max(files, key=lambda ff: os.path.getmtime(os.path.join(folder, ff))))
         utils.openInEditor(filename)
 

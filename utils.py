@@ -71,3 +71,16 @@ def openInEditor(noteFilename):
     rs = os.system(cmd)
     assert rs == 0
 
+def safeset(ss):
+    _SAFESET = set('0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    out = []
+    for cc in ss:
+        if cc in _SAFESET:
+            out.append(cc)
+        else:
+            out.append('_')
+    return "".join(out)
+
+def date_now_iso_8601_safe_folder():
+    return safeset(datetime.datetime.now().astimezone().isoformat())
+
