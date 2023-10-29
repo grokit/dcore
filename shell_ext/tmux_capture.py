@@ -41,6 +41,11 @@ if __name__ == '__main__':
     G_ARGS = get_args()
     data.createDirIfNotExist(folder)
 
+    if G_ARGS.open:
+        files = os.listdir(folder)
+        filename = os.path.join(folder, max(files, key=lambda ff: os.path.getmtime(os.path.join(folder, ff))))
+        utils.openInEditor(filename)
+
     pattern = 'tmux_capture'
     i = 0
     filename = find(folder, pattern, i)
@@ -65,8 +70,6 @@ if __name__ == '__main__':
         with open(filename, 'w') as fh:
             fh.write("".join(out))
 
-    if G_ARGS.open:
-        utils.openInEditor(filename)
     if G_ARGS.cat:
         with open(filename, 'r') as fh:
             for line in fh.readlines():
