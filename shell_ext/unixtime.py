@@ -40,12 +40,11 @@ def unixTimeToReadeableStr(unix_time):
 
 
 if __name__ == '__main__':
-
     args = getCommandLineArguments()
-    print(args)
 
     if args.time is None:
         print(f'unixtime ms: {int(1000*time.time())}')
+        print(f'{int(1000*time.time())}')
         exit(0)
 
     unixTime = float(args.time)
