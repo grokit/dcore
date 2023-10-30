@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print(args)
 
     if args.time is None:
-        print(time.time())
+        print(f'unixtime ms: {int(1000*time.time())}')
         exit(0)
 
     unixTime = float(args.time)
