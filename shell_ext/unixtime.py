@@ -30,13 +30,16 @@ def getCommandLineArguments():
 
 
 def unixTimeToReadeableStr(unix_time):
-    while unix_time > 2**35:  # limitation of time.ctime
+    while abs(unix_time) > 2**35:  # limitation of time.ctime
         #raise ValueError("unix_time: %s is too large" % unix_time)
         unix_time = unix_time/1000
 
     dtc_local = (datetime.datetime.utcfromtimestamp(unix_time) +datetime.timedelta(seconds=datetime.datetime.now().astimezone().utcoffset().total_seconds())).astimezone()
     dtc = datetime.datetime.utcfromtimestamp(unix_time)
-    return "localtime: %s\nutc time : %s" % (dtc_local, dtc)
+    return "\n".join([
+            "localtime: %s" % dtc_local,
+            "utc time : %s" % dtc,
+            ])
 
 
 if __name__ == '__main__':

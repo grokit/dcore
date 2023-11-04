@@ -14,7 +14,7 @@ _meta_shell_command = 'tmux_capture'
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--open', action='store_true', help='Open the most recent written file.')
+    parser.add_argument('-O', '--open', action='store_true', help='Open the most recent written file.')
     parser.add_argument('-c', '--cat', action='store_true', help='Print the file after capture.')
     args = parser.parse_args()
     return args

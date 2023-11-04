@@ -6,6 +6,9 @@ Rename files / folders with nice, commonly used patterns.
 
 - should be able to rename from a to b, e.g.:
     - abc_file.pdf -> rename_files abc def -> def_file.pdf
+
+- should have a mode where it only applies to file in a list, the list itself is a file where each file is sepeared by endline  ... also have a mode where the substitution is given in a file with same rule_one line per substitution
+    - perhaps an even better idea is something to dispatch a command (.e.g sed) to a set of files stored as 1 per line... there might just be a unix command for that
 """
 
 import re
@@ -53,9 +56,7 @@ def removeSpace(filename, args, state):
 
 
 def removeAggressive(filename, args, state):
-    v = set(
-        'abcdefghijklmnopqrstuvwxyz._-ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]'
-    )  # ()
+    non_alphanum_allowed = set( '._-')  # ()[]
 
     accents_to_set = {
         'ä': 'a',
@@ -80,12 +81,12 @@ def removeAggressive(filename, args, state):
     toLower = True
 
     fout = []
-    for l in filename:
-        if l in v:
-            fout.append(l)
+    for ll in filename:
+        if ll.isalnum() or ll in non_alphanum_allowed:
+            fout.append(ll)
         else:
-            if l in accents_to_set:
-                fout.append(accents_to_set[l])
+            if ll in accents_to_set:
+                fout.append(accents_to_set[ll])
             else:
                 fout.append('_')
 
