@@ -3,22 +3,18 @@
 - all files: glob.iglob <-- just use this instead of my own thing
 - merge with files.py
 
-Wouldn't it be easier to just:
+"""
+import os
+import fnmatch
 
+# Note: taken from a sub-script, not linked from anywhere, but could do refactor
+# to do so as it's often what script need.
 def getAllFiles(rootdir='.'):
-    rootdir = os.path.abspath(rootdir)
-    print(f'Using {rootdir} as fullpath.')
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
             F.append(os.path.normpath(os.path.join(dirpath, f)))
     return F
-?
-
-"""
-import os
-import fnmatch
-
 
 def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir='.'):
     """
