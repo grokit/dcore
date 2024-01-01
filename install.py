@@ -205,9 +205,13 @@ shopt -s histappend
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Infinite history
-# https://stackoverflow.com/questions/9457233/unlimited-bash-history
-HISTSIZE=""
-HISTFILESIZE=""
+# https://askubuntu.com/questions/307541/how-to-change-history-size-for-ever
+HISTSIZE=-1
+HISTFILESIZE=-1
+
+# History times
+# https://www.cyberciti.biz/faq/unix-linux-bash-history-display-date-time/
+HISTTIMEFORMAT="%d/%m/%y_%T "
 
 ## Misc
 
@@ -267,7 +271,7 @@ set -g status-bg colour17
 set -g status-fg colour38
 set-window-option -g mode-keys vi
 
-set-option -g history-limit 1000000
+set-option -g history-limit 10000000
 """
     env_setup.updateFileContentBetweenMarks(
         os.path.expanduser('~/.tmux.conf'),

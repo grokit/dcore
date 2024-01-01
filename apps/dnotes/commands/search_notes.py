@@ -61,7 +61,6 @@ def get_args():
 
     parser.add_argument('-f',
                         '--filter',
-                        action='store_true',
                         help='WIP -- custom filters.')
 
     return parser.parse_args()
@@ -103,10 +102,6 @@ if __name__ == '__main__':
 
     matches = util.dedup_matches_to_one_per_file(matches)
 
-    if G_ARGS.filter:
-        print('WIP -- work in progress filters')
-        matches = [mm for mm in matches if mm.last_mod_unixseconds >= time.time() - 24 * 60 * 60 * 1]
-
     if G_ARGS.tag:
         filtered = []
         for match in matches:
@@ -119,13 +114,41 @@ if __name__ == '__main__':
 
     scores = []
     explanations = []
-    for match in matches:
-        mscore, explanation = score.score(match, query, G_ARGS.explain)
-        scores.append(mscore)
-        explanations.append(explanation)
 
-    matches, scores, explanations = search.sortMatchesByScore(
-        matches, scores, explanations)
+    if G_ARGS.filter:
+        """
+        f: might not be good since want to allow passing root folder...
+        find something more intuitive ...
+
+        Ideas:
+        - f:time:last3d
+        - f:time(last3d) ? <-- parens require escaping on command line, not good idea
+            ... but kind of good semantically to express as functional
+        """
+        if False:
+            # this is just filter based on time, not ordering
+            matches = [mm for mm in matches if mm.last_mod_unixseconds >= time.time() - 24 * 60 * 60 * 1]
+            pass
+        # Use filter for ordering.
+        # TODO: filter could be something which is not order, might want to move somewhere
+        # else.
+        print(f'WIP -- work in progress filters: {G_ARGS.filter}')
+        # ordered by time
+        if G_ARGS.filter == 'o:time':
+            matches = sorted(matches, key=lambda x: x.last_mod_unixseconds, reverse=True)
+            explanation = ['manual_filter'] * len(matches)
+            scores = [mm.last_mod_unixseconds for mm in matches]
+        else:
+            raise Exception(f'Unknown filter: {G_ARGS.filter}.')
+    else:
+        # Normal heuristics for scoring.
+        for match in matches:
+            mscore, explanation = score.score(match, query, G_ARGS.explain)
+            scores.append(mscore)
+            explanations.append(explanation)
+
+        matches, scores, explanations = search.sortMatchesByScore(
+            matches, scores, explanations)
 
     if len(matches) == 0:
         print('Not opening since no file matched.')
