@@ -95,12 +95,15 @@ def extract():
 
     note_files = util.get_all_note_files()
     for ii, ff in enumerate(note_files):
-        with open(ff, 'r') as fh:
-            data = fh.read()
-            data = data.split('\n\n')
-            data = [dd.strip() for dd in data if len(dd.strip()) > 0 and filter_is_sql_chunk(dd)]
-            for cc in data:
-                out.append(SQLQuery(cc))
+        try:
+            with open(ff, 'r') as fh:
+                data = fh.read()
+                data = data.split('\n\n')
+                data = [dd.strip() for dd in data if len(dd.strip()) > 0 and filter_is_sql_chunk(dd)]
+                for cc in data:
+                    out.append(SQLQuery(cc))
+        except:
+            print(f'some issue processing {ff}, likely in {data}')
     return out
 
 
