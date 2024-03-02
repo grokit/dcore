@@ -74,6 +74,9 @@ nnoremap <F4> :wa!<CR>:cd %:p:h<CR>:!git add -A :/ && git commit -a -m :vi-f4-co
 nnoremap <F5> :set spell spelllang=en_us<cr>
 nnoremap <F6> :set nospell<cr>
 
+" experimental stuff
+nnoremap <F7> :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
+
 " some extension added other command that starts with E.
 " make it explicit here what I intend by E
 command! E Explore

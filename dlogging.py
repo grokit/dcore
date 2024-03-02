@@ -1,3 +1,12 @@
+"""
+usage:
+    import logging 
+    import dcore.dlogging as dlogging
+    dlogging.setup()
+    ...
+    then just use the logging module
+"""
+
 import os
 import logging
 import datetime

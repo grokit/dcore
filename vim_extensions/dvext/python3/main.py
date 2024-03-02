@@ -38,7 +38,7 @@ def get_curr_word():
     return line[i_left:i_right]
 
 def _remove_paren(ww):
-    # Don't mess with URLs (they would end with paren).
+    # Don't mess with URLs (they may have paren & cie).
     if ww.startswith('http'):
         return ww
 
