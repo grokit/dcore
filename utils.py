@@ -1,8 +1,18 @@
 import datetime
+import importlib.util
+import inspect
 import os
 import platform
 
 import dcore.data as data
+
+
+def extractFunctionsDictFromFilename(filepath):
+    spec = importlib.util.spec_from_file_location("module", filepath)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    functions = {function_name: fn for function_name, fn in module.__dict__.items() if callable(fn)}
+    return functions
 
 def dateForAnnotation():
     return datetime.datetime.now().isoformat()

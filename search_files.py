@@ -1,8 +1,4 @@
 """
-# TODO
-- all files: glob.iglob <-- just use this instead of my own thing
-- merge with files.py
-
 """
 import os
 import fnmatch
@@ -10,18 +6,17 @@ import fnmatch
 # Note: taken from a sub-script, not linked from anywhere, but could do refactor
 # to do so as it's often what script need.
 def getAllFiles(rootdir='.'):
-    F = []
+    FF = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
-        for f in filenames:
-            F.append(os.path.normpath(os.path.join(dirpath, f)))
-    return F
+        for ff in filenames:
+            FF.append(os.path.normpath(os.path.join(dirpath, ff)))
+    return FF
 
 def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir='.'):
     """
-  E.g.: getAllFilesRecursively(['*.txt'], './folder/to/files')
-  E.g.: getAllFilesRecursively(['*.txt', '*.bat'])
-  """
-
+    E.g.: getAllFilesRecursively(['*.txt'], './folder/to/files')
+    E.g.: getAllFilesRecursively(['*.txt', '*.bat'])
+    """
     #Allow user to call using both '*.txt' and ['*.txt']
     if (type(in_allowedExtensionsGlobList) == type('')):
         in_allowedExtensionsGlobList = [in_allowedExtensionsGlobList]
@@ -46,7 +41,6 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir='.'):
 
 
 def filterFilesByExtension(lstFullPathFilenames, lstExtensionsToKeep):
-
     fileList = []
     for file in lstFullPathFilenames:
         add = False

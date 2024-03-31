@@ -75,7 +75,8 @@ nnoremap <F5> :set spell spelllang=en_us<cr>
 nnoremap <F6> :set nospell<cr>
 
 " experimental stuff
-nnoremap <F7> :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
+nnoremap <leader>d :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
+nnoremap <leader>u :r !ns_gen_uuid --with_prefix<cr>
 
 " some extension added other command that starts with E.
 " make it explicit here what I intend by E

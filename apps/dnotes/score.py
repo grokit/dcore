@@ -64,7 +64,7 @@ class __ScorerInTitle(__ScorerBase):
         return score
 
     def get_importance(self):
-        return 2.5
+        return 6.5
 
 
 class __ScorerLinesMentions(__ScorerBase):
@@ -139,7 +139,7 @@ class __ScorerSpecialTags(__ScorerBase):
         return score
 
     def get_importance(self):
-        return 5.0
+        return 3.0
 
 
 class __ScorerLastModifiedTime(__ScorerBase):
@@ -230,7 +230,7 @@ class __ScorerPathFolderInQuery(__ScorerBase):
         return score
 
     def get_importance(self):
-        return 5.0
+        return 3.0
 
 class __ScorerFilename(__ScorerBase):
     """
