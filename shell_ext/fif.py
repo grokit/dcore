@@ -43,8 +43,8 @@ import dcore.utils as utils
 
 _meta_shell_command = 'fif'
 
-search_roots = [data.sync_root()]
-cacheLoc = os.path.join(data.dcoreTempData(),
+_SEARCH_ROOT_FOLDERS = [data.sync_root()]
+_CACHE_FILE_LOCATION = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
 
 # Before automatically force regenerating.
@@ -111,7 +111,7 @@ class Cache:
 def gen():
     F = []
 
-    for search_root in search_roots:
+    for search_root in _SEARCH_ROOT_FOLDERS:
         search_root = os.path.expanduser(search_root)
         assert os.path.isdir(search_root)
         for f in getAllFiles(search_root):
@@ -125,9 +125,9 @@ def do():
     args = get_args()
 
     F = None
-    if not args.reset and os.path.isfile(cacheLoc):
-        print('Loading cache from: %s.' % cacheLoc)
-        cache = pickle.load(open(cacheLoc, 'rb'))
+    if not args.reset and os.path.isfile(_CACHE_FILE_LOCATION):
+        print('Loading cache from: %s.' % _CACHE_FILE_LOCATION)
+        cache = pickle.load(open(_CACHE_FILE_LOCATION, 'rb'))
         cacheAge = dateNow() - cache.date
         print('Cache age = %s.' % cacheAge)
         if cacheAge.total_seconds() < cacheExpiryInSeconds:
@@ -139,10 +139,10 @@ def do():
     if F is None:
         print(
             "Generating cache from %s, this could take a while... grab a coffee and relax :)."
-            % search_roots)
+            % _SEARCH_ROOT_FOLDERS)
         F = gen()
-        print('Saving cache at: %s.' % cacheLoc)
-        pickle.dump(Cache(F), open(cacheLoc, 'wb'))
+        print('Saving cache at: %s.' % _CACHE_FILE_LOCATION)
+        pickle.dump(Cache(F), open(_CACHE_FILE_LOCATION, 'wb'))
 
     if len(args.grep) != 0:
         gg = args.grep

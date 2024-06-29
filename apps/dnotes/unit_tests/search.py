@@ -7,9 +7,13 @@ import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.data as data
 
 class Tests(unittest.TestCase):
-    """
-    https://docs.python.org/3/library/unittest.html
-    """
+
+    def test_folder_override(self):
+        data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
+
+        files = util.get_all_note_files()
+        for file in files:
+            assert '/mock_notes_dir' in file
 
     def test_search_unique_query(self):
         data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
@@ -26,4 +30,4 @@ class Tests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    ussnittest.main()
+    unittest.main()

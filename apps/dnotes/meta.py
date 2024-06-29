@@ -11,6 +11,7 @@ class Meta:
     """
     This is one chunk of metadata.
     """
+
     def __init__(self, meta_type, value, source_line, source_file):
         """
         Example:
@@ -23,16 +24,15 @@ class Meta:
 
         This gets broken into TWO Meta objects.
         """
-        assert type(meta_type) == str
-        assert type(value) == str
-        assert type(source_line) == str
+        assert isinstance(meta_type, str)
+        assert isinstance(value, str)
+        assert isinstance(source_line, str)
         assert len(source_line.splitlines()) == 1
 
         self.meta_type = meta_type
         self.value = value
         self.source_line = source_line
         self.source_filename = source_file
-
 
     def __str__(self):
         return str("%s: %s" % (self.meta_type, self.value))
@@ -42,48 +42,40 @@ class Meta:
 
 
 def extract(orig_filename, content):
-    """
-    content -> T where T is a set of Meta.
+    return extract_v2(orig_filename, content)
 
-    This is an extremely naive parser, might want to enventually replace when I have more than 5 minutes to code.
-    Biggest flaw: can only have 1 meta per line.
-    """
 
-    assert type(content) == str
-    M = []
+def walk_str(ss, ii, di):
+    acc = []
+    while ii >= 0 and ii < len(ss):
+        if ss[ii] in set('\n\r\t ,'):
+            break
+        acc.append(ss[ii])
+        ii += di
+    if di < 0:
+        acc.reverse()
+    return "".join(acc)
+
+
+def extract_v2(orig_filename, content):
+    assert isinstance(content, str)
+    # list of Meta(...) objects.
+    metas = []
 
     lines = content.splitlines()
 
     for line in lines:
-        if re.search('\w%s\w' % options.MSEP, line) is not None:
-            LR = line.split(options.MSEP)
-            if len(LR) == 0:
-                continue
-            if len(LR) > 2:
-                raise Exception(
-                    'Naive parser does not support two tags in one line. Line: %s.'
-                    % line)
-            l, r = LR
+        ii = 0
+        buf = line
+        while ii != -1:
+            ii = buf.find(options.MSEP)
+            pre = walk_str(buf, ii - 1, -1)
+            post = walk_str(buf, ii + len(options.MSEP), 1)
+            if len(pre) > 0 and len(post) > 0:
+                metas.append(Meta(pre, post, line, orig_filename))
+            buf = buf[ii + len(options.MSEP) + len(post):]
 
-            if ' ' in l:
-                l = l.split(' ')[-1]
-
-            R = []
-            if ',' in r:
-                R = r.split(',')
-                R = [r.strip() for r in R]
-                if ' ' in R[-1]:
-                    R[-1] = R[-1].split(' ')[0]
-            else:
-                if ' ' in r:
-                    r = r.split(' ')[0]
-                R.append(r)
-
-            R = [r.strip() for r in R]
-
-            for r in R:
-                M.append(Meta(l, r, line, orig_filename))
-    return M
+    return metas
 
 
 def metaToDict(metaList):
@@ -94,5 +86,3 @@ def metaToDict(metaList):
 
         M[m.meta_type].add(m.value)
     return M
-
-

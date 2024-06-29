@@ -23,15 +23,12 @@ def get_notes_root_folder():
     except ImportError as e:
         pass
 
-    if False:
-        #If want to test...
-        #print('hijack dataLocation from: ' + dataLocation)
-        dataLocation = os.path.expanduser('~/Downloads/dnotes')
-        #print('... to: ' + dataLocation)
-
     return dataLocation
 
 def get_notes_folders_ext():
+    if UNIT_TESTS_OVERRIDE_ROOT_FOLDER is not None:
+        return []
+
     out = []
     out.append(os.path.expanduser('~/sync/dev/windows_computer/sync_w_win'))
     return out

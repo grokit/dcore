@@ -162,7 +162,7 @@ export PATH=$PATH:%s
 
 
 def setupShortcuts():
-    create_python_scripts_shortcuts.do()
+    generate_shortcuts.do()
 
 
 def delOld():
@@ -183,10 +183,10 @@ def tryImports():
     try:
         import dcore.data as data
         import dcore.env_setup as env_setup
-        import dcore.create_python_scripts_shortcuts as create_python_scripts_shortcuts
+        import dcore.generate_shortcuts as generate_shortcuts
         global data
         global env_setup
-        global create_python_scripts_shortcuts
+        global generate_shortcuts
         return True
     except ImportError as e:
         return False
