@@ -21,7 +21,7 @@ import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
 
-_meta_shell_command = 'ns_view_sql'
+_meta_shell_command = 'bg_view_sql'
 
 def _safe_name_as_folder(ss):
     out = []
@@ -108,7 +108,7 @@ def extract():
 
 
 def do():
-    OUT_VIEW_FOLDER = os.path.join(dcore_data.dcoreTempData(), 'dnote_tmp_views')
+    OUT_VIEW_FOLDER = os.path.join(dcore_data.dcoreTempData(), 'dnote_tmp_view_sql')
     if os.path.exists(OUT_VIEW_FOLDER):
         shutil.rmtree(OUT_VIEW_FOLDER)
     os.makedirs(OUT_VIEW_FOLDER)
