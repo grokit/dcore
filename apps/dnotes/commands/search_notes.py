@@ -22,7 +22,7 @@ import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
 
-import dcore.apps.dnotes.commands.bg_daily_digest as bg_daily_digest
+import dcore.apps.dnotes.bg_tasks as bg_tasks
 
 import dcore.utils as utils 
 
@@ -72,8 +72,7 @@ if __name__ == '__main__':
     G_ARGS = get_args()
 
     # this only really does something once a day
-    bg_daily_digest.do()
-
+    bg_tasks.daily_digest()
 
     query = ""
     if len(G_ARGS.search_query) > 0:
