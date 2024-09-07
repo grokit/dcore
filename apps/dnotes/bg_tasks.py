@@ -26,7 +26,7 @@ def daily_digest():
     today_str = datetime.datetime.today().strftime('%Y-%m-%d')
     folder_out = os.path.join(dcore_data.dcoreTempData(), f'dnote_daily_digest', f'{today_str}')
     if os.path.exists(folder_out):
-        if False:
+        if True:
             return
         else:
             shutil.rmtree(folder_out)
