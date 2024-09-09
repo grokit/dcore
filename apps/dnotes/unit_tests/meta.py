@@ -18,13 +18,15 @@ class Tests(unittest.TestCase):
         tag:::tag3 not_tag is not a tag since it is not comma separated
 
         pre:::post
+
+        (check_tag_in_paren:::works)
         """
 
         meta = module_meta.extract("fake.filename", testDoc)
-        if False:
+        if True:
             for m in meta:
                 print(m)
-        assert len(meta) == 4
+        assert len(meta) == 5
         metaDict = module_meta.metaToDict(meta)
 
         assert len(metaDict['tag']) == 3
@@ -37,6 +39,9 @@ class Tests(unittest.TestCase):
         assert 'not_tag' not in metaDict['tag']
         assert len(metaDict['pre']) == 1
         assert 'post' in metaDict['pre']
+
+        assert len(metaDict['check_tag_in_paren']) == 1
+        assert 'works' in metaDict['check_tag_in_paren']
 
     # @unittest.skip("known fail")
     def test_two_tag_per_line(self):

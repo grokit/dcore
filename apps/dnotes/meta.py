@@ -3,6 +3,7 @@ This meta class has became the de-facto parser of filename -> metadata.
 """
 
 import re
+import string
 
 import dcore.apps.dnotes.options as options
 
@@ -48,7 +49,8 @@ def extract(orig_filename, content):
 def walk_str(ss, ii, di):
     acc = []
     while ii >= 0 and ii < len(ss):
-        if ss[ii] in set('\n\r\t ,'):
+        if not (ss[ii] in set(string.ascii_lowercase + string.ascii_uppercase + string.digits + '-_')):
+        #if ss[ii] in set('\n\r\t ,()[];|'):
             break
         acc.append(ss[ii])
         ii += di
