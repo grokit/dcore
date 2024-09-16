@@ -1,5 +1,7 @@
 """
 Gen UUIDs.
+
+Note: I believe this is used by my vim plugin as a shell command.
 """
 
 import dcore.apps.dnotes.options as options
@@ -17,7 +19,7 @@ def get_args():
 
 if __name__ == '__main__':
     uuid_len = 12
-    # string.ascii_letters also contains uppercase
+    # note: string.ascii_letters also contains uppercase
     uuid = ''.join(random.choice(string.ascii_lowercase + string.digits) for cc in range(uuid_len))
     prefix = ''
     if get_args().with_prefix:

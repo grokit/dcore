@@ -43,7 +43,6 @@ class Tests(unittest.TestCase):
         assert len(metaDict['check_tag_in_paren']) == 1
         assert 'works' in metaDict['check_tag_in_paren']
 
-    # @unittest.skip("known fail")
     def test_two_tag_per_line(self):
         testDoc = """tag:::tag1 tag:::tag2
 
@@ -68,6 +67,17 @@ class Tests(unittest.TestCase):
         assert len(metaDict['bb']) == 2
         assert 'b' in metaDict['bb']
         assert 'c' in metaDict['bb']
+
+    def test_time_tags(self):
+        testDoc = """
+        Time tags have to be parseable -- even though it may make sense to change the format at some point
+        to not have to have colon in meta.
+        time:::2024-09-21_14:03
+        """
+        meta = module_meta.extract("fake.filename", testDoc)
+        metaDict = module_meta.metaToDict(meta)
+        assert len(metaDict['time']) == 1
+        assert '2024-09-21_14:03' in metaDict['time']
 
     @unittest.skip("known fail")
     def test_current_confusion(self):

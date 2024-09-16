@@ -49,7 +49,7 @@ def extract(orig_filename, content):
 def walk_str(ss, ii, di):
     acc = []
     while ii >= 0 and ii < len(ss):
-        if not (ss[ii] in set(string.ascii_lowercase + string.ascii_uppercase + string.digits + '-_')):
+        if not (ss[ii] in set(string.ascii_lowercase + string.ascii_uppercase + string.digits + '-_:')):
         #if ss[ii] in set('\n\r\t ,()[];|'):
             break
         acc.append(ss[ii])

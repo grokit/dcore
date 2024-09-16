@@ -127,19 +127,23 @@ class __ScorerSpecialTags(__ScorerBase):
 
             if metad.meta_type == 'tag' and metad.value == 'not_important':
                 score -= 0.8
+            elif metad.meta_type == 'tag' and metad.value == 'meh':
+                score -= 0.6
             elif metad.meta_type == 'tag' and metad.value == 'temp':
                 score -= 0.3
             elif metad.meta_type == 'tag' and metad.value == 'now':
                 score += 0.3
+            elif metad.meta_type == 'tag' and metad.value == 'nowa':
+                score += 0.5
             elif metad.meta_type == 'tag' and metad.value == 'important':
-                score += 0.85
+                score += 0.75
             elif metad.meta_type == 'tag' and metad.value == 'very_important':
-                score += 1.0
+                score += 0.95
 
         return score
 
     def get_importance(self):
-        return 3.0
+        return 4.0
 
 
 class __ScorerLastModifiedTime(__ScorerBase):

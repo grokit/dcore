@@ -44,14 +44,17 @@ import dcore.utils as utils
 
 
 def dateForFile():
+    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 def dateForFolder():
+    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 def dateForAnnotation():
+    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
 
 
