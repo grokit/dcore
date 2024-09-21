@@ -18,10 +18,7 @@ import shutil
 import dcore.apps.dnotes.options as options
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.score as score
-
-
-def dateForAnnotation():
-    return datetime.datetime.now().isoformat()
+import dcore.utils as dutils
 
 
 def render(query, context_range):
@@ -64,7 +61,7 @@ def doTODOsScatteredAndList():
     else:
         content += "No pending items, good job!\n"
 
-    title = "Digest TODOs R9uO6Eje %s" % (dateForAnnotation())
+    title = "Digest TODOs R9uO6Eje %s" % (dutils.date_now_for_annotation())
     return Message(title, content)
 
 
@@ -72,7 +69,7 @@ def doGoals():
     cA = render("uuid%sgoals" % (':' * 3), 75)
     content = cA
 
-    title = "Digest Goals R97O6ejiKe %s" % (dateForAnnotation())
+    title = "Digest Goals R97O6ejiKe %s" % (dutils.date_now_for_annotation())
     return Message(title, content)
 
 
@@ -80,7 +77,7 @@ def doForefront():
     cA = render("uuid%sforefront" % (':' * 3), 75)
     content = cA
 
-    title = "Digest Forefront Oei8Jae %s" % (dateForAnnotation())
+    title = "Digest Forefront Oei8Jae %s" % (dutils.date_now_for_annotation())
     return Message(title, content)
 
 

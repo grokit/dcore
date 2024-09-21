@@ -1,5 +1,5 @@
 """
-Experimental: daily digest.
+Experimental: ???.
 """
 
 import sys
@@ -20,9 +20,9 @@ import dcore.apps.dnotes.score as score
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
-import dcore.apps.dnotes.bg_tasks as bg_tasks
+import dcore.apps.dnotes.background.bg_lib as bg_lib
 
-_meta_shell_command = 'bg_daily_digest'
+_meta_shell_command = 'bg_misc_misc'
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -35,5 +35,5 @@ def get_args():
 
 if __name__ == '__main__':
     G_ARGS = get_args()
-    bg_tasks.daily_digest()
+    bg_lib.uuids_to_db()
 

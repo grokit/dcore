@@ -6,6 +6,29 @@ import platform
 
 import dcore.data as data
 
+################################################################################
+# DATE STUFF
+################################################################################
+
+def __date_safeset(ss):
+    _SAFESET = set('0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    out = []
+    for cc in ss:
+        if cc in _SAFESET:
+            out.append(cc)
+        else:
+            out.append('_')
+    return "".join(out)
+
+def date_now_for_annotation():
+    return datetime.datetime.now().isoformat()
+
+def date_now_iso_8601_safe_folder():
+    return __date_safeset(datetime.datetime.now().astimezone().isoformat())
+
+################################################################################
+# ...
+################################################################################
 
 def extractFunctionsDictFromFilename(filepath):
     spec = importlib.util.spec_from_file_location("module", filepath)
@@ -13,9 +36,6 @@ def extractFunctionsDictFromFilename(filepath):
     spec.loader.exec_module(module)
     functions = {function_name: fn for function_name, fn in module.__dict__.items() if callable(fn)}
     return functions
-
-def dateForAnnotation():
-    return datetime.datetime.now().isoformat()
 
 def delCurrentShortcuts(tag):
     "Delete all files that have special marker inside output directory."
@@ -80,17 +100,4 @@ def openInEditor(noteFilename):
         cmd = 'vi %s' % noteFilename
     rs = os.system(cmd)
     assert rs == 0
-
-def safeset(ss):
-    _SAFESET = set('0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    out = []
-    for cc in ss:
-        if cc in _SAFESET:
-            out.append(cc)
-        else:
-            out.append('_')
-    return "".join(out)
-
-def date_now_iso_8601_safe_folder():
-    return safeset(datetime.datetime.now().astimezone().isoformat())
 

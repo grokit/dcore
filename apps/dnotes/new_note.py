@@ -53,7 +53,7 @@ def dateForFolder():
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
-def dateForAnnotation():
+def date_now_for_annotation():
     # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
 
@@ -72,7 +72,7 @@ def annotateDateIfNotAlreadyDone(file, force=False):
         fileContent = fh.read()
 
     if force or 'time%s' % options.MSEP not in fileContent:
-        annotation = 'time%s' % options.MSEP + dateForAnnotation() + '\n'
+        annotation = 'time%s' % options.MSEP + date_now_for_annotation() + '\n'
 
         with open(file, 'w') as fh:
             fh.write(annotation + '\n' + fileContent)
