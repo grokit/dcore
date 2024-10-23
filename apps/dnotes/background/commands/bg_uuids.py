@@ -22,7 +22,7 @@ import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
 import dcore.apps.dnotes.background.bg_lib as bg_lib
 
-_meta_shell_command = 'bg_misc_misc'
+_meta_shell_command = 'bg_uuids'
 
 def get_args():
     parser = argparse.ArgumentParser()

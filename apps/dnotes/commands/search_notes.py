@@ -101,6 +101,7 @@ if __name__ == '__main__':
 
     matches = util.dedup_matches_to_one_per_file(matches)
 
+    # should this just be a filter?
     if G_ARGS.tag:
         filtered = []
         for match in matches:
@@ -138,7 +139,7 @@ if __name__ == '__main__':
             explanation = ['manual_filter'] * len(matches)
             scores = [mm.last_mod_unixseconds for mm in matches]
         else:
-            raise Exception(f'Unknown filter: {G_ARGS.filter}.')
+            raise Exception(f'Unknown filter: {G_ARGS.filter}. Available filter(s): `o:time`.')
     else:
         # Normal heuristics for scoring.
         for match in matches:
