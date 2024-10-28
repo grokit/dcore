@@ -2,6 +2,7 @@
 Save stdout/stderr piped in to a file.
 
 # TODO
+- option to have -t <title>
 """
 
 import sys

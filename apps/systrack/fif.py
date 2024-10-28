@@ -37,6 +37,8 @@ import argparse
 import pickle
 import datetime
 import platform
+import sqlite3
+import time
 
 import dcore.data as data
 import dcore.utils as utils
@@ -46,6 +48,7 @@ _meta_shell_command = 'fif'
 _SEARCH_ROOT_FOLDERS = [data.sync_root()]
 _CACHE_FILE_LOCATION = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
+_SQL_DB_FILENAME = os.path.join(data.dcoreTempData(), "fif_file_index.db")
 
 # Before automatically force regenerating.
 cacheExpiryInSeconds = 7.0 * 24 * 60 * 60  
@@ -108,18 +111,43 @@ class Cache:
         self.date = dateNow()
 
 
-def gen():
+def list_all_files():
     F = []
 
     for search_root in _SEARCH_ROOT_FOLDERS:
         search_root = os.path.expanduser(search_root)
         assert os.path.isdir(search_root)
         for f in getAllFiles(search_root):
-            F.append(f)
+            f = os.path.abspath(os.path.join(search_root, f))
+            if not os.path.islink(f):
+                F.append(f)
     F = filterOutIfArrayInElement(
         F, ['node_modules', '.git', '.hg', '__pycache__', r'Out\Functional'])
     return F
 
+def do_sql_dump_and_compate(filenames):
+    """
+    New/experimental: dump to SQL database to make it possible to track files added, deleted & spot accidental deleted of uid-files.
+    """
+    print(f'Saving to {_SQL_DB_FILENAME}')
+    conn = sqlite3.connect(_SQL_DB_FILENAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS fif_file_index (
+        filepath TEXT,
+        last_mod_unix_s INTEGER,
+        last_crawled_unix_s INTEGER,
+        PRIMARY KEY (filepath)
+    )
+    ''')
+    now_unix_s = int(time.time() * 1)
+    for filename in filenames:
+        filename_last_mod_unix_s = os.path.getmtime(filename)
+        cursor.execute('''
+        INSERT OR REPLACE INTO fif_file_index (filepath, last_mod_unix_s, last_crawled_unix_s) VALUES (?, ?, ?)
+        ''', (filename, filename_last_mod_unix_s, now_unix_s))
+    conn.commit()
+    conn.close()
 
 def do():
     args = get_args()
@@ -140,9 +168,10 @@ def do():
         print(
             "Generating cache from %s, this could take a while... grab a coffee and relax :)."
             % _SEARCH_ROOT_FOLDERS)
-        F = gen()
-        print('Saving cache at: %s.' % _CACHE_FILE_LOCATION)
+        F = list_all_files()
+        print(f'Saving cache at: {_CACHE_FILE_LOCATION}')
         pickle.dump(Cache(F), open(_CACHE_FILE_LOCATION, 'wb'))
+        do_sql_dump_and_compate(F)
 
     if len(args.grep) != 0:
         gg = args.grep

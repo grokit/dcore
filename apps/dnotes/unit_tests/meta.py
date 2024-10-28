@@ -23,9 +23,6 @@ class Tests(unittest.TestCase):
         """
 
         meta = module_meta.extract("fake.filename", testDoc)
-        if True:
-            for m in meta:
-                print(m)
         assert len(meta) == 5
         metaDict = module_meta.metaToDict(meta)
 
@@ -87,9 +84,6 @@ class Tests(unittest.TestCase):
         """
 
         meta = module_meta.extract("fake.filename", testDoc)
-        if False:
-            for m in meta:
-                print(m)
 
         """
         Currently:
