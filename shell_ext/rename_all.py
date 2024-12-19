@@ -2,6 +2,10 @@
 """
 Rename filenames and file content.
 Applies recursively on all files by default.
+
+# improvements
+
+- ? should only apply to one until --all ? ; review generic pattern for apply to one / all / all + subfolders
 """
 
 import re

@@ -83,11 +83,12 @@ class Note:
         title = None
         unixTime = None
 
-        note.meta = meta.metaToDict(meta.extract("fake.filename", note_fulltext))
+        # maybe _metaToDict should only be used from UTs
+        note_meta = meta._metaToDict(meta.extract("fake.filename", note_fulltext))
 
-        if 'time' in note.meta:
+        if 'time' in note_meta:
             if unixTime is None:
-                unixTimeStr = note.meta['time']
+                unixTimeStr = note_meta['time']
                 assert len(unixTimeStr) == 1
                 unixTimeStr = list(unixTimeStr)[0]
                 unixTime = timeStrToUnixTime(unixTimeStr)

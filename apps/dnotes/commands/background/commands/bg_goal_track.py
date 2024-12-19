@@ -22,7 +22,7 @@ import dcore.apps.dnotes.score as score
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
-import dcore.apps.dnotes.background.bg_lib as bg_lib
+import dcore.apps.dnotes.commands.background.bg_lib as bg_lib
 
 _meta_shell_command = 'bg_goal_track'
 

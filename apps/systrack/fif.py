@@ -166,7 +166,7 @@ def do():
 
     if F is None:
         print(
-            "Generating cache from %s, this could take a while... grab a coffee and relax :)."
+            "Generating cache from %s, this could take a while... have a tea and relax :)."
             % _SEARCH_ROOT_FOLDERS)
         F = list_all_files()
         print(f'Saving cache at: {_CACHE_FILE_LOCATION}')

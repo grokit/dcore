@@ -30,6 +30,15 @@ def date_now_iso_8601_safe_folder():
 # ...
 ################################################################################
 
+def portableCharacterSet():
+    """
+    3.282 Portable Filename Character Set
+    https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282
+
+    TODO?: replace __date_safeset?
+    """
+    return set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-')
+
 def extractFunctionsDictFromFilename(filepath):
     spec = importlib.util.spec_from_file_location("module", filepath)
     module = importlib.util.module_from_spec(spec)

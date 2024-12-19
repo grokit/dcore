@@ -31,6 +31,7 @@ def get_notes_folders_ext():
 
     out = []
     out.append(os.path.expanduser('~/sync/dev/windows_computer/sync_w_win'))
+    out.append(os.path.expanduser('~/sync/dev/sync_phone/reading_notes'))
     return out
 
 def get_notes_low_folder():

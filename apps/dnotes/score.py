@@ -143,7 +143,7 @@ class __ScorerSpecialTags(__ScorerBase):
         return score
 
     def get_importance(self):
-        return 4.0
+        return 6.0
 
 
 class __ScorerLastModifiedTime(__ScorerBase):

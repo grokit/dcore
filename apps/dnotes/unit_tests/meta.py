@@ -1,5 +1,6 @@
 
 import unittest
+import os
 
 import dcore.apps.dnotes.bookmarks as bookmarks
 import dcore.apps.dnotes.util as util
@@ -8,6 +9,9 @@ import dcore.apps.dnotes.meta as module_meta
 
 
 class Tests(unittest.TestCase):
+    """
+    uuid:::u1r1bum7opih
+    """
 
     def test_simple_meta(self):
         testDoc = """
@@ -24,7 +28,7 @@ class Tests(unittest.TestCase):
 
         meta = module_meta.extract("fake.filename", testDoc)
         assert len(meta) == 5
-        metaDict = module_meta.metaToDict(meta)
+        metaDict = module_meta._metaToDict(meta)
 
         assert len(metaDict['tag']) == 3
         assert 'tag1' in metaDict['tag']
@@ -54,7 +58,7 @@ class Tests(unittest.TestCase):
         testDoc += 'not_tag:::              '
 
         meta = module_meta.extract("fake.filename", testDoc)
-        metaDict = module_meta.metaToDict(meta)
+        metaDict = module_meta._metaToDict(meta)
         assert len(metaDict['tag']) == 2
         assert 'tag1' in metaDict['tag']
         assert 'tag2' in metaDict['tag']
@@ -72,7 +76,7 @@ class Tests(unittest.TestCase):
         time:::2024-09-21_14:03
         """
         meta = module_meta.extract("fake.filename", testDoc)
-        metaDict = module_meta.metaToDict(meta)
+        metaDict = module_meta._metaToDict(meta)
         assert len(metaDict['time']) == 1
         assert '2024-09-21_14:03' in metaDict['time']
 
@@ -92,12 +96,38 @@ class Tests(unittest.TestCase):
         [item: discover classical art browse and download high-resolution public domain artworks
         [item: https://artvee.com/
 
-        ... I think this is a pretty confusing way to extract meta... rething this
+        ... I think this is a pretty confusing way to extract meta... rethink this
         and whether we should save the full line with a meta tag (including potential
         other metas, as we currently do).
         """
         assert len(meta) == 1
 
+    def test_extended_meta(self):
+        testDoc = """
+
+        Start with "no context tag", later some tag can have a definition why can enforce types, required columns, etc.
+
+        key:::(v1=value-01,v2=1234)
+
+        Problem: we actually want to break pretty agressively UNLESS there is an open paren:
+        e.g:
+            blah (abc1:::def1) blah
+            blad, abc2:::def2, blah
+        """
+
+        meta = module_meta.extract("fake.filename", testDoc)
+        assert len(meta) == 3
+        metaDict = module_meta._metaToDict(meta)
+
+        assert 'key' in metaDict
+        assert '(v1=value-01,v2=1234)' in metaDict['key']
+        assert 'def1' in metaDict['abc1']
+        assert 'def2' in metaDict['abc2']
 
 if __name__ == '__main__':
-    unittest.main()
+    if False:
+        # ::: resume
+        unittest.main()
+    else:
+        suite = unittest.TestLoader().loadTestsFromName('meta.Tests.test_extended_meta')
+        unittest.TextTestRunner().run(suite)

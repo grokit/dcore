@@ -1,3 +1,8 @@
+"""
+Note: the official dir for this is in dcore, need to run dcore/install.py to copy it to vi's directory.
+
+A better architecture in the future is to just use this as bootstrap, and run the actual file in dcore.
+"""
 
 import vim
 import webbrowser
@@ -13,6 +18,10 @@ vim.eval('command')
 
 execute a vim command (in this case opens file.txt):
 vim.command(':e file.txt')
+
+note: could open at a specific line using:
+    vi +12 file.ext
+    ... for line 12
 """
 
 def get_curr_line():
@@ -63,7 +72,7 @@ def open_link():
         compound = word.split(options.MSEP)
         if len(compound) == 2:
             meta_key, meta_value = compound
-            # luid = search for related uuid
+            # replace link types to targets
             if meta_key == 'luid':
                 meta_key = 'uuid'
             if meta_key == 'lloc':
@@ -71,8 +80,9 @@ def open_link():
             filenames_matched += search.get_filenames_matching_meta(meta_key, meta_value)
 
     matched_once = False
-    for filename in filenames_matched:
-        vim.command(f':tabe {filename}')
+    #print(filenames_matched)
+    for filename, line_no in filenames_matched:
+        vim.command(f':silent! | :tabe {filename} | :{line_no+1}')
         matched_once = True
 
     if not matched_once:
@@ -94,4 +104,7 @@ def open_link():
 
 def test_print():
     print('hello vim')
+
+if __name__ == '__main__':
+    pass
 
