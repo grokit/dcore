@@ -22,6 +22,10 @@ import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.options as options
 import dcore.apps.dnotes.commands.background.bg_lib as bg_lib
 
+
+# This is required for the pickle to run inside bg_lib, somehow.
+UuidWithMeta = bg_lib.UuidWithMeta
+
 _meta_shell_command = 'bg_uuids'
 
 def get_args():

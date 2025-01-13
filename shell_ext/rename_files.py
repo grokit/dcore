@@ -82,7 +82,7 @@ def removeAggressive(filename, args, state):
 
     fout = []
     for ll in filename:
-        if ll.isalnum() or ll in non_alphanum_allowed:
+        if (ll.isalnum() and ll.isascii()) or ll in non_alphanum_allowed:
             fout.append(ll)
         else:
             if ll in accents_to_set:

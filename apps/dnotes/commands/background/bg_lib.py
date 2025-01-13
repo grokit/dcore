@@ -1,11 +1,12 @@
 """
-Experimental: daily digest.
+Unclear what the model is.
 
 # TODO
 
 ## As
 
 - pickle makes it hard to edit, and need all definition in caller
+    - use db or auto-json
 
 ## Bs
 

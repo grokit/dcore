@@ -94,7 +94,7 @@ def createShortcuts(lMeta):
         fileContent = fileContent.replace('__opt_cmd__', meta[2])
 
         fileContent = fileContent.replace('__custom__',
-                                          'python3 %s $*' % meta[0])
+                                          'python3 %s "$@"' % meta[0])
 
         fileOut = scriptsOutputFolder + "/" + meta[1]
         fileOut = os.path.normpath(fileOut)

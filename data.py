@@ -16,6 +16,7 @@ import platform
 ################################################################################
 
 # define like this to allow overriding in tests (?)
+# see `UNIT_TESTS_OVERRIDE_ROOT_FOLDER` used elsewhere ; usure if actually used though
 _SYNC_ROOT = os.path.expanduser('~/sync')
 
 def sync_root():

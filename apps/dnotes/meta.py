@@ -68,7 +68,8 @@ def _extract_v3(orig_filename, content):
         buf = line
         while ii != -1:
             ii = buf.find(options.MSEP)
-            if ii == -1: break
+            if ii == -1:
+                break
             pre = _walk_str(buf, ii - 1, -1)
             pos_next_i = ii + len(options.MSEP)
 
@@ -86,13 +87,25 @@ def _extract_v3(orig_filename, content):
     return metas
 
 
-def _metaToDict(metaList):
+def _unitTestsMetaToDict(metaList):
     MM = {}
     for m in metaList:
         if m.meta_type not in MM:
             MM[m.meta_type] = set()
         MM[m.meta_type].add(m.value)
     return MM
+
+
+def listToUniqueOfType(metaList, mtype):
+    """
+    You can use this if/when you have all the metas for a doc and are sure there can/should be <= 1 item of a given type (e.g. uuid, time, ...).
+    """
+    match = None
+    for mm in metaList:
+        if mm.meta_type == mtype:
+            assert match is None
+            match = mm
+    return match
 
 ##########################################################################
 # PUBLIC
@@ -101,7 +114,7 @@ def _metaToDict(metaList):
 
 class Meta:
     """
-    This is one chunk of metadata.
+    A metadata. Or tag, etc.
     """
 
     def __init__(self, meta_type, value, source_line, source_file, line_no):
@@ -113,14 +126,47 @@ class Meta:
         assert isinstance(source_line, str)
         assert len(source_line.splitlines()) == 1
 
+        # you can also consider this the "key" part of a (key, value) meta
         self.meta_type = meta_type
         # note: this can be kvp, but leave that to an outside extension that can
         # interpret the value (keep things orthogonal)
         self.value = value
+        # provenance info
         self.source_line = source_line
         self.source_filename = source_file
-        assert type(line_no) == int
+        assert isinstance(line_no, int)
         self.line_no = line_no
+
+    def IsExtendedKVP(self):
+        return self.value[0] == '(' and self.value[-1] == ')'
+
+    def Key(self):
+        return self.meta_type
+
+    def Value(self):
+        return self.value
+
+    def ValueDict(self):
+        """
+        (name=work_retro,start=2025-01-01,end=2025-01-10)
+        """
+        assert self.IsExtendedKVP()
+        vv = self.value
+        assert vv[0] == '(' and vv[-1] == ')'
+        vv = vv[1:-1]
+        kvps = vv.split(',')
+
+        dd = {}
+        for kvp in kvps:
+            assert '=' in kvp
+            kk = kvp.split('=')[0]
+            assert kk == kk.strip()
+            vv = kvp.split('=')[1].strip()
+            assert vv == vv.strip()
+            assert kk not in dd
+            dd[kk] = vv
+
+        return dd
 
     def __str__(self):
         return str("%s: %s" % (self.meta_type, self.value))

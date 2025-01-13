@@ -1,13 +1,24 @@
+"""
+List of supported outputs: https://pandoc.org/chunkedhtml-demo/3.1-general-options.html
+
+# also see
+
+wkhtmltopdf https://www.wikipedia.org/ out.pdf
+wkhtmltoimage https://www.wikipedia.org/ out.png
+
+"""
+
 import argparse
 import tempfile
 import os
 import string
 
-_meta_shell_command = 'web_to_epub'
+_meta_shell_command = 'web_to_x'
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('webpage', type=str)
+    parser.add_argument('-o', '--output_type', type=str, default='epub')
     return parser.parse_args()
 
 
@@ -37,7 +48,7 @@ def url_to_filename(url):
 def do():
     args = get_args()
     tempfile_fh = dump_web_to_file(args.webpage)
-    pandoc_convert(tempfile_fh.name, url_to_filename(args.webpage) + '.epub')
+    pandoc_convert(tempfile_fh.name, url_to_filename(args.webpage) + f'.{args.output_type}')
 
 if __name__ == '__main__':
 	do()

@@ -26,14 +26,12 @@ import dcore.apps.dnotes.options as options
 
 _meta_shell_command = 'ingest'
 
-TITLE_SAFE_CHARSET = set(
+_TITLE_SAFE_CHARSET = set(
     'abcdefghijklmnopqrstuvwxyz-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
-TIME_FORMAT = '%Y-%m-%d_%H:%M'
-
+_TIME_FORMAT = '%Y-%m-%d_%H:%M'
 # Putting back minutes so that notes of the day are ordered.
-#TIME_FORMAT_FOLDER_NAME = '%Y-%m-%d'
-TIME_FORMAT_FOLDER_NAME = TIME_FORMAT.replace(":", "-")
+_TIME_FORMAT_FOLDER_NAME = _TIME_FORMAT.replace(":", "-")
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -43,25 +41,25 @@ def get_args():
 
 
 def timeStrToUnixTime(timeStr):
-    dateObj = datetime.datetime.strptime(timeStr, TIME_FORMAT)
+    dateObj = datetime.datetime.strptime(timeStr, _TIME_FORMAT)
     return time.mktime(dateObj.timetuple())
 
 
 def unixTimeAsSafeStr(unixTime):
     dt = datetime.datetime.fromtimestamp(unixTime)
-    return dt.strftime(TIME_FORMAT)
+    return dt.strftime(_TIME_FORMAT)
 
 
 def unixTimeAsSafeFolderStr(unixTime):
     "Use when attaching time to folder names."
     dt = datetime.datetime.fromtimestamp(unixTime)
-    return dt.strftime(TIME_FORMAT_FOLDER_NAME)
+    return dt.strftime(_TIME_FORMAT_FOLDER_NAME)
 
 
 def toFolderName(title, unixTime):
     buf = []
     for l in title:
-        if l not in TITLE_SAFE_CHARSET:
+        if l not in _TITLE_SAFE_CHARSET:
             l = '-'
         buf.append(l.lower())
     safeTitle = "".join(buf)
@@ -83,8 +81,9 @@ class Note:
         title = None
         unixTime = None
 
-        # maybe _metaToDict should only be used from UTs
-        note_meta = meta._metaToDict(meta.extract("fake.filename", note_fulltext))
+        # maybe _unitTestsMetaToDict should only be used from UTs todo:::b1
+        # ^^ replace with getting a fully typed
+        note_meta = meta._unitTestsMetaToDict(meta.extract("fake.filename", note_fulltext))
 
         if 'time' in note_meta:
             if unixTime is None:
@@ -103,9 +102,9 @@ class Note:
                 title = potTitle
 
         if title is None:
-            h = hashlib.new('sha256')
-            h.update(note_fulltext.encode())
-            title = 'anonymous note %s' % h.hexdigest()[0:8]
+            hh = hashlib.new('sha256')
+            hh.update(note_fulltext.encode())
+            title = 'anonymous note %s' % hh.hexdigest()[0:8]
 
         # User did not use automatic tool for unixTime, insert unixTime of ingestion.
         if unixTime is None:
@@ -130,10 +129,10 @@ class Note:
         while os.path.exists(folderWriteTo):
             print('Warning: `%s` already exist, picking next folder.' %
                   folderWriteTo)
-            folderWriteTo = folderWriteTo + '_'
+            folderWriteTo = folderWriteTo + '_next'
 
-        fileWriteTo = os.path.join(folderWriteTo, 'note.md')
         os.makedirs(folderWriteTo)
+        fileWriteTo = os.path.join(folderWriteTo, 'note.md')
 
         with open(fileWriteTo, 'w') as fh:
             print('Wrote note titled `%s` to `%s`.' %
@@ -141,18 +140,19 @@ class Note:
             fh.write(self.content)
 
 
-def ingest(folder_out, contentLines):
+def ingest_content(folder_out, contentLines):
     objNote = Note.fromText(contentLines)
     objNote.writeSelf(folder_out)
 
 
 def gitCommit(folder, message):
+    curr_dir = os.getcwd()
     os.chdir(folder)
     os.system('git add -A')
     message = message.replace('"', '_')
     message = message.replace("'", '_')
     os.system("git commit -m '%s'" % message)
-
+    os.chdir(curr_dir)
 
 def preChangeHook():
     folder_out = data.get_notes_root_folder()
@@ -164,12 +164,12 @@ def postChangeHook():
     gitCommit(folder_out, "%s_postChangeHook" % __file__)
 
 
-if __name__ == '__main__':
-    args = get_args()
-
+def _find_output_folder(args):
     if args.output_folder:
-        assert args.location_hint is None
-        folder_out = args.output_folder
+        # oddly, it doesn't default to None as is indated but with an empty array
+        assert len(args.location_hint) == 0
+        assert len(args.output_folder) == 1
+        folder_out = args.output_folder[0]
     elif args.location_hint:
         candidates = []
         if os.path.exists(data.get_notes_project_folder()):
@@ -207,17 +207,25 @@ if __name__ == '__main__':
             picked = [util.manualSelect(picked)]
 
         folder_out = picked[0]
-
     else:
         folder_out = data.get_notes_low_folder()
+
+    assert folder_out is not None
+    return folder_out
+
+if __name__ == '__main__':
+    args = get_args()
 
     preChangeHook()
 
     fullpath = data.get_ingest_fullpath()
+    with open(fullpath, 'r') as fh:
+        content = fh.read()
 
-    content = open(fullpath).read()
+    folder_out = _find_output_folder(args)
+    print(f'folder_out: {folder_out}')
+    ingest_content(folder_out, content)
 
-    ingest(folder_out, content)
     os.remove(fullpath)
 
     postChangeHook()

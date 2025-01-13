@@ -28,10 +28,12 @@ def get_notes_root_folder():
 def get_notes_folders_ext():
     if UNIT_TESTS_OVERRIDE_ROOT_FOLDER is not None:
         return []
-
     out = []
     out.append(os.path.expanduser('~/sync/dev/windows_computer/sync_w_win'))
-    out.append(os.path.expanduser('~/sync/dev/sync_phone/reading_notes'))
+    out.append(os.path.expanduser('~/low_sync/sync_phone'))
+    # note: do not put dcore to avoid accidental leaking / taking notes in a public file
+    out.append(os.path.expanduser('~/sync/scripts/dcore_ext'))
+    out = [oo for oo in out if os.path.exists(oo) and os.path.isdir(oo)]
     return out
 
 def get_notes_low_folder():

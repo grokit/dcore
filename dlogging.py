@@ -34,7 +34,7 @@ def genLogFilename():
 
 
 def setup():
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     folder = data.logsdir()
     data.createDirIfNotExist(folder)
 

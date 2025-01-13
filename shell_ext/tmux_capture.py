@@ -33,6 +33,7 @@ if __name__ == '__main__':
             exit(0)
         filename = os.path.join(folder, max(files, key=lambda ff: os.path.getmtime(os.path.join(folder, ff))))
         utils.openInEditor(filename)
+        exit(0)
 
     pattern = 'tmux_capture'
     i = 0

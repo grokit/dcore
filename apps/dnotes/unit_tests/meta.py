@@ -28,7 +28,7 @@ class Tests(unittest.TestCase):
 
         meta = module_meta.extract("fake.filename", testDoc)
         assert len(meta) == 5
-        metaDict = module_meta._metaToDict(meta)
+        metaDict = module_meta._unitTestsMetaToDict(meta)
 
         assert len(metaDict['tag']) == 3
         assert 'tag1' in metaDict['tag']
@@ -58,7 +58,7 @@ class Tests(unittest.TestCase):
         testDoc += 'not_tag:::              '
 
         meta = module_meta.extract("fake.filename", testDoc)
-        metaDict = module_meta._metaToDict(meta)
+        metaDict = module_meta._unitTestsMetaToDict(meta)
         assert len(metaDict['tag']) == 2
         assert 'tag1' in metaDict['tag']
         assert 'tag2' in metaDict['tag']
@@ -76,12 +76,15 @@ class Tests(unittest.TestCase):
         time:::2024-09-21_14:03
         """
         meta = module_meta.extract("fake.filename", testDoc)
-        metaDict = module_meta._metaToDict(meta)
+        metaDict = module_meta._unitTestsMetaToDict(meta)
         assert len(metaDict['time']) == 1
         assert '2024-09-21_14:03' in metaDict['time']
 
     @unittest.skip("known fail")
     def test_current_confusion(self):
+        """
+        todo:::a1 -> port all bookmarks to test_extended_meta, I still use it
+        """
 
         testDoc = """
         - [item:::bookmark], discover classical art browse and download high-resolution public domain artworks, https://artvee.com/
@@ -116,18 +119,25 @@ class Tests(unittest.TestCase):
         """
 
         meta = module_meta.extract("fake.filename", testDoc)
-        assert len(meta) == 3
-        metaDict = module_meta._metaToDict(meta)
 
-        assert 'key' in metaDict
-        assert '(v1=value-01,v2=1234)' in metaDict['key']
-        assert 'def1' in metaDict['abc1']
-        assert 'def2' in metaDict['abc2']
+        # test normal ...
+        assert module_meta.listToUniqueOfType(meta, 'abc1').IsExtendedKVP() == False
+        assert module_meta.listToUniqueOfType(meta, 'abc1').Value() == 'def1'
+        assert module_meta.listToUniqueOfType(meta, 'abc2').IsExtendedKVP() == False
+        assert module_meta.listToUniqueOfType(meta, 'abc2').Value() == 'def2'
+
+        # test extended
+        assert module_meta.listToUniqueOfType(meta, 'key').IsExtendedKVP() == True
+        assert module_meta.listToUniqueOfType(meta, 'key').Value() == '(v1=value-01,v2=1234)'
+        assert len(module_meta.listToUniqueOfType(meta, 'key').ValueDict()) == 2
+        assert module_meta.listToUniqueOfType(meta, 'key').ValueDict()['v1'] == 'value-01'
+        assert module_meta.listToUniqueOfType(meta, 'key').ValueDict()['v2'] == '1234'
+
 
 if __name__ == '__main__':
     if False:
-        # ::: resume
         unittest.main()
     else:
+        # run a specific test ...
         suite = unittest.TestLoader().loadTestsFromName('meta.Tests.test_extended_meta')
         unittest.TextTestRunner().run(suite)
