@@ -65,6 +65,9 @@ def permament_folder_out():
 def filename_uuid_db():
     return os.path.join(permament_folder_out(), 'uuids_db.pickle')
 
+def filename_note_events_db():
+    return os.path.join(permament_folder_out(), 'note_events.db')
+
 ################################################################################
 # ...
 ################################################################################

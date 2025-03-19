@@ -1,5 +1,5 @@
 """
-Experimental: ???.
+Experimental: ???. beep beep boop boop.
 """
 
 import sys
@@ -30,12 +30,8 @@ _meta_shell_command = 'bg_uuids'
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a',
-                        '--aaa',
-                        action='store_true',
-                        help='...')
+    parser.add_argument('-a', '--aaa', action='store_true', help='...')
     return parser.parse_args()
-
 
 if __name__ == '__main__':
     G_ARGS = get_args()

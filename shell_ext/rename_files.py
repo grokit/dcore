@@ -99,6 +99,7 @@ def removeAggressive(filename, args, state):
         ss = ss.replace('__', '_')
     while '_.' in ss:
         ss = ss.replace('_.', '.')
+    ss = ss.strip('-_')
     return ss
 
 

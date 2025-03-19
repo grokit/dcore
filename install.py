@@ -74,6 +74,10 @@ nnoremap <F4> :wa!<CR>:cd %:p:h<CR>:!git add -A :/ && git commit -a -m :vi-f4-co
 nnoremap <F5> :set spell spelllang=en_us<cr>
 nnoremap <F6> :set nospell<cr>
 
+" F7 / F8 save/load session
+nnoremap <F7> :mksession! ~/.vim_f7_shortcut_session.vim<cr>
+nnoremap <F8> :source ~/.vim_f7_shortcut_session.vim<cr>
+
 " experimental stuff
 nnoremap <leader>d :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
 nnoremap <leader>u :r !ns_gen_uuid --with_prefix<cr>
@@ -232,7 +236,7 @@ HISTCONTROL=ignoreboth
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-cd ~/no_sync
+cd ~/no_sync/inbound
 tmux
 """
     fname = data.getBashrcOrEquivalent()
