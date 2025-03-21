@@ -31,21 +31,27 @@ _meta_shell_command = 'bg_note_events'
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--crawl_and_update', action='store_true', default=False)
+    parser.add_argument(
+        '-c',
+        '--crawl_and_update',
+        action='store_true',
+        default=False)
     parser.add_argument('-r', '--read', action='store_true', default=True)
     return parser.parse_args()
 
-def add_or_update_time(cursor, uid, ttype, context, now_unixtime_s):
+
+def add_or_update_time(cursor, uid, ttype, context,
+                       last_observed_change_unixtime_s):
     query = 'SELECT * FROM note_events WHERE uid = ?'
     cursor.execute(query, (uid,))
     result = cursor.fetchone()
-    first_seen_unix_s = now_unixtime_s
-    last_modified_unix_s = now_unixtime_s
+    first_seen_unix_s = last_observed_change_unixtime_s
+    last_modified_unix_s = last_observed_change_unixtime_s
     if result:
-        last_uid, last_ttype, last_context, first_seen_unix_s, last_last_modified_unix_s  = result
+        last_uid, last_ttype, last_context, first_seen_unix_s, last_last_modified_unix_s = result
         # if changed, update last mod
         if (last_uid, last_ttype, last_context) != (uid, ttype, context):
-            last_modified_unix_s = now_unixtime_s
+            last_modified_unix_s = last_observed_change_unixtime_s
         else:
             last_modified_unix_s = last_last_modified_unix_s
 
@@ -59,6 +65,10 @@ def add_or_update_time(cursor, uid, ttype, context, now_unixtime_s):
          context,
          first_seen_unix_s,
          last_modified_unix_s))
+
+
+def last_changed_unixtime_s(filepath):
+    return int(os.path.getmtime(filepath))
 
 
 def scan_and_update(db_filename):
@@ -81,8 +91,14 @@ def scan_and_update(db_filename):
         # this may change too much over time to be useful
         uid = ff
         context = ''
-        add_or_update_time(cursor, uid, 'NOTE_FILENAME', context, now_unixtime_s)
+        add_or_update_time(
+            cursor,
+            uid,
+            'NOTE_FILENAME',
+            context,
+            last_changed_unixtime_s(ff))
     for ff in files:
+        last_changed_u_s = last_changed_unixtime_s(ff)
         # person_id@
         with open(ff, 'r') as fh:
             ii = 0
@@ -92,9 +108,14 @@ def scan_and_update(db_filename):
                 if mm is not None:
                     key = mm.group()
                     context = key
-                    # this is not stable, as soon as line changes ... perhaps ok
-                    uid = f'{ff}:{ii}-{key}'
-                    add_or_update_time(cursor, uid, 'PERSON_ID_MENTION', context, now_unixtime_s)
+                    # do not use line number, it's too unstable
+                    uid = f'{ff}:-{key}'
+                    add_or_update_time(
+                        cursor,
+                        uid,
+                        'PERSON_ID_MENTION',
+                        context,
+                        last_changed_u_s)
                 ii += 1
         # uuid
         metas = meta.extract(ff, open(ff, 'r').read())
@@ -102,24 +123,46 @@ def scan_and_update(db_filename):
             if mm.meta_type == 'uuid':
                 uid = mm.value
                 context = ff
-                add_or_update_time(cursor, uid, 'UUID', context, now_unixtime_s)
+                add_or_update_time(
+                    cursor, uid, 'UUID', context, last_changed_u_s)
     conn.commit()
     conn.close()
 
+
 def read(db_filename):
+    """
+    TODO:
+    - break down and indicate the day as yyyy-mm-dd
+    - better render
+    """
     conn = sqlite3.connect(db_filename)
     cursor = conn.cursor()
 
     # stuff changed since ...
-    today = datetime.datetime.today()
-    read_cutoff = today.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    read_cutoff = (
+        datetime.datetime.today() -
+        datetime.timedelta(
+            days=2)).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0)
 
     query = 'SELECT * FROM note_events WHERE last_modified_unix_s >= ?'
     cursor.execute(query, (int(read_cutoff.timestamp()),))
     results = cursor.fetchall()
+
+    # sort by last_modified_unix_s
+    column_names = [desc[0] for desc in cursor.description]
+    ii = column_names.index('last_modified_unix_s')
+    results = sorted(results, key=lambda x: x[ii])
+
+    print(column_names)
     for result in results:
-        #uid, ttype, context, first_seen_unix_s, modified_unix_s  = result
+        # uid, ttype, context, first_seen_unix_s, modified_unix_s  = result
         print(result)
+
 
 if __name__ == '__main__':
     args = get_args()
