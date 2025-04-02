@@ -45,7 +45,7 @@ import dcore.utils as utils
 
 _meta_shell_command = 'fif'
 
-_SEARCH_ROOT_FOLDERS = [data.sync_root()]
+_SEARCH_ROOT_FOLDERS = [os.path.expanduser(ff) for ff in [data.sync_root(), '~/low_sync']]
 _CACHE_FILE_LOCATION = os.path.join(data.dcoreTempData(),
                         os.path.split(__file__)[1] + ".cache")
 _SQL_DB_FILENAME = os.path.join(data.dcoreTempData(), "fif_file_index.db")

@@ -15,6 +15,7 @@ import math
 import time
 import sqlite3
 import datetime
+import hashlib
 
 import dcore.osrun as osrun
 import dcore.data as dcore_data
@@ -37,8 +38,13 @@ def get_args():
         action='store_true',
         default=False)
     parser.add_argument('-r', '--read', action='store_true', default=True)
+    parser.add_argument('--reset', action='store_true', default=False)
     return parser.parse_args()
 
+
+def quick_short_hash(ss):
+    length = 12
+    return hashlib.sha256(ss.encode()).hexdigest()[:length]
 
 def add_or_update_time(cursor, uid, ttype, context,
                        last_observed_change_unixtime_s):
@@ -48,12 +54,14 @@ def add_or_update_time(cursor, uid, ttype, context,
     first_seen_unix_s = last_observed_change_unixtime_s
     last_modified_unix_s = last_observed_change_unixtime_s
     if result:
-        last_uid, last_ttype, last_context, first_seen_unix_s, last_last_modified_unix_s = result
-        # if changed, update last mod
-        if (last_uid, last_ttype, last_context) != (uid, ttype, context):
+        _last_uid, _last_ttype, _last_context, _first_seen_unix_s, _last_modified_unix_s = result
+        # preserve first seen
+        first_seen_unix_s = _first_seen_unix_s
+        # only update last_modified_unix_s if there is a change (rely mainly on context)
+        if (_last_uid, _last_ttype, _last_context) != (uid, ttype, context):
             last_modified_unix_s = last_observed_change_unixtime_s
         else:
-            last_modified_unix_s = last_last_modified_unix_s
+            last_modified_unix_s = _last_modified_unix_s
 
     dml = f'''
     INSERT OR REPLACE INTO note_events VALUES (?, ?, ?, ?, ?)
@@ -71,6 +79,26 @@ def last_changed_unixtime_s(filepath):
     return int(os.path.getmtime(filepath))
 
 
+def generic_regex_and_line_marker(cursor, regex, ff, ttype):
+    last_changed_u_s = last_changed_unixtime_s(ff)
+    with open(ff, 'r') as fh:
+        ii = 0
+        for line in fh.readlines():
+            mm = re.search(regex, line)
+            if mm is not None:
+                key = mm.group()
+                # hash(line) makes sense: only update if the line
+                # if mentioned >1 in same file with no or same line, eh fine to only track once
+                uid = f'{ff}-{quick_short_hash(line)}-{key}'
+                context = line.strip()
+                add_or_update_time(
+                    cursor,
+                    uid,
+                    ttype,
+                    context,
+                    last_changed_u_s)
+            ii += 1
+
 def scan_and_update(db_filename):
     conn = sqlite3.connect(db_filename)
     cursor = conn.cursor()
@@ -87,36 +115,28 @@ def scan_and_update(db_filename):
 
     now_unixtime_s = int(time.time())
     files = sorted(util.get_all_note_files())
+    if False:
+        files = ['']
     for ff in files:
+        last_changed_u_s = last_changed_unixtime_s(ff)
         # this may change too much over time to be useful
         uid = ff
-        context = ''
+        context = last_changed_u_s
         add_or_update_time(
             cursor,
             uid,
             'NOTE_FILENAME',
             context,
-            last_changed_unixtime_s(ff))
+            last_changed_u_s)
     for ff in files:
-        last_changed_u_s = last_changed_unixtime_s(ff)
-        # person_id@
-        with open(ff, 'r') as fh:
-            ii = 0
-            for line in fh.readlines():
-                # todo: test what happens if have 2 ldaps in same line
-                mm = re.search(r'\w+@', line)
-                if mm is not None:
-                    key = mm.group()
-                    context = key
-                    # do not use line number, it's too unstable
-                    uid = f'{ff}:-{key}'
-                    add_or_update_time(
-                        cursor,
-                        uid,
-                        'PERSON_ID_MENTION',
-                        context,
-                        last_changed_u_s)
-                ii += 1
+        # ldap-like my_name@ or my_name@something.com
+        generic_regex_and_line_marker(cursor, r'\w+@', ff, 'PERSON_ID_MENTION')
+        # https://wwww.geico.com
+        generic_regex_and_line_marker(cursor, r'\w+://[^\s\n]+', ff, 'URL')
+        # go/abcd-efg
+        generic_regex_and_line_marker(cursor, r'go/\w+', ff, 'GO_SLASH')
+        # b/12345
+        generic_regex_and_line_marker(cursor, r'b/[0-9]+', ff, 'B_SLASH')
         # uuid
         metas = meta.extract(ff, open(ff, 'r').read())
         for mm in metas:
@@ -139,15 +159,10 @@ def read(db_filename):
     cursor = conn.cursor()
 
     # stuff changed since ...
-
-    read_cutoff = (
-        datetime.datetime.today() -
-        datetime.timedelta(
-            days=2)).replace(
-        hour=0,
-        minute=0,
-        second=0,
-        microsecond=0)
+    if True:
+        read_cutoff = ( datetime.datetime.today() - datetime.timedelta(days=2)).replace( hour=0, minute=0, second=0, microsecond=0)
+    else:
+        read_cutoff = ( datetime.datetime.today() - datetime.timedelta(hours=1))
 
     query = 'SELECT * FROM note_events WHERE last_modified_unix_s >= ?'
     cursor.execute(query, (int(read_cutoff.timestamp()),))
@@ -167,6 +182,10 @@ def read(db_filename):
 if __name__ == '__main__':
     args = get_args()
     db_filename = bg_lib.filename_note_events_db()
+    if args.reset:
+        conn = sqlite3.connect(db_filename)
+        conn.cursor().execute('DROP TABLE note_events')
+        exit(0)
     if args.crawl_and_update:
         scan_and_update(db_filename)
         exit(0)
