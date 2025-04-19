@@ -45,13 +45,14 @@ import dcore.utils as utils
 
 _meta_shell_command = 'fif'
 
-_SEARCH_ROOT_FOLDERS = [os.path.expanduser(ff) for ff in [data.sync_root(), '~/low_sync']]
+_SEARCH_ROOT_FOLDERS = [ os.path.expanduser(ff) for ff in [ data.sync_root(), '~/low_sync', '~/crmounts/lowsync_media']]
 _CACHE_FILE_LOCATION = os.path.join(data.dcoreTempData(),
-                        os.path.split(__file__)[1] + ".cache")
+                                    os.path.split(__file__)[1] + ".cache")
 _SQL_DB_FILENAME = os.path.join(data.dcoreTempData(), "fif_file_index.db")
 
 # Before automatically force regenerating.
-cacheExpiryInSeconds = 7.0 * 24 * 60 * 60  
+cacheExpiryInSeconds = 7.0 * 24 * 60 * 60
+
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -125,6 +126,7 @@ def list_all_files():
         F, ['node_modules', '.git', '.hg', '__pycache__', r'Out\Functional'])
     return F
 
+
 def do_sql_dump_and_compate(filenames):
     """
     New/experimental: dump to SQL database to make it possible to track files added, deleted & spot accidental deleted of uid-files.
@@ -143,11 +145,13 @@ def do_sql_dump_and_compate(filenames):
     now_unix_s = int(time.time() * 1)
     for filename in filenames:
         filename_last_mod_unix_s = os.path.getmtime(filename)
-        cursor.execute('''
-        INSERT OR REPLACE INTO fif_file_index (filepath, last_mod_unix_s, last_crawled_unix_s) VALUES (?, ?, ?)
-        ''', (filename, filename_last_mod_unix_s, now_unix_s))
+        cmd = '''INSERT OR REPLACE INTO fif_file_index (filepath, last_mod_unix_s, last_crawled_unix_s) VALUES (?, ?, ?)'''
+        args = (filename, filename_last_mod_unix_s, now_unix_s)
+        #print(cmd, args)
+        cursor.execute(cmd, args)
     conn.commit()
     conn.close()
+
 
 def do():
     args = get_args()
@@ -166,8 +170,8 @@ def do():
 
     if F is None:
         print(
-            "Generating cache from %s, this could take a while... have a tea and relax :)."
-            % _SEARCH_ROOT_FOLDERS)
+            "Generating cache from %s, this could take a while... have a tea and relax :)." %
+            _SEARCH_ROOT_FOLDERS)
         F = list_all_files()
         print(f'Saving cache at: {_CACHE_FILE_LOCATION}')
         pickle.dump(Cache(F), open(_CACHE_FILE_LOCATION, 'wb'))
@@ -190,6 +194,7 @@ def do():
 
             ff = F[open_ith]
             utils.open_file_autoselect_app(ff)
+
 
 if __name__ == '__main__':
     do()
