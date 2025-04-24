@@ -189,6 +189,11 @@ def do():
 
         if args.open is True:
             open_ith = 0
+            if len(F) == 2:
+                ocular_remove = [ff for ff in F if '.pdf.xml' not in ff]
+                if len(ocular_remove) == 1:
+                    print('Warning: automatically removed ocular meta-file.')
+                    F = ocular_remove
             if len(F) > 1:
                 open_ith = int(input('Open which one?\n'))
 

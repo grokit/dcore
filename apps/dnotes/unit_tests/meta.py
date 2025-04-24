@@ -116,6 +116,13 @@ class Tests(unittest.TestCase):
         e.g:
             blah (abc1:::def1) blah
             blad, abc2:::def2, blah
+
+        loc:::01wc5hf76r7p
+        An interesting question here: if use this in code, probably also want to be able to type.
+            - create a dataclasses type object, which also means ~schema + convert from str
+            - so then do we have yet another type? or do we enforce a schema catalog what has to exist for each of those 'extended' meta?
+                - is this easier / simpler than kvp in a dict?
+            - see lloc:::lc0xein2vgmr for current use: ValueDict() -> manually create object
         """
 
         meta = module_meta.extract("fake.filename", testDoc)

@@ -9,8 +9,9 @@ Usage:
     ingest -f <file>
         - '' <file>
 
-# Maybe?
-- ingest -h : move ingested to cur dir
+# Ideas
+
+- ingest should get a -f argument to swallow a file instead of the default one (ingest.md)
 """
 
 import os

@@ -74,7 +74,7 @@ def open_link():
                 meta_key = 'uuid'
             if meta_key == 'lloc':
                 meta_key = 'loc'
-            filenames_matched += search.get_filenames_matching_meta(meta_key, meta_value)
+            filenames_matched += search.get_filenames_matching_meta_key_and_value(meta_key, meta_value)
 
     matched_once = False
     #print(filenames_matched)

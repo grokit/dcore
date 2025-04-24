@@ -48,7 +48,13 @@ class Match:
 # PUBLIC
 ################################################################################
 
-def get_filenames_matching_meta(meta_key, meta_value):
+class __MetaValueAll: 
+    """
+    Just a marker meaning we only care about keys.
+    """
+    pass
+
+def get_filenames_matching_meta_key_and_value(meta_key, meta_value):
     """
     E.g. key: uuid, value: 123456789
     """
@@ -58,12 +64,15 @@ def get_filenames_matching_meta(meta_key, meta_value):
     for ff in files:
         metas = meta.extract(ff, open(ff).read())
         for mm in metas:
-            if mm.meta_type == meta_key and mm.value == meta_value:
+            if mm.meta_type == meta_key and (type(meta_value) == __MetaValueAll  or mm.value == meta_value):
                 filename = mm.source_filename
                 line_no = mm.line_no
                 files_and_lines_matching.append((filename, line_no))
 
     return files_and_lines_matching
+
+def get_filenames_matching_meta_key(meta_key):
+    return get_filenames_matching_meta_key_and_value(meta_key, __MetaValueAll())
 
 def sortMatchesByScore(matches, scores, explanation=None):
     assert len(matches) == len(scores)

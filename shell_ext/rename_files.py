@@ -104,13 +104,13 @@ def removeAggressive(filename, args, state):
 
 
 def prefix(f, args, state):
-    if arg is None:
+    if args is None:
         raise Exception('No country for None arg.')
-    return "%s%s" % (arg, f)
+    return "%s%s" % (args, f)
 
 
 def suffix(f, args, state):
-    if arg is None:
+    if args is None:
         raise Exception('No country for None arg.')
 
     ext = ''
@@ -118,7 +118,7 @@ def suffix(f, args, state):
         ext = f[f.rfind('.'):]
         f = f[:f.rfind('.')]
 
-    return "%s_%s%s" % (f, arg, ext)
+    return "%s_%s%s" % (f, args, ext)
 
 
 def date(f, args, state):

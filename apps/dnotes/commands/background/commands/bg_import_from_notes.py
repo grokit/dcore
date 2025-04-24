@@ -1,5 +1,4 @@
 """
-todo:::b1 move to ./background/tasks
 """
 
 import os
@@ -13,7 +12,7 @@ import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.score as score
 import dcore.apps.dnotes.options as options
 
-_meta_shell_command = 'td_import_from_notes'
+_meta_shell_command = 'bg_import_from_notes'
 
 import sys
 

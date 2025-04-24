@@ -1,4 +1,13 @@
 """
+
+# FEATURES
+
+- record how often shortcuts are used
+
+================================================================================
+# OLD
+================================================================================
+
 # BUGS
 
 - Same key can be there multiple times ... forbid at entry.
