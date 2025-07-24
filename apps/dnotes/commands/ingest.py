@@ -12,6 +12,11 @@ Usage:
 # Ideas
 
 - ingest should get a -f argument to swallow a file instead of the default one (ingest.md)
+
+# BUGS
+
+- ingest -o should refuse to put in a non-root folder
+
 """
 
 import os

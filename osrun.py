@@ -41,7 +41,8 @@ def executeCmd(cmd, doPrint=False):
 def executePrintAndReturnStdout(cmd, doLog=True, doPrint=True):
     assert type(cmd) == type('')
 
-    logging.debug('Executing: %s.' % cmd)
+    if doLog:
+        logging.debug('Executing: %s.' % cmd)
     L = []
     rv, stdout, stderr = executeCmd(cmd, doPrint)
     if doLog:

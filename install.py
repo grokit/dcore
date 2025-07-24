@@ -24,11 +24,18 @@ execute pathogen#infect()
 
 syntax on
 
+" disabled settings
+
 " set background=dark
 " colorscheme solarized
 
 " set background=light
 " colorscheme solarized
+
+" memory
+
+" vi remembers :oldfiles for 1000 instead of default 100
+set viminfo='1000
 
 " case
 set ignorecase

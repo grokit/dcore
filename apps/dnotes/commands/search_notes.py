@@ -109,7 +109,6 @@ if __name__ == '__main__':
             for meta_ in metas:
                 if meta_.meta_type == 'tag' and meta_.value == G_ARGS.tag:
                     filtered.append(match)
-
         matches = filtered 
 
     scores = []

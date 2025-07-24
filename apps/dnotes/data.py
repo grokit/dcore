@@ -7,6 +7,8 @@ import os
 UNIT_TESTS_OVERRIDE_ROOT_FOLDER = None
 
 def test_hijack_root_folder():
+    # used as: 
+    # data.UNIT_TESTS_OVERRIDE_ROOT_FOLDER = data.test_hijack_root_folder()
     path, _ = os.path.split(__file__)
     return os.path.join(path, 'unit_tests/mock_notes_dir')
 
