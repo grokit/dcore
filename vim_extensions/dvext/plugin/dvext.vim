@@ -20,3 +20,7 @@ endfunction
 function! DextOpenLink()
     python3 main.open_link()
 endfunction
+
+function! DextNotify_FileOpened()
+    python3 main.notify_file_opened()
+endfunction

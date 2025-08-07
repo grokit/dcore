@@ -32,6 +32,9 @@ syntax on
 " set background=light
 " colorscheme solarized
 
+" notification hooks
+autocmd BufReadPost * call DextNotify_FileOpened()
+
 " memory
 
 " vi remembers :oldfiles for 1000 instead of default 100

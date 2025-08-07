@@ -1,8 +1,13 @@
 import vim
 import webbrowser
+import os
+import logging
 
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.options as options
+import dcore.dlogging as dlogging
+import dcore.data as data
+import dcore.utils as dutils
 
 """
 vim.current.buffer.append('This would get added at cursor.')
@@ -101,6 +106,14 @@ def open_link():
 
 def test_print():
     print('hello vim')
+
+def notify_file_opened():
+    filename_log = os.path.join(data.dcoreTempData(), 'vi_files_opened.log')
+    filename = vim.current.buffer.name
+
+    date_annot = dutils.date_now_for_annotation()
+    with open(filename_log, 'a') as fh:
+        fh.write(f'{date_annot} {filename}\n')
 
 if __name__ == '__main__':
     pass
