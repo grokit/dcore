@@ -11,8 +11,8 @@ def open_link():
 def test_print():
     print('hello vim')
 
-def notify_file_opened():
-    return vim_extension.notify_file_opened()
+def notify_file_opened_or_created():
+    return vim_extension.notify_file_opened_or_created()
 
 if __name__ == '__main__':
     pass

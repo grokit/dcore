@@ -24,7 +24,10 @@ execute pathogen#infect()
 
 syntax on
 
-" disabled settings
+" ==== disabled settings
+
+" // yank goes to clipboard
+" set clipboard=unnamedplus
 
 " set background=dark
 " colorscheme solarized
@@ -32,17 +35,21 @@ syntax on
 " set background=light
 " colorscheme solarized
 
-" notification hooks
+" // notification hooks
 autocmd BufReadPost * call DextNotify_FileOpened()
+autocmd BufNewFile  * call DextNotify_FileMisc()
 
-" memory
+" ==== memory
 
 " vi remembers :oldfiles for 1000 instead of default 100
 set viminfo='1000
 
-" case
+" ==== case
+
 set ignorecase
 set smartcase
+
+" ==== misc
 
 filetype indent plugin on
 " show existing tab with 4 spaces width
@@ -52,13 +59,13 @@ set shiftwidth=4
 " " On pressing tab, insert 4 spaces
 set expandtab
 
-" Shortcuts
+" ==== shortcuts
 nnoremap <C-t> :tabedit %<cr>
 "" Flip between .h and .cc files.
 nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
 
 "" dvext 
-"" <leader> is `\`
+"" <leader> is backslash
 "" :nnoremap <leader>o :w<cr>:call DextOpenLink()<cr>
 :nnoremap <leader>o :call DextOpenLink()<cr>
 
@@ -88,7 +95,7 @@ nnoremap <F6> :set nospell<cr>
 nnoremap <F7> :mksession! ~/.vim_f7_shortcut_session.vim<cr>
 nnoremap <F8> :source ~/.vim_f7_shortcut_session.vim<cr>
 
-" experimental stuff
+" ==== experimental stuff
 nnoremap <leader>d :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
 nnoremap <leader>u :r !ns_gen_uuid --with_prefix<cr>
 
@@ -96,7 +103,8 @@ nnoremap <leader>u :r !ns_gen_uuid --with_prefix<cr>
 " make it explicit here what I intend by E
 command! E Explore
 
-" === vi / Markdown ===
+" ==== vi / markdown 
+
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 hi link markdownError NONE
 " for markdown files, do no highlight ** between ** asterix `*`.
@@ -220,7 +228,7 @@ shopt -s histappend
 
 # After each command, save and reload history
 # https://unix.stackexchange.com/questions/1288/preserve-bash-history-in-multiple-terminal-windows
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export PROMPT_COMMAND="history -a; history -c; history -r; history -n; $PROMPT_COMMAND"
 
 # Infinite history
 # https://askubuntu.com/questions/307541/how-to-change-history-size-for-ever

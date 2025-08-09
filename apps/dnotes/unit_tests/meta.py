@@ -112,6 +112,8 @@ class Tests(unittest.TestCase):
 
         key:::(v1=value-01,v2=1234)
 
+        key2:::(v1=value-01,v2=12=34) ; <-- what happens if = used in value
+
         Problem: we actually want to break pretty agressively UNLESS there is an open paren:
         e.g:
             blah (abc1:::def1) blah
@@ -139,6 +141,14 @@ class Tests(unittest.TestCase):
         assert len(module_meta.listToUniqueOfType(meta, 'key').ValueDict()) == 2
         assert module_meta.listToUniqueOfType(meta, 'key').ValueDict()['v1'] == 'value-01'
         assert module_meta.listToUniqueOfType(meta, 'key').ValueDict()['v2'] == '1234'
+
+        # test notation issue
+        assert module_meta.listToUniqueOfType(meta, 'key2').IsExtendedKVP() == True
+        assert module_meta.listToUniqueOfType(meta, 'key2').Value() == '(v1=value-01,v2=12=34)'
+        assert len(module_meta.listToUniqueOfType(meta, 'key2').ValueDict()) == 2
+        assert module_meta.listToUniqueOfType(meta, 'key2').ValueDict()['v1'] == 'value-01'
+        # todo:::a1 this is incorrect: should be 12=34. The parsing is a bit silly...
+        assert module_meta.listToUniqueOfType(meta, 'key2').ValueDict()['v2'] == '12'
 
 
 if __name__ == '__main__':

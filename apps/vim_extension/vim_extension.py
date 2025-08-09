@@ -2,12 +2,14 @@ import vim
 import webbrowser
 import os
 import logging
+import uuid
 
 import dcore.apps.dnotes.search as search
 import dcore.apps.dnotes.options as options
 import dcore.dlogging as dlogging
 import dcore.data as data
 import dcore.utils as dutils
+import dcore.kvp_store as kvp_store
 
 """
 vim.current.buffer.append('This would get added at cursor.')
@@ -66,7 +68,7 @@ def _remove_paren(ww):
 
 def open_link():
     word = get_curr_word().strip()
-    print(f'got v2: `{word}` -> {_remove_paren(word)}')
+    print(f'got v4: `{word}` -> {_remove_paren(word)}')
     word = _remove_paren(word)
 
     filenames_matched = []
@@ -95,7 +97,7 @@ def open_link():
                 matched_once = True
 
     if not matched_once:
-        if word[0:7] == 'http://' or word[0:8] == 'https://':
+        if word.startswith('http://') or word.startswith('https://') or word.startswith('chrome://'):
             webbrowser.open(f'{word}')
             matched_once = True
 
@@ -107,13 +109,20 @@ def open_link():
 def test_print():
     print('hello vim')
 
-def notify_file_opened():
+def notify_file_opened_or_created():
+    """
+    Called from vim plugin, careful if rename.
+    """
     filename_log = os.path.join(data.dcoreTempData(), 'vi_files_opened.log')
     filename = vim.current.buffer.name
 
     date_annot = dutils.date_now_for_annotation()
+    to_write = f'{date_annot} {filename}\n'
     with open(filename_log, 'a') as fh:
-        fh.write(f'{date_annot} {filename}\n')
+        fh.write(to_write)
+    # experimental -- just write data there, can remove later
+    key = str(uuid.uuid1()).replace('-','_')
+    kvp_store.write(key, to_write, namespace='vi_operations')
 
 if __name__ == '__main__':
     pass

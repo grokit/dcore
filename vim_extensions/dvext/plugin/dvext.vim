@@ -22,5 +22,9 @@ function! DextOpenLink()
 endfunction
 
 function! DextNotify_FileOpened()
-    python3 main.notify_file_opened()
+    python3 main.notify_file_opened_or_created()
+endfunction
+
+function! DextNotify_FileMisc()
+    python3 main.notify_file_opened_or_created()
 endfunction

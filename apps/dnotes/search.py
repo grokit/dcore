@@ -10,13 +10,14 @@ import re
 import math
 import inspect
 import pathlib
+import datetime
 
 import dcore.dcolor as dcolor
 
 import dcore.apps.dnotes.data as data
 import dcore.apps.dnotes.util as util
 import dcore.apps.dnotes.meta as meta
-
+import dcore.kvp_store as kvp_store
 
 class Match:
     def __init__(self, filename, lineContent):
@@ -216,5 +217,7 @@ def extractMatchSetsFromFiles(files, query, context_range = 5):
     e_time = time.perf_counter()
     time_us = (e_time - s_time)*(1000*1000)
     time_per_file = time_us / len(files)
-    print(f'took {time_per_file:.2f}us per file searching {len(files)} files, total {time_us/1000:.2f}ms')
+    msg = f'took {time_per_file:.2f}us per file searching {len(files)} files, total {time_us/1000:.2f}ms'
+    print(msg)
+    kvp_store.write(f'{str(datetime.date.today()).replace("-","_")}/v{util.version().replace(".", "_")}/search_stat/{int(1000*time.time())}', msg, namespace='ns_search_stats')
     return matches

@@ -17,6 +17,9 @@ def _walkGatherAllFiles(rootdir='.'):
 ################################################################################
 
 
+def version():
+    return '0.1.0'
+
 def select_filename_by_uuid(uuid):
     files = get_all_note_files()
 
