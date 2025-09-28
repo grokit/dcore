@@ -30,6 +30,57 @@ def date_now_iso_8601_safe_folder():
 # ...
 ################################################################################
 
+def filename_aggresive_simplify(filename):
+    """
+    Replace chars in filename that can cause problems in some systems.
+    """
+
+    non_alphanum_allowed = set( '._-')  # ()[]
+
+    accents_to_set = {
+        'ä': 'a',
+        'à': 'a',
+        'â': 'a',
+        '&': 'and',
+        'é': 'e',
+        'ê': 'e',
+        'è': 'e',
+        'ë': 'e',
+        'ô': 'o',
+        'ç': 'c',
+        'Ä': 'A',
+        'À': 'A',
+        'Â': 'A',
+        'É': 'E',
+        'È': 'E',
+        'Ô': 'O',
+        'Ç': 'C',
+    }
+
+    toLower = True
+
+    fout = []
+    for ll in filename:
+        if (ll.isalnum() and ll.isascii()) or ll in non_alphanum_allowed:
+            fout.append(ll)
+        else:
+            if ll in accents_to_set:
+                fout.append(accents_to_set[ll])
+            else:
+                fout.append('_')
+
+    if toLower:
+        for i in range(0, len(fout)):
+            fout[i] = fout[i].lower()
+
+    ss = "".join(fout)
+    while '__' in ss:
+        ss = ss.replace('__', '_')
+    while '_.' in ss:
+        ss = ss.replace('_.', '.')
+    ss = ss.strip('-_')
+    return ss
+
 def portableCharacterSet():
     """
     3.282 Portable Filename Character Set
@@ -97,7 +148,7 @@ def open_file_autoselect_app(filename):
         pass
     elif os.path.splitext(filename)[1] == '.pdf':
         app = 'okular'
-    cmd = f'{app} {filename}& >/dev/null 2>&1' 
+    cmd = f"{app} '{filename}'& >/dev/null 2>&1" 
     print(cmd)
     os.system(cmd)
 
