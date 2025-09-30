@@ -11,6 +11,7 @@ import dcore.dlogging as dlogging
 import dcore.data as data
 import dcore.utils as dutils
 import dcore.kvp_store as kvp_store
+import dcore.apps.quickdir.lib as quickdir_lib
 
 """
 vim.current.buffer.append('This would get added at cursor.')
@@ -145,6 +146,9 @@ def notify_file_opened_or_created():
     # experimental -- just write data there, can remove later
     key = str(uuid.uuid1()).replace('-','_')
     kvp_store.write(key, to_write, namespace='vi_operations')
+    filename_path = os.path.dirname(filename)
+    # quick access to last path
+    quickdir_lib.remember_dir_typed(quickdir_lib.DirShortcut(path=filename_path,shortcut='vl'))
 
 if __name__ == '__main__':
     pass

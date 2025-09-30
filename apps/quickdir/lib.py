@@ -27,7 +27,7 @@ cacheFileDeleted = cacheFile + ".deleted"
 @dataclasses.dataclass
 class DirShortcut:
     path: str
-    shortcut: str
+    shortcut: str = None
 
 def __createSortcut(new_file, dir):
     tag = 'Auto del tag: ' + data.tagShortcutsForDeletionForDr()
@@ -84,7 +84,7 @@ def __create_shortcuts_sane(dir_shortcuts):
         new_file = os.path.join(PATH_EXT_FOLDER, ds.shortcut)
         __createSortcut(new_file, ds.path)
 
-def remember_dir(directory):
+def remember_dir_typed(dir_shortcut):
     """
     This is not ideal since it forces remembering only curr dir,
     have parameter instead.
@@ -92,12 +92,15 @@ def remember_dir(directory):
 
     dirs = get_file_content()
     # append at END to have stable numbering
-    dirs += [directory]
+    if dir_shortcut.shortcut is None:
+        dirs += [dir_shortcut.path]
+    else:
+        dirs += [f'{dir_shortcut.shortcut},{dir_shortcut.path}']
 
-    bad = [
+    bad = set([
         d for d in dirs if not os.path.isdir(d)
         and not (len(d.split(',')) == 2 and os.path.isdir(d.split(',')[1]))
-    ]
+    ])
 
     if len(bad) > 0:
         print('Removing non-existent directories: %s.' % bad)
@@ -111,6 +114,10 @@ def remember_dir(directory):
 
     setFileContent(dirs)
     __create_shortcuts_insane()
+
+
+def remember_dir(directory):
+    return remember_dir_typed(DirShortcut(path=directory,shortcut=None))
 
 def get_file_content():
     """
