@@ -74,7 +74,7 @@ import dcore.apps.quickdir.lib as quickdir_lib
 
 
 def printStoredDirs():
-    data = quickdir_lib.getFileContent()
+    data = quickdir_lib.get_file_content()
 
     i = 0
     for file in data:
@@ -89,7 +89,6 @@ def do():
     parser.add_argument('-r', '--remember', action="store_true")
     parser.add_argument('-p', '--print', action="store_true")
     parser.add_argument('-e', '--edit', action="store_true")
-    parser.add_argument('-g', '--goto_clip', type=int)
 
     args = parser.parse_args()
     cacheFile = quickdir_lib.cacheFile
@@ -109,36 +108,13 @@ def do():
             os.system('np ' + cacheFile)
         else:
             os.system('vim ' + cacheFile)
-        quickdir_lib.rememberDirs()
+        quickdir_lib.remember_dir(os.getcwd())
         exit(0)
 
     if args.remember:
-        quickdir_lib.rememberDirs()
-        printStoredDirs()
-        exit(0)
-
-    if args.goto_clip != None:
-        """
-        BUG: this does not work (anymore?).
-        """
-        filec = quickdir_lib.getFileContent()
-        dir = filec[args.goto_clip]
-
-        try:
-            from tkinter import Tk
-        except:
-            pass
-
-        if Tk is not None:
-            r = Tk()
-            r.withdraw()
-            r.clipboard_clear()
-            r.clipboard_append(dir)
-            r.destroy()
-        else:
-            print('Tk not available, clipboard functions will not work.')
-
-        print("'%s' now in clipboard" % dir)
+        quickdir_lib.remember_dir(os.getcwd())
+        if False:
+            printStoredDirs()
         exit(0)
 
     printStoredDirs()

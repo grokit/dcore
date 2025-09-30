@@ -14,25 +14,85 @@ import sys
 import os
 import argparse
 import platform
+import dataclasses
 
 import dcore.data as data
 import dcore.utils as dutils
 import dcore.utils as dutils
 
-path_ext_folder = data.pathExt()
+PATH_EXT_FOLDER = data.pathExt()
 cacheFile = os.path.join(data.dcoreData(), 'dr.py.cache')
 cacheFileDeleted = cacheFile + ".deleted"
 
+@dataclasses.dataclass
+class DirShortcut:
+    path: str
+    shortcut: str
 
-def rememberDirs():
+def __createSortcut(new_file, dir):
+    tag = 'Auto del tag: ' + data.tagShortcutsForDeletionForDr()
+    if platform.system() == 'Windows':
+        new_file += '.bat'
+    with open(new_file, 'w') as fh:
+        if platform.system() == 'Windows':
+            fh.write('Rem %s\ncd /d "%s"' % (tag, dir))
+        else:
+            fh.write('# %s\ncd "%s"' % (tag, dir))
+
+def __create_shortcuts_insane():
+    if not os.path.isdir(PATH_EXT_FOLDER):
+        raise Exception(PATH_EXT_FOLDER)
+
+    dirs = get_file_content()
+
+    last = None
+    to_create = []
+    for i, dir in enumerate(dirs):
+
+        # named labels: cddev, cdgame, ...
+        if ',' in dir:
+            shortcut, unpacked_dir = dir.split(',')
+            # cdl == cd last, it has a special meaning
+            assert shortcut != 'l'
+            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%s' % shortcut)
+            shortcut = r'cd%s' % shortcut
+            to_create.append((unpacked_dir, shortcut))
+            # also create a numerical label
+            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%02d' % i)
+            shortcut = r'cd%02d' % i
+            to_create.append((unpacked_dir, shortcut))
+            last = unpacked_dir
+        else:
+            # numerical labels: cd01, cd02, ...
+            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%02d' % i)
+            shortcut = r'cd%02d' % i
+            to_create.append((dir, shortcut))
+            last = dir
+
+    # cdl always point to last folder
+    to_create.append((last, 'cdl'))
+
+
+    out = []
+    for directory, shortcut in to_create:
+        out.append(DirShortcut(path=directory,shortcut=shortcut))
+
+    __create_shortcuts_sane(out)
+
+def __create_shortcuts_sane(dir_shortcuts):
+    for ds in dir_shortcuts:
+        new_file = os.path.join(PATH_EXT_FOLDER, ds.shortcut)
+        __createSortcut(new_file, ds.path)
+
+def remember_dir(directory):
     """
     This is not ideal since it forces remembering only curr dir,
     have parameter instead.
     """
 
-    dirs = getFileContent()
+    dirs = get_file_content()
     # append at END to have stable numbering
-    dirs += [os.getcwd()]
+    dirs += [directory]
 
     bad = [
         d for d in dirs if not os.path.isdir(d)
@@ -50,48 +110,9 @@ def rememberDirs():
     dirs = [d for d in dirs if d not in bad]
 
     setFileContent(dirs)
+    __create_shortcuts_insane()
 
-    # need to read again because might be different if there are duplicates
-    dirs = getFileContent()
-
-    def createSortcut(new_file, dir):
-        tag = 'Auto del tag: ' + data.tagShortcutsForDeletionForDr()
-        if platform.system() == 'Windows':
-            new_file += '.bat'
-        with open(new_file, 'w') as fh:
-            if platform.system() == 'Windows':
-                fh.write('Rem %s\ncd /d "%s"' % (tag, dir))
-            else:
-                fh.write('# %s\ncd "%s"' % (tag, dir))
-
-    # create shortcut files
-    if os.path.isdir(path_ext_folder):
-        for i, dir in enumerate(dirs):
-
-            # named labels: cddev, cdgame, ...
-            if ',' in dir:
-                shortcut, unpacked_dir = dir.split(',')
-                # cdl == cd last, it has a special meaning
-                assert shortcut != 'l'
-                new_file = os.path.join(path_ext_folder, r'cd%s' % shortcut)
-                createSortcut(new_file, unpacked_dir)
-                # also create a numerical label
-                new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
-                createSortcut(new_file, unpacked_dir)
-            else:
-                # numerical labels: cd01, cd02, ...
-                new_file = os.path.join(path_ext_folder, r'cd%02d' % i)
-                createSortcut(new_file, dir)
-
-        # cdl always point to last folder
-        new_file = os.path.join(path_ext_folder, r'cdl')
-        createSortcut(new_file, dir)
-
-    else:
-        raise Exception(path_ext_folder)
-
-
-def getFileContent():
+def get_file_content():
     """
     # File Format
     
@@ -107,10 +128,9 @@ def getFileContent():
     '/etc' is a non-tag shortcut, will be accessible with a number.
     '/journal' will be accessible with a number OR cdjl.
     """
-
-    fh = open(cacheFile, 'r')
-    data = fh.read()
-    fh.close()
+    with open(cacheFile, 'r') as fh:
+        data = fh.read()
+        fh.close()
 
     data = data.splitlines()
 
@@ -146,5 +166,3 @@ def setFileContent(fileList):
         fh.write("\n")
     fh.close()
 
-def create_shortcut(directory, shortcut_name):
-    pass
