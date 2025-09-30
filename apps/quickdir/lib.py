@@ -103,7 +103,8 @@ def remember_dir_typed(dir_shortcut):
     ])
 
     if len(bad) > 0:
-        print('Removing non-existent directories: %s.' % bad)
+        # do not print, it can create issues when in vi plugin
+        #print('Removing non-existent directories: %s.' % bad)
         with open(cacheFileDeleted, 'a') as fh:
             fh.write("\n".join(bad))
             fh.write("\n")
