@@ -1,14 +1,3 @@
-"""
-want to create a shortcut for a directory:
-
-    /a/dir dr -r <name>
-
-then at a later time:
-
-    . cd<name> 
-
-    this goes to that dir
-"""
 
 import sys
 import os
@@ -21,15 +10,28 @@ import dcore.utils as dutils
 import dcore.utils as dutils
 
 PATH_EXT_FOLDER = data.pathExt()
-cacheFile = os.path.join(data.dcoreData(), 'dr.py.cache')
-cacheFileDeleted = cacheFile + ".deleted"
+CACHE_FILE = os.path.join(data.dcoreData(), 'dr.py.cache')
+CACHE_FILE_DELETED = CACHE_FILE + ".deleted"
+
 
 @dataclasses.dataclass
 class DirShortcut:
     path: str
+    # shortcut for this directory, without the cd
+    # e.g. 01, then will be accessible with . cd01
     shortcut: str = None
 
-def __createSortcut(new_file, dir):
+def write_to_disk(dirs_shortcuts):
+    fh = open(CACHE_FILE, 'w')
+    for ds in dirs_shortcuts:
+        if ds.shortcut is None:
+            fh.write(f'{ds.path}')
+        else:
+            fh.write(f'{ds.shortcut},{ds.path}')
+        fh.write("\n")
+    fh.close()
+
+def __create_shortcut(new_file, dir):
     tag = 'Auto del tag: ' + data.tagShortcutsForDeletionForDr()
     if platform.system() == 'Windows':
         new_file += '.bat'
@@ -39,138 +41,116 @@ def __createSortcut(new_file, dir):
         else:
             fh.write('# %s\ncd "%s"' % (tag, dir))
 
-def __create_shortcuts_insane():
-    if not os.path.isdir(PATH_EXT_FOLDER):
-        raise Exception(PATH_EXT_FOLDER)
-
-    dirs = get_file_content()
-
+def __file_lines_to_typed_class(dirs):
     last = None
     to_create = []
     for i, dir in enumerate(dirs):
+        assert ',' in dir
+        shortcut, unpacked_dir = dir.split(',')
+        shortcut = r'%s' % shortcut
+        to_create.append((unpacked_dir, shortcut))
+        last = dir
 
-        # named labels: cddev, cdgame, ...
-        if ',' in dir:
-            shortcut, unpacked_dir = dir.split(',')
-            # cdl == cd last, it has a special meaning
-            assert shortcut != 'l'
-            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%s' % shortcut)
-            shortcut = r'cd%s' % shortcut
-            to_create.append((unpacked_dir, shortcut))
-            # also create a numerical label
-            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%02d' % i)
-            shortcut = r'cd%02d' % i
-            to_create.append((unpacked_dir, shortcut))
-            last = unpacked_dir
-        else:
-            # numerical labels: cd01, cd02, ...
-            #new_file = os.path.join(PATH_EXT_FOLDER, r'cd%02d' % i)
-            shortcut = r'cd%02d' % i
-            to_create.append((dir, shortcut))
-            last = dir
-
+    # todo:::a1 re-implement
     # cdl always point to last folder
-    to_create.append((last, 'cdl'))
+    #to_create.append((last, 'l'))
 
-
+    # as type
     out = []
     for directory, shortcut in to_create:
-        out.append(DirShortcut(path=directory,shortcut=shortcut))
-
-    __create_shortcuts_sane(out)
+        out.append(DirShortcut(path=directory, shortcut=shortcut))
+    return out
 
 def __create_shortcuts_sane(dir_shortcuts):
     for ds in dir_shortcuts:
-        new_file = os.path.join(PATH_EXT_FOLDER, ds.shortcut)
-        __createSortcut(new_file, ds.path)
+        new_file = os.path.join(PATH_EXT_FOLDER, f'cd{ds.shortcut}')
+        __create_shortcut(new_file, ds.path)
+        #print(f'create shortcut for as file: {new_file} with inner go to dir: {ds.path}')
+
+##########################################################################
+# PUBLIC
+##########################################################################
+
+def dr_nums_dupl_and_seen(dirs_typed):
+    seen_path = set()
+    out = []
+    for dd in dirs_typed:
+        if dd.path not in seen_path:
+            seen_path.add(dd.path)
+            out.append(dd)
+    out = out[0:9]
+    return out
 
 def remember_dir_typed(dir_shortcut):
-    """
-    This is not ideal since it forces remembering only curr dir,
-    have parameter instead.
-    """
+    dirs_typed = __file_lines_to_typed_class(get_file_content_as_list())
 
-    dirs = get_file_content()
-    # append at END to have stable numbering
+    # at this point:
+    # ds.shortcut: shortcut name e.g. 01
+    # ds.path: the file the shortcut is for
+
+    dirs_typed.reverse()
+
+    numbers = []
+    named = []
+    seen_names = set()
+    for ds in dirs_typed:
+        if ds.shortcut.isdigit():
+            numbers.append(ds)
+        else:
+            if ds.shortcut not in seen_names:
+                named.append(ds)
+                seen_names.add(ds.shortcut)
+
     if dir_shortcut.shortcut is None:
-        dirs += [dir_shortcut.path]
+        numbers = [dir_shortcut] + numbers
     else:
-        dirs += [f'{dir_shortcut.shortcut},{dir_shortcut.path}']
+        named.append(dir_shortcut)
 
-    bad = set([
-        d for d in dirs if not os.path.isdir(d)
-        and not (len(d.split(',')) == 2 and os.path.isdir(d.split(',')[1]))
-    ])
+    numbers = dr_nums_dupl_and_seen(numbers)
+    i = 1
+    for nn in numbers:
+        nn.shortcut = r'%01d' % i
+        i += 1
+    numbers.reverse()
 
-    if len(bad) > 0:
-        # do not print, it can create issues when in vi plugin
-        #print('Removing non-existent directories: %s.' % bad)
-        with open(cacheFileDeleted, 'a') as fh:
-            fh.write("\n".join(bad))
-            fh.write("\n")
+    dirs_typed = named + numbers
 
+    write_to_disk(dirs_typed)
+
+    # write shortcuts
     dutils.delCurrentShortcuts(data.tagShortcutsForDeletionForDr())
-
-    dirs = [d for d in dirs if d not in bad]
-
-    setFileContent(dirs)
-    __create_shortcuts_insane()
+    __create_shortcuts_sane(dirs_typed)
 
 
 def remember_dir(directory):
-    return remember_dir_typed(DirShortcut(path=directory,shortcut=None))
+    return remember_dir_typed(DirShortcut(path=directory, shortcut=None))
 
-def get_file_content():
+
+def get_file_content_as_list():
     """
     # File Format
-    
+
         [tag,]<file>
         ...
         [tag,]<file>
-    
+
     e.g:
-    
+
         jl,/journal
         /etc
-    
+
     '/etc' is a non-tag shortcut, will be accessible with a number.
     '/journal' will be accessible with a number OR cdjl.
     """
-    with open(cacheFile, 'r') as fh:
-        data = fh.read()
-        fh.close()
+    if not os.path.isdir(PATH_EXT_FOLDER):
+        raise Exception(PATH_EXT_FOLDER)
 
-    data = data.splitlines()
-
+    data = []
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, 'r') as fh:
+            data = fh.read()
+            fh.close()
+        data = data.splitlines()
     return data
 
-
-def eliminateDup(lst: list):
-
-    # Reverse so that eliminates EARLIER entry.
-    # This does not preserve numbering (bad), but
-    # it does make sure new dir gets back on top of
-    # stack.
-    lst.reverse()
-
-    st = set()
-    out = []
-    for l in lst:
-        if l not in st:
-            out.append(l)
-        st.add(l)
-
-    out.reverse()
-    return out
-
-
-def setFileContent(fileList):
-    fileList = eliminateDup(fileList)
-
-    fh = open(cacheFile, 'w')
-
-    for file in fileList:
-        fh.write(file)
-        fh.write("\n")
-    fh.close()
 
