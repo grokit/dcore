@@ -12,7 +12,6 @@ Create a shortcut for a directory:
 # FEATURES / ideas
 
 - record how often shortcuts are used
-- be able to name a dir without having to edit file (meh)
 
 # misc
 
@@ -23,9 +22,6 @@ Create a shortcut for a directory:
     - CDPATH, try application `autojump`
 
 # BUGS
-
-- Same key / shortcut can be there multiple times ... forbid at entry.
-- Cut down to 10 autonum -- not sure the point to have 100s
 """
 
 import dcore.apps.quickdir.lib as quickdir_lib
