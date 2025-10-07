@@ -6,6 +6,13 @@ Provide search and search + quick-action.
 # BUGS
 - `engineering less` does not bring up lessons: engineering (since order different)
 - word in title or uuid should rank higher
+
+# FEATURES
+
+## As
+## Bs
+- ns -u should support lloc
+## Cs
 """
 
 import sys

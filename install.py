@@ -38,6 +38,7 @@ syntax on
 " // notification hooks
 autocmd BufReadPost * call DextNotify_FileOpened()
 autocmd BufNewFile  * call DextNotify_FileMisc()
+autocmd BufWritePost * call DextNotify_FileMisc()
 
 " ==== memory
 
@@ -63,11 +64,14 @@ set expandtab
 nnoremap <C-t> :tabedit %<cr>
 "" Flip between .h and .cc files.
 nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
+"" ctrl+y : copy to (system) clipboard
+"" vnoremap : only works in selection mode
+vnoremap <C-y> :silent w !wl-copy<cr>
 
 "" dvext 
 "" <leader> is backslash
 "" :nnoremap <leader>o :w<cr>:call DextOpenLink()<cr>
-:nnoremap <leader>o :call DextOpenLink()<cr>
+nnoremap <leader>o :call DextOpenLink()<cr>
 
 " F2: compile and run current file.
 autocmd FileType python nnoremap <F2> :wa!<cr>:exec '!python3' shellescape(@%, 1)<cr>
@@ -217,6 +221,10 @@ def tryImports():
 def setupBashRc():
     CONTENT = """
     
+## Aliases
+
+alias mps='mpv --no-audio-display --shuffle --loop-playlist=inf'
+
 ## Plugins
 
 ### https://vimawesome.com/plugin/ctrlp-vim + vimplug

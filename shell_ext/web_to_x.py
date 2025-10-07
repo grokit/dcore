@@ -24,7 +24,7 @@ def get_args():
 
 def dump_web_to_file(url):
     tempfile_fh =  tempfile.NamedTemporaryFile(delete=True, suffix='.html')
-    cmd = f'wget --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" -O {tempfile_fh.name} {url}'
+    cmd = f"wget --user-agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36' -O '{tempfile_fh.name}' '{url}'"
     print(cmd)
     assert os.system(cmd) == 0
     return tempfile_fh

@@ -35,15 +35,24 @@ def dcoreExtRoot():
     return os.path.join(os.path.split(dcoreRoot())[0], 'dcore_ext')
 
 ################################################################################
-# OTHER LOCATIONS
-# (try to sort more or less in order of importance)
+# CORE DATA LOCATIONS
 ################################################################################
 
 def dcoreData():
     return os.path.abspath(os.path.join(sync_root(), 'dcore_data'))
 
 def dcoreTempData():
+    """
+    This is not just for temp data, this is misnamed.
+    See note.md in that dir.
+    """
     return os.path.abspath(os.path.join(sync_root(), 'dcore_data_temp'))
+
+################################################################################
+# OTHER LOCATIONS
+# (try to sort more or less in order of importance)
+################################################################################
+
 
 def logsdir():
     return os.path.join(dcoreTempData(), 'logs')

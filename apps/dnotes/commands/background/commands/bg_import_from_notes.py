@@ -1,4 +1,9 @@
 """
+# FEATURES
+## As
+## Bs
+- TODO-A,B,C should be supported by bg_<x>, same as todo<tag>a
+## Cs
 """
 
 import os

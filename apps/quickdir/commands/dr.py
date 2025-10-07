@@ -22,6 +22,10 @@ Create a shortcut for a directory:
     - CDPATH, try application `autojump`
 
 # BUGS
+
+# FEATURES
+
+- `dr -c name` prints that fullpath folder with quotes such that: mv abcd `dr -c name` moves to that folder
 """
 
 import dcore.apps.quickdir.lib as quickdir_lib
@@ -29,6 +33,7 @@ import platform
 import argparse
 import os
 import sys
+
 _meta_shell_command = 'dr'
 
 

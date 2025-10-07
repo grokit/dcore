@@ -10,7 +10,8 @@ import dcore.utils as dutils
 import dcore.utils as dutils
 
 PATH_EXT_FOLDER = data.pathExt()
-CACHE_FILE = os.path.join(data.dcoreData(), 'dr.py.cache')
+CACHE_FILE = os.path.join(data.dcoreTempData(), 'dr.py.cache')
+# ::: fix: no longer used
 CACHE_FILE_DELETED = CACHE_FILE + ".deleted"
 
 

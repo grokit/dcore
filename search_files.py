@@ -1,15 +1,26 @@
 """
+Utils to list files / folders.
 """
+
 import os
 import fnmatch
 
-# Note: taken from a sub-script, not linked from anywhere, but could do refactor
-# to do so as it's often what script need.
 def getAllFiles(rootdir='.'):
+    """
+    - Recursive by default.
+    - Does not follow symlinks (but will list them).
+    """
+    assert os.path.isdir(rootdir)
+
     FF = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
+        # all folders
+        #   we would need to process dirnames if we also want dirs as output
+        # ...
+
+        # all files
         for ff in filenames:
-            FF.append(os.path.normpath(os.path.join(dirpath, ff)))
+            FF.append(os.path.abspath(os.path.normpath(os.path.join(dirpath, ff))))
     return FF
 
 def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir='.'):
@@ -33,7 +44,7 @@ def getAllFilesRecursively(in_allowedExtensionsGlobList, in_RootDir='.'):
 
             if add:
                 fullPathFile = os.path.join(root, file)
-                normalizedFullPath = os.path.abspath(fullPathFile)
+                normalizedFullPath = os.path.abspath(os.path.normpath(fullPathFile))
                 fileList.append(normalizedFullPath)
 
     # return: List of fullpath string to files matching extensions provided.

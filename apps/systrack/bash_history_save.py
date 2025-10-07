@@ -13,10 +13,10 @@ import sqlite3
 
 import dcore.data as data
 
-_meta_shell_command = 'backup_bash_history'
+_meta_shell_command = 'bg_backup_bash_history'
 
 BASH_HISTORY_LOC = os.path.realpath(os.path.expanduser('~/.bash_history'))
-
+BASH_HISTORY_DUMP_DB = os.path.join(data.dcoreTempData(), "bash_history_save.db")
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -77,10 +77,7 @@ def save_dump_to_sqlite(bash_history_filename):
     bash_history_raw_content = None
     with open(bash_history_filename, 'r') as fh:
         bash_history_raw_content = fh.read().strip()
-    db_file = os.path.realpath(
-        os.path.join(
-            data.dcoreData(),
-            'bash_history_save.db'))
+    db_file = BASH_HISTORY_DUMP_DB
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.execute('''
@@ -100,10 +97,7 @@ def save_dump_to_sqlite(bash_history_filename):
     conn.close()
 
 def save_individual_entries_to_sqlite(entries):
-    db_file = os.path.realpath(
-        os.path.join(
-            data.dcoreData(),
-            'bash_history_save.db'))
+    db_file = BASH_HISTORY_DUMP_DB
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.execute('''
@@ -121,6 +115,9 @@ def save_individual_entries_to_sqlite(entries):
     conn.close()
 
 def do():
+    """
+    Called by dcron.
+    """
     args = get_args()
 
     if args.list:

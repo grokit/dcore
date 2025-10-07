@@ -2,9 +2,24 @@ import datetime
 import importlib.util
 import inspect
 import os
+import hashlib
 import platform
 
 import dcore.data as data
+
+################################################################################
+# HASH
+################################################################################
+
+def hash_filename_fast_unsecure(fullpath):
+    with open(fullpath, 'rb') as fh:
+        mm = hashlib.md5()
+        while True:
+            data = fh.read(8192)
+            if not data:
+                break
+            mm.update(data)
+        return mm.hexdigest()
 
 ################################################################################
 # DATE STUFF

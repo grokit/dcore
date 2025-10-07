@@ -42,6 +42,7 @@ import time
 
 import dcore.data as data
 import dcore.utils as utils
+import dcore.search_files as d_search_files
 
 _meta_shell_command = 'fif'
 
@@ -75,12 +76,7 @@ def get_args():
 
 
 def getAllFiles(rootdir='.'):
-    F = []
-    for dirpath, dirnames, filenames in os.walk(rootdir):
-        for f in filenames:
-            F.append(os.path.normpath(os.path.join(dirpath, f)))
-    return F
-
+    return d_search_files.getAllFiles(rootdir)
 
 def elementInList(f, filterArray):
     for e in filterArray:
@@ -114,7 +110,6 @@ class Cache:
 
 def list_all_files():
     F = []
-
     for search_root in _SEARCH_ROOT_FOLDERS:
         search_root = os.path.expanduser(search_root)
         assert os.path.isdir(search_root)
@@ -122,12 +117,11 @@ def list_all_files():
             f = os.path.abspath(os.path.join(search_root, f))
             if not os.path.islink(f):
                 F.append(f)
-    F = filterOutIfArrayInElement(
-        F, ['node_modules', '.git', '.hg', '__pycache__', r'Out\Functional'])
+    F = filterOutIfArrayInElement(F, ['node_modules', '.git', '.hg', '__pycache__'])
     return F
 
 
-def do_sql_dump_and_compate(filenames):
+def to_sql_dump(filenames):
     """
     New/experimental: dump to SQL database to make it possible to track files added, deleted & spot accidental deleted of uid-files.
     """
@@ -175,7 +169,7 @@ def do():
         F = list_all_files()
         print(f'Saving cache at: {_CACHE_FILE_LOCATION}')
         pickle.dump(Cache(F), open(_CACHE_FILE_LOCATION, 'wb'))
-        do_sql_dump_and_compate(F)
+        to_sql_dump(F)
 
     if len(args.grep) != 0:
         gg = args.grep
@@ -189,11 +183,11 @@ def do():
 
         if args.open is True:
             open_ith = 0
-            if len(F) == 2:
-                ocular_remove = [ff for ff in F if '.pdf.xml' not in ff]
-                if len(ocular_remove) == 1:
-                    print('Warning: automatically removed ocular meta-file.')
-                    F = ocular_remove
+            if len(F) >= 2:
+                F_wo_pdf_xml_ocular = [ff for ff in F if '.pdf.xml' not in ff]
+                if len(F_wo_pdf_xml_ocular) < len(F):
+                    print(f'Warning: automatically removed ocular meta-file: {set(F) - set(F_wo_pdf_xml_ocular)}')
+                    F = F_wo_pdf_xml_ocular
             if len(F) > 1:
                 open_ith = int(input('Open which one?\n'))
 

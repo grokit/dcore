@@ -4,6 +4,8 @@ todo:::a1
 - extract something very simple like id@
 - store as/with uid
 - allow to list in last x days (new or last mod)
+
+- see bg_uuids & merge together?
 """
 
 import shutil
@@ -117,26 +119,29 @@ def scan_and_update(db_filename):
     files = sorted(util.get_all_note_files())
     if False:
         files = ['']
+    if False:
+        for ff in files:
+            last_changed_u_s = last_changed_unixtime_s(ff)
+            # this may change too much over time to be useful
+            uid = ff
+            context = last_changed_u_s
+            add_or_update_time(
+                cursor,
+                uid,
+                'NOTE_FILENAME',
+                context,
+                last_changed_u_s)
     for ff in files:
         last_changed_u_s = last_changed_unixtime_s(ff)
-        # this may change too much over time to be useful
-        uid = ff
-        context = last_changed_u_s
-        add_or_update_time(
-            cursor,
-            uid,
-            'NOTE_FILENAME',
-            context,
-            last_changed_u_s)
-    for ff in files:
-        # ldap-like my_name@ or my_name@something.com
-        generic_regex_and_line_marker(cursor, r'\w+@', ff, 'PERSON_ID_MENTION')
-        # https://wwww.geico.com
-        generic_regex_and_line_marker(cursor, r'\w+://[^\s\n]+', ff, 'URL')
-        # go/abcd-efg
-        generic_regex_and_line_marker(cursor, r'go/\w+', ff, 'GO_SLASH')
-        # b/12345
-        generic_regex_and_line_marker(cursor, r'b/[0-9]+', ff, 'B_SLASH')
+        if False:
+            # ldap-like my_name@ or my_name@something.com
+            generic_regex_and_line_marker(cursor, r'\w+@', ff, 'PERSON_ID_MENTION')
+            # https://wwww.geico.com
+            generic_regex_and_line_marker(cursor, r'\w+://[^\s\n]+', ff, 'URL')
+            # go/abcd-efg
+            generic_regex_and_line_marker(cursor, r'go/\w+', ff, 'GO_SLASH')
+            # b/12345
+            generic_regex_and_line_marker(cursor, r'b/[0-9]+', ff, 'B_SLASH')
         # uuid
         metas = meta.extract(ff, open(ff, 'r').read())
         for mm in metas:
@@ -160,7 +165,7 @@ def read(db_filename):
 
     # stuff changed since ...
     if True:
-        read_cutoff = ( datetime.datetime.today() - datetime.timedelta(days=2)).replace( hour=0, minute=0, second=0, microsecond=0)
+        read_cutoff = ( datetime.datetime.today() - datetime.timedelta(days=7)).replace( hour=0, minute=0, second=0, microsecond=0)
     else:
         read_cutoff = ( datetime.datetime.today() - datetime.timedelta(hours=1))
 

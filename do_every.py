@@ -7,23 +7,16 @@ import json
 import time
 import hashlib
 
-import dcore.data as data
+import dcore.data as d_data
+import dcore.utils as d_utils
 import dcore.dlogging as dlogging
 
 
 def _hash(filename):
-    with open(filename, 'rb') as fh:
-        m = hashlib.md5()
-        while True:
-            data = fh.read(8192)
-            if not data:
-                break
-            m.update(data)
-        return m.hexdigest()
-
+    return d_utils.hash_filename_fast_unsecure(filename)
 
 def isFileModifiedSinceLastTouch(filename):
-    cache = os.path.join(data.dcoreTempData(), 'file_hash_cache.json')
+    cache = os.path.join(d_data.dcoreTempData(), 'file_hash_cache.json')
 
     # If no information on file, has never been touched.
     if not os.path.isfile(cache):
@@ -40,7 +33,7 @@ def isFileModifiedSinceLastTouch(filename):
 
 
 def markFileAsCurrent(filename):
-    cache = os.path.join(data.dcoreTempData(), 'file_hash_cache.json')
+    cache = os.path.join(d_data.dcoreTempData(), 'file_hash_cache.json')
 
     hashMap = {}
     if os.path.isfile(cache):
@@ -57,7 +50,7 @@ def markFileAsCurrent(filename):
 
 
 def _lastTimeDone(key):
-    filename = os.path.join(data.dcoreTempData(), 'do_every.json')
+    filename = os.path.join(d_data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
         return 1e9
@@ -75,7 +68,7 @@ def _lastTimeDone(key):
 
 
 def _markDone(key):
-    filename = os.path.join(data.dcoreTempData(), 'do_every.json')
+    filename = os.path.join(d_data.dcoreTempData(), 'do_every.json')
 
     if not os.path.isfile(filename):
         with open(filename, 'w') as fh:
