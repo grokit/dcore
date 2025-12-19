@@ -225,6 +225,20 @@ def setupBashRc():
 
 alias mps='mpv --no-audio-display --shuffle --loop-playlist=inf'
 
+## functions
+
+move_files_to_sub() {
+    if [[ "$#" -ne 1 ]]; then
+        echo "need exactly 1 arg"
+        return 1
+    fi
+
+    local target="$1"
+
+    mkdir -p -- "$target" || return 1
+    find . -maxdepth 1 -type f -exec mv -v -t "$target" {} +
+}
+
 ## Plugins
 
 ### https://vimawesome.com/plugin/ctrlp-vim + vimplug

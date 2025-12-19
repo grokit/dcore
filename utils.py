@@ -36,10 +36,20 @@ def __date_safeset(ss):
     return "".join(out)
 
 def date_now_for_annotation():
-    return datetime.datetime.now().isoformat()
+    # TODO: rename: ..._as_str
+    #
+    # on 2025-12-29 replaced from:
+    #   return datetime.datetime.now().isoformat()
+    # this replaces from:
+    #   2025-12-29T09:01:13.385267 
+    # to:
+    #   2025-12-29T09:01:38.426779-05:00
+    # 
+    # note: this uses the timezone from local computer settings
+    return datetime.datetime.now().astimezone().isoformat()
 
 def date_now_iso_8601_safe_folder():
-    return __date_safeset(datetime.datetime.now().astimezone().isoformat())
+    return __date_safeset(date_now_for_annotation())
 
 ################################################################################
 # ...

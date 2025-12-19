@@ -38,11 +38,11 @@ def get_curr_word():
     i_left = 0
     i_right = len(line)
 
-    sep = set([' ', '\t'])
+    sep = set([' ', '\t', '"', ","])
+
     for j in range(col, len(line)):
         if line[j] in sep: break
         i_right = j+1
-
     for j in range(col, -1, -1):
         if line[j] in sep: break
         i_left = j

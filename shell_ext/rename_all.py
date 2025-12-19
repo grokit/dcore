@@ -30,10 +30,15 @@ def get_args():
 
 
 def walkGatherAllFiles(rootdir='.'):
+    ALLOWED = set(['.py', '.cpp', '.h', '.cc', '.txt', '.rs', '.hpp'])
+    if False:
+        ALLOWED = None
     F = []
     for dirpath, dirnames, filenames in os.walk(rootdir):
         for f in filenames:
             F.append(os.path.join(dirpath, f))
+    if ALLOWED is not None:
+        F = [ff for ff in F if os.path.splitext(ff)[1].lower() in ALLOWED]
     return F
 
 
