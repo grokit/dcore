@@ -76,15 +76,23 @@ def manualSelect(str_list, nCut=30):
 
     return str_list[s]
 
-def get_all_note_files():
+def get_all_note_files(root_folders_override=None):
     files = []
 
-    files += _walkGatherAllFiles(data.get_notes_root_folder())
+    root_folders = []
+    if root_folders_override is None:
+        root_folders.append(data.get_notes_root_folder())
+        for loc in data.get_notes_folders_ext():
+            root_folders.append(loc)
+    else:
+        for loc in root_folders_override:
+            root_folders.append(loc)
 
-    for loc in data.get_notes_folders_ext():
+    for loc in root_folders:
+        loc = os.path.expanduser(loc)
         files += _walkGatherAllFiles(loc)
 
-    files = [ff for ff in files if os.path.splitext(os.path.split(ff)[1])[1] == '.md' ]
+    files = [os.path.abspath(os.path.normpath(ff)) for ff in files if os.path.splitext(os.path.split(ff)[1])[1] == '.md' ]
     files = list(set(files))
 
     return files
