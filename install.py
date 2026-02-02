@@ -64,6 +64,9 @@ set expandtab
 nnoremap <C-t> :tabedit %<cr>
 "" Flip between .h and .cc files.
 nnoremap <C-h> :w<cr> :call CurtineIncSw()<cr>
+"" browse oldfiles
+noremap <leader>b <esc>:browse oldfiles<cr>
+"" ^^ note: apparently no way to avoid having to press `q` manually after this
 "" ctrl+y : copy to (system) clipboard
 "" vnoremap : only works in selection mode
 vnoremap <C-y> :silent w !wl-copy<cr>

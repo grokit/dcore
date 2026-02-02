@@ -40,23 +40,18 @@ import data
 import util
 import options
 
-import dcore.utils as utils 
+import dcore.utils as dutils 
 
 
 def dateForFile():
-    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d")
-
 
 def dateForFolder():
-    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
-
-def date_now_for_annotation():
-    # todo:::b1 all time should be somewhere central -- otherwise it's easy to have different competing formats
-    return datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
-
+def date_now_as_str():
+    # e.g. 2026-02-09T21:30-08:00
+    return dutils.date_now().replace(second=0, microsecond=0).isoformat(timespec="minutes")
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -72,7 +67,7 @@ def annotateDateIfNotAlreadyDone(file, force=False):
         fileContent = fh.read()
 
     if force or 'time%s' % options.MSEP not in fileContent:
-        annotation = 'time%s' % options.MSEP + date_now_for_annotation() + '\n'
+        annotation = 'time%s' % options.MSEP + date_now_as_str() + '\n'
 
         with open(file, 'w') as fh:
             fh.write(annotation + '\n' + fileContent)
@@ -86,4 +81,4 @@ if __name__ == '__main__':
     util.createFileIfNotExist(fullpath)
 
     annotateDateIfNotAlreadyDone(fullpath, args.force_time_tagging)
-    utils.openInEditor(fullpath)
+    dutils.openInEditor(fullpath)

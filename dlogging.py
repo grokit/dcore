@@ -15,7 +15,7 @@ import logging.handlers
 import dcore.data as data
 
 
-def date_now_for_annotation():
+def date_now_as_str():
     return datetime.datetime.now().isoformat()
 
 def genLogFilename():

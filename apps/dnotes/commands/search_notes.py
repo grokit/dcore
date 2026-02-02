@@ -70,7 +70,7 @@ def get_args():
                         '--filter',
                         help='WIP -- custom filters.')
 
-    parser.add_argument('--root_folder',
+    parser.add_argument('--root',
                         help='Override that the root folder is')
 
     return parser.parse_args()
@@ -89,10 +89,10 @@ if __name__ == '__main__':
     # empty query == match all
     query = query.strip()
 
-    if G_ARGS.root_folder is None:
+    if G_ARGS.root is None:
         files = util.get_all_note_files()
     else:
-        files = util.get_all_note_files(root_folders_override=[G_ARGS.root_folder])
+        files = util.get_all_note_files(root_folders_override=[G_ARGS.root])
 
     open_first_matching_file = G_ARGS.open_first_matching_file
     if G_ARGS.open_uuid:

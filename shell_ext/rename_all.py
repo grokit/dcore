@@ -30,7 +30,7 @@ def get_args():
 
 
 def walkGatherAllFiles(rootdir='.'):
-    ALLOWED = set(['.py', '.cpp', '.h', '.cc', '.txt', '.rs', '.hpp'])
+    ALLOWED = set(['.py', '.cpp', '.h', '.cc', '.txt', '.rs', '.hpp', '.md'])
     if False:
         ALLOWED = None
     F = []

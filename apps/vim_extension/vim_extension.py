@@ -139,7 +139,7 @@ def notify_file_opened_or_created():
     filename_log = os.path.join(data.dcoreTempData(), 'vi_files_opened.log')
     filename = vim.current.buffer.name
 
-    date_annot = dutils.date_now_for_annotation()
+    date_annot = dutils.date_now_as_str()
     to_write = f'{date_annot} {filename}\n'
     with open(filename_log, 'a') as fh:
         fh.write(to_write)

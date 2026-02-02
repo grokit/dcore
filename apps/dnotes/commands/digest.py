@@ -61,7 +61,7 @@ def doTODOsScatteredAndList():
     else:
         content += "No pending items, good job!\n"
 
-    title = "Digest TODOs R9uO6Eje %s" % (dutils.date_now_for_annotation())
+    title = "Digest TODOs R9uO6Eje %s" % (dutils.date_now_as_str())
     return Message(title, content)
 
 
@@ -69,7 +69,7 @@ def doGoals():
     cA = render("uuid%sgoals" % (':' * 3), 75)
     content = cA
 
-    title = "Digest Goals R97O6ejiKe %s" % (dutils.date_now_for_annotation())
+    title = "Digest Goals R97O6ejiKe %s" % (dutils.date_now_as_str())
     return Message(title, content)
 
 
@@ -77,7 +77,7 @@ def doForefront():
     cA = render("uuid%sforefront" % (':' * 3), 75)
     content = cA
 
-    title = "Digest Forefront Oei8Jae %s" % (dutils.date_now_for_annotation())
+    title = "Digest Forefront Oei8Jae %s" % (dutils.date_now_as_str())
     return Message(title, content)
 
 
