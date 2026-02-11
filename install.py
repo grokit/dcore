@@ -99,8 +99,8 @@ nnoremap <F5> :set spell spelllang=en_us<cr>
 nnoremap <F6> :set nospell<cr>
 
 " F7 / F8 save/load session
-nnoremap <F7> :mksession! ~/.vim_f7_shortcut_session.vim<cr>
-nnoremap <F8> :source ~/.vim_f7_shortcut_session.vim<cr>
+nnoremap <F7> :mksession! $(vi_save_session)<cr>
+nnoremap <F8> :source $(vi_load_session)<cr>
 
 " ==== experimental stuff
 nnoremap <leader>d :r !python3 -c "import datetime;print(f'{datetime.date.today()}')"<cr>
