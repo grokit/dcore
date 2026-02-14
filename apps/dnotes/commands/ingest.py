@@ -26,9 +26,10 @@ import datetime
 import argparse
 
 import dcore.apps.dnotes.data as data
-import dcore.apps.dnotes.util as util
+import dcore.apps.dnotes.util as dnutil
 import dcore.apps.dnotes.meta as meta
 import dcore.apps.dnotes.options as options
+import dcore.utils as dutils 
 
 _meta_shell_command = 'ingest'
 
@@ -45,16 +46,13 @@ def get_args():
     parser.add_argument('-o', '--output_folder', nargs=1, help='Specific output folder.')
     return parser.parse_args()
 
-
 def timeStrToUnixTime(timeStr):
-    dateObj = datetime.datetime.strptime(timeStr, _TIME_FORMAT)
-    return time.mktime(dateObj.timetuple())
-
+    dt = datetime.datetime.fromisoformat(timeStr)
+    return dt.timestamp()
 
 def unixTimeAsSafeStr(unixTime):
     dt = datetime.datetime.fromtimestamp(unixTime)
-    return dt.strftime(_TIME_FORMAT)
-
+    return dt.replace(second=0, microsecond=0).isoformat(timespec="minutes")
 
 def unixTimeAsSafeFolderStr(unixTime):
     "Use when attaching time to folder names."
@@ -210,7 +208,7 @@ def _find_output_folder(args):
 
         if len(picked) > 1:
             print('Too many matches, select folder to ingest to:')
-            picked = [util.manualSelect(picked)]
+            picked = [dnutil.manualSelect(picked)]
 
         folder_out = picked[0]
     else:

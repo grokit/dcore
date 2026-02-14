@@ -49,15 +49,21 @@ def do():
 
     parser.add_argument('-r', '--remember', action="store_true")
     parser.add_argument('-e', '--edit', action="store_true")
+    parser.add_argument('-p', '--print', dest="key", help="output the folder")
 
     args = parser.parse_args()
+
+    if args.key:
+        rv = quickdir_lib.lookup(args.key)
+        print(rv)
+        exit(0)
 
     if args.edit:
         cacheFile = quickdir_lib.CACHE_FILE
         if platform.system().lower() == 'windows':
             os.system('np ' + cacheFile)
         else:
-            os.system('vim ' + cacheFile)
+            os.system('vi ' + cacheFile)
         quickdir_lib.remember_dir(os.getcwd())
         exit(0)
 

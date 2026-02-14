@@ -49,6 +49,10 @@ def date_now_as_str():
     # note: this uses the timezone from local computer settings
     return date_now().isoformat()
 
+def date_now_as_str_timespec_minutes():
+    # e.g. 2026-02-09T21:30-08:00
+    return date_now().replace(second=0, microsecond=0).isoformat(timespec="minutes")
+
 def date_now_iso_8601_safe_folder():
     return __date_safeset(date_now_as_str())
 

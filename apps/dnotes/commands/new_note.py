@@ -35,13 +35,10 @@ import datetime
 import argparse
 import shutil
 
-# ? why not normal absolute path?
-import data
-import util
-import options
-
+import dcore.apps.dnotes.data as ddata
+import dcore.apps.dnotes.util as dnutil
+import dcore.apps.dnotes.options as doptions
 import dcore.utils as dutils 
-
 
 def dateForFile():
     return datetime.datetime.now().strftime("%Y-%m-%d")
@@ -51,7 +48,7 @@ def dateForFolder():
 
 def date_now_as_str():
     # e.g. 2026-02-09T21:30-08:00
-    return dutils.date_now().replace(second=0, microsecond=0).isoformat(timespec="minutes")
+    return dutils.date_now_as_str_timespec_minutes()
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -61,13 +58,12 @@ def get_args():
                         default=False)
     return parser.parse_args()
 
-
 def annotateDateIfNotAlreadyDone(file, force=False):
     with open(file, 'r') as fh:
         fileContent = fh.read()
 
-    if force or 'time%s' % options.MSEP not in fileContent:
-        annotation = 'time%s' % options.MSEP + date_now_as_str() + '\n'
+    if force or 'time%s' % doptions.MSEP not in fileContent:
+        annotation = 'time%s' % doptions.MSEP + date_now_as_str() + '\n'
 
         with open(file, 'w') as fh:
             fh.write(annotation + '\n' + fileContent)
@@ -76,9 +72,9 @@ def annotateDateIfNotAlreadyDone(file, force=False):
 if __name__ == '__main__':
     args = get_args()
 
-    fullpath = data.get_ingest_fullpath()
-    util.createFolderIfNotExist(os.path.split(fullpath)[0])
-    util.createFileIfNotExist(fullpath)
+    fullpath = ddata.get_ingest_fullpath()
+    dnutil.createFolderIfNotExist(os.path.split(fullpath)[0])
+    dnutil.createFileIfNotExist(fullpath)
 
     annotateDateIfNotAlreadyDone(fullpath, args.force_time_tagging)
     dutils.openInEditor(fullpath)

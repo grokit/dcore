@@ -82,6 +82,17 @@ def dr_nums_dupl_and_seen(dirs_typed):
     out = out[0:9]
     return out
 
+def lookup(dir_shortcut):
+    dirs_typed = __file_lines_to_typed_class(get_file_content_as_list())
+
+    res = None
+    for dd in dirs_typed:
+        if dd.shortcut == dir_shortcut:
+            assert res is None
+            res = dd.path
+    assert res is not None
+    return res
+
 def remember_dir_typed(dir_shortcut):
     dirs_typed = __file_lines_to_typed_class(get_file_content_as_list())
 
