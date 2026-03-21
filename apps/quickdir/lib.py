@@ -11,7 +11,6 @@ import dcore.utils as dutils
 
 PATH_EXT_FOLDER = data.pathExt()
 CACHE_FILE = os.path.join(data.dcoreTempData(), 'dr.py.cache')
-# ::: fix: no longer used
 CACHE_FILE_DELETED = CACHE_FILE + ".deleted"
 
 
@@ -22,13 +21,16 @@ class DirShortcut:
     # e.g. 01, then will be accessible with . cd01
     shortcut: str = None
 
+    def as_str(self):
+        if self.shortcut is None:
+            return f'{self.path}'
+        else:
+            return f'{self.shortcut},{self.path}'
+
 def write_to_disk(dirs_shortcuts):
     fh = open(CACHE_FILE, 'w')
     for ds in dirs_shortcuts:
-        if ds.shortcut is None:
-            fh.write(f'{ds.path}')
-        else:
-            fh.write(f'{ds.shortcut},{ds.path}')
+        fh.write(ds.as_str())
         fh.write("\n")
     fh.close()
 
@@ -51,10 +53,6 @@ def __file_lines_to_typed_class(dirs):
         shortcut = r'%s' % shortcut
         to_create.append((unpacked_dir, shortcut))
         last = dir
-
-    # todo:::a1 re-implement
-    # cdl always point to last folder
-    #to_create.append((last, 'l'))
 
     # as type
     out = []
@@ -79,8 +77,15 @@ def dr_nums_dupl_and_seen(dirs_typed):
         if dd.path not in seen_path:
             seen_path.add(dd.path)
             out.append(dd)
-    out = out[0:9]
     return out
+
+def save_removed(remove):
+    with open(CACHE_FILE_DELETED, 'a') as fout:
+        for rr in remove:
+            #ss = repr(rr)
+            ss = rr.as_str()
+            fout.write(ss)
+            fout.write('\n')
 
 def lookup(dir_shortcut):
     dirs_typed = __file_lines_to_typed_class(get_file_content_as_list())
@@ -119,6 +124,9 @@ def remember_dir_typed(dir_shortcut):
         named.append(dir_shortcut)
 
     numbers = dr_nums_dupl_and_seen(numbers)
+    save_removed(numbers[9:])
+    numbers = numbers[0:9]
+
     i = 1
     for nn in numbers:
         nn.shortcut = r'%01d' % i
