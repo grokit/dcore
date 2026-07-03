@@ -33,8 +33,8 @@ def find_next_file(folder, pattern, title, i):
 
 if __name__ == '__main__':
     folder = os.path.join(data.logsdir(), 'ssave')
-    G_ARGS = get_args()
     data.createDirIfNotExist(folder)
+    G_ARGS = get_args()
 
     title = G_ARGS.title
     pattern = 'ssave_capture'
